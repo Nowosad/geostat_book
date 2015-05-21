@@ -32,6 +32,13 @@ if (file.exists("source/index.html")) {
     file.copy(htmlFolderNames, "build/", recursive = TRUE)
   }
   
+  # Fix file and directory permissions
+  dirsBuild <- list.dirs("build/.", full.names = TRUE, recursive = TRUE)
+  filesBuild <- list.files("build/.", all.files=TRUE, full.names = TRUE, recursive = TRUE)
+  
+  Sys.chmod(dirsBuild, mode = "0755", use_umask = TRUE)
+  Sys.chmod(filesBuild, mode = "0644", use_umask = TRUE)
+  
   # Delete only rendered html files and folders from source.
   # Make sure folders exist or source will be deleted!
   unlink(paste("source/", htmlFileNames, sep=""), recursive = TRUE)
