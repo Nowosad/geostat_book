@@ -17,6 +17,8 @@ if (file.exists("source/index.html")) {
   # Copy relevant files from source to build folder.
   # Make sure they exist or source will be copied over.
   relevantFileNames <- dir("source/", pattern = "\\.html$|feed.xml$|robots.txt$")
+  # the regexp isn't working, add .htaccess manually
+  relevantFileNames <- c(relevantFileNames, ".htaccess")
   if (length(relevantFileNames) > 0){
     relevantFileNames <- paste("source/", relevantFileNames, sep="")
     file.copy(relevantFileNames, "build/", recursive = TRUE)
