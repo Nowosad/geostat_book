@@ -114,8 +114,20 @@ domready(function () {
       id("book").addClass("color-theme-2");
       id("book").removeClass("color-theme-1");
     }
+  
+  // Add active class to highlight current page on toc
+  // Here is code for when the page loads
+  var url = document.location.href; // Stores url
+  url = url.substring(url.lastIndexOf("/") + 1, url.length); // Removes everything before the last slash in the path
+  document.querySelector('ul.summary a[href$="'+url+'"]').parentNode.addClass('active'); // Adds active class to highlight toc
+  // Here is code for when a hash is added to the url
+  window.onhashchange = function () {
+  	document.querySelector('ul.summary a[href$="'+url+'"]').parentNode.removeClass('active'); // Remove the active class from old url
+    var hashurl = document.location.href; // Store new hash url
+    hashurl = hashurl.substring(hashurl.lastIndexOf("/") + 1, hashurl.length);
+    document.querySelector('ul.summary a[href$="'+hashurl+'"]').parentNode.addClass('active');
+    url = document.location.href; // Stores new url so it can be removed later
+    url = url.substring(url.lastIndexOf("/") + 1, url.length);
+  }
 
-  // add active attribute to highlight summary links
-  var url = window.location.pathname;
-  document.querySelector('ul.summary li a[href$="'+url+'"]').parentNode.addClass('active');
 });
