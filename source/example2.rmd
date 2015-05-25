@@ -5,19 +5,19 @@ published: "2015-05-17"
 updated: ""
 ---
 
-## This is header level 2
+## This is a Level 2 Heading
 
 Idque verterem voluptatum sed no. Ut debitis dolores neglegentur nam, admodum ancillae interpretaris sea ea. Eos no legere consetetur. Mel nisl commodo at. Nullam nominavi eloquentiam at vel. His ei animal numquam, no noster impedit sea.
 
-### This is header level 3
+### This is a Level 3 Heading
 
 Ex vel habeo iusto. Mea alii commodo saperet et, cu odio scaevola expetendis est. Sed et soluta meliore, porro salutandi no has, in duo atomorum delicatissimi. Duo id omnis reque ocurreret. Recteque pericula convenire pri an, eum habemus mnesarchum no.
 
-#### This is header level 4
+#### This is a Level 4 Heading
 
 Primis feugiat vel ex, at omnis legere accusata eam. At pro vidit timeam consequat. Te augue graecis alienum duo, volumus molestie ex mel, an habeo dictas voluptatibus duo. Ex sit reque libris bonorum.
 
-## Here is a second level 2 header
+## Here is a Second Level 2 Heading
 
 Vim an facilisis intellegat assueverit, erat iudicabit comprehensam ut eos. Sit ne dicunt verear, eum eu appetere pertinacia. Vim omnis atqui ei, pri ea case ipsum suavitate, usu an atqui hendrerit. Noluisse repudiandae et qui, possim fabulas fuisset per ex, nam ut erant molestie pericula. An eam timeam nostrud elaboraret, duo ex mazim urbanitas. Natum discere ei vel.
 
