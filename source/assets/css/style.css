@@ -135,7 +135,7 @@ pre,code{background:#f2f2f2;font-family:'Inconsolata-g',monospace;}
 .book .book-body .book-body-content h2,
 .book .book-body .book-body-content h3,
 .book .book-body .book-body-content h4{position:relative;margin-top:1em;margin-bottom:16px;font-weight:bold;line-height:1.4}
-.book .book-body .book-body-content h2{border-bottom:1px solid #eee;padding-bottom:.25em;}
+.book .book-body .book-body-content h2{border-bottom:1px solid #e5e5e5;padding-bottom:.25em;}
 
 .book .book-body .book-body-content h1{font-size:2.8em;}
 .book .book-body .book-body-content h2{font-size:2em;}
@@ -206,6 +206,7 @@ gitbook.io uses javascript to insert 15px right margin on element.style
 .book.color-theme-1 .book-body{color:#704214;background:#f3eacb;}
 .book.color-theme-1 .book-body .book-body-content {background:#f3eacb;}
 .book.color-theme-1 .book-body .book-body-content {color:#704214;}
+.book.color-theme-1 .book-body .book-body-content h2{border-bottom:1px solid rgba(0,0,0,0.1);}
 .book.color-theme-1 .book-body .book-body-content pre{background:#fdf6e3;color:#657b83;border-color:#f8df9c;}
 .book.color-theme-1 .book-body .book-body-content code{background:#fdf6e3;color:#657b83;border-color:#f8df9c;}
 .book.color-theme-2 .book-header{color:#7e888b;background:#1d1f21;}
@@ -226,6 +227,7 @@ gitbook.io uses javascript to insert 15px right margin on element.style
 .book.color-theme-2 .book-body{color:#a4b1b1;background:#1d1f21;}
 .book.color-theme-2 .book-body .book-body-content {background:#1d1f21;}
 .book.color-theme-2 .book-body .book-body-content {color:#a4b1b1;}
+.book.color-theme-2 .book-body .book-body-content h2{border-bottom:1px solid rgba(164, 177, 177, 0.4);}
 .book.color-theme-2 .book-body .book-body-content pre{background:black;color:#eaeaea;border-color:#000;}
 .book.color-theme-2 .book-body .book-body-content code{background:black;color:#eaeaea;border-color:#000;}
 .book.color-theme-2 .book-body .navigation{color:rgba(255,255,255,0.4);}
