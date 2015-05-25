@@ -1,12 +1,15 @@
-domready(function () {
-  // Shorten "document.getElementById" variable
-  var id = function(e) {return document.getElementById(e);};
-  // Shorten local storage variables
-  // if encounter trouble, switch to https://github.com/nbubna/store
-  var removeStor = function(key) {return localStorage.removeItem(key);};
-  var setStor = function(key, value) {return localStorage.setItem(key, value);};
-  var getStor = function(key) {return localStorage.getItem(key);};
+/*CSSClass https://github.com/EarMaster/CSSClass (c) Nico Wiedemann*/
+(function(){Array.prototype.CSSClassIndexOf=Array.prototype.indexOf||function(a){for(var b=this.length,e=0;e<b;e++)if(this[e]===a)return e;return-1};var d="classList"in document.createElement("a"),c=Element.prototype;d?(c.hasClass||(c.hasClass=function(a){var b=!0;Array.prototype.slice.call(this.classList);a=a.split(" ");for(var e=0;e<a.length;e++)this.classList.contains(a[e])||(b=!1);return b}),c.addClass||(c.addClass=function(a){a=a.split(" ");for(var b=0;b<a.length;b++)this.hasClass(a[b])||this.classList.add(a[b]); return this}),c.removeClass||(c.removeClass=function(a){this.className.split(" ");a=a.split(" ");for(var b=0;b<a.length;b++)this.hasClass(a[b])&&this.classList.remove(a[b]);return this}),c.toggleClass||(c.toggleClass=function(a){a=a.split(" ");for(var b=0;b<a.length;b++)this.classList.toggle(a[b]);return this})):(c.hasClass||(c.hasClass=function(a){var b=!0,e=this.className.split(" ");a=a.split(" ");for(var c=0;c<a.length;c++)-1===e.CSSClassIndexOf(a[c])&&(b=!1);return b}),c.addClass||(c.addClass= function(a){a=a.split(" ");for(var b=0;b<a.length;b++)this.hasClass(a[b])||(this.className=""!==this.className?this.className+" "+a[b]:a[b]);return this}),c.removeClass||(c.removeClass=function(a){var b=this.className.split(" ");a=a.split(" ");for(var c=0;c<a.length;c++)this.hasClass(a[c])&&b.splice(b.CSSClassIndexOf(a[c]),1);this.className=b.join(" ");return this}),c.toggleClass||(c.toggleClass=function(a){a=a.split(" ");for(var b=0;b<a.length;b++)this.hasClass(a[b])?this.removeClass(a[b]):this.addClass(a[b]); return this}));d=NodeList.prototype;d.hasClass||(d.hasClass=function(a,b){void 0===b&&(b=!0);for(var c=0,d=b?!0:!1;(b&&!0===d||!b&&!1===d)&&c<this.length;++c)d=this[c].hasClass(a);return d});d.addClass||(d.addClass=function(a){for(var b=0;b<this.length;++b)this[b].addClass(a)});d.removeClass||(d.removeClass=function(a){for(var b=0;b<this.length;++b)this[b].removeClass(a)});d.toggleClass||(d.toggleClass=function(a){for(var b=0;b<this.length;++b)this[b].toggleClass(a)})})();
+/*END CssClass*/
 
+// Shorten "document.getElementById" variable
+var id = function(e) {return document.getElementById(e);};
+// Shorten local storage variables. If encounter trouble, switch to https://github.com/nbubna/store
+var removeStor = function(key) {return localStorage.removeItem(key);};
+var setStor = function(key, value) {return localStorage.setItem(key, value);};
+var getStor = function(key) {return localStorage.getItem(key);};
+
+document.addEventListener("DOMContentLoaded", function(event) {
   // toggle main menu and use localstorage for persistence
   id("toggle-summary").onclick = function() {
     if(id("book").hasClass("with-summary")) {
@@ -129,5 +132,4 @@ domready(function () {
     url = document.location.href; // Stores new url so it can be removed later
     url = url.substring(url.lastIndexOf("/") + 1, url.length);
   }
-
 });
