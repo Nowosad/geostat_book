@@ -1,4 +1,5 @@
 /*CSSClass https://github.com/EarMaster/CSSClass (c) Nico Wiedemann*/
+// Provides .hasClass(), .addClass(), .removeClass() and .toggleClass()
 (function(){Array.prototype.CSSClassIndexOf=Array.prototype.indexOf||function(a){for(var b=this.length,e=0;e<b;e++)if(this[e]===a)return e;return-1};var d="classList"in document.createElement("a"),c=Element.prototype;d?(c.hasClass||(c.hasClass=function(a){var b=!0;Array.prototype.slice.call(this.classList);a=a.split(" ");for(var e=0;e<a.length;e++)this.classList.contains(a[e])||(b=!1);return b}),c.addClass||(c.addClass=function(a){a=a.split(" ");for(var b=0;b<a.length;b++)this.hasClass(a[b])||this.classList.add(a[b]); return this}),c.removeClass||(c.removeClass=function(a){this.className.split(" ");a=a.split(" ");for(var b=0;b<a.length;b++)this.hasClass(a[b])&&this.classList.remove(a[b]);return this}),c.toggleClass||(c.toggleClass=function(a){a=a.split(" ");for(var b=0;b<a.length;b++)this.classList.toggle(a[b]);return this})):(c.hasClass||(c.hasClass=function(a){var b=!0,e=this.className.split(" ");a=a.split(" ");for(var c=0;c<a.length;c++)-1===e.CSSClassIndexOf(a[c])&&(b=!1);return b}),c.addClass||(c.addClass= function(a){a=a.split(" ");for(var b=0;b<a.length;b++)this.hasClass(a[b])||(this.className=""!==this.className?this.className+" "+a[b]:a[b]);return this}),c.removeClass||(c.removeClass=function(a){var b=this.className.split(" ");a=a.split(" ");for(var c=0;c<a.length;c++)this.hasClass(a[c])&&b.splice(b.CSSClassIndexOf(a[c]),1);this.className=b.join(" ");return this}),c.toggleClass||(c.toggleClass=function(a){a=a.split(" ");for(var b=0;b<a.length;b++)this.hasClass(a[b])?this.removeClass(a[b]):this.addClass(a[b]); return this}));d=NodeList.prototype;d.hasClass||(d.hasClass=function(a,b){void 0===b&&(b=!0);for(var c=0,d=b?!0:!1;(b&&!0===d||!b&&!1===d)&&c<this.length;++c)d=this[c].hasClass(a);return d});d.addClass||(d.addClass=function(a){for(var b=0;b<this.length;++b)this[b].addClass(a)});d.removeClass||(d.removeClass=function(a){for(var b=0;b<this.length;++b)this[b].removeClass(a)});d.toggleClass||(d.toggleClass=function(a){for(var b=0;b<this.length;++b)this[b].toggleClass(a)})})();
 /*END CssClass*/
 
@@ -8,39 +9,45 @@ var id = function(e) {return document.getElementById(e);};
 var removeStor = function(key) {return localStorage.removeItem(key);};
 var setStor = function(key, value) {return localStorage.setItem(key, value);};
 var getStor = function(key) {return localStorage.getItem(key);};
+// Store window width
+var width = window.innerWidth
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  var width = window.innerWidth
+  // Open summary on new page if user previously had it open
+  if (getStor("with-summary") != null) {
+    id("book").addClass("with-summary");
+  }
 
-  // toggle main menu and use localstorage for persistence
+  // toggle summary and use localstorage for persistence
   id("toggle-summary").onclick = function() {
-    if(id("book").hasClass("with-summary")) {
-      id("book").removeClass("with-summary");
-      removeStor("with-summary");
-    } else{
-      id("book").addClass("with-summary");
-      setStor("with-summary", "0");
+    width = window.innerWidth
+    id("book").toggleClass("with-summary");
+    // Summary can stay open if using a large screen
+    if (width > 675) {
+      if(id("book").hasClass("with-summary")) {
+        setStor("with-summary", "0");
+      } else{
+        id("book").removeClass("with-summary");
+        removeStor("with-summary");
+      }
     }
-    // remove font-settings menu when clicked
-    if(id("font-settings-dropdown").hasClass("open")) {
+    // remove font-settings menu when summary is clicked
+    if (id("font-settings-dropdown").hasClass("open")) {
       id("font-settings-dropdown").removeClass("open");
     }
   }
-    if (getStor("with-summary") != null) {
-      id("book").addClass("with-summary");
-    }
 
   // toggle font-settings menu and remove when clicked elsewhere
   id("toggle-font-settings").onclick = function() {
     id("font-settings-dropdown").toggleClass("open");
   }
-    // must separate as just using body immediately reverts
+  // Remove font-settings if click elsewhere
   id("book-summary").onclick = function() {
     id("font-settings-dropdown").removeClass("open");
   }
   id("book-body").onclick = function() {
     id("font-settings-dropdown").removeClass("open");
-    // Remove summary if click on body for small screens
+    // Remove summary if click on body for a small screen
     width = window.innerWidth
     if (width < 675) {
       id("book").removeClass("with-summary");
@@ -133,9 +140,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.querySelector('ul.summary a[href$="'+url+'"]').parentNode.addClass('active'); // Adds active class to highlight toc
   // This is code for when a hash is added to the url
   window.onhashchange = function () {
-  	// Remove summary if hash change for mobile devices
-  	width = window.innerWidth
-  	if (width < 675) {
+    // Remove summary if hash change for a small screen
+    width = window.innerWidth
+    if (width < 675) {
       id("book").removeClass("with-summary");
       removeStor("with-summary");
     }
