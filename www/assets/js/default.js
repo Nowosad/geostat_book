@@ -30,15 +30,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   // toggle font-settings menu and remove when clicked elsewhere
   id("toggle-font-settings").onclick = function() {
-      id("font-settings-dropdown").toggleClass("open");
-    }
+    id("font-settings-dropdown").toggleClass("open");
+  }
     // must separate as just using body immediately reverts
-    id("book-summary").onclick = function() {
-      id("font-settings-dropdown").removeClass("open");
+  id("book-summary").onclick = function() {
+    id("font-settings-dropdown").removeClass("open");
+  }
+  id("book-body").onclick = function() {
+    id("font-settings-dropdown").removeClass("open");
+    var width = window.innerWidth
+    if (width < 500) { // Remove summary if click on body for mobile devices
+      id("book").removeClass("with-summary");
+      removeStor("with-summary");
     }
-    id("book-body").onclick = function() {
-      id("font-settings-dropdown").removeClass("open");
-    }
+  }
 
   // toggle font-settings normal size and use localstorage for persistence
   id("reduce-font-size").onclick = function() {
@@ -47,9 +52,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     removeStor("font-size-2");
     setStor("font-size-1", "0");
   }
-    if (getStor("font-size-1") != null) {
-      id("book").addClass("font-size-1");
-    }
+  if (getStor("font-size-1") != null) {
+    id("book").addClass("font-size-1");
+  }
 
   // toggle font-settings larger size and use localstorage for persistence
   id("enlarge-font-size").onclick = function() {
@@ -58,10 +63,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     removeStor("font-size-1");
     setStor("font-size-2", "0");
   }
-    if (getStor("font-size-2") != null) {
-      id("book").addClass("font-size-2");
-      id("book").removeClass("font-size-1");
-    }
+  if (getStor("font-size-2") != null) {
+    id("book").addClass("font-size-2");
+    id("book").removeClass("font-size-1");
+  }
 
   // toggle font-settings serif and use localstorage for persistence
   id("serif").onclick = function() {
@@ -70,10 +75,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     removeStor("font-family-1");
     setStor("font-family-0", "0");
   }
-    if (getStor("font-family-0") != null) {
-      id("book").addClass("font-family-0");
-      id("book").removeClass("font-family-1");
-    }
+  if (getStor("font-family-0") != null) {
+    id("book").addClass("font-family-0");
+    id("book").removeClass("font-family-1");
+  }
 
   // toggle font-settings sans and use localstorage for persistence
   id("sans").onclick = function() {
@@ -82,9 +87,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     removeStor("font-family-0");
     setStor("font-family-1", "0");
   }
-    if (getStor("font-family-1") != null) {
-      id("book").addClass("font-family-1");
-    }
+  if (getStor("font-family-1") != null) {
+    id("book").addClass("font-family-1");
+  }
 
   // toggle font-settings white background
   id("color-theme-preview-0").onclick = function() {
@@ -101,10 +106,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     setStor('color-theme-1','0');
     removeStor('color-theme-2');
   }
-    if (getStor("color-theme-1") != null) {
-      id("book").addClass("color-theme-1");
-      id("book").removeClass("color-theme-2");
-    }
+  if (getStor("color-theme-1") != null) {
+    id("book").addClass("color-theme-1");
+    id("book").removeClass("color-theme-2");
+  }
 
   // toggle font-settings dark background and use localstorage for persistence
   id("color-theme-preview-2").onclick = function() {
@@ -113,19 +118,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
     setStor('color-theme-2','0');
     removeStor('color-theme-1');
   }
-    if (getStor("color-theme-2") != null) {
-      id("book").addClass("color-theme-2");
-      id("book").removeClass("color-theme-1");
-    }
+  if (getStor("color-theme-2") != null) {
+    id("book").addClass("color-theme-2");
+    id("book").removeClass("color-theme-1");
+  }
   
   // Add active class to highlight current page on toc
-  // Here is code for when the page loads
+  // This is code for when the page loads
   var url = document.location.href; // Stores url
   url = url.substring(url.lastIndexOf("/") + 1, url.length); // Removes everything before the last slash in the path
   document.querySelector('ul.summary a[href$="'+url+'"]').parentNode.addClass('active'); // Adds active class to highlight toc
-  // Here is code for when a hash is added to the url
+  // This is code for when a hash is added to the url
   window.onhashchange = function () {
-  	document.querySelector('ul.summary a[href$="'+url+'"]').parentNode.removeClass('active'); // Remove the active class from old url
+    document.querySelector('ul.summary a[href$="'+url+'"]').parentNode.removeClass('active'); // Remove the active class from old url
     var hashurl = document.location.href; // Store new hash url
     hashurl = hashurl.substring(hashurl.lastIndexOf("/") + 1, hashurl.length);
     document.querySelector('ul.summary a[href$="'+hashurl+'"]').parentNode.addClass('active');
