@@ -38,8 +38,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }
   id("book-body").onclick = function() {
     id("font-settings-dropdown").removeClass("open");
+    // Remove summary if click on body for mobile devices
     var width = window.innerWidth
-    if (width < 500) { // Remove summary if click on body for mobile devices
+    if (width < 500) {
       id("book").removeClass("with-summary");
       removeStor("with-summary");
     }
