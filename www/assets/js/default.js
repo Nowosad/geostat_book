@@ -10,6 +10,8 @@ var setStor = function(key, value) {return localStorage.setItem(key, value);};
 var getStor = function(key) {return localStorage.getItem(key);};
 
 document.addEventListener("DOMContentLoaded", function(event) {
+  var width = window.innerWidth
+
   // toggle main menu and use localstorage for persistence
   id("toggle-summary").onclick = function() {
     if(id("book").hasClass("with-summary")) {
@@ -38,9 +40,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }
   id("book-body").onclick = function() {
     id("font-settings-dropdown").removeClass("open");
-    // Remove summary if click on body for mobile devices
-    var width = window.innerWidth
-    if (width < 500) {
+    // Remove summary if click on body for small screens
+    width = window.innerWidth
+    if (width < 675) {
       id("book").removeClass("with-summary");
       removeStor("with-summary");
     }
@@ -131,6 +133,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.querySelector('ul.summary a[href$="'+url+'"]').parentNode.addClass('active'); // Adds active class to highlight toc
   // This is code for when a hash is added to the url
   window.onhashchange = function () {
+  	// Remove summary if hash change for mobile devices
+  	width = window.innerWidth
+  	if (width < 675) {
+      id("book").removeClass("with-summary");
+      removeStor("with-summary");
+    }
     document.querySelector('ul.summary a[href$="'+url+'"]').parentNode.removeClass('active'); // Remove the active class from old url
     var hashurl = document.location.href; // Store new hash url
     hashurl = hashurl.substring(hashurl.lastIndexOf("/") + 1, hashurl.length);
