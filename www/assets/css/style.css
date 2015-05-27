@@ -29,7 +29,7 @@ a:focus{outline:thin dotted #333;outline:5px auto;outline-offset:-2px;}
 h1{font-family:inherit;font-weight:400;}
 pre,code{background:#f2f2f2;font-family:'Inconsolata-g',monospace;}
 
-.btn{display:inline-block;padding:6px 12px;margin-bottom:0;font-size:14px;font-weight:normal;line-height:1.428571429;text-align:center;vertical-align:middle;cursor:pointer;border:1px solid transparent;border-radius:1px;white-space:nowrap;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+.btn{display:inline-block;padding:6px 12px;margin-bottom:0;font-size:14px;font-weight:normal;line-height:1.428571429;text-align:center;vertical-align:middle;cursor:pointer;border:1px solid transparent;border-radius:1px;white-space:nowrap;user-select:none;}
 .btn:focus{outline:thin dotted #333;outline:5px auto;outline-offset:-2px;}
 .btn:hover,
 .btn:focus{color:#333;text-decoration:none;}
@@ -59,9 +59,8 @@ pre,code{background:#f2f2f2;font-family:'Inconsolata-g',monospace;}
 .list-group-item:last-child{margin-bottom:0;border-bottom-right-radius:1px;border-bottom-left-radius:1px;}
 .pull-right{float:right!important;}
 .pull-left{float:left!important;}
-@-ms-viewport{width:device-width;}
-@media screen and (max-width:400px) {@  -ms-viewport {width: 320px;}}
-.fa{display:inline-block;font-family:'FontAwesome';font-style:normal;font-weight:normal;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+
+.fa{display:inline-block;font-family:'FontAwesome';font-style:normal;font-weight:normal;line-height:1;}
 .pull-right{float:right;}
 .pull-left{float:left;}
 .fa-font:before{content:"\f031";}
@@ -72,7 +71,7 @@ pre,code{background:#f2f2f2;font-family:'Inconsolata-g',monospace;}
 .fa-times:before{content:"\f00d";}
 
 .book .book-header{font-family:'SourceSansPro',sans-serif;position:absolute;overflow:visible;top:0;right:0;left:0;height:50px;z-index:2;font-size:1em;color:#7e888b;background:#fff;border-bottom:1px solid rgba(0,0,0,0.07);}
-.book .book-header .btn{display:block;height:50px;padding:0 15px;border-bottom:0;color:#7e888b;text-transform:uppercase;line-height:50px;-webkit-box-shadow:none!important;box-shadow:none!important;position:relative;}
+.book .book-header .btn{display:block;height:50px;padding:0 15px;border-bottom:0;color:#7e888b;text-transform:uppercase;line-height:50px;box-shadow:none!important;position:relative;}
 .book .book-header .btn:hover{position:relative;text-decoration:none;color:#151515;background:#f0f2f4;}
 .book .book-header h1{margin:0;font-size:20px;text-align:center;line-height:50px;padding-left:25px;padding-right:25px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .book .book-header h1 a,
