@@ -1,7 +1,7 @@
 library(rmarkdown)
 
 # Read in toc, create file names, and remove old build folder.
-rmdFileNames <- read.csv("rmd/toc.csv", header = FALSE)
+rmdFileNames <- read.csv("rmd/_toc.csv", header = FALSE)
 rmdFileNames <- as.character(rmdFileNames$V1)
 htmlFileNames <- gsub(".rmd", ".html", rmdFileNames, fixed = TRUE)
 rmdFileNames <- paste("rmd/", rmdFileNames, sep="")
