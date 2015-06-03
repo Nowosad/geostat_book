@@ -101,7 +101,7 @@ pre{overflow:auto;overflow-x:auto;}
 .book .book-summary ul.summary li a:hover{color:#008cff;background:transparent;text-decoration:none;}
 .book .book-summary ul.summary ol {counter-reset: item; padding:0;}
 .book .book-summary ul.summary ul {padding:0;}
-.book .book-summary ul.summary ol li:before {content: counters(item, ".") ". ";counter-increment: item; float:left; color: #698078; font-weight: bold; padding: 6px 0 6px 0;}
+.book .book-summary ul.summary ol li:before {content: counters(item, ".") ". ";counter-increment: item; float:left; color: #555555; font-weight: bold; padding: 6px 0 6px 0;}
 .book .book-summary ul.summary ol li {padding-left:15px;}
 .book .book-summary ul.summary ol li a {padding-left:5px;}
 .book.with-summary .book-summary{left:0;}
