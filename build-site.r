@@ -8,7 +8,7 @@ rmdFileNames <- paste("rmd/", rmdFileNames, sep="")
 unlink("build", recursive = TRUE)
 
 # Renders the rmd files to html.
-lapply(rmdFileNames, rmarkdown::render, output_dir = "../build")
+lapply(rmdFileNames, rmarkdown::render, output_dir = "build")
 
 # Insert the table of contents and page navigation.
 source("scripts/toc.r")
