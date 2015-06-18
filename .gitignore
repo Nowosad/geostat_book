@@ -3,5 +3,5 @@
 *-tikzDictionary
 figures/
 _cache/
-html/
-pdf/
+/html
+/pdf

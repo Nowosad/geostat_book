@@ -1,0 +1,49 @@
+% Remove header and footer
+\thispagestyle{titlepage}
+
+\begin{center}
+  \newlength{\parSepLength}
+  \setlength{\parSepLength}{10ex}
+
+  \Large
+  \centering
+
+  % Main title
+  \thinRule\par
+  \par\vspace{0.15\parSepLength}
+  \begin{minipage}{\textwidth}
+    \centering
+    \fontsize{37pt}{33pt}\selectfont\titleColor\scshape
+    \makeatletter
+    \mytitle
+    \makeatother
+    \par\vspace{0.25\parSepLength}
+    \fontsize{17pt}{13pt}\selectfont\titleColor\scshape
+    \makeatletter
+    \mysubtitle
+    \makeatother
+  \end{minipage}
+  \par\vspace{0.25\parSepLength}
+  \par\thinRule
+
+
+  \vfill
+
+  % Author
+  \begin{minipage}{\textwidth}
+    \centering
+    \Large
+    \makeatletter
+    \myauthor
+    \makeatother
+  \end{minipage}
+
+  \vfill
+
+  % Logo and other info
+%  \begin{minipage}{0.8\textwidth}
+%    \centering
+%    \small
+%    Last Updated \today
+%  \end{minipage}
+\end{center}
