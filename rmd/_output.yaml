@@ -1,16 +1,23 @@
-html_document:
+rbook_html:
   smart: true
   self_contained: false
-  lib_dir: ../www/assets
-  template: ../www/templates/default.html
+  lib_dir: ../build/html/assets
+  template: ../build/html/templates/default.html
   theme: null
   highlight: null
   mathjax: null
   pandoc_args: [
-      "--metadata", "booktitle=Book Title",
-      "--metadata", "link1=http://example.org",
-      "--metadata", "linktext1=example.org",
-      "--metadata", "link2=http://example.org",
-      "--metadata", "linktext2=example.org",
-      "--metadata", "lang=en",
-    ]
+    "--metadata", "booktitle=Book Title",
+    "--metadata", "link1=http://example.org",
+    "--metadata", "linktext1=example.org",
+    "--metadata", "link2=http://example.org",
+    "--metadata", "linktext2=example.org",
+    "--metadata", "lang=en",
+  ]
+rbook_tex:
+  template: null
+  keep_tex: yes
+  latex_engine: lualatex
+  pandoc_args: [
+    "--chapters", ""
+  ]

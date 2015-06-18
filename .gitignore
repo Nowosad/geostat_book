@@ -1,3 +1,7 @@
 *.Rhistory
 *.RData
-build/
+*-tikzDictionary
+figures/
+_cache/
+html/
+pdf/

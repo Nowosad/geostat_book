@@ -11,9 +11,9 @@ navFirst <- "<a class=\"navigation navigation-next navigation-unique\" href=\"<!
 navFirst <- sub("<!-- BEGIN href -->", htmlFileNames[2], navFirst, fixed = TRUE)
 
 # Insert page navigation into html file
-htmlFile <- readLines(paste("build/", htmlFileNames[1], sep=""))
+htmlFile <- readLines(paste("html/", htmlFileNames[1], sep=""))
 htmlFile <- sub("<!-- BEGIN page-nav -->", navFirst, htmlFile, fixed = TRUE)
-writeLines(htmlFile, paste("build/", htmlFileNames[1], sep=""))
+writeLines(htmlFile, paste("html/", htmlFileNames[1], sep=""))
 
 #===============================================================================
 # Page navigation for the middle pages
@@ -28,9 +28,9 @@ if (length(htmlFileNames) > 2) {
     navMiddle <- sub("<!-- BEGIN href-next -->", htmlFileNames[i+1], navMiddle, fixed = TRUE)
     
     # Insert page navigation into html file
-    htmlFile <- readLines(paste("build/", htmlFileNames[i], sep=""))
+    htmlFile <- readLines(paste("html/", htmlFileNames[i], sep=""))
     htmlFile <- sub("<!-- BEGIN page-nav -->", navMiddle, htmlFile, fixed = TRUE)
-    writeLines(htmlFile, paste("build/", htmlFileNames[i], sep=""))
+    writeLines(htmlFile, paste("html/", htmlFileNames[i], sep=""))
   }
 }
 
@@ -44,6 +44,6 @@ navLast <- "<a class=\"navigation navigation-prev navigation-unique\" href=\"<!-
 navLast <- sub("<!-- BEGIN href -->", htmlFileNames[length(htmlFileNames)-1], navLast, fixed = TRUE)
 
 # Insert page navigation into html file
-htmlFile <- readLines(paste("build/", htmlFileNames[length(htmlFileNames)], sep=""))
+htmlFile <- readLines(paste("html/", htmlFileNames[length(htmlFileNames)], sep=""))
 htmlFile <- sub("<!-- BEGIN page-nav -->", navLast, htmlFile, fixed = TRUE)
-writeLines(htmlFile, paste("build/", htmlFileNames[length(htmlFileNames)], sep=""))
+writeLines(htmlFile, paste("html/", htmlFileNames[length(htmlFileNames)], sep=""))

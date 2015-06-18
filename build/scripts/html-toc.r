@@ -133,7 +133,7 @@ toc <- paste(toc, "</ol>\n</li>\n", sep = "")
 
 # Insert toc into html file
 for (i in 1:length(htmlFileNames)) {
-  htmlFile <- readLines(paste("build/", htmlFileNames[i], sep=""))
+  htmlFile <- readLines(paste("html/", htmlFileNames[i], sep=""))
   htmlFile <- sub("<!-- BEGIN toc -->", toc, htmlFile, fixed = TRUE)
-  writeLines(htmlFile, paste("build/", htmlFileNames[i], sep=""))
+  writeLines(htmlFile, paste("html/", htmlFileNames[i], sep=""))
 }
