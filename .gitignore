@@ -5,3 +5,4 @@ figures/
 _cache/
 /html
 /pdf
+.Rproj.user
