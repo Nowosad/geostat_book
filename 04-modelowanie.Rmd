@@ -112,7 +112,7 @@ ve_fit <- as.vgm.variomodel(v_eye[[1]])
 ```{r }
 library('raster')
 library('gstat')
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
 plot(vario)
 model_nug <- vgm(10, model = 'Nug')
 model_nug
@@ -126,7 +126,7 @@ plot(vario, model=fitted_nug)
 ### Modelowanie izotropowe | Model sferyczny
 
 ```{r }
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
 plot(vario)
 model_sph <- vgm(psill=15, model = 'Sph', range=2500)
 model_sph
@@ -140,9 +140,9 @@ plot(vario, model=fitted_sph)
 ### Modelowanie izotropowe | Model Gaussowski
 
 ```{r }
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
 plot(vario)
-model_gau <- vgm(psill=15, model = 'Gau', range=900)
+model_gau <- vgm(psill=15, model = 'Gau', range=3000)
 model_gau
 plot(vario, model=model_gau)
 fitted_gau <- fit.variogram(vario, model_gau)
@@ -154,7 +154,7 @@ plot(vario, model=fitted_gau)
 ### Modelowanie izotropowe | Model potęgowy
 
 ```{r }
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
 plot(vario)
 model_pow <- vgm(psill=2, model = 'Pow', range=0.25)
 model_pow
@@ -168,7 +168,7 @@ plot(vario, model=fitted_pow)
 ### Modelowanie izotropowe | Model wykładniczy
 
 ```{r }
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
 plot(vario)
 model_exp <- vgm(psill=15, model = 'Exp', range=900)
 model_exp
@@ -182,7 +182,7 @@ plot(vario, model=fitted_exp)
 ### Modelowanie izotropowe | Modele złożone I
 
 ```{r }
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
 model_zl1 <- vgm(psill=10, model = 'Sph', range = 9000, add.to = vgm(9, "Nug"))
 model_zl1
 fitted_zl1 <- fit.variogram(vario, model_zl1)
@@ -194,13 +194,12 @@ plot(vario, model=fitted_zl1)
 ### Modelowanie izotropowe | Modele złożone II
 
 ```{r }
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
-model_zl2 <- vgm(10, model = 'Sph', range = 4000, add.to = vgm(5, "Gau", 8000, nugget = 5))
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
+model_zl2 <- vgm(8, "Gau", 7000, add.to = vgm(10, model = 'Sph', range = 2000, nugget = 4))
 model_zl2
 fitted_zl2 <- fit.variogram(vario, model_zl2)
 plot(vario, model=fitted_zl2)
 ```
-
 
 ## Modelowanie anizotropowe
 
@@ -212,15 +211,13 @@ plot(vario, model=fitted_zl2)
 
 
 ```{r }
-vario_map <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=8000, width=500, map=TRUE)
+vario_map <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=12000, width=1200, map=TRUE)
 plot(vario_map)
 vario_kier <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, alpha = c(60, 105, 150, 195), cutoff=20000)
 plot(vario_kier, plot.numbers=TRUE)
 vario_kier_fit <- vgm(psill=10, model="Sph", range=10000, nugget=8, anis = c(60, .25))
 plot(vario_kier, vario_kier_fit, as.table=TRUE)
 ```
-
-
 
 ## Modelowanie krossemiwariogramów
 ### Modelowanie krossemiwariogramów | *fit.lmc*
@@ -243,14 +240,4 @@ g_fit <- fit.lmc(v, g, fit.ranges = FALSE, fit.method=1)
 g_fit
 plot(v, g_fit)
 ```
-
-
-<!--
-
-```{r }
-vgm_map <- variogram(g, cutoff=10000, width=500, map=TRUE)
-plot(vgm_map, threshold=30)
-```
-
--->
 
