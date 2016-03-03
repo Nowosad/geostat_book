@@ -10,7 +10,7 @@ bookdown::gitbook:
       after: |
         <li><a href="https://www.nowosad.github.io" target="blank">Jakub Nowosad 2016</a></li>
     edit:
-      link: https://gitlab.com/nowosad/geostat_book/edit/blob/master/%s
+      link: https://gitlab.com/nowosad/geostat_book/edit/master/%s
       text: "Edycja"
 bookdown::pdf_book:
   includes:
