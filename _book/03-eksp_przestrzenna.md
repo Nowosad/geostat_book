@@ -271,7 +271,7 @@ http://www.inside-r.org/packages/cran/raster/docs/interpolate
 
 
 
-![](fig_skrypt/diag.png)
+![](figs/diag.png)
 
 ### Geostatystyka | Dane wejściowe
 1. Wystarczająca duża liczba punktów (minimalnie >30, ale zazwyczaj więcej niż 100/150)

@@ -381,7 +381,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="symulacje.html#sekwencyjna-symulacja-danych-kodowanych-ang.-sequential-indicator-simulation-1"><span class="toc-section-number">13.5.1</span> Sekwencyjna symulacja danych kodowanych (ang. <em>Sequential indicator simulation</em>)</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="14" data-path="references-1.html"><a href="references-1.html"><i class="fa fa-check"></i><b>14</b> References</a></li>
+<li class="chapter" data-level="14" data-path="bibliografia.html"><a href="bibliografia.html"><i class="fa fa-check"></i><b>14</b> Bibliografia</a></li>
 <li class="divider"></li>
 <li><a href="https://www.nowosad.github.io" target="blank">Jakub Nowosad 2016</a></li>
 
@@ -529,7 +529,7 @@ ve_fit &lt;-<span class="st"> </span><span class="kw">as.vgm.variomodel</span>(v
 <h3><span class="header-section-number">5.4.2</span> Modelowanie izotropowe | Model nuggetowy</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;raster&#39;</span>)
 <span class="kw">library</span>(<span class="st">&#39;gstat&#39;</span>)
-vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los, <span class="dt">cutoff=</span><span class="dv">20000</span>)
+vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los)
 <span class="kw">plot</span>(vario)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-5-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_nug &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Nug&#39;</span>)
@@ -541,13 +541,13 @@ model_nug</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_nug &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_nug)
 fitted_nug</code></pre></div>
 <pre><code>##   model    psill range
-## 1   Nug 13.46823     0</code></pre>
+## 1   Nug 12.60929     0</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_nug)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-5-3.png" alt="" /><!-- --></p>
 </div>
 <div id="modelowanie-izotropowe-model-sferyczny" class="section level3">
 <h3><span class="header-section-number">5.4.3</span> Modelowanie izotropowe | Model sferyczny</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los, <span class="dt">cutoff=</span><span class="dv">20000</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los)
 <span class="kw">plot</span>(vario)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-6-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_sph &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">15</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range=</span><span class="dv">2500</span>)
@@ -559,31 +559,31 @@ model_sph</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_sph &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_sph)
 fitted_sph</code></pre></div>
 <pre><code>##   model    psill    range
-## 1   Sph 15.92886 1807.716</code></pre>
+## 1   Sph 14.88507 1298.071</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_sph)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-6-3.png" alt="" /><!-- --></p>
 </div>
 <div id="modelowanie-izotropowe-model-gaussowski" class="section level3">
 <h3><span class="header-section-number">5.4.4</span> Modelowanie izotropowe | Model Gaussowski</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los, <span class="dt">cutoff=</span><span class="dv">20000</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los)
 <span class="kw">plot</span>(vario)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-7-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_gau &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">15</span>, <span class="dt">model =</span> <span class="st">&#39;Gau&#39;</span>, <span class="dt">range=</span><span class="dv">900</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_gau &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">15</span>, <span class="dt">model =</span> <span class="st">&#39;Gau&#39;</span>, <span class="dt">range=</span><span class="dv">3000</span>)
 model_gau</code></pre></div>
 <pre><code>##   model psill range
-## 1   Gau    15   900</code></pre>
+## 1   Gau    15  3000</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>model_gau)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-7-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_gau &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_gau)
 fitted_gau</code></pre></div>
 <pre><code>##   model    psill    range
-## 1   Gau 15.99224 695.0783</code></pre>
+## 1   Gau 14.93177 590.2896</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_gau)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-7-3.png" alt="" /><!-- --></p>
 </div>
 <div id="modelowanie-izotropowe-model-potegowy" class="section level3">
 <h3><span class="header-section-number">5.4.5</span> Modelowanie izotropowe | Model potęgowy</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los, <span class="dt">cutoff=</span><span class="dv">20000</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los)
 <span class="kw">plot</span>(vario)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-8-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_pow &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">2</span>, <span class="dt">model =</span> <span class="st">&#39;Pow&#39;</span>, <span class="dt">range=</span><span class="fl">0.25</span>)
@@ -595,13 +595,13 @@ model_pow</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_pow &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_pow)
 fitted_pow</code></pre></div>
 <pre><code>##   model    psill     range
-## 1   Pow 2.017736 0.2486255</code></pre>
+## 1   Pow 1.827893 0.2613741</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_pow)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-8-3.png" alt="" /><!-- --></p>
 </div>
 <div id="modelowanie-izotropowe-model-wykadniczy" class="section level3">
 <h3><span class="header-section-number">5.4.6</span> Modelowanie izotropowe | Model wykładniczy</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los, <span class="dt">cutoff=</span><span class="dv">20000</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los)
 <span class="kw">plot</span>(vario)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-9-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_exp &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">15</span>, <span class="dt">model =</span> <span class="st">&#39;Exp&#39;</span>, <span class="dt">range=</span><span class="dv">900</span>)
@@ -613,13 +613,13 @@ model_exp</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_exp &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_exp)
 fitted_exp</code></pre></div>
 <pre><code>##   model    psill    range
-## 1   Exp 17.04506 943.5193</code></pre>
+## 1   Exp 16.32313 755.2052</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_exp)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-9-3.png" alt="" /><!-- --></p>
 </div>
 <div id="modelowanie-izotropowe-modele-zozone-i" class="section level3">
 <h3><span class="header-section-number">5.4.7</span> Modelowanie izotropowe | Modele złożone I</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los, <span class="dt">cutoff=</span><span class="dv">20000</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los)
 model_zl1 &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">9000</span>, <span class="dt">add.to =</span> <span class="kw">vgm</span>(<span class="dv">9</span>, <span class="st">&quot;Nug&quot;</span>))
 model_zl1</code></pre></div>
 <pre><code>##   model psill range
@@ -628,20 +628,20 @@ model_zl1</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_zl1 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_zl1)
 fitted_zl1</code></pre></div>
 <pre><code>##   model     psill    range
-## 1   Nug  9.940273     0.00
-## 2   Sph 11.412555 12025.31</code></pre>
+## 1   Nug  9.021726    0.000
+## 2   Sph 11.023669 9009.149</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_zl1)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-10-1.png" alt="" /><!-- --></p>
 </div>
 <div id="modelowanie-izotropowe-modele-zozone-ii" class="section level3">
 <h3><span class="header-section-number">5.4.8</span> Modelowanie izotropowe | Modele złożone II</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los, <span class="dt">cutoff=</span><span class="dv">20000</span>)
-model_zl2 &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4000</span>, <span class="dt">add.to =</span> <span class="kw">vgm</span>(<span class="dv">5</span>, <span class="st">&quot;Gau&quot;</span>, <span class="dv">8000</span>, <span class="dt">nugget =</span> <span class="dv">5</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los)
+model_zl2 &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">8</span>, <span class="st">&quot;Gau&quot;</span>, <span class="dv">7000</span>, <span class="dt">add.to =</span> <span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">2000</span>, <span class="dt">nugget =</span> <span class="dv">4</span>))
 model_zl2</code></pre></div>
 <pre><code>##   model psill range
-## 1   Nug     5     0
-## 2   Gau     5  8000
-## 3   Sph    10  4000</code></pre>
+## 1   Nug     4     0
+## 2   Sph    10  2000
+## 3   Gau     8  7000</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_zl2 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_zl2)
 <span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_zl2)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-11-1.png" alt="" /><!-- --></p>
@@ -657,7 +657,7 @@ model_zl2</code></pre></div>
 <li>Kąt określający dominujący kierunek</li>
 <li>Proporcję anizotropii, czyli relację pomiędzy zasięgiem w dominującym kierunku a zasięgiem w przeciwległym kierunku</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_map &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los, <span class="dt">cutoff=</span><span class="dv">8000</span>, <span class="dt">width=</span><span class="dv">500</span>, <span class="dt">map=</span><span class="ot">TRUE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_map &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los, <span class="dt">cutoff=</span><span class="dv">12000</span>, <span class="dt">width=</span><span class="dv">1200</span>, <span class="dt">map=</span><span class="ot">TRUE</span>)
 <span class="kw">plot</span>(vario_map)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-12-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kier &lt;-<span class="st"> </span><span class="kw">variogram</span>(X2002<span class="fl">.08</span>.20_TPZ~<span class="dv">1</span>, wolin_lato_los, <span class="dt">alpha =</span> <span class="kw">c</span>(<span class="dv">60</span>, <span class="dv">105</span>, <span class="dv">150</span>, <span class="dv">195</span>), <span class="dt">cutoff=</span><span class="dv">20000</span>)
@@ -707,16 +707,6 @@ g_fit</code></pre></div>
 ## TPZ1999.TPZ2002[2]   Sph 10.911990 12000</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(v, g_fit)</code></pre></div>
 <p><img src="04-modelowanie_files/figure-html/unnamed-chunk-13-2.png" alt="" /><!-- --></p>
-<!--
-
-
-```r
-vgm_map <- variogram(g, cutoff=10000, width=500, map=TRUE)
-plot(vgm_map, threshold=30)
-```
-
-![](04-modelowanie_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
-<p>–&gt;</p>
 
 </div>
 </div>
@@ -754,7 +744,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://gitlab.com/nowosad/geostat_book/edit/blob/master/04-modelowanie.Rmd",
+"link": "https://gitlab.com/nowosad/geostat_book/edit/master/04-modelowanie.Rmd",
 "text": "Edycja"
 },
 "download": null,

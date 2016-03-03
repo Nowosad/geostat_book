@@ -8,7 +8,7 @@ bookdown::gitbook:
       before: |
         <li><a href="./">Geostatystyka - skrypt</a></li>
       after: |
-        <li><a href="https://www.nowosad.github.io" target="blank">Jakub Nowosad 2016</a></li>
+        <li><a href="https://nowosad.github.io" target="blank">Jakub Nowosad 2016</a></li>
     edit:
       link: https://gitlab.com/nowosad/geostat_book/edit/master/%s
       text: "Edycja"

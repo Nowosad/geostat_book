@@ -136,7 +136,7 @@ ve_fit <- as.vgm.variomodel(v_eye[[1]])
 ```r
 library('raster')
 library('gstat')
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
 plot(vario)
 ```
 
@@ -165,7 +165,7 @@ fitted_nug
 
 ```
 ##   model    psill range
-## 1   Nug 13.46823     0
+## 1   Nug 12.60929     0
 ```
 
 ```r
@@ -179,7 +179,7 @@ plot(vario, model=fitted_nug)
 
 
 ```r
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
 plot(vario)
 ```
 
@@ -208,7 +208,7 @@ fitted_sph
 
 ```
 ##   model    psill    range
-## 1   Sph 15.92886 1807.716
+## 1   Sph 14.88507 1298.071
 ```
 
 ```r
@@ -222,20 +222,20 @@ plot(vario, model=fitted_sph)
 
 
 ```r
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
 plot(vario)
 ```
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 ```r
-model_gau <- vgm(psill=15, model = 'Gau', range=900)
+model_gau <- vgm(psill=15, model = 'Gau', range=3000)
 model_gau
 ```
 
 ```
 ##   model psill range
-## 1   Gau    15   900
+## 1   Gau    15  3000
 ```
 
 ```r
@@ -251,7 +251,7 @@ fitted_gau
 
 ```
 ##   model    psill    range
-## 1   Gau 15.99224 695.0783
+## 1   Gau 14.93177 590.2896
 ```
 
 ```r
@@ -265,7 +265,7 @@ plot(vario, model=fitted_gau)
 
 
 ```r
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
 plot(vario)
 ```
 
@@ -294,7 +294,7 @@ fitted_pow
 
 ```
 ##   model    psill     range
-## 1   Pow 2.017736 0.2486255
+## 1   Pow 1.827893 0.2613741
 ```
 
 ```r
@@ -308,7 +308,7 @@ plot(vario, model=fitted_pow)
 
 
 ```r
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
 plot(vario)
 ```
 
@@ -337,7 +337,7 @@ fitted_exp
 
 ```
 ##   model    psill    range
-## 1   Exp 17.04506 943.5193
+## 1   Exp 16.32313 755.2052
 ```
 
 ```r
@@ -351,7 +351,7 @@ plot(vario, model=fitted_exp)
 
 
 ```r
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
 model_zl1 <- vgm(psill=10, model = 'Sph', range = 9000, add.to = vgm(9, "Nug"))
 model_zl1
 ```
@@ -369,8 +369,8 @@ fitted_zl1
 
 ```
 ##   model     psill    range
-## 1   Nug  9.940273     0.00
-## 2   Sph 11.412555 12025.31
+## 1   Nug  9.021726    0.000
+## 2   Sph 11.023669 9009.149
 ```
 
 ```r
@@ -384,16 +384,16 @@ plot(vario, model=fitted_zl1)
 
 
 ```r
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=20000)
-model_zl2 <- vgm(10, model = 'Sph', range = 4000, add.to = vgm(5, "Gau", 8000, nugget = 5))
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
+model_zl2 <- vgm(8, "Gau", 7000, add.to = vgm(10, model = 'Sph', range = 2000, nugget = 4))
 model_zl2
 ```
 
 ```
 ##   model psill range
-## 1   Nug     5     0
-## 2   Gau     5  8000
-## 3   Sph    10  4000
+## 1   Nug     4     0
+## 2   Sph    10  2000
+## 3   Gau     8  7000
 ```
 
 ```r
@@ -402,7 +402,6 @@ plot(vario, model=fitted_zl2)
 ```
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
-
 
 ## Modelowanie anizotropowe
 
@@ -415,7 +414,7 @@ plot(vario, model=fitted_zl2)
 
 
 ```r
-vario_map <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=8000, width=500, map=TRUE)
+vario_map <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=12000, width=1200, map=TRUE)
 plot(vario_map)
 ```
 
@@ -434,8 +433,6 @@ plot(vario_kier, vario_kier_fit, as.table=TRUE)
 ```
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-12-3.png)<!-- -->
-
-
 
 ## Modelowanie krossemiwariogramów
 ### Modelowanie krossemiwariogramów | *fit.lmc*
@@ -492,17 +489,4 @@ plot(v, g_fit)
 ```
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-13-2.png)<!-- -->
-
-
-<!--
-
-
-```r
-vgm_map <- variogram(g, cutoff=10000, width=500, map=TRUE)
-plot(vgm_map, threshold=30)
-```
-
-![](04-modelowanie_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
-
--->
 
