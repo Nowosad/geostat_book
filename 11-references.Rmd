@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-`r if (knitr:::is_html_output()) '# References'`
+`r if (knitr:::is_html_output()) '# Bibliografia'`
 
 ```{r include=FALSE}
 # automatically create a bib database for R packages

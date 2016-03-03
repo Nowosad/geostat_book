@@ -430,8 +430,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Matematyczne modelowanie autokorelacji przestrzennej</li>
 <li>Estymacje jednozmienne</li>
 <li>Ocena jakości estymacji</li>
-<li>Wykorzystanie do estymacji danych uzupełniających</li>
-<li>Estymacja lokalnego rozkładu prawdopodobieństwa</li>
+<li>Wykorzystanie do estymacji danych uzupełniających 8. Estymacja lokalnego rozkładu prawdopodobieństwa</li>
 <li>Estymacje wielozmienne</li>
 <li>Symulacje przestrzenne</li>
 </ol>
@@ -536,7 +535,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li>Ramki danych (ang. <em>data.frame</em>) - to zbiór zmiennych (kolumn) oraz obserwacji (wierszy) zawierających różne typt danych</li>
 <li>Macierze (ang. <em>matrix</em>)</li>
-<li>Listy (ang. <em>listy</em>)</li>
+<li>Listy (ang. <em>list</em>)</li>
 </ul>
 </div>
 <div id="reprezentacja-danych-przestrzennych" class="section level3">
@@ -793,11 +792,9 @@ siatka_raster &lt;-<span class="st"> </span><span class="kw">raster</span>(<span
 </div>
 <div id="rastry-1" class="section level3">
 <h3><span class="header-section-number">2.6.4</span> Rastry</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;raster&#39;</span>); <span class="kw">library</span>(<span class="st">&#39;rasterVis&#39;</span>)</code></pre></div>
-<pre><code>## Loading required package: lattice</code></pre>
-<pre><code>## Loading required package: latticeExtra</code></pre>
-<pre><code>## Loading required package: RColorBrewer</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">levelplot</span>(siatka_raster, <span class="dt">margin=</span><span class="ot">FALSE</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;raster&#39;</span>)
+<span class="kw">library</span>(<span class="st">&#39;rasterVis&#39;</span>)
+<span class="kw">levelplot</span>(siatka_raster, <span class="dt">margin=</span><span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="01-wprowadzenie_files/figure-html/unnamed-chunk-12-1.png" alt="" /><!-- --></p>
 </div>
 </div>
@@ -806,7 +803,7 @@ siatka_raster &lt;-<span class="st"> </span><span class="kw">raster</span>(<span
 <div id="siatki-regularne-1" class="section level3">
 <h3><span class="header-section-number">2.7.1</span> Siatki regularne</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">X =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">451470</span>, <span class="dt">to =</span> <span class="dv">483570</span>, <span class="dt">by =</span> <span class="dv">1000</span>),
-                      <span class="dt">Y =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">5962620</span>, <span class="dt">to =</span> <span class="dv">5985510</span>, <span class="dt">by =</span> <span class="dv">1000</span>))
+                      <span class="dt">Y =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">5962620</span>, <span class="dt">to =</span> <span class="dv">5986000</span>, <span class="dt">by =</span> <span class="dv">1000</span>))
 <span class="kw">coordinates</span>(siatka) &lt;-<span class="st"> </span><span class="er">~</span>X +<span class="st"> </span>Y
 <span class="kw">gridded</span>(siatka) &lt;-<span class="st"> </span><span class="ot">TRUE</span></code></pre></div>
 </div>
@@ -821,7 +818,7 @@ siatka_raster &lt;-<span class="st"> </span><span class="kw">raster</span>(<span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;raster&#39;</span>)
 poligon_shp &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;data&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;wolin_polygon&#39;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
 siatka_n &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(poligon_shp))
-<span class="kw">res</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1000</span>, <span class="dv">1000</span>)
+<span class="kw">res</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">250</span>, <span class="dv">250</span>)
 siatka_n[] &lt;-<span class="st"> </span><span class="dv">0</span>
 <span class="kw">proj4string</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">CRS</span>(<span class="kw">proj4string</span>(poligon_shp))
 siatka_n &lt;-<span class="st"> </span><span class="kw">mask</span>(siatka_n, poligon_shp)</code></pre></div>
@@ -857,21 +854,14 @@ siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(s
 <div id="dane-wolin-1" class="section level3">
 <h3><span class="header-section-number">3.2.1</span> Dane Wolin</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;sp&#39;</span>)
-<span class="kw">library</span>(<span class="st">&#39;rgdal&#39;</span>)</code></pre></div>
-<pre><code>## rgdal: version: 1.1-3, (SVN revision 594)
-##  Geospatial Data Abstraction Library extensions to R successfully loaded
-##  Loaded GDAL runtime: GDAL 1.11.2, released 2015/02/10
-##  Path to GDAL shared files: /usr/share/gdal/1.11
-##  Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012, [PJ_VERSION: 480]
-##  Path to PROJ.4 shared files: (autodetected)
-##  Linking to sp version: 1.2-1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wolin_lato_los &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;data/Wolin_TPZ_p_lato_750losN.csv&#39;</span>, <span class="dt">na.strings=</span>-<span class="fl">999.00</span>)
+<span class="kw">library</span>(<span class="st">&#39;rgdal&#39;</span>)
+
+wolin_lato_los &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;data/Wolin_TPZ_p_lato_750losN.csv&#39;</span>, <span class="dt">na.strings=</span>-<span class="fl">999.00</span>)
 <span class="kw">coordinates</span>(wolin_lato_los) &lt;-<span class="st"> </span><span class="er">~</span>X+Y
 <span class="kw">proj4string</span>(wolin_lato_los) &lt;-<span class="st"> &#39;+init=epsg:32633&#39;</span>
 <span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">4</span>)))
-<span class="kw">plot</span>(wolin_lato_los)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-2-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(wolin_lato_los)</code></pre></div>
+<span class="kw">plot</span>(wolin_lato_los)
+<span class="kw">str</span>(wolin_lato_los)</code></pre></div>
 <pre><code>## Formal class &#39;SpatialPointsDataFrame&#39; [package &quot;sp&quot;] with 5 slots
 ##   ..@ data       :&#39;data.frame&#39;:  750 obs. of  9 variables:
 ##   .. ..$ X1999.09.13_TPZ : num [1:750] 20.5 24.8 26.9 21 23 ...
@@ -910,6 +900,8 @@ siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(s
 ## Source: &quot;data&quot;, layer: &quot;wolin_polygon&quot;
 ## with 1 features
 ## It has 11 fields</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(poligon, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-1-1.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="statystyki-opisowe" class="section level2">
@@ -986,9 +978,7 @@ siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(s
 <h3><span class="header-section-number">3.4.1</span> Histogram</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;ggplot2&#39;</span>)
 <span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(X1999<span class="fl">.09</span>.13_TPZ)) +<span class="st"> </span><span class="kw">geom_histogram</span>()</code></pre></div>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<pre><code>## Warning: Removed 495 rows containing non-finite values (stat_bin).</code></pre>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-7-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-6-1.png" alt="" /><!-- --></p>
 <ul>
 <li>Stworzony przez Karla Pearsona</li>
 <li>Jest graficzną reprezentacją rozkładu <br> danych</li>
@@ -1000,14 +990,12 @@ siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(s
 <div id="estymator-jadrowy-gestosci-ang.-kernel-density-estimation" class="section level3">
 <h3><span class="header-section-number">3.4.2</span> Estymator jądrowy gęstości (ang. <em>kernel density estimation</em>)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(X1999<span class="fl">.09</span>.13_TPZ)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<pre><code>## Warning: Removed 495 rows containing non-finite values (stat_density).</code></pre>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-8-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-7-1.png" alt="" /><!-- --></p>
 </div>
 <div id="wykresy-kwantyl-kwantyl-ang.quantile-quantile" class="section level3">
 <h3><span class="header-section-number">3.4.3</span> Wykresy kwantyl-kwantyl (ang.<em>quantile-quantile</em>)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(<span class="dt">sample=</span>X1999<span class="fl">.09</span>.13_TPZ)) +<span class="st"> </span><span class="kw">stat_qq</span>()</code></pre></div>
-<pre><code>## Warning: Removed 495 rows containing non-finite values (stat_qq).</code></pre>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-9-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-8-1.png" alt="" /><!-- --></p>
 </div>
 <div id="wykresy-kwantyl-kwantyl-ang.-quantile-quantile" class="section level3">
 <h3><span class="header-section-number">3.4.4</span> Wykresy kwantyl-kwantyl (ang. <em>quantile-quantile</em>)</h3>
@@ -1022,10 +1010,9 @@ df <- as.data.frame(qqplot(wolin_lato_los$X1999.09.13_TPZ, wolin_lato_los$X1999.
 ggplot(df) + geom_point(aes(x=x, y=y)) + xlab('TPZ') + ylab('NDVI')
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(wolin_lato_los@data) +<span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>X1999<span class="fl">.09</span>.13_TPZ, <span class="dt">y=</span>X1999<span class="fl">.09</span>.13_NDVI)) +<span class="st"> </span><span class="kw">xlab</span>(<span class="st">&#39;TPZ&#39;</span>) +<span class="st"> </span><span class="kw">ylab</span>(<span class="st">&#39;NDVI&#39;</span>)</code></pre></div>
-<pre><code>## Warning: Removed 495 rows containing missing values (geom_point).</code></pre>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-10-2.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-9-2.png" alt="" /><!-- --></p>
 <p>–&gt;</p>
 </div>
 <div id="dystrybuanta-cdf" class="section level3">
@@ -1034,8 +1021,7 @@ ggplot(df) + geom_point(aes(x=x, y=y)) + xlab('TPZ') + ylab('NDVI')
 <li>Dystrybuanta (ang. conditional density function - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(X1999<span class="fl">.09</span>.13_TPZ)) +<span class="st"> </span><span class="kw">stat_ecdf</span>()</code></pre></div>
-<pre><code>## Warning: Removed 495 rows containing non-finite values (stat_ecdf).</code></pre>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-11-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-10-1.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="porownanie-zmiennych" class="section level2">
@@ -1063,8 +1049,7 @@ ggplot(df) + geom_point(aes(x=x, y=y)) + xlab('TPZ') + ylab('NDVI')
 <li>Z racji unormowania nie jest ona uzależniona od jednostki</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(X1999<span class="fl">.09</span>.13_TPZ, X1999<span class="fl">.09</span>.13_NDVI)) +<span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<pre><code>## Warning: Removed 495 rows containing missing values (geom_point).</code></pre>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-13-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-12-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(wolin_lato_los$X1999<span class="fl">.09</span>.13_TPZ, wolin_lato_los$X1999<span class="fl">.09</span>.13_NDVI, <span class="dt">use=</span>  <span class="st">&quot;complete.obs&quot;</span>)</code></pre></div>
 <pre><code>## [1] -0.7036398</code></pre>
 </div>
@@ -1115,7 +1100,7 @@ ggplot(df) + geom_point(aes(x=x, y=y)) + xlab('TPZ') + ylab('NDVI')
 <h3><span class="header-section-number">3.5.5</span> Współczynnik korelacji</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;corrplot&#39;</span>)
 <span class="kw">corrplot</span>(<span class="kw">cor</span>(wolin_lato_los@data[<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">4</span>, <span class="dv">7</span>:<span class="dv">9</span>)], <span class="dt">use=</span> <span class="st">&quot;complete.obs&quot;</span>))</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-16-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-15-1.png" alt="" /><!-- --></p>
 <!--    
 ### Dane odstające
 -->
@@ -1124,8 +1109,7 @@ ggplot(df) + geom_point(aes(x=x, y=y)) + xlab('TPZ') + ylab('NDVI')
 <h3><span class="header-section-number">3.5.6</span> Wykresy pudełkowe</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wolin_lato_los$CLC06_p_lato &lt;-<span class="st"> </span><span class="kw">as.factor</span>(wolin_lato_los$CLC06_p_lato)
 <span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(CLC06_p_lato, X1999<span class="fl">.09</span>.13_TPZ)) +<span class="st"> </span><span class="kw">geom_boxplot</span>()</code></pre></div>
-<pre><code>## Warning: Removed 495 rows containing non-finite values (stat_boxplot).</code></pre>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-17-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-16-1.png" alt="" /><!-- --></p>
 <ul>
 <li>obrazuje pięc podstawowych <br> statystyk opisowych oraz wartości odstające</li>
 <li>pudełko to zakres międzykwantylowy</li>
@@ -1136,8 +1120,7 @@ ggplot(df) + geom_point(aes(x=x, y=y)) + xlab('TPZ') + ylab('NDVI')
 <div id="wykresy-pudekowe-1" class="section level3">
 <h3><span class="header-section-number">3.5.7</span> Wykresy pudełkowe</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(CLC06_p_lato, X1999<span class="fl">.09</span>.13_TPZ)) +<span class="st"> </span><span class="kw">geom_boxplot</span>()</code></pre></div>
-<pre><code>## Warning: Removed 495 rows containing non-finite values (stat_boxplot).</code></pre>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-18-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-17-1.png" alt="" /><!-- --></p>
 <ol style="list-style-type: decimal">
 <li>Tereny komunikacyjne i porty</li>
 <li>Zabudowa luźna, złożone systemy upraw i działek</li>
@@ -1163,7 +1146,7 @@ aov_test &lt;-<span class="st"> </span><span class="kw">aov</span>(X1999<span cl
 <h3><span class="header-section-number">3.5.9</span> Testowanie istotności różnić średniej pomiędzy grupami</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tukey &lt;-<span class="st"> </span><span class="kw">TukeyHSD</span>(aov_test, <span class="st">&quot;CLC06_p_lato&quot;</span>)
 <span class="kw">plot</span>(tukey, <span class="dt">las=</span><span class="dv">1</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-19-1.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="transformacje-danych" class="section level2">
@@ -1190,31 +1173,30 @@ aov_test &lt;-<span class="st"> </span><span class="kw">aov</span>(X1999<span cl
 <div id="transformacja-danych-logarytmizacja" class="section level3">
 <h3><span class="header-section-number">3.6.2</span> Transformacja danych | Logarytmizacja</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(X2002<span class="fl">.08</span>.20_TPZ)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wolin_lato_los$log_tpz &lt;-<span class="st"> </span><span class="kw">log</span>(wolin_lato_los$X2002<span class="fl">.08</span>.20_TPZ)
 <span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(log_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-2.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wolin_lato_los$exp_tpz &lt;-<span class="st"> </span><span class="kw">exp</span>(wolin_lato_los$log_tpz)
 <span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(exp_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-3.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-3.png" alt="" /><!-- --></p>
 </div>
 <div id="transformacja-danych-pierwiastkowanie" class="section level3">
 <h3><span class="header-section-number">3.6.3</span> Transformacja danych | Pierwiastkowanie</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(X2002<span class="fl">.08</span>.20_TPZ)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wolin_lato_los$sqrt_tpz &lt;-<span class="st"> </span><span class="kw">sqrt</span>(wolin_lato_los$X2002<span class="fl">.08</span>.20_TPZ)
 <span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(sqrt_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-2.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wolin_lato_los$pow_tpz &lt;-<span class="st"> </span>wolin_lato_los$sqrt_tpz^<span class="dv">2</span>
 <span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(pow_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-3.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-3.png" alt="" /><!-- --></p>
 </div>
 <div id="transformacja-danych-rodzina-transformacji-boxa-coxa" class="section level3">
 <h3><span class="header-section-number">3.6.4</span> Transformacja danych | Rodzina transformacji Boxa Coxa</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;caret&#39;</span>)</code></pre></div>
-<pre><code>## Loading required package: lattice</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(X2002<span class="fl">.08</span>.20_TPZ)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-23-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;caret&#39;</span>)
+<span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(X2002<span class="fl">.08</span>.20_TPZ)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">transformacja &lt;-<span class="st"> </span><span class="kw">BoxCoxTrans</span>(wolin_lato_los$X2002<span class="fl">.08</span>.20_TPZ)
 transformacja</code></pre></div>
 <pre><code>## Box-Cox Transformation
@@ -1231,11 +1213,11 @@ transformacja</code></pre></div>
 ## Estimated Lambda: -2</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wolin_lato_los$bc_tpz &lt;-<span class="st"> </span><span class="kw">predict</span>(transformacja, wolin_lato_los$X2002<span class="fl">.08</span>.20_TPZ)
 <span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(bc_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-23-2.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">invBoxCox &lt;-<span class="st"> </span>function(x, lambda) if (lambda ==<span class="st"> </span><span class="dv">0</span>) <span class="kw">exp</span>(x) else (lambda*x +<span class="st"> </span><span class="dv">1</span>)^(<span class="dv">1</span>/lambda) 
 wolin_lato_los$bc_tpz_inv &lt;-<span class="st"> </span><span class="kw">invBoxCox</span>(wolin_lato_los$bc_tpz, <span class="dt">lambda=</span>-<span class="dv">2</span>)
 <span class="kw">ggplot</span>(wolin_lato_los@data, <span class="kw">aes</span>(bc_tpz_inv)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-23-3.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-3.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="mapy" class="section level2">
@@ -1271,7 +1253,7 @@ wolin_lato_los$bc_tpz_inv &lt;-<span class="st"> </span><span class="kw">invBoxC
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">225</span>)
 regularny &lt;-<span class="st"> </span><span class="kw">spsample</span>(poligon, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;regular&#39;</span>)
 <span class="kw">plot</span>(regularny)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-24-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-23-1.png" alt="" /><!-- --></p>
 <ul>
 <li>Zmienna <em>offset</em></li>
 </ul>
@@ -1281,7 +1263,7 @@ regularny &lt;-<span class="st"> </span><span class="kw">spsample</span>(poligon
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">301</span>)
 losowy &lt;-<span class="st"> </span><span class="kw">spsample</span>(poligon, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;random&#39;</span>)
 <span class="kw">plot</span>(losowy)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-25-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-24-1.png" alt="" /><!-- --></p>
 <ul>
 <li>Każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia</li>
 <li>Każdy punkt jest losowany niezależnie od pozostałych</li>
@@ -1292,14 +1274,14 @@ losowy &lt;-<span class="st"> </span><span class="kw">spsample</span>(poligon, <
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">125</span>)
 strat &lt;-<span class="st"> </span><span class="kw">spsample</span>(poligon, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;stratified&#39;</span>)
 <span class="kw">plot</span>(strat)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-26-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-25-1.png" alt="" /><!-- --></p>
 </div>
 <div id="typ-probowania-preferencyjny-i" class="section level3">
 <h3><span class="header-section-number">3.7.7</span> Typ próbowania | Preferencyjny I</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">425</span>)
 pref &lt;-<span class="st"> </span><span class="kw">spsample</span>(poligon, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;clustered&#39;</span>, <span class="dt">nclusters=</span><span class="dv">80</span>)
 <span class="kw">plot</span>(pref)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-27-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-26-1.png" alt="" /><!-- --></p>
 </div>
 <div id="typ-probowania-liniowy" class="section level3">
 <h3><span class="header-section-number">3.7.8</span> Typ próbowania | Liniowy</h3>
@@ -1308,7 +1290,7 @@ linia &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class=
 <span class="kw">set.seed</span>(<span class="dv">224</span>)
 izoliniowy &lt;-<span class="st"> </span><span class="kw">spsample</span>(linia, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;regular&#39;</span>)
 <span class="kw">plot</span>(izoliniowy)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-28-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-27-1.png" alt="" /><!-- --></p>
 </div>
 <div id="mapy-punktowe-i-dane-lokalnie-odstajace" class="section level3">
 <h3><span class="header-section-number">3.7.9</span> Mapy punktowe i dane lokalnie odstające</h3>
@@ -1317,7 +1299,7 @@ izoliniowy &lt;-<span class="st"> </span><span class="kw">spsample</span>(linia,
 poligon &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;data&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;wolin_polygon&#39;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>) 
 <span class="kw">plot</span>(poligon) 
 <span class="kw">plot</span>(wolin_lato_los, <span class="dt">add=</span><span class="ot">TRUE</span>) </code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-29-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-28-1.png" alt="" /><!-- --></p>
 </div>
 <div id="mapy-punktowe-i-dane-lokalnie-odstajace-1" class="section level3">
 <h3><span class="header-section-number">3.7.10</span> Mapy punktowe i dane lokalnie odstające</h3>
@@ -1328,7 +1310,7 @@ poligon &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span clas
 <div id="mapy-punktowe-i-dane-lokalnie-odstajace-2" class="section level3">
 <h3><span class="header-section-number">3.7.11</span> Mapy punktowe i dane lokalnie odstające</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(wolin_lato_los, <span class="st">&quot;X2002.08.20_TPZ&quot;</span>, <span class="dt">sp.layout =</span> poligon)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-30-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-29-1.png" alt="" /><!-- --></p>
 <!--
 ### Mapy punktowe i dane lokalnie odstające
 
@@ -1456,7 +1438,7 @@ wolin_lato_pref &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<
 <span class="kw">coordinates</span>(wolin_lato_pref) &lt;-<span class="st"> </span><span class="er">~</span>X+Y
 <span class="kw">proj4string</span>(wolin_lato_pref) &lt;-<span class="st"> &#39;+init=epsg:32633&#39;</span>
 <span class="kw">spplot</span>(wolin_lato_pref, <span class="st">&quot;X2002.08.20_TPZ&quot;</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-30-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(wolin_lato_pref$X2002<span class="fl">.08</span>.20_TPZ)</code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   18.14   21.96   26.16   26.54   30.07   44.22</code></pre>
@@ -1472,15 +1454,11 @@ wolin_lato_pref$id &lt;-<span class="st"> </span><span class="dv">1</span>:<span
 <span class="kw">coordinates</span>(wolin_lato_pref) &lt;-<span class="st"> </span><span class="er">~</span>X +<span class="st"> </span>Y
 <span class="kw">proj4string</span>(wolin_lato_pref) &lt;-<span class="st"> &quot;+init=epsg:32633&quot;</span>
 <span class="kw">spplot</span>(wolin_lato_pref, <span class="st">&quot;id&quot;</span>, <span class="dt">colorkey=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;rgdal&#39;</span>)
 <span class="kw">library</span>(<span class="st">&quot;raster&quot;</span>)
-<span class="kw">library</span>(<span class="st">&#39;rgeos&#39;</span>)</code></pre></div>
-<pre><code>## rgeos version: 0.3-15, (SVN revision 515)
-##  GEOS runtime version: 3.4.2-CAPI-1.8.2 r3921 
-##  Linking to sp version: 1.2-1 
-##  Polygon checking: TRUE</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">poligon_shp &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn =</span> <span class="st">&quot;data&quot;</span>, <span class="dt">layer =</span> <span class="st">&quot;wolin_polygon&quot;</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
+<span class="kw">library</span>(<span class="st">&#39;rgeos&#39;</span>)
+poligon_shp &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn =</span> <span class="st">&quot;data&quot;</span>, <span class="dt">layer =</span> <span class="st">&quot;wolin_polygon&quot;</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 siatka_n &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(poligon_shp))
 <span class="co"># siatka_n &lt;- raster(xmn=450000, xmx=485000, ymn=5960000, ymx=5989000)</span>
 <span class="kw">res</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1000</span>, <span class="dv">1000</span>)
@@ -1491,16 +1469,16 @@ siatka_n &lt;-<span class="st"> </span><span class="kw">as</span>(siatka_n, <spa
 siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(siatka_n@data$layer), ]
 <span class="kw">plot</span>(siatka_n)
 <span class="kw">plot</span>(wolin_lato_pref, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-2.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wolin_lato_pref$liczebnosc &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">length</span>(wolin_lato_pref))
 siatka_nr &lt;-<span class="st"> </span><span class="kw">aggregate</span>(wolin_lato_pref[<span class="st">&#39;liczebnosc&#39;</span>], <span class="dt">by =</span> siatka_n, <span class="dt">FUN =</span> length) 
 <span class="kw">spplot</span>(siatka_nr, <span class="st">&quot;liczebnosc&quot;</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-3.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-3.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">liczba &lt;-<span class="st"> </span><span class="kw">over</span>(wolin_lato_pref, siatka_nr)
 wolin_lato_pref$waga &lt;-<span class="st"> </span>((<span class="dv">1</span>/liczba$liczebnosc)/<span class="kw">sum</span>(!<span class="kw">is.na</span>(siatka_nr$liczebnosc))) *<span class="st"> </span><span class="kw">length</span>(wolin_lato_pref)
 
 <span class="kw">spplot</span>(wolin_lato_pref, <span class="st">&#39;waga&#39;</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-4.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-4.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">srednia_arytmetyczna &lt;-<span class="st"> </span><span class="kw">mean</span>(wolin_lato_pref$X2002<span class="fl">.08</span>.20_TPZ)
 srednia_wazona_c1 &lt;-<span class="st"> </span><span class="kw">mean</span>(wolin_lato_pref$X2002<span class="fl">.08</span>.20_TPZ *<span class="st"> </span>wolin_lato_pref$waga, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
 </div>
@@ -1521,7 +1499,7 @@ wolin_lato_pref$id &lt;-<span class="st"> </span><span class="dv">1</span>:<span
 <span class="kw">coordinates</span>(wolin_lato_pref) &lt;-<span class="st"> </span><span class="er">~</span>X+Y
 <span class="kw">proj4string</span>(wolin_lato_pref) &lt;-<span class="st"> &#39;+init=epsg:32633&#39;</span>
 <span class="kw">spplot</span>(wolin_lato_pref, <span class="st">&quot;id&quot;</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;raster&#39;</span>)
 poligon_shp &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;data&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;wolin_polygon&#39;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
 siatka_n &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(poligon_shp))
@@ -1533,14 +1511,14 @@ siatka_n &lt;-<span class="st"> </span><span class="kw">as</span>(siatka_n, <spa
 siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(siatka_n@data$layer), ]
 <span class="kw">gridded</span>(siatka_n) &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 <span class="kw">plot</span>(siatka_n)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-2.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-2.png" alt="" /><!-- --></p>
 </div>
 <div id="rozgrupowanie-komorkowe-ii-ang.-cell-declustering-1" class="section level3">
 <h3><span class="header-section-number">3.8.6</span> Rozgrupowanie komórkowe II | (ang. <em>cell declustering</em>)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st">  </span><span class="kw">krige</span>(id~<span class="dv">1</span>, wolin_lato_pref, siatka_n, <span class="dt">nmax=</span><span class="dv">1</span>)</code></pre></div>
 <pre><code>## [inverse distance weighted interpolation]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(out, <span class="st">&quot;var1.pred&quot;</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">table</span>(out[[<span class="dv">1</span>]]))
 df$waga &lt;-<span class="st"> </span>df$Freq/<span class="kw">sum</span>(df$Freq)
 wolin_lato_pref &lt;-<span class="st"> </span><span class="kw">merge</span>(wolin_lato_pref, df, <span class="dt">by.x=</span><span class="st">&quot;id&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Var1&quot;</span>)
@@ -1548,9 +1526,9 @@ wolin_lato_pref &lt;-<span class="st"> </span><span class="kw">merge</span>(woli
 <pre><code>##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
 ## 3.822e-05 4.682e-04 8.791e-04 1.326e-03 1.682e-03 8.829e-03</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(out, <span class="st">&quot;var1.pred&quot;</span>, <span class="dt">sp.layout=</span><span class="kw">list</span>(<span class="st">&quot;sp.points&quot;</span>, wolin_lato_pref))</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-2.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(wolin_lato_pref[<span class="st">&quot;waga&quot;</span>])</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-3.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-3.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">srednia_arytmetyczna &lt;-<span class="st"> </span><span class="kw">mean</span>(wolin_lato_pref$X2002<span class="fl">.08</span>.20_TPZ)
 srednia_wazona_c2 &lt;-<span class="st"> </span><span class="kw">sum</span>(wolin_lato_pref$X2002<span class="fl">.08</span>.20_TPZ *<span class="st"> </span>wolin_lato_pref$waga, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
 </div>
@@ -1565,34 +1543,23 @@ wolin_lato_pref$id &lt;-<span class="st"> </span><span class="dv">1</span>:<span
 <span class="kw">coordinates</span>(wolin_lato_pref) &lt;-<span class="st"> </span><span class="er">~</span>X+Y
 <span class="kw">proj4string</span>(wolin_lato_pref) &lt;-<span class="st"> &#39;+init=epsg:32633&#39;</span>
 <span class="kw">spplot</span>(wolin_lato_pref, <span class="st">&quot;id&quot;</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-35-1.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;dismo&#39;</span>)
-v &lt;-<span class="st"> </span><span class="kw">voronoi</span>(wolin_lato_pref)</code></pre></div>
-<pre><code>## Loading required namespace: deldir</code></pre>
-<pre><code>## 
-##      PLEASE NOTE:  The components &quot;delsgs&quot; and &quot;summary&quot; of the
-##  object returned by deldir() are now DATA FRAMES rather than
-##  matrices (as they were prior to release 0.0-18).
-##  See help(&quot;deldir&quot;).
-##  
-##      PLEASE NOTE: The process that deldir() uses for determining
-##  duplicated points has changed from that used in version
-##  0.0-9 of this package (and previously). See help(&quot;deldir&quot;).</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(wolin_lato_pref, <span class="dt">cex=</span><span class="fl">0.2</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)
+v &lt;-<span class="st"> </span><span class="kw">voronoi</span>(wolin_lato_pref)
+<span class="kw">plot</span>(wolin_lato_pref, <span class="dt">cex=</span><span class="fl">0.2</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)
 <span class="kw">plot</span>(v, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-35-2.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;rgeos&#39;</span>)
-v_intersect &lt;-<span class="kw">intersect</span>(poligon_shp, v)</code></pre></div>
-<pre><code>## Warning in intersect(poligon_shp, v): non identical CRS</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(wolin_lato_pref, <span class="dt">cex=</span><span class="fl">0.2</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)
+v_intersect &lt;-<span class="kw">intersect</span>(poligon_shp, v)
+<span class="kw">plot</span>(wolin_lato_pref, <span class="dt">cex=</span><span class="fl">0.2</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)
 <span class="kw">plot</span>(v_intersect, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-35-3.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-3.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v_intersect$pow &lt;-<span class="st"> </span><span class="kw">area</span>(v_intersect)
 v_intersect$waga &lt;-<span class="st"> </span>v_intersect$pow/<span class="kw">sum</span>(v_intersect$pow) *<span class="st"> </span><span class="kw">length</span>(wolin_lato_pref)
 
 wolin_lato_pref &lt;-<span class="st"> </span><span class="kw">merge</span>(wolin_lato_pref, v_intersect[<span class="kw">c</span>(<span class="st">&#39;id&#39;</span>, <span class="st">&#39;waga&#39;</span>)], <span class="dt">by=</span><span class="st">&#39;id&#39;</span>)
 <span class="kw">spplot</span>(wolin_lato_pref, <span class="st">&#39;waga&#39;</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-35-4.png" alt="" /><!-- --></p>
+<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-4.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">srednia_arytmetyczna &lt;-<span class="st"> </span><span class="kw">mean</span>(wolin_lato_pref$X2002<span class="fl">.08</span>.20_TPZ)
 srednia_wazona_p &lt;-<span class="st"> </span><span class="kw">mean</span>(wolin_lato_pref$X2002<span class="fl">.08</span>.20_TPZ*wolin_lato_pref$waga)</code></pre></div>
 <table>

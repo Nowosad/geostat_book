@@ -415,8 +415,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Matematyczne modelowanie autokorelacji przestrzennej</li>
 <li>Estymacje jednozmienne</li>
 <li>Ocena jakości estymacji</li>
-<li>Wykorzystanie do estymacji danych uzupełniających</li>
-<li>Estymacja lokalnego rozkładu prawdopodobieństwa</li>
+<li>Wykorzystanie do estymacji danych uzupełniających 8. Estymacja lokalnego rozkładu prawdopodobieństwa</li>
 <li>Estymacje wielozmienne</li>
 <li>Symulacje przestrzenne</li>
 </ol>
@@ -521,7 +520,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li>Ramki danych (ang. <em>data.frame</em>) - to zbiór zmiennych (kolumn) oraz obserwacji (wierszy) zawierających różne typt danych</li>
 <li>Macierze (ang. <em>matrix</em>)</li>
-<li>Listy (ang. <em>listy</em>)</li>
+<li>Listy (ang. <em>list</em>)</li>
 </ul>
 </div>
 <div id="reprezentacja-danych-przestrzennych" class="section level3">
@@ -778,11 +777,9 @@ siatka_raster &lt;-<span class="st"> </span><span class="kw">raster</span>(<span
 </div>
 <div id="rastry-1" class="section level3">
 <h3><span class="header-section-number">2.6.4</span> Rastry</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;raster&#39;</span>); <span class="kw">library</span>(<span class="st">&#39;rasterVis&#39;</span>)</code></pre></div>
-<pre><code>## Loading required package: lattice</code></pre>
-<pre><code>## Loading required package: latticeExtra</code></pre>
-<pre><code>## Loading required package: RColorBrewer</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">levelplot</span>(siatka_raster, <span class="dt">margin=</span><span class="ot">FALSE</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;raster&#39;</span>)
+<span class="kw">library</span>(<span class="st">&#39;rasterVis&#39;</span>)
+<span class="kw">levelplot</span>(siatka_raster, <span class="dt">margin=</span><span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="01-wprowadzenie_files/figure-html/unnamed-chunk-12-1.png" alt="" /><!-- --></p>
 </div>
 </div>
@@ -791,7 +788,7 @@ siatka_raster &lt;-<span class="st"> </span><span class="kw">raster</span>(<span
 <div id="siatki-regularne-1" class="section level3">
 <h3><span class="header-section-number">2.7.1</span> Siatki regularne</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">X =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">451470</span>, <span class="dt">to =</span> <span class="dv">483570</span>, <span class="dt">by =</span> <span class="dv">1000</span>),
-                      <span class="dt">Y =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">5962620</span>, <span class="dt">to =</span> <span class="dv">5985510</span>, <span class="dt">by =</span> <span class="dv">1000</span>))
+                      <span class="dt">Y =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">5962620</span>, <span class="dt">to =</span> <span class="dv">5986000</span>, <span class="dt">by =</span> <span class="dv">1000</span>))
 <span class="kw">coordinates</span>(siatka) &lt;-<span class="st"> </span><span class="er">~</span>X +<span class="st"> </span>Y
 <span class="kw">gridded</span>(siatka) &lt;-<span class="st"> </span><span class="ot">TRUE</span></code></pre></div>
 </div>
@@ -806,7 +803,7 @@ siatka_raster &lt;-<span class="st"> </span><span class="kw">raster</span>(<span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;raster&#39;</span>)
 poligon_shp &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;data&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;wolin_polygon&#39;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
 siatka_n &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(poligon_shp))
-<span class="kw">res</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1000</span>, <span class="dv">1000</span>)
+<span class="kw">res</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">250</span>, <span class="dv">250</span>)
 siatka_n[] &lt;-<span class="st"> </span><span class="dv">0</span>
 <span class="kw">proj4string</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">CRS</span>(<span class="kw">proj4string</span>(poligon_shp))
 siatka_n &lt;-<span class="st"> </span><span class="kw">mask</span>(siatka_n, poligon_shp)</code></pre></div>

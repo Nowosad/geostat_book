@@ -6,7 +6,6 @@ knit: bookdown::preview_chapter
 
 
 
-
 ## Eksploracyjna analiza danych | Cel
 - Ogólna charakterystyka danych oraz badanego zjawiska
 - Określenie przestrzennego/czasowego typu próbkowania
@@ -19,29 +18,12 @@ knit: bookdown::preview_chapter
 ```r
 library('sp')
 library('rgdal')
-```
 
-```
-## rgdal: version: 1.1-3, (SVN revision 594)
-##  Geospatial Data Abstraction Library extensions to R successfully loaded
-##  Loaded GDAL runtime: GDAL 1.11.2, released 2015/02/10
-##  Path to GDAL shared files: /usr/share/gdal/1.11
-##  Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012, [PJ_VERSION: 480]
-##  Path to PROJ.4 shared files: (autodetected)
-##  Linking to sp version: 1.2-1
-```
-
-```r
 wolin_lato_los <- read.csv('data/Wolin_TPZ_p_lato_750losN.csv', na.strings=-999.00)
 coordinates(wolin_lato_los) <- ~X+Y
 proj4string(wolin_lato_los) <- '+init=epsg:32633'
 par(mar=c(rep(0, 4)))
 plot(wolin_lato_los)
-```
-
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
-
-```r
 str(wolin_lato_los)
 ```
 
@@ -97,6 +79,12 @@ poligon <- readOGR('data', 'wolin_polygon')
 ## with 1 features
 ## It has 11 fields
 ```
+
+```r
+plot(poligon, add=TRUE)
+```
+
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
 
 
 ## Statystyki opisowe
@@ -208,15 +196,7 @@ library('ggplot2')
 ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + geom_histogram()
 ```
 
-```
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-```
-
-```
-## Warning: Removed 495 rows containing non-finite values (stat_bin).
-```
-
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 - Stworzony przez Karla Pearsona
 - Jest graficzną reprezentacją rozkładu <br> danych
@@ -231,11 +211,7 @@ ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + geom_histogram()
 ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + geom_density()
 ```
 
-```
-## Warning: Removed 495 rows containing non-finite values (stat_density).
-```
-
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 
 ### Wykresy kwantyl-kwantyl (ang.*quantile-quantile*)
@@ -245,11 +221,7 @@ ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + geom_density()
 ggplot(wolin_lato_los@data, aes(sample=X1999.09.13_TPZ)) + stat_qq()
 ```
 
-```
-## Warning: Removed 495 rows containing non-finite values (stat_qq).
-```
-
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 
 ### Wykresy kwantyl-kwantyl (ang. *quantile-quantile*)
@@ -266,17 +238,13 @@ df <- as.data.frame(qqplot(wolin_lato_los$X1999.09.13_TPZ, wolin_lato_los$X1999.
 ggplot(df) + geom_point(aes(x=x, y=y)) + xlab('TPZ') + ylab('NDVI')
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 ```r
 ggplot(wolin_lato_los@data) + geom_point(aes(x=X1999.09.13_TPZ, y=X1999.09.13_NDVI)) + xlab('TPZ') + ylab('NDVI')
 ```
 
-```
-## Warning: Removed 495 rows containing missing values (geom_point).
-```
-
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-10-2.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-9-2.png)<!-- -->
 
 -->
 
@@ -289,11 +257,7 @@ ggplot(wolin_lato_los@data) + geom_point(aes(x=X1999.09.13_TPZ, y=X1999.09.13_ND
 ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + stat_ecdf()
 ```
 
-```
-## Warning: Removed 495 rows containing non-finite values (stat_ecdf).
-```
-
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 
 ## Porównanie zmiennych
@@ -328,11 +292,7 @@ cov(wolin_lato_los$X1999.09.13_TPZ, wolin_lato_los$X1999.09.13_NDVI, use=  "comp
 ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ, X1999.09.13_NDVI)) + geom_point()
 ```
 
-```
-## Warning: Removed 495 rows containing missing values (geom_point).
-```
-
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
 ```r
 cor(wolin_lato_los$X1999.09.13_TPZ, wolin_lato_los$X1999.09.13_NDVI, use=  "complete.obs")
@@ -408,7 +368,7 @@ library('corrplot')
 corrplot(cor(wolin_lato_los@data[c(1:4, 7:9)], use= "complete.obs"))
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
 
 
 <!--    
@@ -424,11 +384,7 @@ wolin_lato_los$CLC06_p_lato <- as.factor(wolin_lato_los$CLC06_p_lato)
 ggplot(wolin_lato_los@data, aes(CLC06_p_lato, X1999.09.13_TPZ)) + geom_boxplot()
 ```
 
-```
-## Warning: Removed 495 rows containing non-finite values (stat_boxplot).
-```
-
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
 
 
 - obrazuje pięc podstawowych <br> statystyk opisowych oraz wartości odstające
@@ -443,11 +399,7 @@ ggplot(wolin_lato_los@data, aes(CLC06_p_lato, X1999.09.13_TPZ)) + geom_boxplot()
 ggplot(wolin_lato_los@data, aes(CLC06_p_lato, X1999.09.13_TPZ)) + geom_boxplot()
 ```
 
-```
-## Warning: Removed 495 rows containing non-finite values (stat_boxplot).
-```
-
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
 
 1. Tereny komunikacyjne i porty
 2. Zabudowa luźna, złożone systemy upraw i działek
@@ -486,7 +438,7 @@ tukey <- TukeyHSD(aov_test, "CLC06_p_lato")
 plot(tukey, las=1)
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
 
 ## Transformacje danych
 ### Transformacje danych
@@ -509,21 +461,21 @@ plot(tukey, las=1)
 ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + geom_density()
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
 
 ```r
 wolin_lato_los$log_tpz <- log(wolin_lato_los$X2002.08.20_TPZ)
 ggplot(wolin_lato_los@data, aes(log_tpz)) + geom_density()
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-2.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-2.png)<!-- -->
 
 ```r
 wolin_lato_los$exp_tpz <- exp(wolin_lato_los$log_tpz)
 ggplot(wolin_lato_los@data, aes(exp_tpz)) + geom_density()
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-3.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-3.png)<!-- -->
 
 
 ### Transformacja danych | Pierwiastkowanie
@@ -533,21 +485,21 @@ ggplot(wolin_lato_los@data, aes(exp_tpz)) + geom_density()
 ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + geom_density()
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
 
 ```r
 wolin_lato_los$sqrt_tpz <- sqrt(wolin_lato_los$X2002.08.20_TPZ)
 ggplot(wolin_lato_los@data, aes(sqrt_tpz)) + geom_density()
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-2.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-2.png)<!-- -->
 
 ```r
 wolin_lato_los$pow_tpz <- wolin_lato_los$sqrt_tpz^2
 ggplot(wolin_lato_los@data, aes(pow_tpz)) + geom_density()
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-3.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-3.png)<!-- -->
 
 
 ### Transformacja danych | Rodzina transformacji Boxa Coxa
@@ -555,17 +507,10 @@ ggplot(wolin_lato_los@data, aes(pow_tpz)) + geom_density()
 
 ```r
 library('caret')
-```
-
-```
-## Loading required package: lattice
-```
-
-```r
 ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + geom_density()
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
 
 ```r
 transformacja <- BoxCoxTrans(wolin_lato_los$X2002.08.20_TPZ)
@@ -592,7 +537,7 @@ wolin_lato_los$bc_tpz <- predict(transformacja, wolin_lato_los$X2002.08.20_TPZ)
 ggplot(wolin_lato_los@data, aes(bc_tpz)) + geom_density()
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-23-2.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-2.png)<!-- -->
 
 ```r
 invBoxCox <- function(x, lambda) if (lambda == 0) exp(x) else (lambda*x + 1)^(1/lambda) 
@@ -600,7 +545,7 @@ wolin_lato_los$bc_tpz_inv <- invBoxCox(wolin_lato_los$bc_tpz, lambda=-2)
 ggplot(wolin_lato_los@data, aes(bc_tpz_inv)) + geom_density()
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-23-3.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-3.png)<!-- -->
 
 
 ## Mapy 
@@ -631,7 +576,7 @@ regularny <- spsample(poligon, 150, type = 'regular')
 plot(regularny)
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
 
 - Zmienna *offset*
 
@@ -644,7 +589,7 @@ losowy <- spsample(poligon, 150, type = 'random')
 plot(losowy)
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
 
 
 - Każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia
@@ -659,7 +604,7 @@ strat <- spsample(poligon, 150, type = 'stratified')
 plot(strat)
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
 
 
 ### Typ próbowania | Preferencyjny I
@@ -672,7 +617,7 @@ pref <- spsample(poligon, 150, type = 'clustered', nclusters=80)
 plot(pref)
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
 
 
 ### Typ próbowania | Liniowy
@@ -686,7 +631,7 @@ izoliniowy <- spsample(linia, 150, type = 'regular')
 plot(izoliniowy)
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
 
 
 
@@ -701,7 +646,7 @@ plot(poligon)
 plot(wolin_lato_los, add=TRUE) 
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-29-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
 
 
 ### Mapy punktowe i dane lokalnie odstające
@@ -721,7 +666,7 @@ spplot(wolin_lato_los, "X2002.08.20_TPZ", identify=TRUE)
 spplot(wolin_lato_los, "X2002.08.20_TPZ", sp.layout = poligon)
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-30-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-29-1.png)<!-- -->
 
 
 <!--
@@ -851,7 +796,7 @@ proj4string(wolin_lato_pref) <- '+init=epsg:32633'
 spplot(wolin_lato_pref, "X2002.08.20_TPZ")
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-30-1.png)<!-- -->
 
 ```r
 summary(wolin_lato_pref$X2002.08.20_TPZ)
@@ -881,22 +826,12 @@ proj4string(wolin_lato_pref) <- "+init=epsg:32633"
 spplot(wolin_lato_pref, "id", colorkey=TRUE)
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-1.png)<!-- -->
 
 ```r
 library('rgdal')
 library("raster")
 library('rgeos')
-```
-
-```
-## rgeos version: 0.3-15, (SVN revision 515)
-##  GEOS runtime version: 3.4.2-CAPI-1.8.2 r3921 
-##  Linking to sp version: 1.2-1 
-##  Polygon checking: TRUE
-```
-
-```r
 poligon_shp <- readOGR(dsn = "data", layer = "wolin_polygon", verbose = FALSE)
 siatka_n <- raster(extent(poligon_shp))
 # siatka_n <- raster(xmn=450000, xmx=485000, ymn=5960000, ymx=5989000)
@@ -910,7 +845,7 @@ plot(siatka_n)
 plot(wolin_lato_pref, add=TRUE)
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-2.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-2.png)<!-- -->
 
 ```r
 wolin_lato_pref$liczebnosc <- rep(0, length(wolin_lato_pref))
@@ -918,7 +853,7 @@ siatka_nr <- aggregate(wolin_lato_pref['liczebnosc'], by = siatka_n, FUN = lengt
 spplot(siatka_nr, "liczebnosc")
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-3.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-3.png)<!-- -->
 
 ```r
 liczba <- over(wolin_lato_pref, siatka_nr)
@@ -927,7 +862,7 @@ wolin_lato_pref$waga <- ((1/liczba$liczebnosc)/sum(!is.na(siatka_nr$liczebnosc))
 spplot(wolin_lato_pref, 'waga')
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-4.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-4.png)<!-- -->
 
 ```r
 srednia_arytmetyczna <- mean(wolin_lato_pref$X2002.08.20_TPZ)
@@ -958,7 +893,7 @@ proj4string(wolin_lato_pref) <- '+init=epsg:32633'
 spplot(wolin_lato_pref, "id")
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
 
 ```r
 library('raster')
@@ -974,7 +909,7 @@ gridded(siatka_n) <- TRUE
 plot(siatka_n)
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-2.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-2.png)<!-- -->
 
 
 ### Rozgrupowanie komórkowe II | (ang. *cell declustering*)
@@ -992,7 +927,7 @@ out <-  krige(id~1, wolin_lato_pref, siatka_n, nmax=1)
 spplot(out, "var1.pred")
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-1.png)<!-- -->
 
 ```r
 df <- as.data.frame(table(out[[1]]))
@@ -1010,13 +945,13 @@ summary(wolin_lato_pref$waga)
 spplot(out, "var1.pred", sp.layout=list("sp.points", wolin_lato_pref))
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-2.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-2.png)<!-- -->
 
 ```r
 spplot(wolin_lato_pref["waga"])
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-3.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-3.png)<!-- -->
 
 ```r
 srednia_arytmetyczna <- mean(wolin_lato_pref$X2002.08.20_TPZ)
@@ -1039,51 +974,25 @@ proj4string(wolin_lato_pref) <- '+init=epsg:32633'
 spplot(wolin_lato_pref, "id")
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-35-1.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-1.png)<!-- -->
 
 ```r
 library('dismo')
 v <- voronoi(wolin_lato_pref)
-```
-
-```
-## Loading required namespace: deldir
-```
-
-```
-## 
-##      PLEASE NOTE:  The components "delsgs" and "summary" of the
-##  object returned by deldir() are now DATA FRAMES rather than
-##  matrices (as they were prior to release 0.0-18).
-##  See help("deldir").
-##  
-##      PLEASE NOTE: The process that deldir() uses for determining
-##  duplicated points has changed from that used in version
-##  0.0-9 of this package (and previously). See help("deldir").
-```
-
-```r
 plot(wolin_lato_pref, cex=0.2, col='red')
 plot(v, add=TRUE)
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-35-2.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-2.png)<!-- -->
 
 ```r
 library('rgeos')
 v_intersect <-intersect(poligon_shp, v)
-```
-
-```
-## Warning in intersect(poligon_shp, v): non identical CRS
-```
-
-```r
 plot(wolin_lato_pref, cex=0.2, col='red')
 plot(v_intersect, add=TRUE)
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-35-3.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-3.png)<!-- -->
 
 ```r
 v_intersect$pow <- area(v_intersect)
@@ -1093,7 +1002,7 @@ wolin_lato_pref <- merge(wolin_lato_pref, v_intersect[c('id', 'waga')], by='id')
 spplot(wolin_lato_pref, 'waga')
 ```
 
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-35-4.png)<!-- -->
+![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-4.png)<!-- -->
 
 ```r
 srednia_arytmetyczna <- mean(wolin_lato_pref$X2002.08.20_TPZ)

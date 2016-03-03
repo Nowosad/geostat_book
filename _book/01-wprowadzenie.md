@@ -13,8 +13,7 @@ knit: bookdown::preview_chapter
 4. Matematyczne modelowanie autokorelacji przestrzennej
 5. Estymacje jednozmienne
 6. Ocena jakości estymacji
-7. Wykorzystanie do estymacji danych uzupełniających 
-8. Estymacja lokalnego rozkładu prawdopodobieństwa
+7. Wykorzystanie do estymacji danych uzupełniających 8. Estymacja lokalnego rozkładu prawdopodobieństwa
 9. Estymacje wielozmienne
 10. Symulacje przestrzenne
 
@@ -85,12 +84,10 @@ Objaśnienia:
 - Inne - **ggplot2, corrplot, caret**
 
 
-
 ```r
 install.packages(c('sp', 'rgdal', 'raster', 'rasterVis', 'gstat', 'ggplot2', 'corrplot', 'deldir', 'fields', 'geoR', 'pgirmess', 'caret'))
 ```
 
-    
 ### Reprezentacja danych nieprzestrzennych
     
 - Wektory (ang. *vector*):
@@ -100,7 +97,7 @@ install.packages(c('sp', 'rgdal', 'raster', 'rasterVis', 'gstat', 'ggplot2', 'co
     - czynnikowe (ang. *factor*) - c('jeden', 'dwa', 'trzy', 'jeden')
 - Ramki danych (ang. *data.frame*) - to zbiór zmiennych (kolumn) oraz obserwacji (wierszy) zawierających różne typt danych
 - Macierze (ang. *matrix*)
-- Listy (ang. *listy*)
+- Listy (ang. *list*)
 
 ### Reprezentacja danych przestrzennych
 
@@ -110,7 +107,6 @@ install.packages(c('sp', 'rgdal', 'raster', 'rasterVis', 'gstat', 'ggplot2', 'co
 - Najczęściej stosowane obiekty klasy Spatial* to SpatialPointsDataFrame, SpatialPolygonsDataFrame oraz SpatialGridDataFrame
 - Obiekty klasy Raster, tj. RasterLayer, RasterStack, RasterBrick
 - Inne
-
 
 ### GDAL/OGR
 - http://www.gdal.org/
@@ -146,12 +142,10 @@ lub
 ### Dane punktowe (format csv)
 
 
-
 ```r
 library('sp')
 wolin_lato_los <- read.csv('data/Wolin_TPZ_p_lato_750losN.csv', na.strings=-999.00)
 ```
-
 
 ### Dane punktowe (format csv)
 
@@ -196,7 +190,6 @@ summary(wolin_lato_los)
 ##  Max.   :69.44  
 ## 
 ```
-
 
 ### Dane punktowe (format csv)
 
@@ -244,9 +237,7 @@ summary(wolin_lato_los)
 ## 
 ```
 
-
 ### Usuwanie punktów zawierających braki wartości
-
 
 
 ```r
@@ -309,7 +300,6 @@ summary(wolin_lato_los2)
 ##  Max.   :68.47
 ```
 
-   
 ### Dane poligonowe (formaty gisowe)
 
 
@@ -338,7 +328,6 @@ plot(poligon)
 
 ![](01-wprowadzenie_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
-
 ### Rastry
 
 
@@ -350,7 +339,6 @@ plot(siatka_raster)
 
 ![](01-wprowadzenie_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
-
 ### Siatki regularne
 
 
@@ -360,7 +348,6 @@ plot(siatka_shp)
 ```
 
 ![](01-wprowadzenie_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
-
 
 ### Siatki nieregularne
 
@@ -372,11 +359,9 @@ plot(siatka_n_shp)
 
 ![](01-wprowadzenie_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
-
 ## Eksport danych
 
 ### Zapisywanie danych wektorowych
-
 
 
 ```r
@@ -384,16 +369,13 @@ library('rgdal')
 writeOGR(poligon, dsn="nazwa_folderu", layer="nowy_poligon", driver="ESRI Shapefile")
 ```
 
-
 ### Zapisywanie danych rastrowych
-
 
 
 ```r
 library('raster')
 writeRaster(siatka_raster, filename="nazwa_folderu/nowy_raster.tif")
 ```
-
 
 ## Wizualizacja danych 2D
 ### Dane punktowe
@@ -405,7 +387,6 @@ spplot(wolin_lato_los, "X1999.09.13_TPZ")
 
 ![](01-wprowadzenie_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
-
 ### Dane punktowe
 
 
@@ -414,7 +395,6 @@ spplot(wolin_lato_los, "odl_od_morza")
 ```
 
 ![](01-wprowadzenie_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
-
 
 ### Dane punktowe - kategorie
 
@@ -426,32 +406,16 @@ spplot(wolin_lato_los, "CLC06_p_lato")
 
 ![](01-wprowadzenie_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
-
 ### Rastry
 
 
 ```r
-library('raster'); library('rasterVis')
-```
-
-```
-## Loading required package: lattice
-```
-
-```
-## Loading required package: latticeExtra
-```
-
-```
-## Loading required package: RColorBrewer
-```
-
-```r
+library('raster')
+library('rasterVis')
 levelplot(siatka_raster, margin=FALSE)
 ```
 
 ![](01-wprowadzenie_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
-
 
 ## Tworzenie siatek
 ### Siatki regularne
@@ -459,11 +423,10 @@ levelplot(siatka_raster, margin=FALSE)
 
 ```r
 siatka <- expand.grid(X = seq(from = 451470, to = 483570, by = 1000),
-                      Y = seq(from = 5962620, to = 5985510, by = 1000))
+                      Y = seq(from = 5962620, to = 5986000, by = 1000))
 coordinates(siatka) <- ~X + Y
 gridded(siatka) <- TRUE
 ```
-
 
 ### Siatki regularne
 
@@ -475,7 +438,6 @@ plot(wolin_lato_los, add=TRUE)
 
 ![](01-wprowadzenie_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
-
 ### Siatki nieregularne
 
 
@@ -483,12 +445,11 @@ plot(wolin_lato_los, add=TRUE)
 library('raster')
 poligon_shp <- readOGR(dsn='data', layer='wolin_polygon', verbose=FALSE)
 siatka_n <- raster(extent(poligon_shp))
-res(siatka_n) <- c(1000, 1000)
+res(siatka_n) <- c(250, 250)
 siatka_n[] <- 0
 proj4string(siatka_n) <- CRS(proj4string(poligon_shp))
 siatka_n <- mask(siatka_n, poligon_shp)
 ```
-
 
 ### Siatki nieregularne
 
@@ -498,7 +459,6 @@ levelplot(siatka_n, margin=FALSE)
 ```
 
 ![](01-wprowadzenie_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
-
 
 ### Siatki nieregularne
 
@@ -511,5 +471,3 @@ plot(siatka_n)
 ```
 
 ![](01-wprowadzenie_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
-
-

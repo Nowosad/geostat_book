@@ -4,10 +4,11 @@ knit: bookdown::preview_chapter
 
 # Eksploracyjna analiza danych
 
-```{r, include=FALSE}
+```{r setup2, echo=FALSE, include=FALSE}
+library('knitr')
 library('methods')
+opts_chunk$set(warning=FALSE, message=FALSE) 
 ```
-
 
 ## Eksploracyjna analiza danych | Cel
 - Ogólna charakterystyka danych oraz badanego zjawiska
@@ -17,7 +18,7 @@ library('methods')
 ## Dane Wolin
 ### Dane Wolin
 
-```{r }
+```{r, message=FALSE, warning=FALSE}
 library('sp')
 library('rgdal')
 
@@ -30,6 +31,7 @@ str(wolin_lato_los)
 str(wolin_lato_los@data)
 
 poligon <- readOGR('data', 'wolin_polygon')
+plot(poligon, add=TRUE)
 ```
 
 
