@@ -1,0 +1,120 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Estymacja lokalnego rozkładu prawdopodobieństwa
+
+```{r setup8, echo=FALSE, include=FALSE}
+library('knitr')
+opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE) 
+library('raster')
+library('sp')
+wolin_lato_los <- read.csv('data/Wolin_TPZ_p_lato_750losN.csv', na.strings=-999.00)
+coordinates(wolin_lato_los) <- ~X+Y
+proj4string(wolin_lato_los) <- '+init=epsg:32633'
+ras <- raster('data/siatka_raster.tif', level=0)
+crs(ras) <- proj4string(wolin_lato_los)
+grid <- as(ras, "SpatialGridDataFrame")
+```
+
+## Kriging danych kodowanych (ang. *Indicator kriging*) | Wprowadzenie
+
+### Kriging danych kodowanych (ang. *Indicator kriging*)
+- Jest to metoda krigingu oparta o dane kategoryzowane lub też dane przetworzone z postaci ciągłej do binarnej
+- Zazwyczaj używana jest to oszacowania prawdopodobieństwa przekroczenia zdefiniowanej wartości progowej
+- Może być też używana do szacowania wartości z całego rozkładu
+
+<!--
+http://geostat-course.org/system/files/geostat13_ind.pdf
+-->
+
+### Kriging danych kodowanych (ang. *Indicator kriging*)
+- Wartości danych wykorzystywane do krigingu danych kodowanych są określone jako 0 lub 1
+- Powyzsze kategorie reprezentują czy wartość danej zmiennej jest powyżej czy poniżej określonego progu
+
+### Kriging danych kodowanych (ang. *Indicator kriging*)| Wady i zalety
+- Zalety:
+    - Możliwość zastosowania, gdy nie interesuje nas konkretna wartość, ale znalezienie obszarów o wartości przekraczającej dany poziom
+    - Nie jest istotny kszałt rozkładu
+- Wady:
+    - Potencjalnie trudne do modelowania semiwariogramy (szczególnie skrajnych przedziałów)
+    - Czasochłonność/pracochłonność
+    
+## Kriging danych kodowanych (ang. *Indicator kriging*) | Przykłady
+
+### Binaryzacja danych
+
+```{r }
+summary(wolin_lato_los$X2002.08.20_TPZ) 
+wolin_lato_los$temp_ind <- wolin_lato_los$X2002.08.20_TPZ < 20
+summary(wolin_lato_los$temp_ind) 
+```
+
+
+### Eksploracja danych
+
+```{r }
+library('ggplot2')
+ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + stat_ecdf()
+```
+
+    
+### Kriging danych kodowanych (ang. *Indicator kriging*) | Semiwariogram
+
+```{r }
+library('gstat')
+vario_ind <- variogram(temp_ind~1, wolin_lato_los)         
+plot(vario_ind)
+```
+
+
+### Kriging danych kodowanych (ang. *Indicator kriging*) | Modelowanie
+
+```{r }
+model_ind <- vgm(0.05, model = 'Sph', range = 2000, add.to = vgm(0.05, "Exp", 6000, nugget = 0.05))   
+plot(vario_ind, model=model_ind)
+fitted_ind <- fit.variogram(vario_ind, model_ind)
+fitted_ind
+plot(vario_ind, model=fitted_ind)
+```
+
+
+### Kriging danych kodowanych (ang. *Indicator kriging*) | Interpolacja
+
+```{r }
+ik <- krige(temp_ind~1, wolin_lato_los, grid, model=fitted_ind)
+```{r plotsy1ok, eval=FALSE}
+spplot(ik, "var1.pred")
+spplot(ik, "var1.var")
+```{r plotsy2ok, echo=FALSE}
+library('gridExtra')
+library('sp')
+p1 <- spplot(ik, "var1.pred", main='Prawdopodobieństwo Temp < 20')
+p2 <- spplot(ik, "var1.var", main='Wariancja predykcji IK')
+grid.arrange(p1, p2, ncol=2)
+```
+
+
+### Kriging danych kodowanych (ang. *Indicator kriging*)
+
+```{r }
+vario_ind20 <- variogram(I(X2002.08.20_TPZ>20)~1, wolin_lato_los)  
+fitted_ind20 <- fit.variogram(vario_ind20, vgm(0.1, "Exp", 9000, nugget=0.05))
+vario_ind22 <- variogram(I(X2002.08.20_TPZ>22)~1, wolin_lato_los)  
+fitted_ind22 <- fit.variogram(vario_ind22, vgm(0.15, "Exp", 9000, nugget=0.1))
+vario_ind25 <- variogram(I(X2002.08.20_TPZ>25)~1, wolin_lato_los)  
+fitted_ind25 <- fit.variogram(vario_ind25, vgm(0.1, "Exp", 9000, nugget=0.1))
+
+ik20 <- krige(I(X2002.08.20_TPZ>20)~1, wolin_lato_los, grid, model=fitted_ind20, nmax=10)
+ik22 <- krige(I(X2002.08.20_TPZ>22)~1, wolin_lato_los, grid, model=fitted_ind22, nmax=10)
+ik25 <- krige(I(X2002.08.20_TPZ>25)~1, wolin_lato_los, grid, model=fitted_ind25, nmax=10)
+
+```{r ploty_trzyik, echo=FALSE, fig.height=8}
+library('gridExtra')
+p1 <- spplot(ik20, "var1.pred", main="Prawdopodobieństwo Temp > 20")
+p2 <- spplot(ik22, "var1.pred", main="Prawdopodobieństwo Temp > 22")
+p3 <- spplot(ik25, "var1.pred", main="Prawdopodobieństwo Temp > 25")
+grid.arrange(p1, p2, p3, ncol=1)
+```
+
+    

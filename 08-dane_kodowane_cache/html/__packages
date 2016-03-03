@@ -1,0 +1,7 @@
+base
+knitr
+sp
+raster
+ggplot2
+gstat
+gridExtra

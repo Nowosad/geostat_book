@@ -1,8 +1,3 @@
-*.Rhistory
-*.RData
-*-tikzDictionary
-figures/
-_cache/
-/html
-/pdf
 .Rproj.user
+.Rhistory
+.RData

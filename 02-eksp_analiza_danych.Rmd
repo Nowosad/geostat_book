@@ -1,0 +1,654 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Eksploracyjna analiza danych
+
+```{r, include=FALSE}
+library('methods')
+```
+
+
+## Eksploracyjna analiza danych | Cel
+- Ogólna charakterystyka danych oraz badanego zjawiska
+- Określenie przestrzennego/czasowego typu próbkowania
+- Informacja o relacji pomiędzy lokalizacją obserwacji a czynnikami wpływającymi na zmienność przestrzenną cechy
+
+## Dane Wolin
+### Dane Wolin
+
+```{r }
+library('sp')
+library('rgdal')
+
+wolin_lato_los <- read.csv('data/Wolin_TPZ_p_lato_750losN.csv', na.strings=-999.00)
+coordinates(wolin_lato_los) <- ~X+Y
+proj4string(wolin_lato_los) <- '+init=epsg:32633'
+par(mar=c(rep(0, 4)))
+plot(wolin_lato_los)
+str(wolin_lato_los)
+str(wolin_lato_los@data)
+
+poligon <- readOGR('data', 'wolin_polygon')
+```
+
+
+## Statystyki opisowe
+### Statystyki opisowe
+
+```{r }
+summary(wolin_lato_los@data)
+```
+
+
+### Statystyki opisowe | średnia i mediana
+
+```{r }
+median(wolin_lato_los$X1999.09.13_TPZ, na.rm=TRUE)
+mean(wolin_lato_los$X1999.09.13_TPZ, na.rm=TRUE)
+```
+
+
+### Statystyki opisowe | średnia i mediana
+- w wypadku symetrycznego rozkładu te dwie cechy są równe
+- średnia jest bardziej wrażliwa na wartości odstające
+- mediana jest lepszą miarą środka danych, jeżeli są one skośne
+
+Po co używać średniej?
+
+- przydatniejsza w przypadku małych zbiorów danych
+- gdy rozkład danych jest symetryczny
+- (jednak) często warto podawać obie miary
+  
+### Statystyki opisowe | minimum i maksimum
+
+```{r }
+min(wolin_lato_los$X1999.09.13_TPZ, na.rm=TRUE)
+max(wolin_lato_los$X1999.09.13_TPZ, na.rm=TRUE)
+```
+
+
+### Statystyki opisowe | ochylenie standardowe
+![](figs/sd.png)
+
+```{r }
+sd(wolin_lato_los$X1999.09.13_TPZ, na.rm=TRUE)
+```
+
+
+## Wykresy
+### Histogram
+
+```{r }
+library('ggplot2')
+ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + geom_histogram()
+```
+
+- Stworzony przez Karla Pearsona
+- Jest graficzną reprezentacją rozkładu <br> danych
+- Wartości danych są łączone w przedziały (na osi poziomej) a na osi pionowej jest ukazana liczba punktów (obserwacji) w każdym przedziale
+- Różny dobór przedziałów może dawać inną informację
+- W pakiecie ggplot2, domyślnie przedział to zakres/30
+
+### Estymator jądrowy gęstości (ang. *kernel density estimation*)
+
+```{r }
+ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + geom_density()
+```
+
+
+### Wykresy kwantyl-kwantyl (ang.*quantile-quantile*)
+
+```{r }
+ggplot(wolin_lato_los@data, aes(sample=X1999.09.13_TPZ)) + stat_qq()
+```
+
+
+### Wykresy kwantyl-kwantyl (ang. *quantile-quantile*)
+http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot
+![http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot](figs/qq.png)
+
+<!--    
+## [analiza typu rozkładu jednej zmiennej i porównanie rozkładów dwóch zmiennych (wykresy q-q i p-p)]
+    
+
+```{r }
+df <- as.data.frame(qqplot(wolin_lato_los$X1999.09.13_TPZ, wolin_lato_los$X1999.09.13_NDVI, plot.it=FALSE))
+ggplot(df) + geom_point(aes(x=x, y=y)) + xlab('TPZ') + ylab('NDVI')
+
+ggplot(wolin_lato_los@data) + geom_point(aes(x=X1999.09.13_TPZ, y=X1999.09.13_NDVI)) + xlab('TPZ') + ylab('NDVI')
+```
+
+-->
+
+### Dystrybuanta (CDF)
+- Dystrybuanta (ang. conditional density function - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości
+
+
+```{r }
+ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + stat_ecdf()
+```
+
+
+## Porównanie zmiennych
+
+### Kowariancja
+- Kowariancja jest nieunormowaną miarą zależności liniowej pomiędzy dwiema zmiennymi
+- Kowariancja dwóch zmiennych $x$ i $y$ pokazuje jak dwie zmienne są ze sobą liniowo powiązane
+- Dodatnia kowariancja wzkazuje na pozytywną relację liniową pomiędzy zmiennymi, podczas gdy ujemna kowariancja świadczy o odwrotnej sytuacji
+- Jeżeli zmienne nie są ze sobą liniowo powiązane, wartość kowariacji jest bliska zeru
+- Inaczej mówiąc, kowariancja stanowi miarę wspólnej zmienności dwóch zmiennych  
+- Wielkość samej kowariancji uzależniona jest od przyjętej skali zmiennej (jednostki)
+- Inne wyniku uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wieku i dochodu w złotówkach a inne dla wieku i dochodu w dolarach
+
+
+```{r }
+cov(wolin_lato_los$X1999.09.13_TPZ, wolin_lato_los$X1999.09.13_NDVI, use=  "complete.obs")
+```
+
+
+### Współczynnik korelacji
+- Wspołczynnik korelacji to unormowana miara zależności pomiędzy dwiema zmiennymi, przyjmująca wartości od -1 do 1
+- Współczynnik korelacji jest uzyskiwany poprzez podzielenie wartości kowariancji przez odchylenie standardowe wyników
+- Z racji unormowania nie jest ona uzależniona od jednostki
+
+```{r }
+ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ, X1999.09.13_NDVI)) + geom_point()
+cor(wolin_lato_los$X1999.09.13_TPZ, wolin_lato_los$X1999.09.13_NDVI, use=  "complete.obs")
+```
+
+
+### Współczynnik korelacji
+
+```{r }
+cor.test(wolin_lato_los$X1999.09.13_TPZ, wolin_lato_los$X1999.09.13_NDVI)
+```
+
+
+### Współczynnik korelacji
+
+```{r }
+cor(wolin_lato_los@data[c(1:4, 7:9)], use= "complete.obs")
+```
+
+
+### Współczynnik korelacji
+
+```{r }
+library('corrplot')
+corrplot(cor(wolin_lato_los@data[c(1:4, 7:9)], use= "complete.obs"))
+```
+
+
+<!--    
+### Dane odstające
+-->
+
+
+### Wykresy pudełkowe
+
+```{r }
+wolin_lato_los$CLC06_p_lato <- as.factor(wolin_lato_los$CLC06_p_lato)
+ggplot(wolin_lato_los@data, aes(CLC06_p_lato, X1999.09.13_TPZ)) + geom_boxplot()
+```
+
+
+- obrazuje pięc podstawowych <br> statystyk opisowych oraz wartości odstające
+- pudełko to zakres międzykwantylowy
+- linie oznaczają najbardziej ekstremalne wartości, ale nie odstające. Górna to 1,5\*IQR ponad krawędź pudełka, dolna to 1,5\*IQR poniżej wartości dolnej krawędzi pudełka
+- linia środkowa to mediana
+
+### Wykresy pudełkowe
+
+```{r }
+ggplot(wolin_lato_los@data, aes(CLC06_p_lato, X1999.09.13_TPZ)) + geom_boxplot()
+```
+
+1. Tereny komunikacyjne i porty
+2. Zabudowa luźna, złożone systemy upraw i działek
+3. Grunty orne, Łąki
+4. Lasy liściaste,  Lasy iglaste, mieszane
+5. Bagna, Torfowiska
+6. Zbiorniki wodne
+
+### Testowanie istotności różnić średniej pomiędzy grupami
+
+
+```{r }
+wolin_lato_los$CLC06_p_lato <- as.factor(wolin_lato_los$CLC06_p_lato)
+aov_test <- aov(X1999.09.13_TPZ~CLC06_p_lato, data=wolin_lato_los)
+summary(aov_test)
+```
+
+
+
+### Testowanie istotności różnić średniej pomiędzy grupami
+
+
+```{r }
+tukey <- TukeyHSD(aov_test, "CLC06_p_lato")
+plot(tukey, las=1)
+```
+
+## Transformacje danych
+### Transformacje danych
+- Transformacja danych może mieć na celu ułatwienie porównywania różnych zmiennych, zniwelowanie skośności rozkładu lub też zmniejszenie wpływu danych odstających
+- Centrowanie i skalowanie (standaryzacja):
+    - Centrowanie danych - wybierana jest przeciętna wartość predyktora, a następnie od wszystkich wartości predyktorów odejmowana jest wybrana wcześniej wartość
+    - Skalowanie danych - dzielenie każdej wartości predyktora przez jego odchylenie standardowe
+    - Wadą tego podjeścia jest główne zmniejszenie interpretowalności pojedynczych wartości
+- Redukcja skośności:
+    - Logarytmizacja
+    - Pierwiastkowanie
+    - Rodzina transformacji Boxa Coxa
+    - Inne    
+
+### Transformacja danych | Logarytmizacja
+
+
+```{r }
+ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + geom_density()
+wolin_lato_los$log_tpz <- log(wolin_lato_los$X2002.08.20_TPZ)
+ggplot(wolin_lato_los@data, aes(log_tpz)) + geom_density()
+wolin_lato_los$exp_tpz <- exp(wolin_lato_los$log_tpz)
+ggplot(wolin_lato_los@data, aes(exp_tpz)) + geom_density()
+```
+
+
+### Transformacja danych | Pierwiastkowanie
+
+```{r }
+ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + geom_density()
+wolin_lato_los$sqrt_tpz <- sqrt(wolin_lato_los$X2002.08.20_TPZ)
+ggplot(wolin_lato_los@data, aes(sqrt_tpz)) + geom_density()
+wolin_lato_los$pow_tpz <- wolin_lato_los$sqrt_tpz^2
+ggplot(wolin_lato_los@data, aes(pow_tpz)) + geom_density()
+```
+
+
+### Transformacja danych | Rodzina transformacji Boxa Coxa
+
+```{r }
+library('caret')
+ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + geom_density()
+transformacja <- BoxCoxTrans(wolin_lato_los$X2002.08.20_TPZ)
+transformacja
+wolin_lato_los$bc_tpz <- predict(transformacja, wolin_lato_los$X2002.08.20_TPZ)
+ggplot(wolin_lato_los@data, aes(bc_tpz)) + geom_density()
+invBoxCox <- function(x, lambda) if (lambda == 0) exp(x) else (lambda*x + 1)^(1/lambda) 
+wolin_lato_los$bc_tpz_inv <- invBoxCox(wolin_lato_los$bc_tpz, lambda=-2)
+ggplot(wolin_lato_los@data, aes(bc_tpz_inv)) + geom_density()
+```
+
+
+## Mapy 
+
+### Podstawowe terminy | Kontekst przestrzenny
+- Populacja - cały obszar, dla którego chcemy określić wybrane właściwości
+- Próba - zbiór obserwacji, dla których mamy informacje. Inaczej, próba to podzbiór populacji. Zazwyczaj niemożliwe (lub bardzo kosztowne) jest zdobycie informacji o całej populacji. Z tego powodu bardzo cenne jest odpowiednie wykorzystanie informacji z próby.
+
+### Mapy punktowe | Cel
+- Sprawdzenie poprawności współrzędnych
+- Wgląd w typ próbkowania
+- Sprawdzenie poprawności danych - dane odstające lokalnie
+- Identyfikacja głównych cech struktury przestrzennej zjawiska (np. trend)
+
+### Typ próbowania
+- Regularny
+- Losowy
+- Losowy stratyfikowany
+- Preferencyjny
+- Liniowy
+
+### Typ próbowania | Regularny
+
+```{r }
+set.seed(225)
+regularny <- spsample(poligon, 150, type = 'regular')
+plot(regularny)
+```
+
+- Zmienna *offset*
+
+### Typ próbowania | Losowy
+
+```{r }
+set.seed(301)
+losowy <- spsample(poligon, 150, type = 'random')
+plot(losowy)
+```
+
+
+- Każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia
+- Każdy punkt jest losowany niezależnie od pozostałych
+
+### Typ próbowania | Losowy stratyfikowany
+
+```{r }
+set.seed(125)
+strat <- spsample(poligon, 150, type = 'stratified')
+plot(strat)
+```
+
+
+### Typ próbowania | Preferencyjny I
+
+
+```{r }
+set.seed(425)
+pref <- spsample(poligon, 150, type = 'clustered', nclusters=80)
+plot(pref)
+```
+
+
+### Typ próbowania | Liniowy
+
+```{r }
+library('rgdal')
+linia <- readOGR("data", "linia", verbose=FALSE)
+set.seed(224)
+izoliniowy <- spsample(linia, 150, type = 'regular')
+plot(izoliniowy)
+```
+
+
+
+### Mapy punktowe i dane lokalnie odstające
+
+```{r }
+par(mar=c(rep(0, 4)))
+library('rgdal')
+poligon <- readOGR(dsn='data', layer='wolin_polygon', verbose=FALSE) 
+plot(poligon) 
+plot(wolin_lato_los, add=TRUE) 
+```
+
+
+### Mapy punktowe i dane lokalnie odstające
+
+```{r klik, eval=FALSE}
+library('sp')
+# select.spatial(wolin_lato_los, digitize=FALSE, rownames=TRUE)
+spplot(wolin_lato_los, "X2002.08.20_TPZ", identify=TRUE)
+```
+
+
+### Mapy punktowe i dane lokalnie odstające
+
+```{r }
+spplot(wolin_lato_los, "X2002.08.20_TPZ", sp.layout = poligon)
+```
+
+
+<!--
+### Mapy punktowe i dane lokalnie odstające
+
+```{r geoxp00, eval=FALSE}
+library('GeoXp')
+options(device="windows") #X11
+# clear all plots
+dev.new()
+boxplotmap(wolin_lato_los, "X2002.08.20_TPZ")
+driftmap(wolin_lato_los, "X2002.08.20_TPZ")
+plot3dmap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI', 'odl_od_morza'))
+```
+
+
+-->
+
+
+<!--
+
+### Mapy punktowe i dane lokalnie odstające
+
+```{r geoxp, eval=FALSE}
+# library('GeoXp')
+# options(device="windows") #X11
+# # clear all plots
+# dev.new()
+# boxplotmap(wolin_lato_los, "X2002.08.20_TPZ")
+# driftmap(wolin_lato_los, "X2002.08.20_TPZ")
+# plot3dmap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI', 'odl_od_morza'))
+```
+
+
+## Średnia lokalna i wariancja lokaln
+### Średnia lokalna 
+library('gplots')
+wapply(wolin_lato_los_df$X,wolin_lato_los$X2002.08.20_TPZ, fun=mean, n=10)
+#' 
+#' ### Wariancja lokalna 
+wapply(wolin_lato_los_df$X,wolin_lato_los$X2002.08.20_TPZ, fun=var, n=10)
+#' 
+wolin_lato_los_df <- as.data.frame(wolin_lato_los)
+library("ggplot2")
+ggplot(wolin_lato_los_df, aes(X, X2002.08.20_TPZ)) + geom_point() + geom_smooth()
+ggplot(wolin_lato_los_df, aes(X2002.08.20_TPZ, Y)) + geom_point() + geom_smooth() + coord_flip()
+
+library("gstat")
+wolin_lato_pref <- read.csv("data/Wolin_TPZ_p_lato_754prefN.csv", na.strings = -999)
+wolin_lato_pref$rn <- 1:nrow(wolin_lato_pref)
+coordinates(wolin_lato_pref) <- ~X + Y
+proj4string(wolin_lato_pref) <- "+init=epsg:32633"
+spplot(wolin_lato_pref, "rn", colorkey=TRUE)
+
+library('rgdal')
+library("raster")
+library('rgeos')
+poligon_shp <- readOGR(dsn = "data", layer = "wolin_polygon", verbose = FALSE)
+siatka_n <- raster(extent(poligon_shp))
+res(siatka_n) <- c(5000, 5000)
+siatka_n[] <- 0
+proj4string(siatka_n) <- CRS(proj4string(wolin_lato_pref))
+siatka_n <- mask(siatka_n, gBuffer(poligon_shp, width = 2500))
+siatka_n <- as(siatka_n, "SpatialPolygonsDataFrame")
+siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
+plot(siatka_n)
+plot(wolin_lato_pref, add=TRUE)
+
+lok_srednia <- aggregate(wolin_lato_pref['X2002.08.20_TPZ'], by = siatka_n, FUN = mean) 
+lok_wariancja <- aggregate(wolin_lato_pref['X2002.08.20_TPZ'], by = siatka_n, FUN = var) 
+
+lokalne <- cbind(lok_srednia@data, lok_wariancja@data)
+names(lokalne) <- c("srednia", "wariancja")
+ggplot(lokalne, aes(srednia, wariancja)) + geom_point()
+
+spplot(siatka_nr, "liczebnosc")
+
+
+[statystyki lokalne w ruchomym oknie (średnia lokalna i wariancja lokalna)]
+    
+    GeoXp
+    
+    
+    library('GeoXp')
+    options(device="X11")
+    dev.new()
+    # angleplotmap(wolin_lato_los, "X2002.08.20_TPZ") # zapycha pamięć
+    barmap(wolin_lato_los, "X2002.08.20_TPZ") # klikadło wykresowe
+    boxplotmap(wolin_lato_los, "X2002.08.20_TPZ")
+    densitymap(wolin_lato_los, "X2002.08.20_TPZ")
+    driftmap(wolin_lato_los, "X2002.08.20_TPZ")
+    ginimap(wolin_lato_los, "X2002.08.20_TPZ")
+    histomap(wolin_lato_los, "X2002.08.20_TPZ")
+    variocloudmap(wolin_lato_los, "X2002.08.20_TPZ") dłuugo
+    
+    clustermap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI'), 3) ## ?
+    dbledensitymap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI'))
+    dblehistomap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI'))
+    histobarmap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI'))
+    pcamap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI'))
+    plot3dmap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI', 'odl_od_morza'))
+    scattermap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI'))
+
+    [efekt proporcjonalności]
+    
+    Efekt proporcjonalności średniej lokalnej do wariancji lokalnej)
+-->
+
+## Rozgrupowanie danych
+
+### Rozgrupowanie danych
+- Istnieje szereg metod rozgrupowywania danych, między innymi:
+    - Rozgrupowywanie komórkowe
+    - Rozgrupowywanie poligonowe
+- Celem tych metod jest nadanie wag obserwacjom w celu zapewnienia reprezentatywności przestrzennej danych
+
+### Rozgrupowanie danych
+
+```{r }
+library('sp')
+wolin_lato_pref <- read.csv('data/Wolin_TPZ_p_lato_754prefN.csv', na.strings=-999.00)
+coordinates(wolin_lato_pref) <- ~X+Y
+proj4string(wolin_lato_pref) <- '+init=epsg:32633'
+spplot(wolin_lato_pref, "X2002.08.20_TPZ")
+summary(wolin_lato_pref$X2002.08.20_TPZ)
+```
+
+
+### Rozgrupowanie komórkowe I | (ang. *cell declustering*)
+
+$$w'_j=\frac{\frac{1}{n_i}}{\text{liczba komórek z danymi}} \cdot n$$
+, gdzie $n_i$ to liczba obserwacji w komórce, a $n$ to łączna liczba obserwacji
+
+### Rozgrupowanie komórkowe I | (ang. *cell declustering*)
+
+
+
+```{r }
+wolin_lato_pref <- read.csv("data/Wolin_TPZ_p_lato_754prefN.csv", na.strings = -999)
+wolin_lato_pref$id <- 1:nrow(wolin_lato_pref)
+coordinates(wolin_lato_pref) <- ~X + Y
+proj4string(wolin_lato_pref) <- "+init=epsg:32633"
+spplot(wolin_lato_pref, "id", colorkey=TRUE)
+
+library('rgdal')
+library("raster")
+library('rgeos')
+poligon_shp <- readOGR(dsn = "data", layer = "wolin_polygon", verbose = FALSE)
+siatka_n <- raster(extent(poligon_shp))
+# siatka_n <- raster(xmn=450000, xmx=485000, ymn=5960000, ymx=5989000)
+res(siatka_n) <- c(1000, 1000)
+siatka_n[] <- 0
+proj4string(siatka_n) <- CRS(proj4string(wolin_lato_pref))
+siatka_n <- mask(siatka_n, gBuffer(poligon_shp, width = 500))
+siatka_n <- as(siatka_n, "SpatialPolygonsDataFrame")
+siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
+plot(siatka_n)
+plot(wolin_lato_pref, add=TRUE)
+
+wolin_lato_pref$liczebnosc <- rep(0, length(wolin_lato_pref))
+siatka_nr <- aggregate(wolin_lato_pref['liczebnosc'], by = siatka_n, FUN = length) 
+spplot(siatka_nr, "liczebnosc")
+
+liczba <- over(wolin_lato_pref, siatka_nr)
+wolin_lato_pref$waga <- ((1/liczba$liczebnosc)/sum(!is.na(siatka_nr$liczebnosc))) * length(wolin_lato_pref)
+
+spplot(wolin_lato_pref, 'waga')
+
+srednia_arytmetyczna <- mean(wolin_lato_pref$X2002.08.20_TPZ)
+srednia_wazona_c1 <- mean(wolin_lato_pref$X2002.08.20_TPZ * wolin_lato_pref$waga, na.rm=TRUE)
+```
+
+
+### Rozgrupowanie komórkowe II | (ang. *cell declustering*)
+<!--
+- Przygotowanie danych
+https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html
+
+When "interpolating" with nmax=1, you basically assign the value of the 
+nearest observation to each grid cell, so, honoustly, it's hard to call 
+this interpolation, it is rather something of a discretized Thiessen 
+polygon.
+-->
+
+
+
+```{r }
+library('gstat')
+wolin_lato_pref <- read.csv('data/Wolin_TPZ_p_lato_754prefN.csv', na.strings=-999.00)
+wolin_lato_pref$id <- 1:nrow(wolin_lato_pref)
+coordinates(wolin_lato_pref) <- ~X+Y
+proj4string(wolin_lato_pref) <- '+init=epsg:32633'
+spplot(wolin_lato_pref, "id")
+library('raster')
+poligon_shp <- readOGR(dsn='data', layer='wolin_polygon', verbose=FALSE)
+siatka_n <- raster(extent(poligon_shp))
+res(siatka_n) <- c(100, 100)
+siatka_n[] <- 0
+proj4string(siatka_n) <- CRS(proj4string(wolin_lato_pref))
+siatka_n <- mask(siatka_n, poligon_shp)
+siatka_n <- as(siatka_n, 'SpatialPointsDataFrame')
+siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
+gridded(siatka_n) <- TRUE
+plot(siatka_n)
+```
+
+
+### Rozgrupowanie komórkowe II | (ang. *cell declustering*)
+
+```{r }
+out <-  krige(id~1, wolin_lato_pref, siatka_n, nmax=1)
+spplot(out, "var1.pred")
+df <- as.data.frame(table(out[[1]]))
+df$waga <- df$Freq/sum(df$Freq)
+wolin_lato_pref <- merge(wolin_lato_pref, df, by.x="id", by.y="Var1")
+summary(wolin_lato_pref$waga)
+spplot(out, "var1.pred", sp.layout=list("sp.points", wolin_lato_pref))
+spplot(wolin_lato_pref["waga"])
+
+srednia_arytmetyczna <- mean(wolin_lato_pref$X2002.08.20_TPZ)
+srednia_wazona_c2 <- sum(wolin_lato_pref$X2002.08.20_TPZ * wolin_lato_pref$waga, na.rm=TRUE)
+```
+
+
+### Rozgrupowanie poligonowe | (ang. *polygon declustering*)
+$$w'_j=\frac{area_j}{\sum_{j=1}^{n}area_j} \cdot n$$
+, gdzie $area_j$ powierzchnia dla wybranej obserwacji, a $n$ to łączna liczba obserwacji
+
+### Rozgrupowanie poligonowe | (ang. *polygon declustering*)
+
+```{r }
+wolin_lato_pref <- read.csv('data/Wolin_TPZ_p_lato_754prefN.csv', na.strings=-999.00)
+wolin_lato_pref$id <- 1:nrow(wolin_lato_pref)
+coordinates(wolin_lato_pref) <- ~X+Y
+proj4string(wolin_lato_pref) <- '+init=epsg:32633'
+spplot(wolin_lato_pref, "id")
+
+library('dismo')
+v <- voronoi(wolin_lato_pref)
+plot(wolin_lato_pref, cex=0.2, col='red')
+plot(v, add=TRUE)
+
+library('rgeos')
+v_intersect <-intersect(poligon_shp, v)
+plot(wolin_lato_pref, cex=0.2, col='red')
+plot(v_intersect, add=TRUE)
+
+v_intersect$pow <- area(v_intersect)
+v_intersect$waga <- v_intersect$pow/sum(v_intersect$pow) * length(wolin_lato_pref)
+
+wolin_lato_pref <- merge(wolin_lato_pref, v_intersect[c('id', 'waga')], by='id')
+spplot(wolin_lato_pref, 'waga')
+
+srednia_arytmetyczna <- mean(wolin_lato_pref$X2002.08.20_TPZ)
+srednia_wazona_p <- mean(wolin_lato_pref$X2002.08.20_TPZ*wolin_lato_pref$waga)
+```
+
+
+
+```{r tab_dec_1, echo=FALSE}
+library('knitr')
+srednia_arytmetyczna_pop <- mean(read.csv('data/Wolin_TPZ_p_lato_pop.csv')$X2002.08.20_TPZ)
+df <- data.frame(sa=c(srednia_arytmetyczna_pop, srednia_arytmetyczna, srednia_wazona_c1, srednia_wazona_c2, srednia_wazona_p))
+rownames(df) <- c('Populacja', 'Próba', "Rozgrupowanie komórkowe I", "Rozgrupowanie komórkowe II", "Rozgrupowanie poligonowe")
+kable(df, col.names='Średnia arytmetyczna', row.names=TRUE)
+```
+
+
+<!--
+polygon declustering - http://gis.stackexchange.com/questions/122376/cell-declustering-using-open-source-software
+cell declustering - https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html
+http://gaa.org.au/pdf/DeclusterDebias-CCG.pdf
+-->
+

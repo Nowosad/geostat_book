@@ -1,0 +1,143 @@
+---
+knit: bookdown::preview_chapter
+---
+# Estymacje jednozmienne
+
+```{r setup5, echo=FALSE, include=FALSE}
+library('knitr')
+opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE) 
+library('sp')
+wolin_lato_los <- read.csv('data/Wolin_TPZ_p_lato_750losN.csv', na.strings=-999.00)
+coordinates(wolin_lato_los) <- ~X+Y
+proj4string(wolin_lato_los) <- '+init=epsg:32633'
+```
+
+## Kriging
+
+### Kriging | Interpolacja geostatystyczna
+- Zaproponowana w latach 50. przez Daniela Krige
+- Istnieje wiele rodzajów krigingu
+- Główna zasada mówi, że prognoza w danej lokalizacji jest kombinacją obokległych obserwacji
+- Waga nadawana każdej z obserwacji jest zależna od stopnia (przestrzennej) korelacji - stąd też bierze się istotna rola semiwariogramów
+
+## Rodzaje krigingu
+### Rodzaje krigingu
+- Kriging prosty (ang. *Simple kriging*)
+- Kriging zwykły (ang. *Ordinary kriging*)
+- Kriging z trendem (ang. *Kriging with a trend*)
+- Kriging stratyfikowany (ang. *Kriging within strata* – KWS)
+- Kriging prosty ze zmiennymi średnimi lokalnymi (ang. *Simple kriging with varying local means* - SKlm)
+- Kriging z zewnętrznym trendem/Uniwersalny kriging (ang.*Kriging with an external trend/Universal kriging*)
+- Kriging danych kodowanych (ang. *Indicator kriging*)
+- Kokriging (ang. *Co-kriging*)
+- Inne
+
+
+## Kriging prosty (ang. *Simple kriging*)
+### Kriging prosty (ang. *Simple kriging*)
+- Zakłada, że średnia jest znana i stała na całym obszarze
+
+### Kriging prosty (ang. *Simple kriging*)
+
+```{r }
+library('raster')
+ras <- raster('data/siatka_raster.tif')
+grid <- as(ras, "SpatialGridDataFrame")
+proj4string(grid) <- proj4string(wolin_lato_los)
+
+library('gstat')
+vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
+model_zl2 <- vgm(10, model = 'Sph', range = 4000, add.to = vgm(5, "Gau", 8000, nugget = 5))
+model_zl2
+fitted_zl2 <- fit.variogram(vario, model_zl2)
+plot(vario, model=fitted_zl2)
+
+sk <- krige(X2002.08.20_TPZ~1, wolin_lato_los, grid, model=model_zl2, beta=23.6)
+summary(sk)
+```{r plotsy1, eval=FALSE}
+spplot(sk, "var1.pred")
+spplot(sk, "var1.var")
+```{r plotsy2, echo=FALSE, eval=TRUE}
+library('gridExtra')
+p1 <- spplot(sk, "var1.pred", main='Predykcja SK')
+p2 <- spplot(sk, "var1.var", main='Wariancja predykcji SK')
+grid.arrange(p1, p2, ncol=2)
+```
+
+
+
+## Kriging zwykły (ang. *Ordinary kriging*)
+### Kriging zwykły (ang. *Ordinary kriging*)
+- Średnia traktowana jest jako nieznana
+- Uwzględnia lokalne fluktuacje średniej poprzez stosowanie ruchomego okna
+
+### Kriging zwykły  (ang. *Ordinary kriging*)
+
+```{r }
+ok <- krige(X2002.08.20_TPZ~1, wolin_lato_los, grid, model=model_zl2, maxdist=1000)
+```{r plotsy1ok2, eval=FALSE}
+spplot(ok, "var1.pred")
+spplot(ok, "var1.var")
+```{r plotsy2ok2, echo=FALSE, eval=TRUE}
+library('gridExtra')
+p1 <- spplot(ok, "var1.pred", main='Predykcja OK')
+p2 <- spplot(ok, "var1.var", main='Wariancja predykcji OK')
+grid.arrange(p1, p2, ncol=2)
+```
+
+
+<!--
+
+```{r }
+spplot(ok, "var1.pred", sp.layout=list(wolin_lato_los, pch=21, col="white"))
+spplot(ok, "var1.var", sp.layout=list(wolin_lato_los, pch=21, col="white"))
+```
+
+
+-->
+## Kriging z trendem (ang. *Kriging with a trend*)
+### Kriging z trendem (ang. *Kriging with a trend*)
+
+```{r }
+vario_kzt <- variogram(X2002.08.20_TPZ~X+Y, data=wolin_lato_los)
+plot(vario_kzt)
+model_kzt <- vgm(psill = 17, model = 'Sph', range = 12000, nugget = 5)
+fitted_kzt <- fit.variogram(vario_kzt, model_kzt)
+fitted_kzt
+plot(vario_kzt, fitted_kzt)
+
+grid_sp <- as(ras, "SpatialPixelsDataFrame")
+proj4string(grid_sp) <- proj4string(wolin_lato_los)
+grid_sp@data <- as.data.frame(coordinates(grid_sp))
+names(grid_sp) <- c("X", "Y")
+
+wolin_lato_los@data <- cbind(wolin_lato_los@data, as.data.frame(coordinates(wolin_lato_los)))
+kzt <- krige(X2002.08.20_TPZ~X+Y, wolin_lato_los, grid_sp, model=fitted_kzt)
+
+```{r plotsy1kzt, eval=FALSE}
+spplot(kzt, "var1.pred")
+spplot(kzt, "var1.var")
+```{r plotsy2kzt, echo=FALSE, eval=TRUE}
+library('gridExtra')
+p1 <- spplot(kzt, "var1.pred", main='Predykcja OK')
+p2 <- spplot(kzt, "var1.var", main='Wariancja predykcji OK')
+grid.arrange(p1, p2, ncol=2)
+```
+
+
+## Porównanie wyników SK, OK i KZT
+
+
+```{r ploty_trzy, echo=FALSE, fig.height=12}
+library('gridExtra')
+zmax <- round(max(sk$var1.pred, ok$var1.pred, kzt$var1.pred, na.rm=TRUE), 1) + 0.1    
+zmin <- round(min(sk$var1.pred, ok$var1.pred, kzt$var1.pred, na.rm=TRUE), 1) - 0.1    
+ramp <- seq(from=zmin, to=zmax, by=(zmax-zmin)/20)
+p1 <- spplot(sk, "var1.pred", at=ramp, main="SK")
+p2 <- spplot(ok, "var1.pred", at=ramp, main="OK")
+p3 <- spplot(kzt, "var1.pred", at=ramp, main="KZT")
+grid.arrange(p1, p2, p3, ncol=1, padding = unit(0, "line"))
+```
+
+
+
