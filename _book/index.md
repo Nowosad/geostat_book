@@ -1,7 +1,7 @@
 --- 
 title: "Geostatystyka"
 author: "Jakub Nowosad"
-date: "2016-03-03"
+date: "2016-03-04"
 knit: "bookdown::render_book"
 output:
   bookdown::gitbook:
