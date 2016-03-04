@@ -4,7 +4,7 @@ bookdown::gitbook:
     toolbar:
       position: fixed
     toc:
-      collapse: no
+      collapse: section
       before: |
         <li><a href="./">Geostatystyka - skrypt</a></li>
       after: |
