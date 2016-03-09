@@ -18,15 +18,34 @@ library('sp')
 library('raster')
 library('rgeos')
 library('magrittr')
+library('rasterVis')
 
 r <- raster('data/crc/g100_06.tif')
 spk_line <- readRDS('data/granica_spk_rds') %>% as(., 'SpatialLines')
 spk <- readRDS('data/granica_spk_rds')
 spk10 <- gBuffer(spk, width=10000) %>% spTransform(., proj4string(r))
-r2 <- crop(r, spk10) %>% projectRaster(., crs=proj4string(spk))
-spk2 <- gBuffer(spk, width=1000)
-r3 <- crop(r2, spk2) %>% mask(., spk2)
+r2 <- crop(r, spk10) %>% projectRaster(., crs=proj4string(spk), method='ngb')
+spk1 <- gBuffer(spk, width=1000)
+r3 <- crop(r2, spk1) %>% mask(., spk1)
 
-writeRaster(r3, 'data/crc06_spk.tif')
+# 1-9 Artificial surfaces
+# 12-22 Agricultural areas
+# 23-34 Forest and semi natural areas
+# 35-39 Wetlands
+# 40-44 Water bodies
+# 48 NODATA
+# 49, 50, 255 UNCLASSIFIED
+r4 <- reclassify(r3, include.lowest = TRUE, right=FALSE,
+                        c(12, 22, 1,
+                        23, 34, 2,
+                        35, 39, 3, 
+                        40, 44, 4))
+writeRaster(r4, 'data/crc06_spk.tif', overwrite=TRUE)
 fn <- 'data/crc/g100_06.tif'
 if (file.exists(fn)) file.remove(fn)
+# 
+# r5 <- ratify(r4) 
+# rat <- levels(r5)[[1]]
+# rat$legend <- c('Agricultural areas', 'Forest and semi natural areas', 'Water bodies')
+# levels(r5) <- rat
+# levelplot(r5)
