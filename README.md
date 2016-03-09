@@ -13,6 +13,15 @@
 12. Normalizacja przy symulacjach (GsLIB – metodyka nieparametryczna – strona 141; Wackernagel – metodyka parametryczna (wielomiany Hermite) –   strona 238)
 
 # data:
+
+## dane:
+- landuse - CLC - [licencja](http://wiki.openstreetmap.org/wiki/Corine_Land_Cover)
+- elevation (lidar + srtm + dted?)
+- ndvi
+- temperature
+- soils?
+
+## resources:
 - http://opentopo.sdsc.edu/lidar?format=sd
 - http://earthexplorer.usgs.gov/logout/expire 
 - http://neo.sci.gsfc.nasa.gov/

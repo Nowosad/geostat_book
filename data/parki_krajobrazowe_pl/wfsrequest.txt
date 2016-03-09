@@ -1,0 +1,1 @@
+http://sdi.gdos.gov.pl/wfs?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=GDOS:ParkiKrajobrazowe&SRSNAME=EPSG:2180&outputFormat=shape-zip&format_options=charset:windows-1250
