@@ -1,0 +1,20 @@
+sources: R/
+
+packages:
+  - XML
+  - sp
+  - raster
+  - rgeos
+  - magrittr	
+
+targets:
+  data:
+    depends:
+      - granica_spk 
+
+  data/parki_krajobrazowe_pl.zip:
+    command: download_granica_spk(target_name)
+    cleanup_level: purge
+  granica_spk:
+    command: process_granica_spk("data/parki_krajobrazowe_pl.zip")
+    packages: rgeos

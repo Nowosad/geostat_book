@@ -7,9 +7,9 @@ url10 <- "http://landsat-pds.s3.amazonaws.com/L8/187/022/LC81870222015186LGN00/L
 url11 <- "http://landsat-pds.s3.amazonaws.com/L8/187/022/LC81870222015186LGN00/LC81870222015186LGN00_B11.TIF"
 
 fn10 <- 'data/LC81870222015186LGN00_B10.tif'
-download.file(url10, fn10, mode = "wb")
+download.file(url10, fn10, method='curl')
 fn11 <- 'data/LC81870222015186LGN00_B11.tif'
-download.file(url11, fn11, mode = "wb")
+download.file(url11, fn11, method='curl')
 
 ###
 r <- stack('data/LC81870222015186LGN00_B10.tif', 'data/LC81870222015186LGN00_B11.tif')
