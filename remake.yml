@@ -16,6 +16,7 @@ targets:
       - data/landsat8_temperature_spk.tif
       - data/landsat8_ndvi_spk.tif
       - data/landsat8_savi_spk.tif
+      - data/raster_stack.rds
 
   data:
     depends:
@@ -27,7 +28,6 @@ targets:
     command: process_granica_spk("data/parki_krajobrazowe_pl.zip")
     cleanup_level: never
 
-    
   data/clc/g100_06.tif:
     command: download_clc()
   data/clc06_spk.tif:
@@ -62,3 +62,10 @@ targets:
   data/landsat8_savi_spk.tif:  
     command: process_landsat8_ndvi(cropped_landsat45, type=2)  
     cleanup_level: never
+    
+  raster_stack:
+    command: data_merger(granica_spk, "data/clc06_spk.tif", "data/srtm_spk.tif", "data/landsat8_temperature_spk.tif", "data/landsat8_ndvi_spk.tif", "data/landsat8_savi_spk.tif")
+  data/raster_stack.rds:
+    command: saveRDS(raster_stack, "data/raster_stack.rds")
+    cleanup_level: never 
+
