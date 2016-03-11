@@ -1,6 +1,4 @@
-sources: 
-  - R/1_spk_border.R
-  - R/2_CLC_download.R
+sources: R/
   
 packages:
   - XML
@@ -14,6 +12,7 @@ targets:
     depends:
       - granica_spk
       - data/clc06_spk.tif
+      - data/srtm_spk.tif
 
   data:
     depends:
@@ -29,4 +28,9 @@ targets:
     command: download_clc()
   data/clc06_spk.tif:
     command: process_clc("data/clc/g100_06.tif", granica_spk)
+    
+  data/srtm_41_02.zip:
+    command: download_srtm(target_name)
+  data/srtm_spk.tif:
+    command: process_srtm("data/srtm_41_02.zip", granica_spk)
     
