@@ -13,6 +13,9 @@ targets:
       - granica_spk
       - data/clc06_spk.tif
       - data/srtm_spk.tif
+      - data/landsat8_temperature_spk.tif
+      - data/landsat8_ndvi_spk.tif
+      - data/landsat8_savi_spk.tif
 
   data:
     depends:
@@ -22,15 +25,40 @@ targets:
     command: download_granica_spk(target_name)
   granica_spk:
     command: process_granica_spk("data/parki_krajobrazowe_pl.zip")
-    packages: rgeos
+    cleanup_level: never
+
     
   data/clc/g100_06.tif:
     command: download_clc()
   data/clc06_spk.tif:
     command: process_clc("data/clc/g100_06.tif", granica_spk)
+    cleanup_level: never
     
   data/srtm_41_02.zip:
     command: download_srtm(target_name)
   data/srtm_spk.tif:
     command: process_srtm("data/srtm_41_02.zip", granica_spk)
+    cleanup_level: never
     
+  data/LC81870222015186LGN00_B10.tif:
+    command: download_landsat8(target_name, band=10)
+  data/LC81870222015186LGN00_B11.tif:
+    command: download_landsat8(target_name, band=11)
+  cropped_landsat1011:  
+    command: crop_landsat("data/LC81870222015186LGN00_B10.tif", "data/LC81870222015186LGN00_B11.tif", granica_spk)
+  data/landsat8_temperature_spk.tif:
+   command: process_landsat8_temp(cropped_landsat1011)
+   cleanup_level: never
+   
+  data/LC81870222015186LGN00_B4.tif:
+    command: download_landsat8(target_name, band=4)
+  data/LC81870222015186LGN00_B5.tif:
+    command: download_landsat8(target_name, band=5)
+  cropped_landsat45:  
+    command: crop_landsat("data/LC81870222015186LGN00_B4.tif", "data/LC81870222015186LGN00_B5.tif", granica_spk)
+  data/landsat8_ndvi_spk.tif:  
+    command: process_landsat8_ndvi(cropped_landsat45, type=1)
+    cleanup_level: never
+  data/landsat8_savi_spk.tif:  
+    command: process_landsat8_ndvi(cropped_landsat45, type=2)  
+    cleanup_level: never
