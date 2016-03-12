@@ -1,7 +1,7 @@
 data_merger <- function(spk, srtm, clc, temp, ndvi, savi){
         ext <- extent(spk)
         rtemplate <- raster(ext)
-        res(rtemplate) <- 30
+        res(rtemplate) <- 90
         srtm_res <- resample(raster(srtm), rtemplate, method="bilinear")
         clc_res  <- resample(raster(clc),  rtemplate, method="ngb")        
         temp_res <- resample(raster(temp), rtemplate, method="bilinear")

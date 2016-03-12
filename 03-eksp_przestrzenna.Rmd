@@ -9,7 +9,7 @@ knit: bookdown::preview_chapter
 ### Modele deterministyczne
 - Parametry tych modeli są zazwyczaj ustalane w oparciu o funkcję odległości lub powierzchni. Brakuje również szacunków na temat oceny błędu modelu. Np:
     - Funkcje wielomianowe
-    - Funkcje sklejane (ang. *splines*)
+    - Funkcje sklejane (ang. *Splines*)
     - Triangulacje 
     - IDW (ang. *Inverse Distance Weighted*)
 
@@ -18,18 +18,13 @@ http://neondataskills.org/Data-Workshops/ESA15-Going-On-The-Grid-Spatial-Interpo
 ### Modele deterministyczne 
 
 ```{r }
-library('fields')
-library('sp')
-library('raster')
-library('gstat')
-library('rgdal')
 punkty <- read.csv('dane/punkty.csv')
 coordinates(punkty) <- ~x+y
 proj4string(punkty) <- '+init=epsg:2180'
 ras <- raster('dane/siatka.tif')
 crs(ras) <- proj4string(punkty)
-grid <- as(ras, "SpatialGridDataFrame")
-granica <- readOGR("dane", "granica")
+grid <- as(ras, 'SpatialGridDataFrame')
+granica <- readOGR('dane', 'granica')
 ```
 
 ### Modele deterministyczne | Funkcje wielomianowe
@@ -37,13 +32,13 @@ granica <- readOGR("dane", "granica")
 ```{r }
 wielomian_1 <- gstat(formula=temp~1, data=punkty, degree=1)
 wielomian_1_pred <- predict(wielomian_1, newdata=grid)
-spplot(wielomian_1_pred[1], contour=TRUE,main="Powierzchnia trendu - wielomian pierwszego stopnia")
+spplot(wielomian_1_pred[1], contour=TRUE,main='Powierzchnia trendu - wielomian pierwszego stopnia')
 wielomian_2 <- gstat(formula=temp~1, data=punkty, degree=2)
 wielomian_2_pred <- predict(wielomian_2, newdata=grid)
-spplot(wielomian_2_pred[1], contour=TRUE,main="Powierzchnia trendu - wielomian drugiego stopnia")
+spplot(wielomian_2_pred[1], contour=TRUE,main='Powierzchnia trendu - wielomian drugiego stopnia')
 wielomian_3 <- gstat(formula=temp~1, data=punkty, degree=3)
 wielomian_3_pred <- predict(wielomian_3, newdata=grid)
-spplot(wielomian_3_pred[1], contour=TRUE,main="Powierzchnia trendu - wielomian trzeciego stopnia")
+spplot(wielomian_3_pred[1], contour=TRUE,main='Powierzchnia trendu - wielomian trzeciego stopnia')
 ```
 
 <!--
@@ -61,24 +56,23 @@ plot3D(raster[[1]])
 tps <- Tps(coordinates(punkty), punkty@data$temp)
 spline <- interpolate(ras, tps)
 spline <- mask(spline, ras)
-spplot(spline, contour=TRUE , main="Funkcje sklejane")
+spplot(spline, contour=TRUE , main='Funkcje sklejane')
 ```
 
 
 ### Modele deterministyczne | Triangulacje (Thiessen)
 
 ```{r }
-library('dismo')
 voronoi_interp <- voronoi(punkty)
 voronoi_interp <- intersect(granica, voronoi_interp)
-spplot(voronoi_interp, "temp", contour=TRUE, main="Poligony Voronoi'a")
+spplot(voronoi_interp, 'temp', contour=TRUE, main='Poligony Voronoia')
 ```
 
 ### Modele deterministyczne | IDW
 
 ```{r }
 idw_wolin <- idw(temp~1, punkty, grid, idp=2)
-spplot(idw_wolin, 'var1.pred', contour=TRUE, main="IDW")
+spplot(idw_wolin, 'var1.pred', contour=TRUE, main='IDW')
 ```
 
 <!--
@@ -90,10 +84,10 @@ https://rpubs.com/DonalOLeary/80504
 
 ```{r echo=FALSE}
 library('gridExtra')
-p1 <- spplot(wielomian_3_pred[1] , main="Wielomiany")
-p2 <- spplot(spline, main="Funkcje sklejane")
-p3 <- spplot(voronoi_interp, "temp", main="Poligony Voronoi'a")
-p4 <- spplot(idw_wolin, 'var1.pred', main="IDW")
+p1 <- spplot(wielomian_3_pred[1] , main='Wielomiany')
+p2 <- spplot(spline, main='Funkcje sklejane')
+p3 <- spplot(voronoi_interp, 'temp', main='Poligony Voronoia')
+p4 <- spplot(idw_wolin, 'var1.pred', main='IDW')
 grid.arrange(p1, p2, p3, p4)
 ```
 
@@ -194,7 +188,6 @@ p <- DiagrammeR("
 hscat(temp~1, punkty, breaks=c(0, 200))
 ```
 
-
 ### Wykres rozrzutu z przesunięciem
 
 ```{r z_przs, fig.height=7}
@@ -213,8 +206,6 @@ plot(kowario)
 - Autokorelogram jest wykresem pokazującym jedną z miar autokorelacji (np. I Morana lub C Geary'ego) w stosunku do odległości
  
 ```{r }
-library('pgirmess')
-library('ggplot2')
 wsp <- coordinates(punkty)
 kor <- correlog(wsp, punkty$temp)
 kor <- as.data.frame(kor)
@@ -241,7 +232,6 @@ gamma
 ### Określenie występowania autokorelacji przestrzennej | Chmura semiwariogramu
 
 ```{r }
-library('gstat')
 vario_cloud <- variogram(temp~1, punkty, cloud=TRUE)
 plot(vario_cloud) 
 ```
@@ -319,7 +309,7 @@ sqrt(pow_pr)
 ```
 
 ### Semiwariogram | Maksymalny zasięg semiwariogramu (ang. *Cutoff distance*)
-- Maksymalny zasięg semiwariogramu (ang. *Cutoff distance*) jest domyślnie wyliczany w pakiecie **gstat** jako 1/3 z najdłuższej przekątnej badanego obszaru
+- Maksymalny zasięg semiwariogramu (ang. *Cutoff distance*) jest domyślnie wyliczany w pakiecie `gstat` jako 1/3 z najdłuższej przekątnej badanego obszaru
 
 ```{r }
 vario_par <- variogram(temp~1, punkty)
@@ -329,8 +319,8 @@ vario_par <- variogram(temp~1, punkty, cutoff = 4000)
 plot(vario_par)
 ```
 
-### Semiwariogram | Odległość między przedziałami (ang, *Interval width *)
-- Domyślnie to maksymalny zasięg semiwariogramu podzielony przez 15 dahe odległość między przedziałami  (ang, *Interval width *)
+### Semiwariogram | Odległość między przedziałami (ang. *Interval width*)
+- Domyślnie to maksymalny zasięg semiwariogramu podzielony przez 15 dahe odległość między przedziałami  (ang. *Interval width*)
 
 ```{r }
 vario_par <- variogram(temp~1, punkty, cutoff = 1000, width = 250)
@@ -383,7 +373,6 @@ plot(vario_map, threshold=30) # co najmniej 30 par punktów
 ### Mapa semiwariogramu | 3D
 
 ```{r mapa_semi, eval=FALSE}
-library('rasterVis')
 plot3D(raster(vario_map$map), col=rainbow)
 ```
 
@@ -402,45 +391,3 @@ plot(vario_kier)
 vario_kier <- variogram(temp~1, punkty, alpha = c(60, 105, 150, 195))
 plot(vario_kier)
 ```
-
-
-<!--
-Kroskowariogramy
-Kroskorelogramy
--->
-
-## Krossemiwariogramy
-### Krossemiwariogramy
-- Krossemiwariogram jest to wariancja różnicy pomiędzy dwiema zmiennymi w dwóch lokalizacjach
-- Wyliczając Krossemiwariogram otrzymujemy empiryczne semiwatiogramy dla dwóch badanych zmiennych oraz kroswariogram dla kombinacji dwóch zmiennych
-- Krossemiwariogram znajduje swoje zastosowanie w technice zwanej kokrigingiem
-
-### Krossemiwariogramy
-
-toDo
-<!--
-
-```{r , eval=FALSE}
-library('sp')
-punkty <- read.csv('dane/punkty.csv')
-coordinates(punkty) <- ~x+y
-proj4string(punkty) <- '+init=epsg:2180'
-
-punkty_255 <- punkty[!is.na(punkty$X1999.09.13_TPZ), ]
-punkty_750 <- punkty
-
-library('gstat')
-g <- gstat(NULL, id="TPZ1999", form = X1999.09.13_TPZ~1, data = punkty_255)
-g <- gstat(g, id="TPZ2000", form = temp~1, data = punkty_750)
-g
-plot(variogram(g))
-```
-
-### Krossemiwariogramy
-
-```{r , eval=FALSE}
-# plot(variogram(g, map=TRUE, cutoff=12000, width=800))
-plot(variogram(g, alpha = c(60, 105, 150, 195)))
-```
-
--->

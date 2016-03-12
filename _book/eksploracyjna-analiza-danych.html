@@ -12,7 +12,7 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-03-04">
+<meta name="date" content="2016-03-12">
 
   <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
@@ -25,11 +25,11 @@
 <link rel="prev" href="intro.html">
 <link rel="next" href="eksploracyjna-analiza-danych-geostatystyka.html">
 
-<link href="book_assets/gitbook-2.6.7/css/style.css" rel="stylesheet" />
-<link href="book_assets/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
-<link href="book_assets/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
-<link href="book_assets/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
-<link href="book_assets/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
 
 
 
@@ -94,7 +94,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Dzień dobry</a></li>
 <li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Wprowadzenie</a><ul>
-<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#suwalski-park-krajobrazowy"><i class="fa fa-check"></i><b>2.1</b> Suwalski Park Krajobrazowy</a></li>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#wymagania-wstepne"><i class="fa fa-check"></i><b>2.1</b> Wymagania wstępne</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="intro.html"><a href="intro.html#oprogramowanie"><i class="fa fa-check"></i><b>2.1.1</b> Oprogramowanie</a></li>
+<li class="chapter" data-level="2.1.2" data-path="intro.html"><a href="intro.html#dane"><i class="fa fa-check"></i><b>2.1.2</b> Dane</a></li>
+</ul></li>
 <li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#r-a-dane-przestrzenne"><i class="fa fa-check"></i><b>2.2</b> R a dane przestrzenne</a><ul>
 <li class="chapter" data-level="2.2.1" data-path="intro.html"><a href="intro.html#pakiety"><i class="fa fa-check"></i><b>2.2.1</b> Pakiety</a></li>
 <li class="chapter" data-level="2.2.2" data-path="intro.html"><a href="intro.html#reprezentacja-danych-nieprzestrzennych"><i class="fa fa-check"></i><b>2.2.2</b> Reprezentacja danych nieprzestrzennych</a></li>
@@ -115,21 +118,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="intro.html"><a href="intro.html#wizualizacja-danych-2d"><i class="fa fa-check"></i><b>2.5</b> Wizualizacja danych 2D</a><ul>
 <li class="chapter" data-level="2.5.1" data-path="intro.html"><a href="intro.html#dane-punktowe"><i class="fa fa-check"></i><b>2.5.1</b> Dane punktowe</a></li>
-<li class="chapter" data-level="2.5.2" data-path="intro.html"><a href="intro.html#dane-punktowe-1"><i class="fa fa-check"></i><b>2.5.2</b> Dane punktowe</a></li>
-<li class="chapter" data-level="2.5.3" data-path="intro.html"><a href="intro.html#dane-punktowe---kategorie"><i class="fa fa-check"></i><b>2.5.3</b> Dane punktowe - kategorie</a></li>
-<li class="chapter" data-level="2.5.4" data-path="intro.html"><a href="intro.html#rastry-1"><i class="fa fa-check"></i><b>2.5.4</b> Rastry</a></li>
+<li class="chapter" data-level="2.5.2" data-path="intro.html"><a href="intro.html#dane-punktowe---kategorie"><i class="fa fa-check"></i><b>2.5.2</b> Dane punktowe - kategorie</a></li>
+<li class="chapter" data-level="2.5.3" data-path="intro.html"><a href="intro.html#rastry-1"><i class="fa fa-check"></i><b>2.5.3</b> Rastry</a></li>
 </ul></li>
 <li class="chapter" data-level="2.6" data-path="intro.html"><a href="intro.html#tworzenie-siatek"><i class="fa fa-check"></i><b>2.6</b> Tworzenie siatek</a><ul>
 <li class="chapter" data-level="2.6.1" data-path="intro.html"><a href="intro.html#siatki-regularne"><i class="fa fa-check"></i><b>2.6.1</b> Siatki regularne</a></li>
 <li class="chapter" data-level="2.6.2" data-path="intro.html"><a href="intro.html#siatki-regularne-1"><i class="fa fa-check"></i><b>2.6.2</b> Siatki regularne</a></li>
-<li class="chapter" data-level="2.6.3" data-path="intro.html"><a href="intro.html#siatki-nieregularne"><i class="fa fa-check"></i><b>2.6.3</b> Siatki nieregularne</a></li>
-<li class="chapter" data-level="2.6.4" data-path="intro.html"><a href="intro.html#siatki-nieregularne-1"><i class="fa fa-check"></i><b>2.6.4</b> Siatki nieregularne</a></li>
+<li><a href="intro.html#siatki-nieregularne---klasa-rasterlayer"><span class="toc-section-number">2.6.3</span> Siatki nieregularne - klasa <code>RasterLayer</code></a></li>
+<li><a href="intro.html#siatki-nieregularne---klasa-spatialpixelsdataframe"><span class="toc-section-number">2.6.4</span> Siatki nieregularne - klasa <code>SpatialPixelsDataFrame</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="eksploracyjna-analiza-danych.html"><a href="eksploracyjna-analiza-danych.html"><i class="fa fa-check"></i><b>3</b> Eksploracyjna analiza danych</a><ul>
 <li class="chapter" data-level="3.1" data-path="eksploracyjna-analiza-danych.html"><a href="eksploracyjna-analiza-danych.html#eksploracyjna-analiza-danych-cel"><i class="fa fa-check"></i><b>3.1</b> Eksploracyjna analiza danych | Cel</a></li>
-<li class="chapter" data-level="3.2" data-path="eksploracyjna-analiza-danych.html"><a href="eksploracyjna-analiza-danych.html#dane-wolin"><i class="fa fa-check"></i><b>3.2</b> Dane Wolin</a><ul>
-<li class="chapter" data-level="3.2.1" data-path="eksploracyjna-analiza-danych.html"><a href="eksploracyjna-analiza-danych.html#dane-wolin-1"><i class="fa fa-check"></i><b>3.2.1</b> Dane Wolin</a></li>
+<li class="chapter" data-level="3.2" data-path="eksploracyjna-analiza-danych.html"><a href="eksploracyjna-analiza-danych.html#dane-1"><i class="fa fa-check"></i><b>3.2</b> Dane</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="eksploracyjna-analiza-danych.html"><a href="eksploracyjna-analiza-danych.html#dane-2"><i class="fa fa-check"></i><b>3.2.1</b> Dane</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="eksploracyjna-analiza-danych.html"><a href="eksploracyjna-analiza-danych.html#statystyki-opisowe"><i class="fa fa-check"></i><b>3.3</b> Statystyki opisowe</a><ul>
 <li class="chapter" data-level="3.3.1" data-path="eksploracyjna-analiza-danych.html"><a href="eksploracyjna-analiza-danych.html#statystyki-opisowe-1"><i class="fa fa-check"></i><b>3.3.1</b> Statystyki opisowe</a></li>
@@ -214,7 +216,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.3.14" data-path="eksploracyjna-analiza-danych-geostatystyka.html"><a href="eksploracyjna-analiza-danych-geostatystyka.html#semiwariogram-rules-of-thumb"><i class="fa fa-check"></i><b>4.3.14</b> Semiwariogram | Rules of thumb</a></li>
 <li class="chapter" data-level="4.3.15" data-path="eksploracyjna-analiza-danych-geostatystyka.html"><a href="eksploracyjna-analiza-danych-geostatystyka.html#semiwariogram-obliczenia-pomocnicze"><i class="fa fa-check"></i><b>4.3.15</b> Semiwariogram | Obliczenia pomocnicze</a></li>
 <li><a href="eksploracyjna-analiza-danych-geostatystyka.html#semiwariogram-maksymalny-zasieg-semiwariogramu-ang.-cutoff-distance"><span class="toc-section-number">4.3.16</span> Semiwariogram | Maksymalny zasięg semiwariogramu (ang. <em>Cutoff distance</em>)</a></li>
-<li><a href="eksploracyjna-analiza-danych-geostatystyka.html#semiwariogram-odlegosc-miedzy-przedziaami-ang-interval-width"><span class="toc-section-number">4.3.17</span> Semiwariogram | Odległość między przedziałami (ang, <em>Interval width </em>)</a></li>
+<li><a href="eksploracyjna-analiza-danych-geostatystyka.html#semiwariogram-odlegosc-miedzy-przedziaami-ang.-interval-width"><span class="toc-section-number">4.3.17</span> Semiwariogram | Odległość między przedziałami (ang. <em>Interval width</em>)</a></li>
 </ul></li>
 <li class="chapter" data-level="4.4" data-path="eksploracyjna-analiza-danych-geostatystyka.html"><a href="eksploracyjna-analiza-danych-geostatystyka.html#anizotropia"><i class="fa fa-check"></i><b>4.4</b> Anizotropia</a><ul>
 <li class="chapter" data-level="4.4.1" data-path="eksploracyjna-analiza-danych-geostatystyka.html"><a href="eksploracyjna-analiza-danych-geostatystyka.html#anizotropia-struktury-przestrzennej"><i class="fa fa-check"></i><b>4.4.1</b> Anizotropia struktury przestrzennej</a></li>
@@ -222,10 +224,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.4.3" data-path="eksploracyjna-analiza-danych-geostatystyka.html"><a href="eksploracyjna-analiza-danych-geostatystyka.html#mapa-semiwariogramu-3d"><i class="fa fa-check"></i><b>4.4.3</b> Mapa semiwariogramu | 3D</a></li>
 <li class="chapter" data-level="4.4.4" data-path="eksploracyjna-analiza-danych-geostatystyka.html"><a href="eksploracyjna-analiza-danych-geostatystyka.html#semiwariogramy-kierunkowe-kierunki"><i class="fa fa-check"></i><b>4.4.4</b> Semiwariogramy kierunkowe | Kierunki</a></li>
 <li class="chapter" data-level="4.4.5" data-path="eksploracyjna-analiza-danych-geostatystyka.html"><a href="eksploracyjna-analiza-danych-geostatystyka.html#semiwariogramy-kierunkowe-kierunki-1"><i class="fa fa-check"></i><b>4.4.5</b> Semiwariogramy kierunkowe | Kierunki</a></li>
-</ul></li>
-<li class="chapter" data-level="4.5" data-path="eksploracyjna-analiza-danych-geostatystyka.html"><a href="eksploracyjna-analiza-danych-geostatystyka.html#krossemiwariogramy"><i class="fa fa-check"></i><b>4.5</b> Krossemiwariogramy</a><ul>
-<li class="chapter" data-level="4.5.1" data-path="eksploracyjna-analiza-danych-geostatystyka.html"><a href="eksploracyjna-analiza-danych-geostatystyka.html#krossemiwariogramy-1"><i class="fa fa-check"></i><b>4.5.1</b> Krossemiwariogramy</a></li>
-<li class="chapter" data-level="4.5.2" data-path="eksploracyjna-analiza-danych-geostatystyka.html"><a href="eksploracyjna-analiza-danych-geostatystyka.html#krossemiwariogramy-2"><i class="fa fa-check"></i><b>4.5.2</b> Krossemiwariogramy</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><i class="fa fa-check"></i><b>5</b> Modelowanie matematycznie autokorelacji przestrzennej</a><ul>
@@ -239,7 +237,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.2.3" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#metody-modelowania-liniowy-model-regionalizacji"><i class="fa fa-check"></i><b>5.2.3</b> Metody modelowania | Liniowy model regionalizacji</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-semiwariogramu"><i class="fa fa-check"></i><b>5.3</b> Modelowanie semiwariogramu</a><ul>
-<li><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-semiwariogramu-funkcja-fit.variogram"><span class="toc-section-number">5.3.1</span> Modelowanie semiwariogramu | funkcja <em>fit.variogram</em></a></li>
+<li><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-semiwariogramu-funkcja-fit.variogram"><span class="toc-section-number">5.3.1</span> Modelowanie semiwariogramu | funkcja <code>fit.variogram</code></a></li>
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-izotropowe"><i class="fa fa-check"></i><b>5.4</b> Modelowanie izotropowe</a><ul>
 <li class="chapter" data-level="5.4.1" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-izotropowe-modelowanie-wizualne"><i class="fa fa-check"></i><b>5.4.1</b> Modelowanie izotropowe | Modelowanie “wizualne”</a></li>
@@ -253,10 +251,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="5.5" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-anizotropowe"><i class="fa fa-check"></i><b>5.5</b> Modelowanie anizotropowe</a><ul>
 <li class="chapter" data-level="5.5.1" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#anizotropia-1"><i class="fa fa-check"></i><b>5.5.1</b> Anizotropia</a></li>
-</ul></li>
-<li class="chapter" data-level="5.6" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-krossemiwariogramow"><i class="fa fa-check"></i><b>5.6</b> Modelowanie krossemiwariogramów</a><ul>
-<li><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-krossemiwariogramow-fit.lmc"><span class="toc-section-number">5.6.1</span> Modelowanie krossemiwariogramów | <em>fit.lmc</em></a></li>
-<li class="chapter" data-level="5.6.2" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-krossemiwariogramow-1"><i class="fa fa-check"></i><b>5.6.2</b> Modelowanie krossemiwariogramów</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="estymacje-jednozmienne.html"><a href="estymacje-jednozmienne.html"><i class="fa fa-check"></i><b>6</b> Estymacje jednozmienne</a><ul>
@@ -281,11 +275,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.1.1" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#statystyki-jakosci-estymacji-1"><i class="fa fa-check"></i><b>7.1.1</b> Statystyki jakości estymacji</a></li>
 <li class="chapter" data-level="7.1.2" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#statystyki-jakosci-estymacji-2"><i class="fa fa-check"></i><b>7.1.2</b> Statystyki jakości estymacji</a></li>
 <li class="chapter" data-level="7.1.3" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#sredni-bad-estymacji"><i class="fa fa-check"></i><b>7.1.3</b> Średni błąd estymacji</a></li>
-<li class="chapter" data-level="7.1.4" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#pierwiastek-sredniego-bedu-kwadratowego"><i class="fa fa-check"></i><b>7.1.4</b> Pierwiastek średniego błędu kwadratowego</a></li>
-<li class="chapter" data-level="7.1.5" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#wspoczynnik-korelacji-1"><i class="fa fa-check"></i><b>7.1.5</b> Współczynnik korelacji</a></li>
-<li class="chapter" data-level="7.1.6" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#statystyki-jakosci-estymacji-mapa"><i class="fa fa-check"></i><b>7.1.6</b> Statystyki jakości estymacji | Mapa</a></li>
-<li class="chapter" data-level="7.1.7" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#statystyki-jakosci-estymacji-histogram"><i class="fa fa-check"></i><b>7.1.7</b> Statystyki jakości estymacji | Histogram</a></li>
-<li class="chapter" data-level="7.1.8" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#statystyki-jakosci-estymacji-wykres-rozrzutu"><i class="fa fa-check"></i><b>7.1.8</b> Statystyki jakości estymacji | Wykres rozrzutu</a></li>
+<li class="chapter" data-level="7.1.4" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#wspoczynnik-korelacji-1"><i class="fa fa-check"></i><b>7.1.4</b> Współczynnik korelacji</a></li>
+<li class="chapter" data-level="7.1.5" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#statystyki-jakosci-estymacji-mapa"><i class="fa fa-check"></i><b>7.1.5</b> Statystyki jakości estymacji | Mapa</a></li>
+<li class="chapter" data-level="7.1.6" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#statystyki-jakosci-estymacji-histogram"><i class="fa fa-check"></i><b>7.1.6</b> Statystyki jakości estymacji | Histogram</a></li>
+<li class="chapter" data-level="7.1.7" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#statystyki-jakosci-estymacji-wykres-rozrzutu"><i class="fa fa-check"></i><b>7.1.7</b> Statystyki jakości estymacji | Wykres rozrzutu</a></li>
 </ul></li>
 <li class="chapter" data-level="7.2" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#walidacja-wynikow-estymacji"><i class="fa fa-check"></i><b>7.2</b> Walidacja wyników estymacji</a><ul>
 <li class="chapter" data-level="7.2.1" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#walidacja-wynikow-estymacji-1"><i class="fa fa-check"></i><b>7.2.1</b> Walidacja wyników estymacji</a></li>
@@ -295,56 +288,71 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.2.5" data-path="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html"><a href="ocena-jakosci-estymacji-uwaga-pomieszany-me-z-reszta.html#kroswalidacja-1"><i class="fa fa-check"></i><b>7.2.5</b> Kroswalidacja</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><i class="fa fa-check"></i><b>8</b> Wykorzystanie do estymacji danych uzupełniających</a><ul>
-<li><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-stratyfikowany-ang.-kriging-within-strata"><span class="toc-section-number">8.1</span> Kriging stratyfikowany (ang. <em>Kriging within strata</em>)</a><ul>
-<li><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-stratyfikowany-ang.-kriging-within-strata-1"><span class="toc-section-number">8.1.1</span> Kriging stratyfikowany (ang. <em>Kriging within strata</em>)</a></li>
-<li><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-stratyfikowany-ang.-kriging-within-strata-2"><span class="toc-section-number">8.1.2</span> Kriging stratyfikowany (ang. <em>Kriging within strata</em>)</a></li>
+<li class="chapter" data-level="8" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><i class="fa fa-check"></i><b>8</b> Estymacja lokalnego rozkładu prawdopodobieństwa</a><ul>
+<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-wprowadzenie"><span class="toc-section-number">8.1</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>) | Wprowadzenie</a><ul>
+<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging"><span class="toc-section-number">8.1.1</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>)</a></li>
+<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-1"><span class="toc-section-number">8.1.2</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>)</a></li>
+<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-wady-i-zalety"><span class="toc-section-number">8.1.3</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>)| Wady i zalety</a></li>
 </ul></li>
-<li class="chapter" data-level="8.2" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#prosty-kriging-ze-zmiennymi-srednimi-lokalnymi-lvm"><i class="fa fa-check"></i><b>8.2</b> Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)</a><ul>
-<li class="chapter" data-level="8.2.1" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#prosty-kriging-ze-zmiennymi-srednimi-lokalnymi-lvm-1"><i class="fa fa-check"></i><b>8.2.1</b> Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)</a></li>
-<li class="chapter" data-level="8.2.2" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#prosty-kriging-ze-zmiennymi-srednimi-lokalnymi-lvm-2"><i class="fa fa-check"></i><b>8.2.2</b> Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)</a></li>
-</ul></li>
-<li><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-uniwersalny-ang.-universal-kriging"><span class="toc-section-number">8.3</span> Kriging uniwersalny (ang. <em>Universal kriging</em>)</a><ul>
-<li><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-uniwersalny-ang.-universal-kriging-1"><span class="toc-section-number">8.3.1</span> Kriging uniwersalny (ang. <em>Universal kriging</em>)</a></li>
-<li><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-uniwersalny-ang.-universal-kriging-2"><span class="toc-section-number">8.3.2</span> Kriging uniwersalny (ang. <em>Universal kriging</em>)</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="9" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><i class="fa fa-check"></i><b>9</b> Estymacja lokalnego rozkładu prawdopodobieństwa</a><ul>
-<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-wprowadzenie"><span class="toc-section-number">9.1</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>) | Wprowadzenie</a><ul>
-<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging"><span class="toc-section-number">9.1.1</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>)</a></li>
-<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-1"><span class="toc-section-number">9.1.2</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>)</a></li>
-<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-wady-i-zalety"><span class="toc-section-number">9.1.3</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>)| Wady i zalety</a></li>
-</ul></li>
-<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-przykady"><span class="toc-section-number">9.2</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>) | Przykłady</a><ul>
-<li class="chapter" data-level="9.2.1" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#binaryzacja-danych"><i class="fa fa-check"></i><b>9.2.1</b> Binaryzacja danych</a></li>
-<li class="chapter" data-level="9.2.2" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#eksploracja-danych"><i class="fa fa-check"></i><b>9.2.2</b> Eksploracja danych</a></li>
-<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-semiwariogram"><span class="toc-section-number">9.2.3</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>) | Semiwariogram</a></li>
-<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-modelowanie"><span class="toc-section-number">9.2.4</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>) | Modelowanie</a></li>
-<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-interpolacja"><span class="toc-section-number">9.2.5</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>) | Interpolacja</a></li>
-<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-2"><span class="toc-section-number">9.2.6</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>)</a></li>
+<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-przykady"><span class="toc-section-number">8.2</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>) | Przykłady</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#binaryzacja-danych"><i class="fa fa-check"></i><b>8.2.1</b> Binaryzacja danych</a></li>
+<li class="chapter" data-level="8.2.2" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#eksploracja-danych"><i class="fa fa-check"></i><b>8.2.2</b> Eksploracja danych</a></li>
+<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-semiwariogram"><span class="toc-section-number">8.2.3</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>) | Semiwariogram</a></li>
+<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-modelowanie"><span class="toc-section-number">8.2.4</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>) | Modelowanie</a></li>
+<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-interpolacja"><span class="toc-section-number">8.2.5</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>) | Interpolacja</a></li>
+<li><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-2"><span class="toc-section-number">8.2.6</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>)</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="symulacje.html"><a href="symulacje.html"><i class="fa fa-check"></i><b>10</b> Symulacje</a><ul>
-<li class="chapter" data-level="10.1" data-path="symulacje.html"><a href="symulacje.html#symulacje-geostatystyczne"><i class="fa fa-check"></i><b>10.1</b> Symulacje geostatystyczne</a><ul>
-<li class="chapter" data-level="10.1.1" data-path="symulacje.html"><a href="symulacje.html#symulacje-geostatystyczne-1"><i class="fa fa-check"></i><b>10.1.1</b> Symulacje geostatystyczne</a></li>
-<li class="chapter" data-level="10.1.2" data-path="symulacje.html"><a href="symulacje.html#symulacje-geostatystyczne-cel"><i class="fa fa-check"></i><b>10.1.2</b> Symulacje geostatystyczne | Cel</a></li>
+<li class="chapter" data-level="9" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html"><i class="fa fa-check"></i><b>9</b> Estymacje wielozmienne</a><ul>
+<li class="chapter" data-level="9.1" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#kokriging-prosty-i-zwyky-sck-i-ock"><i class="fa fa-check"></i><b>9.1</b> Kokriging (prosty i zwykły, SCK i OCK)</a><ul>
+<li><a href="estymacje-wielozmienne.html#kokriging-ang.-co-kriging"><span class="toc-section-number">9.1.1</span> Kokriging (ang. <em>co-kriging</em>)</a></li>
+<li class="chapter" data-level="9.1.2" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#kokriging-wybor-dodatkowej-zmiennej"><i class="fa fa-check"></i><b>9.1.2</b> Kokriging | Wybór dodatkowej zmiennej</a></li>
 </ul></li>
-<li class="chapter" data-level="10.2" data-path="symulacje.html"><a href="symulacje.html#typy-symulacji"><i class="fa fa-check"></i><b>10.2</b> Typy symulacji</a><ul>
-<li class="chapter" data-level="10.2.1" data-path="symulacje.html"><a href="symulacje.html#typy-symulacji-1"><i class="fa fa-check"></i><b>10.2.1</b> Typy symulacji</a></li>
+<li class="chapter" data-level="9.2" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#krossemiwariogramy"><i class="fa fa-check"></i><b>9.2</b> Krossemiwariogramy</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#krossemiwariogramy-1"><i class="fa fa-check"></i><b>9.2.1</b> Krossemiwariogramy</a></li>
+<li class="chapter" data-level="9.2.2" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#krossemiwariogramy-2"><i class="fa fa-check"></i><b>9.2.2</b> Krossemiwariogramy</a></li>
 </ul></li>
-<li class="chapter" data-level="10.3" data-path="symulacje.html"><a href="symulacje.html#symulacje-bezwarunkowe"><i class="fa fa-check"></i><b>10.3</b> Symulacje bezwarunkowe</a></li>
-<li class="chapter" data-level="10.4" data-path="symulacje.html"><a href="symulacje.html#symulacje-warunkowe"><i class="fa fa-check"></i><b>10.4</b> Symulacje warunkowe</a><ul>
-<li><a href="symulacje.html#sekwencyjna-symulacja-gaussowska-ang.-sequential-gaussian-simulation"><span class="toc-section-number">10.4.1</span> Sekwencyjna symulacja gaussowska (ang. <em>Sequential Gaussian simulation</em>)</a></li>
-<li><a href="symulacje.html#sekwencyjna-symulacja-gaussowska-ang.-sequential-gaussian-simulation-1"><span class="toc-section-number">10.4.2</span> Sekwencyjna symulacja gaussowska (ang. <em>Sequential Gaussian simulation</em>)</a></li>
-<li><a href="symulacje.html#sekwencyjna-symulacja-gaussowska-ang.-sequential-gaussian-simulation-2"><span class="toc-section-number">10.4.3</span> Sekwencyjna symulacja gaussowska (ang. <em>Sequential Gaussian simulation</em>)</a></li>
+<li class="chapter" data-level="9.3" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#modelowanie-krossemiwariogramow"><i class="fa fa-check"></i><b>9.3</b> Modelowanie krossemiwariogramów</a><ul>
+<li><a href="estymacje-wielozmienne.html#modelowanie-krossemiwariogramow-fit.lmc"><span class="toc-section-number">9.3.1</span> Modelowanie krossemiwariogramów | <code>fit.lmc</code></a></li>
+<li class="chapter" data-level="9.3.2" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#modelowanie-krossemiwariogramow-1"><i class="fa fa-check"></i><b>9.3.2</b> Modelowanie krossemiwariogramów</a></li>
 </ul></li>
-<li><a href="symulacje.html#sekwencyjna-symulacja-danych-kodowanych-ang.-sequential-indicator-simulation"><span class="toc-section-number">10.5</span> Sekwencyjna symulacja danych kodowanych (ang. <em>Sequential indicator simulation</em>)</a><ul>
-<li><a href="symulacje.html#sekwencyjna-symulacja-danych-kodowanych-ang.-sequential-indicator-simulation-1"><span class="toc-section-number">10.5.1</span> Sekwencyjna symulacja danych kodowanych (ang. <em>Sequential indicator simulation</em>)</a></li>
+<li class="chapter" data-level="9.4" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#kokriging"><i class="fa fa-check"></i><b>9.4</b> Kokriging</a><ul>
+<li class="chapter" data-level="9.4.1" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#kokriging-1"><i class="fa fa-check"></i><b>9.4.1</b> Kokriging</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="11" data-path="bibliografia.html"><a href="bibliografia.html"><i class="fa fa-check"></i><b>11</b> Bibliografia</a><ul>
-<li class="chapter" data-level="11.0.1" data-path="bibliografia.html"><a href="bibliografia.html#zroda-wiedzy"><i class="fa fa-check"></i><b>11.0.1</b> Źródła wiedzy</a></li>
+<li class="chapter" data-level="10" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><i class="fa fa-check"></i><b>10</b> Wykorzystanie do estymacji danych uzupełniających</a><ul>
+<li><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-stratyfikowany-ang.-kriging-within-strata"><span class="toc-section-number">10.1</span> Kriging stratyfikowany (ang. <em>Kriging within strata</em>)</a><ul>
+<li><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-stratyfikowany-ang.-kriging-within-strata-1"><span class="toc-section-number">10.1.1</span> Kriging stratyfikowany (ang. <em>Kriging within strata</em>)</a></li>
+<li><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-stratyfikowany-ang.-kriging-within-strata-2"><span class="toc-section-number">10.1.2</span> Kriging stratyfikowany (ang. <em>Kriging within strata</em>)</a></li>
 </ul></li>
+<li class="chapter" data-level="10.2" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#prosty-kriging-ze-zmiennymi-srednimi-lokalnymi-lvm"><i class="fa fa-check"></i><b>10.2</b> Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#prosty-kriging-ze-zmiennymi-srednimi-lokalnymi-lvm-1"><i class="fa fa-check"></i><b>10.2.1</b> Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)</a></li>
+<li class="chapter" data-level="10.2.2" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#prosty-kriging-ze-zmiennymi-srednimi-lokalnymi-lvm-2"><i class="fa fa-check"></i><b>10.2.2</b> Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)</a></li>
+</ul></li>
+<li><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-uniwersalny-ang.-universal-kriging"><span class="toc-section-number">10.3</span> Kriging uniwersalny (ang. <em>Universal kriging</em>)</a><ul>
+<li><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-uniwersalny-ang.-universal-kriging-1"><span class="toc-section-number">10.3.1</span> Kriging uniwersalny (ang. <em>Universal kriging</em>)</a></li>
+<li><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-uniwersalny-ang.-universal-kriging-2"><span class="toc-section-number">10.3.2</span> Kriging uniwersalny (ang. <em>Universal kriging</em>)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="symulacje.html"><a href="symulacje.html"><i class="fa fa-check"></i><b>11</b> Symulacje</a><ul>
+<li class="chapter" data-level="11.1" data-path="symulacje.html"><a href="symulacje.html#symulacje-geostatystyczne"><i class="fa fa-check"></i><b>11.1</b> Symulacje geostatystyczne</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="symulacje.html"><a href="symulacje.html#symulacje-geostatystyczne-1"><i class="fa fa-check"></i><b>11.1.1</b> Symulacje geostatystyczne</a></li>
+<li class="chapter" data-level="11.1.2" data-path="symulacje.html"><a href="symulacje.html#symulacje-geostatystyczne-cel"><i class="fa fa-check"></i><b>11.1.2</b> Symulacje geostatystyczne | Cel</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="symulacje.html"><a href="symulacje.html#typy-symulacji"><i class="fa fa-check"></i><b>11.2</b> Typy symulacji</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="symulacje.html"><a href="symulacje.html#typy-symulacji-1"><i class="fa fa-check"></i><b>11.2.1</b> Typy symulacji</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="symulacje.html"><a href="symulacje.html#symulacje-bezwarunkowe"><i class="fa fa-check"></i><b>11.3</b> Symulacje bezwarunkowe</a></li>
+<li class="chapter" data-level="11.4" data-path="symulacje.html"><a href="symulacje.html#symulacje-warunkowe"><i class="fa fa-check"></i><b>11.4</b> Symulacje warunkowe</a><ul>
+<li><a href="symulacje.html#sekwencyjna-symulacja-gaussowska-ang.-sequential-gaussian-simulation"><span class="toc-section-number">11.4.1</span> Sekwencyjna symulacja gaussowska (ang. <em>Sequential Gaussian simulation</em>)</a></li>
+<li><a href="symulacje.html#sekwencyjna-symulacja-gaussowska-ang.-sequential-gaussian-simulation-1"><span class="toc-section-number">11.4.2</span> Sekwencyjna symulacja gaussowska (ang. <em>Sequential Gaussian simulation</em>)</a></li>
+<li><a href="symulacje.html#sekwencyjna-symulacja-gaussowska-ang.-sequential-gaussian-simulation-2"><span class="toc-section-number">11.4.3</span> Sekwencyjna symulacja gaussowska (ang. <em>Sequential Gaussian simulation</em>)</a></li>
+</ul></li>
+<li><a href="symulacje.html#sekwencyjna-symulacja-danych-kodowanych-ang.-sequential-indicator-simulation"><span class="toc-section-number">11.5</span> Sekwencyjna symulacja danych kodowanych (ang. <em>Sequential indicator simulation</em>)</a><ul>
+<li><a href="symulacje.html#sekwencyjna-symulacja-danych-kodowanych-ang.-sequential-indicator-simulation-1"><span class="toc-section-number">11.5.1</span> Sekwencyjna symulacja danych kodowanych (ang. <em>Sequential indicator simulation</em>)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="bibliografia.html"><a href="bibliografia.html"><i class="fa fa-check"></i><b>12</b> Bibliografia</a></li>
 <li class="divider"></li>
 <li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencja Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a></li>
 <li><a href="https://nowosad.github.io" target="blank">Jakub Nowosad 2016</a></li>
@@ -376,13 +384,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Informacja o relacji pomiędzy lokalizacją obserwacji a czynnikami wpływającymi na zmienność przestrzenną cechy</li>
 </ul>
 </div>
-<div id="dane-wolin" class="section level2">
-<h2><span class="header-section-number">3.2</span> Dane Wolin</h2>
-<div id="dane-wolin-1" class="section level3">
-<h3><span class="header-section-number">3.2.1</span> Dane Wolin</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;sp&#39;</span>)
-<span class="kw">library</span>(<span class="st">&#39;rgdal&#39;</span>)
-punkty &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;dane/punkty.csv&#39;</span>)
+<div id="dane-1" class="section level2">
+<h2><span class="header-section-number">3.2</span> Dane</h2>
+<div id="dane-2" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Dane</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;dane/punkty.csv&#39;</span>)
 <span class="kw">coordinates</span>(punkty) &lt;-<span class="st"> </span><span class="er">~</span>x+y
 
 <span class="kw">proj4string</span>(punkty) &lt;-<span class="st"> &#39;+init=epsg:2180&#39;</span>
@@ -391,37 +397,37 @@ punkty &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span clas
 
 <span class="kw">str</span>(punkty)</code></pre></div>
 <pre><code>## Formal class &#39;SpatialPointsDataFrame&#39; [package &quot;sp&quot;] with 5 slots
-##   ..@ data       :&#39;data.frame&#39;:  244 obs. of  5 variables:
-##   .. ..$ srtm: num [1:244] 184 220 242 204 203 ...
-##   .. ..$ clc : int [1:244] 1 2 2 1 1 1 2 2 4 4 ...
-##   .. ..$ temp: num [1:244] 17.8 16.8 10.1 18.6 17.9 ...
-##   .. ..$ ndvi: num [1:244] 0.549 0.607 0.6 0.723 0.5 ...
-##   .. ..$ savi: num [1:244] 0.364 0.343 0.398 0.489 0.335 ...
+##   ..@ data       :&#39;data.frame&#39;:  252 obs. of  5 variables:
+##   .. ..$ srtm: num [1:252] 225 226 202 218 196 ...
+##   .. ..$ clc : int [1:252] 4 1 1 1 1 2 1 2 1 1 ...
+##   .. ..$ temp: num [1:252] 8.45 26.46 16.22 19.48 20.68 ...
+##   .. ..$ ndvi: num [1:252] 0.271 0.399 0.541 0.502 0.414 ...
+##   .. ..$ savi: num [1:252] 0.134 0.278 0.319 0.277 0.224 ...
 ##   ..@ coords.nrs : int [1:2] 6 7
-##   ..@ coords     : num [1:244, 1:2] 752245 751901 750205 753276 753895 ...
+##   ..@ coords     : num [1:252, 1:2] 748319 746796 755747 752827 748584 ...
 ##   .. ..- attr(*, &quot;dimnames&quot;)=List of 2
-##   .. .. ..$ : chr [1:244] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##   .. .. ..$ : chr [1:252] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
 ##   .. .. ..$ : chr [1:2] &quot;x&quot; &quot;y&quot;
-##   ..@ bbox       : num [1:2, 1:2] 745574 712659 756978 721228
+##   ..@ bbox       : num [1:2, 1:2] 745619 712664 756964 721254
 ##   .. ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. .. ..$ : chr [1:2] &quot;x&quot; &quot;y&quot;
 ##   .. .. ..$ : chr [1:2] &quot;min&quot; &quot;max&quot;
 ##   ..@ proj4string:Formal class &#39;CRS&#39; [package &quot;sp&quot;] with 1 slot
 ##   .. .. ..@ projargs: chr &quot;+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m&quot;| __truncated__</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(punkty@data)</code></pre></div>
-<pre><code>## &#39;data.frame&#39;:    244 obs. of  5 variables:
-##  $ srtm: num  184 220 242 204 203 ...
-##  $ clc : int  1 2 2 1 1 1 2 2 4 4 ...
-##  $ temp: num  17.8 16.8 10.1 18.6 17.9 ...
-##  $ ndvi: num  0.549 0.607 0.6 0.723 0.5 ...
-##  $ savi: num  0.364 0.343 0.398 0.489 0.335 ...</code></pre>
+<pre><code>## &#39;data.frame&#39;:    252 obs. of  5 variables:
+##  $ srtm: num  225 226 202 218 196 ...
+##  $ clc : int  4 1 1 1 1 2 1 2 1 1 ...
+##  $ temp: num  8.45 26.46 16.22 19.48 20.68 ...
+##  $ ndvi: num  0.271 0.399 0.541 0.502 0.414 ...
+##  $ savi: num  0.134 0.278 0.319 0.277 0.224 ...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="st">&#39;dane&#39;</span>, <span class="st">&#39;granica&#39;</span>)</code></pre></div>
 <pre><code>## OGR data source with driver: ESRI Shapefile 
 ## Source: &quot;dane&quot;, layer: &quot;granica&quot;
 ## with 1 features
 ## It has 3 fields</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(granica, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-1-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-25-1.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="statystyki-opisowe" class="section level2">
@@ -430,47 +436,47 @@ punkty &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span clas
 <h3><span class="header-section-number">3.3.1</span> Statystyki opisowe</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(punkty@data)</code></pre></div>
 <pre><code>##       srtm            clc             temp             ndvi       
-##  Min.   :145.0   Min.   :1.000   Min.   : 7.805   Min.   :0.1465  
-##  1st Qu.:188.5   1st Qu.:1.000   1st Qu.:12.192   1st Qu.:0.4590  
-##  Median :213.2   Median :1.000   Median :15.134   Median :0.5163  
-##  Mean   :211.6   Mean   :1.418   Mean   :15.324   Mean   :0.5033  
-##  3rd Qu.:236.7   3rd Qu.:2.000   3rd Qu.:17.343   3rd Qu.:0.5660  
-##  Max.   :283.0   Max.   :4.000   Max.   :26.072   Max.   :0.7229  
+##  Min.   :145.8   Min.   :1.000   Min.   : 8.153   Min.   :0.1772  
+##  1st Qu.:184.6   1st Qu.:1.000   1st Qu.:12.459   1st Qu.:0.4520  
+##  Median :215.0   Median :1.000   Median :15.210   Median :0.5105  
+##  Mean   :211.4   Mean   :1.508   Mean   :15.522   Mean   :0.4974  
+##  3rd Qu.:235.4   3rd Qu.:2.000   3rd Qu.:18.258   3rd Qu.:0.5587  
+##  Max.   :277.0   Max.   :4.000   Max.   :26.700   Max.   :0.6955  
 ##       savi        
-##  Min.   :0.04552  
-##  1st Qu.:0.29080  
-##  Median :0.32742  
-##  Mean   :0.32071  
-##  3rd Qu.:0.36468  
-##  Max.   :0.48895</code></pre>
+##  Min.   :0.05808  
+##  1st Qu.:0.27785  
+##  Median :0.31928  
+##  Mean   :0.31185  
+##  3rd Qu.:0.35793  
+##  Max.   :0.46736</code></pre>
 </div>
 <div id="statystyki-opisowe-srednia-i-mediana" class="section level3">
 <h3><span class="header-section-number">3.3.2</span> Statystyki opisowe | średnia i mediana</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">median</span>(punkty$temp, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## [1] 15.13433</code></pre>
+<pre><code>## [1] 15.20954</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(punkty$temp, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## [1] 15.32378</code></pre>
+<pre><code>## [1] 15.52164</code></pre>
 </div>
 <div id="statystyki-opisowe-srednia-i-mediana-1" class="section level3">
 <h3><span class="header-section-number">3.3.3</span> Statystyki opisowe | średnia i mediana</h3>
 <ul>
-<li>w wypadku symetrycznego rozkładu te dwie cechy są równe</li>
-<li>średnia jest bardziej wrażliwa na wartości odstające</li>
-<li>mediana jest lepszą miarą środka danych, jeżeli są one skośne</li>
+<li>W wypadku symetrycznego rozkładu te dwie cechy są równe</li>
+<li>Średnia jest bardziej wrażliwa na wartości odstające</li>
+<li>Mediana jest lepszą miarą środka danych, jeżeli są one skośne</li>
 </ul>
 <p>Po co używać średniej?</p>
 <ul>
-<li>przydatniejsza w przypadku małych zbiorów danych</li>
-<li>gdy rozkład danych jest symetryczny</li>
-<li>(jednak) często warto podawać obie miary</li>
+<li>Bardziej przydatna w przypadku małych zbiorów danych</li>
+<li>Gdy rozkład danych jest symetryczny</li>
+<li>(Jednak) często warto podawać obie miary</li>
 </ul>
 </div>
 <div id="statystyki-opisowe-minimum-i-maksimum" class="section level3">
 <h3><span class="header-section-number">3.3.4</span> Statystyki opisowe | minimum i maksimum</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">min</span>(punkty$temp, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## [1] 7.804768</code></pre>
+<pre><code>## [1] 8.153331</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">max</span>(punkty$temp, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## [1] 26.07235</code></pre>
+<pre><code>## [1] 26.69978</code></pre>
 </div>
 <div id="statystyki-opisowe-ochylenie-standardowe" class="section level3">
 <h3><span class="header-section-number">3.3.5</span> Statystyki opisowe | ochylenie standardowe</h3>
@@ -479,16 +485,15 @@ punkty &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span clas
 
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sd</span>(punkty$temp, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## [1] 3.883714</code></pre>
+<pre><code>## [1] 4.079184</code></pre>
 </div>
 </div>
 <div id="wykresy" class="section level2">
 <h2><span class="header-section-number">3.4</span> Wykresy</h2>
 <div id="histogram" class="section level3">
 <h3><span class="header-section-number">3.4.1</span> Histogram</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;ggplot2&#39;</span>)
-<span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_histogram</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-6-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_histogram</span>()</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-30-1.png" alt="" /><!-- --></p>
 <ul>
 <li>Stworzony przez Karla Pearsona</li>
 <li>Jest graficzną reprezentacją rozkładu <br> danych</li>
@@ -500,37 +505,24 @@ punkty &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span clas
 <div id="estymator-jadrowy-gestosci-ang.-kernel-density-estimation" class="section level3">
 <h3><span class="header-section-number">3.4.2</span> Estymator jądrowy gęstości (ang. <em>kernel density estimation</em>)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-7-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-31-1.png" alt="" /><!-- --></p>
 </div>
 <div id="wykresy-kwantyl-kwantyl-ang.quantile-quantile" class="section level3">
 <h3><span class="header-section-number">3.4.3</span> Wykresy kwantyl-kwantyl (ang.<em>quantile-quantile</em>)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(<span class="dt">sample=</span>temp)) +<span class="st"> </span><span class="kw">stat_qq</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-8-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-32-1.png" alt="" /><!-- --></p>
 </div>
 <div id="wykresy-kwantyl-kwantyl-ang.-quantile-quantile" class="section level3">
 <h3><span class="header-section-number">3.4.4</span> Wykresy kwantyl-kwantyl (ang. <em>quantile-quantile</em>)</h3>
 <p><a href="http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot" class="uri">http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot</a> <img src="figs/qq.png" alt="http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot" /></p>
-<!--    
-## [analiza typu rozkładu jednej zmiennej i porównanie rozkładów dwóch zmiennych (wykresy q-q i p-p)]
-    
-
-
-```r
-df <- as.data.frame(qqplot(punkty$temp, punkty$X1999.09.13_NDVI, plot.it=FALSE))
-ggplot(df) + geom_point(aes(x=x, y=y)) + xlab('TPZ') + ylab('NDVI')
-
-ggplot(punkty@data) + geom_point(aes(x=temp, y=X1999.09.13_NDVI)) + xlab('TPZ') + ylab('NDVI')
-```
-
--->
 </div>
 <div id="dystrybuanta-cdf" class="section level3">
 <h3><span class="header-section-number">3.4.5</span> Dystrybuanta (CDF)</h3>
 <ul>
-<li>Dystrybuanta (ang. conditional density function - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości</li>
+<li>Dystrybuanta (ang. <em>conditional density function</em> - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">stat_ecdf</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-10-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-33-1.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="porownanie-zmiennych" class="section level2">
@@ -547,8 +539,8 @@ ggplot(punkty@data) + geom_point(aes(x=temp, y=X1999.09.13_NDVI)) + xlab('TPZ') 
 <li>Wielkość samej kowariancji uzależniona jest od przyjętej skali zmiennej (jednostki)</li>
 <li>Inne wyniku uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wieku i dochodu w złotówkach a inne dla wieku i dochodu w dolarach</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cov</span>(punkty$temp, punkty$ndvi, <span class="dt">use=</span> <span class="st">&quot;complete.obs&quot;</span>)</code></pre></div>
-<pre><code>## [1] 0.03160881</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cov</span>(punkty$temp, punkty$ndvi, <span class="dt">use=</span> <span class="st">&#39;complete.obs&#39;</span>)</code></pre></div>
+<pre><code>## [1] 0.02515738</code></pre>
 </div>
 <div id="wspoczynnik-korelacji" class="section level3">
 <h3><span class="header-section-number">3.5.2</span> Współczynnik korelacji</h3>
@@ -558,41 +550,40 @@ ggplot(punkty@data) + geom_point(aes(x=temp, y=X1999.09.13_NDVI)) + xlab('TPZ') 
 <li>Z racji unormowania nie jest ona uzależniona od jednostki</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp, ndvi)) +<span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-12-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(punkty$temp, punkty$ndvi, <span class="dt">use=</span>  <span class="st">&quot;complete.obs&quot;</span>)</code></pre></div>
-<pre><code>## [1] 0.0852945</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-35-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(punkty$temp, punkty$ndvi, <span class="dt">use=</span> <span class="st">&#39;complete.obs&#39;</span>)</code></pre></div>
+<pre><code>## [1] 0.0642325</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor.test</span>(punkty$temp, punkty$ndvi)</code></pre></div>
 <pre><code>## 
 ##  Pearson&#39;s product-moment correlation
 ## 
 ## data:  punkty$temp and punkty$ndvi
-## t = 1.3317, df = 242, p-value = 0.1842
+## t = 1.0177, df = 250, p-value = 0.3098
 ## alternative hypothesis: true correlation is not equal to 0
 ## 95 percent confidence interval:
-##  -0.04072759  0.20864535
+##  -0.05981513  0.18632640
 ## sample estimates:
 ##       cor 
-## 0.0852945</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(punkty@data[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>:<span class="dv">5</span>)], <span class="dt">use=</span> <span class="st">&quot;complete.obs&quot;</span>)</code></pre></div>
-<pre><code>##             srtm        temp      ndvi       savi
-## srtm  1.00000000 -0.14468277 0.1054047 0.08462306
-## temp -0.14468277  1.00000000 0.0852945 0.06513805
-## ndvi  0.10540468  0.08529450 1.0000000 0.94461511
-## savi  0.08462306  0.06513805 0.9446151 1.00000000</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;corrplot&#39;</span>)
-<span class="kw">corrplot</span>(<span class="kw">cor</span>(punkty@data[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>:<span class="dv">5</span>)], <span class="dt">use=</span> <span class="st">&quot;complete.obs&quot;</span>))</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-15-1.png" alt="" /><!-- --></p>
+## 0.0642325</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(punkty@data[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>:<span class="dv">5</span>)], <span class="dt">use=</span> <span class="st">&#39;complete.obs&#39;</span>)</code></pre></div>
+<pre><code>##            srtm        temp      ndvi       savi
+## srtm  1.0000000 -0.03717220 0.1116264 0.09361020
+## temp -0.0371722  1.00000000 0.0642325 0.04570619
+## ndvi  0.1116264  0.06423250 1.0000000 0.94296709
+## savi  0.0936102  0.04570619 0.9429671 1.00000000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">corrplot</span>(<span class="kw">cor</span>(punkty@data[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>:<span class="dv">5</span>)], <span class="dt">use=</span> <span class="st">&#39;complete.obs&#39;</span>))</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-38-1.png" alt="" /><!-- --></p>
 </div>
 <div id="wykresy-pudekowe" class="section level3">
 <h3><span class="header-section-number">3.5.3</span> Wykresy pudełkowe</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(punkty$clc)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(clc, temp)) +<span class="st"> </span><span class="kw">geom_boxplot</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-16-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-39-1.png" alt="" /><!-- --></p>
 <ul>
-<li>obrazuje pięc podstawowych <br> statystyk opisowych oraz wartości odstające</li>
-<li>pudełko to zakres międzykwantylowy</li>
-<li>linie oznaczają najbardziej ekstremalne wartości, ale nie odstające. Górna to 1,5*IQR ponad krawędź pudełka, dolna to 1,5*IQR poniżej wartości dolnej krawędzi pudełka</li>
-<li>linia środkowa to mediana</li>
+<li>Obrazuje pięc podstawowych statystyk opisowych oraz wartości odstające</li>
+<li>Pudełko to zakres międzykwantylowy</li>
+<li>Linie oznaczają najbardziej ekstremalne wartości, ale nie odstające. Górna to 1,5*IQR ponad krawędź pudełka, dolna to 1,5*IQR poniżej wartości dolnej krawędzi pudełka</li>
+<li>Linia środkowa to mediana</li>
 </ul>
 <!--
 1. Tereny komunikacyjne i porty
@@ -609,8 +600,8 @@ ggplot(punkty@data) + geom_point(aes(x=temp, y=X1999.09.13_NDVI)) + xlab('TPZ') 
 aov_test &lt;-<span class="st"> </span><span class="kw">aov</span>(temp~clc, <span class="dt">data=</span>punkty)
 <span class="kw">summary</span>(aov_test)</code></pre></div>
 <pre><code>##              Df Sum Sq Mean Sq F value Pr(&gt;F)    
-## clc           2   1098   549.1   51.55 &lt;2e-16 ***
-## Residuals   241   2567    10.7                   
+## clc           2   1577   788.4   75.51 &lt;2e-16 ***
+## Residuals   249   2600    10.4                   
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </div>
@@ -618,9 +609,9 @@ aov_test &lt;-<span class="st"> </span><span class="kw">aov</span>(temp~clc, <sp
 <h3><span class="header-section-number">3.5.5</span> Testowanie istotności różnić średniej pomiędzy grupami</h3>
 <pre><code>## null device 
 ##           1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tukey &lt;-<span class="st"> </span><span class="kw">TukeyHSD</span>(aov_test, <span class="st">&quot;clc&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tukey &lt;-<span class="st"> </span><span class="kw">TukeyHSD</span>(aov_test, <span class="st">&#39;clc&#39;</span>)
 <span class="kw">plot</span>(tukey, <span class="dt">las=</span><span class="dv">1</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-19-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-42-1.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="transformacje-danych" class="section level2">
@@ -647,52 +638,51 @@ aov_test &lt;-<span class="st"> </span><span class="kw">aov</span>(temp~clc, <sp
 <div id="transformacja-danych-logarytmizacja" class="section level3">
 <h3><span class="header-section-number">3.6.2</span> Transformacja danych | Logarytmizacja</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-43-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$log_tpz &lt;-<span class="st"> </span><span class="kw">log</span>(punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(log_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-43-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$exp_tpz &lt;-<span class="st"> </span><span class="kw">exp</span>(punkty$log_tpz)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(exp_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-3.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-43-3.png" alt="" /><!-- --></p>
 </div>
 <div id="transformacja-danych-pierwiastkowanie" class="section level3">
 <h3><span class="header-section-number">3.6.3</span> Transformacja danych | Pierwiastkowanie</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-44-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$sqrt_tpz &lt;-<span class="st"> </span><span class="kw">sqrt</span>(punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(sqrt_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-44-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$pow_tpz &lt;-<span class="st"> </span>punkty$sqrt_tpz^<span class="dv">2</span>
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(pow_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-3.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-44-3.png" alt="" /><!-- --></p>
 </div>
 <div id="transformacja-danych-rodzina-transformacji-boxa-coxa" class="section level3">
 <h3><span class="header-section-number">3.6.4</span> Transformacja danych | Rodzina transformacji Boxa Coxa</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;caret&#39;</span>)
-<span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-45-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">transformacja &lt;-<span class="st"> </span><span class="kw">BoxCoxTrans</span>(punkty$temp)
 transformacja</code></pre></div>
 <pre><code>## Box-Cox Transformation
 ## 
-## 244 data points used to estimate Lambda
+## 252 data points used to estimate Lambda
 ## 
 ## Input data summary:
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   7.805  12.190  15.130  15.320  17.340  26.070 
+##   8.153  12.460  15.210  15.520  18.260  26.700 
 ## 
-## Largest/Smallest: 3.34 
-## Sample Skewness: 0.508 
+## Largest/Smallest: 3.27 
+## Sample Skewness: 0.474 
 ## 
 ## Estimated Lambda: 0.1 
 ## With fudge factor, Lambda = 0 will be used for transformations</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$bc_tpz &lt;-<span class="st"> </span><span class="kw">predict</span>(transformacja, punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(bc_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-45-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">invBoxCox &lt;-<span class="st"> </span>function(x, lambda) if (lambda ==<span class="st"> </span><span class="dv">0</span>) <span class="kw">exp</span>(x) else (lambda*x +<span class="st"> </span><span class="dv">1</span>)^(<span class="dv">1</span>/lambda) 
 punkty$bc_tpz_inv &lt;-<span class="st"> </span><span class="kw">invBoxCox</span>(punkty$bc_tpz, <span class="dt">lambda=</span>-<span class="fl">0.3</span>)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(bc_tpz_inv)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-3.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-45-3.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="mapy" class="section level2">
@@ -728,7 +718,7 @@ punkty$bc_tpz_inv &lt;-<span class="st"> </span><span class="kw">invBoxCox</span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">225</span>)
 regularny &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;regular&#39;</span>)
 <span class="kw">plot</span>(regularny)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-23-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-46-1.png" alt="" /><!-- --></p>
 <ul>
 <li>Zmienna <em>offset</em></li>
 </ul>
@@ -738,7 +728,7 @@ regularny &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">301</span>)
 losowy &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;random&#39;</span>)
 <span class="kw">plot</span>(losowy)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-24-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-47-1.png" alt="" /><!-- --></p>
 <ul>
 <li>Każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia</li>
 <li>Każdy punkt jest losowany niezależnie od pozostałych</li>
@@ -749,14 +739,14 @@ losowy &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">125</span>)
 strat &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;stratified&#39;</span>)
 <span class="kw">plot</span>(strat)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-25-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-48-1.png" alt="" /><!-- --></p>
 </div>
 <div id="typ-probowania-preferencyjny-i" class="section level3">
 <h3><span class="header-section-number">3.7.7</span> Typ próbowania | Preferencyjny I</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">425</span>)
 pref &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;clustered&#39;</span>, <span class="dt">nclusters=</span><span class="dv">80</span>)
 <span class="kw">plot</span>(pref)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-26-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-49-1.png" alt="" /><!-- --></p>
 </div>
 <div id="typ-probowania-liniowy" class="section level3">
 <h3><span class="header-section-number">3.7.8</span> Typ próbowania | Liniowy</h3>
@@ -769,16 +759,14 @@ pref &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <sp
 <div id="mapy-punktowe-i-dane-lokalnie-odstajace" class="section level3">
 <h3><span class="header-section-number">3.7.9</span> Mapy punktowe i dane lokalnie odstające</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">4</span>)))
-<span class="kw">library</span>(<span class="st">&#39;rgdal&#39;</span>)
 granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;dane&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;granica&#39;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>) 
 <span class="kw">plot</span>(granica) 
 <span class="kw">plot</span>(punkty, <span class="dt">add=</span><span class="ot">TRUE</span>) </code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-28-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;sp&#39;</span>)
-<span class="co"># select.spatial(punkty, digitize=FALSE, rownames=TRUE)</span>
-<span class="kw">spplot</span>(punkty, <span class="st">&quot;temp&quot;</span>, <span class="dt">identify=</span><span class="ot">TRUE</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(punkty, <span class="st">&quot;temp&quot;</span>, <span class="dt">sp.layout =</span> granica)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-29-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-51-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># select.spatial(punkty, digitize=FALSE, rownames=TRUE)</span>
+<span class="kw">spplot</span>(punkty, <span class="st">&#39;temp&#39;</span>, <span class="dt">identify=</span><span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(punkty, <span class="st">&#39;temp&#39;</span>, <span class="dt">sp.layout =</span> granica)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-52-1.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="rozgrupowanie-danych" class="section level2">
@@ -796,15 +784,14 @@ granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span clas
 </div>
 <div id="rozgrupowanie-danych-2" class="section level3">
 <h3><span class="header-section-number">3.8.2</span> Rozgrupowanie danych</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;sp&#39;</span>)
-punkty_pref &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;dane/punkty_pref.csv&#39;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty_pref &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;dane/punkty_pref.csv&#39;</span>)
 <span class="kw">coordinates</span>(punkty_pref) &lt;-<span class="st"> </span><span class="er">~</span>x+y
 <span class="kw">proj4string</span>(punkty_pref) &lt;-<span class="st"> &#39;+init=epsg:2180&#39;</span>
-<span class="kw">spplot</span>(punkty_pref, <span class="st">&quot;temp&quot;</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-30-1.png" alt="" /><!-- --></p>
+<span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;temp&#39;</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-53-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(punkty_pref$temp)</code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   8.705  12.500  15.380  15.520  17.960  25.520</code></pre>
+##   8.205  12.490  15.480  15.580  17.930  26.440</code></pre>
 </div>
 <div id="rozgrupowanie-komorkowe-i-ang.-cell-declustering" class="section level3">
 <h3><span class="header-section-number">3.8.3</span> Rozgrupowanie komórkowe I | (ang. <em>cell declustering</em>)</h3>
@@ -816,32 +803,29 @@ punkty_pref &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span
 punkty_pref$id &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(punkty_pref)
 <span class="kw">coordinates</span>(punkty_pref) &lt;-<span class="st"> </span><span class="er">~</span>x+y
 <span class="kw">proj4string</span>(punkty_pref) &lt;-<span class="st"> &#39;+init=epsg:2180&#39;</span>
-<span class="kw">spplot</span>(punkty_pref, <span class="st">&quot;id&quot;</span>, <span class="dt">colorkey=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;rgdal&#39;</span>)
-<span class="kw">library</span>(<span class="st">&quot;raster&quot;</span>)
-<span class="kw">library</span>(<span class="st">&#39;rgeos&#39;</span>)
-granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn =</span> <span class="st">&quot;dane&quot;</span>, <span class="dt">layer =</span> <span class="st">&quot;granica&quot;</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
+<span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;id&#39;</span>, <span class="dt">colorkey=</span><span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-54-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn =</span> <span class="st">&#39;dane&#39;</span>, <span class="dt">layer =</span> <span class="st">&#39;granica&#39;</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 siatka_n &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(granica))
 <span class="co"># siatka_n &lt;- raster(xmn=450000, xmx=485000, ymn=5960000, ymx=5989000)</span>
 <span class="kw">res</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">500</span>, <span class="dv">500</span>)
 siatka_n[] &lt;-<span class="st"> </span><span class="dv">0</span>
 <span class="kw">proj4string</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">CRS</span>(<span class="kw">proj4string</span>(punkty_pref))
 siatka_n &lt;-<span class="st"> </span><span class="kw">mask</span>(siatka_n, <span class="kw">gBuffer</span>(granica, <span class="dt">width =</span> <span class="dv">500</span>))
-siatka_n &lt;-<span class="st"> </span><span class="kw">as</span>(siatka_n, <span class="st">&quot;SpatialPolygonsDataFrame&quot;</span>)
+siatka_n &lt;-<span class="st"> </span><span class="kw">as</span>(siatka_n, <span class="st">&#39;SpatialPolygonsDataFrame&#39;</span>)
 siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(siatka_n@data$layer), ]
 <span class="kw">plot</span>(siatka_n)
 <span class="kw">plot</span>(punkty_pref, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-54-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty_pref$liczebnosc &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">length</span>(punkty_pref))
 siatka_nr &lt;-<span class="st"> </span><span class="kw">aggregate</span>(punkty_pref[<span class="st">&#39;liczebnosc&#39;</span>], <span class="dt">by =</span> siatka_n, <span class="dt">FUN =</span> length) 
-<span class="kw">spplot</span>(siatka_nr, <span class="st">&quot;liczebnosc&quot;</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-3.png" alt="" /><!-- --></p>
+<span class="kw">spplot</span>(siatka_nr, <span class="st">&#39;liczebnosc&#39;</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-54-3.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">liczba &lt;-<span class="st"> </span><span class="kw">over</span>(punkty_pref, siatka_nr)
 punkty_pref$waga &lt;-<span class="st"> </span>((<span class="dv">1</span>/liczba$liczebnosc)/<span class="kw">sum</span>(!<span class="kw">is.na</span>(siatka_nr$liczebnosc))) *<span class="st"> </span><span class="kw">length</span>(punkty_pref)
 
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;waga&#39;</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-4.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-54-4.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">srednia_arytmetyczna &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp)
 srednia_wazona_c1 &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp *<span class="st"> </span>punkty_pref$waga, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
 </div>
@@ -856,15 +840,13 @@ nearest observation to each grid cell, so, honoustly, it's hard to call
 this interpolation, it is rather something of a discretized Thiessen 
 polygon.
 -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;gstat&#39;</span>)
-punkty_pref &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;dane/punkty_pref.csv&#39;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty_pref &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;dane/punkty_pref.csv&#39;</span>)
 punkty_pref$id &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(punkty_pref)
 <span class="kw">coordinates</span>(punkty_pref) &lt;-<span class="st"> </span><span class="er">~</span>x+y
 <span class="kw">proj4string</span>(punkty_pref) &lt;-<span class="st"> &#39;+init=epsg:2180&#39;</span>
-<span class="kw">spplot</span>(punkty_pref, <span class="st">&quot;id&quot;</span>, <span class="dt">colorkey=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;raster&#39;</span>)
-granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;dane&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;granica&#39;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
+<span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;id&#39;</span>, <span class="dt">colorkey=</span><span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-55-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;dane&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;granica&#39;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
 siatka_n &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(granica))
 <span class="kw">res</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">500</span>, <span class="dv">500</span>)
 siatka_n[] &lt;-<span class="st"> </span><span class="dv">0</span>
@@ -874,21 +856,21 @@ siatka_n &lt;-<span class="st"> </span><span class="kw">as</span>(siatka_n, <spa
 siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(siatka_n@data$layer), ]
 <span class="kw">gridded</span>(siatka_n) &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 <span class="kw">plot</span>(siatka_n)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-55-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st">  </span><span class="kw">krige</span>(id~<span class="dv">1</span>, punkty_pref, siatka_n, <span class="dt">nmax=</span><span class="dv">1</span>)</code></pre></div>
 <pre><code>## [inverse distance weighted interpolation]</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(out, <span class="st">&quot;var1.pred&quot;</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(out, <span class="st">&#39;var1.pred&#39;</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-56-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">table</span>(out[[<span class="dv">1</span>]]))
 df$waga &lt;-<span class="st"> </span>df$Freq/<span class="kw">sum</span>(df$Freq)
-punkty_pref &lt;-<span class="st"> </span><span class="kw">merge</span>(punkty_pref, df, <span class="dt">by.x=</span><span class="st">&quot;id&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Var1&quot;</span>)
+punkty_pref &lt;-<span class="st"> </span><span class="kw">merge</span>(punkty_pref, df, <span class="dt">by.x=</span><span class="st">&#39;id&#39;</span>, <span class="dt">by.y=</span><span class="st">&#39;Var1&#39;</span>)
 <span class="kw">summary</span>(punkty_pref$waga)</code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
-## 0.00389 0.00389 0.00389 0.00552 0.00778 0.01556      61</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(out, <span class="st">&quot;var1.pred&quot;</span>, <span class="dt">sp.layout=</span><span class="kw">list</span>(<span class="st">&quot;sp.points&quot;</span>, punkty_pref))</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-2.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(punkty_pref[<span class="st">&quot;waga&quot;</span>])</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-3.png" alt="" /><!-- --></p>
+## 0.00389 0.00389 0.00389 0.00546 0.00778 0.01167      56</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(out, <span class="st">&#39;var1.pred&#39;</span>, <span class="dt">sp.layout=</span><span class="kw">list</span>(<span class="st">&#39;sp.points&#39;</span>, punkty_pref))</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-56-2.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(punkty_pref[<span class="st">&#39;waga&#39;</span>])</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-56-3.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">srednia_arytmetyczna &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp)
 srednia_wazona_c2 &lt;-<span class="st"> </span><span class="kw">sum</span>(punkty_pref$temp *<span class="st"> </span>punkty_pref$waga, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
 </div>
@@ -902,24 +884,22 @@ srednia_wazona_c2 &lt;-<span class="st"> </span><span class="kw">sum</span>(punk
 punkty_pref$id &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(punkty_pref)
 <span class="kw">coordinates</span>(punkty_pref) &lt;-<span class="st"> </span><span class="er">~</span>x+y
 <span class="kw">proj4string</span>(punkty_pref) &lt;-<span class="st"> &#39;+init=epsg:2180&#39;</span>
-<span class="kw">spplot</span>(punkty_pref, <span class="st">&quot;id&quot;</span>, <span class="dt">colorkey=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;dismo&#39;</span>)
-v &lt;-<span class="st"> </span><span class="kw">voronoi</span>(punkty_pref)
+<span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;id&#39;</span>, <span class="dt">colorkey=</span><span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-57-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v &lt;-<span class="st"> </span><span class="kw">voronoi</span>(punkty_pref)
 <span class="kw">plot</span>(punkty_pref, <span class="dt">cex=</span><span class="fl">0.2</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)
 <span class="kw">plot</span>(v, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-2.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;rgeos&#39;</span>)
-v_intersect &lt;-<span class="kw">intersect</span>(granica, v)
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-57-2.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v_intersect &lt;-<span class="kw">intersect</span>(granica, v)
 <span class="kw">plot</span>(punkty_pref, <span class="dt">cex=</span><span class="fl">0.2</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)
 <span class="kw">plot</span>(v_intersect, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-3.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-57-3.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v_intersect$pow &lt;-<span class="st"> </span><span class="kw">area</span>(v_intersect)
 v_intersect$waga &lt;-<span class="st"> </span>v_intersect$pow/<span class="kw">sum</span>(v_intersect$pow) *<span class="st"> </span><span class="kw">length</span>(punkty_pref)
 
 punkty_pref &lt;-<span class="st"> </span><span class="kw">merge</span>(punkty_pref, v_intersect[<span class="kw">c</span>(<span class="st">&#39;id&#39;</span>, <span class="st">&#39;waga&#39;</span>)], <span class="dt">by=</span><span class="st">&#39;id&#39;</span>)
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;waga&#39;</span>)</code></pre></div>
-<p><img src="02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-4.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-57-4.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">srednia_arytmetyczna &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)
 srednia_wazona_p &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp*punkty_pref$waga, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
 <table>
@@ -936,19 +916,19 @@ srednia_wazona_p &lt;-<span class="st"> </span><span class="kw">mean</span>(punk
 </tr>
 <tr class="even">
 <td align="left">Próba</td>
-<td align="right">15.52427</td>
+<td align="right">15.58453</td>
 </tr>
 <tr class="odd">
 <td align="left">Rozgrupowanie komórkowe I</td>
-<td align="right">17.53834</td>
+<td align="right">17.88282</td>
 </tr>
 <tr class="even">
 <td align="left">Rozgrupowanie komórkowe II</td>
-<td align="right">15.32633</td>
+<td align="right">15.17018</td>
 </tr>
 <tr class="odd">
 <td align="left">Rozgrupowanie poligonowe</td>
-<td align="right">18.33385</td>
+<td align="right">17.61604</td>
 </tr>
 </tbody>
 </table>
@@ -969,13 +949,13 @@ http://gaa.org.au/pdf/DeclusterDebias-CCG.pdf
 <a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="eksploracyjna-analiza-danych-geostatystyka.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
-<script src="book_assets/gitbook-2.6.7/js/app.js"></script>
-<script src="book_assets/gitbook-2.6.7/js/lunr.js"></script>
-<script src="book_assets/gitbook-2.6.7/js/plugin-search.js"></script>
-<script src="book_assets/gitbook-2.6.7/js/plugin-sharing.js"></script>
-<script src="book_assets/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
-<script src="book_assets/gitbook-2.6.7/js/plugin-bookdown.js"></script>
-<script src="book_assets/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/app.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
 <script>
 require(["gitbook"], function(gitbook) {
 gitbook.start({

@@ -4,18 +4,44 @@ knit: bookdown::preview_chapter
 
 # Wprowadzenie {#intro}
 
-## Suwalski Park Krajobrazowy
-    
+## Wymagania wstępne
+
+Oprogramowanie, pakiety i dane.
+
+### Oprogramowanie
+
+- [R](www.r-project.org) - https://cloud.r-project.org/
+- [RStudio](www.rstudio.com) - https://www.rstudio.com/products/rstudio/download/
+
+### Dane
+
+- Adres
+- Pliki + ryciny
+
 ## R a dane przestrzenne
     
 ### Pakiety
     
-- GIS - **sp, rgdal, raster, rasterVis, rgeos, maptools, GeoXp, deldir, pgirmess**
-- Geostatystyka - **gstat, geoR, geoRglm, fields, spBayes, RandomFields, vardiag**
-- Inne - **ggplot2, corrplot, caret**
+- GIS - `sp`, `rgdal`, `raster`, `rasterVis`, `rgeos`, `maptools`, `GeoXp`, `deldir`, `pgirmess`
+- Geostatystyka - `gstat`, `geoR`, `geoRglm`, `fields`, `spBayes`, `RandomFields`, `vardiag`
+- Inne - `ggplot2`, `corrplot`, `caret`
 
-```{r pakiety, eval=FALSE}
-install.packages(c('sp', 'rgdal', 'raster', 'rasterVis', 'gstat', 'ggplot2', 'corrplot', 'deldir', 'fields', 'geoR', 'pgirmess', 'caret'))
+```{r pakiety}
+pakiety <- c('caret', 'corrplot', 'dismo', 'fields', 'geoR', 'ggplot2', 'gridExtra', 'gstat', 'pgirmess', 'raster', 'rasterVis', 'rgdal', 'rgeos', 'sp')
+```
+
+```{r pakiety_inst, eval=FALSE}
+install.packages(pakiety)
+```
+
+Pakiety R używane w tej książce można również zainstalować poprzez:
+
+```{r, eval=FALSE}
+devtools::install_github("nowosad/geostat_book")
+```
+
+```{r, echo=FALSE, eval=FALSE}
+devtools::session_info(pakiety)
 ```
 
 ### Reprezentacja danych nieprzestrzennych
@@ -31,18 +57,18 @@ install.packages(c('sp', 'rgdal', 'raster', 'rasterVis', 'gstat', 'ggplot2', 'co
 
 ### Reprezentacja danych przestrzennych
 
-- Obiekty klasy Spatial* - wszystkie z nich zawierają dwie dodatkowe informacje:
-    - bounding box (bbox) - obwiednia - określa zasięg danych
-    - CRS (proj4string) - układ współrzędnych
-- Najczęściej stosowane obiekty klasy Spatial* to SpatialPointsDataFrame, SpatialPolygonsDataFrame oraz SpatialGridDataFrame
-- Obiekty klasy Raster, tj. RasterLayer, RasterStack, RasterBrick
+- Obiekty klasy `Spatial*` z pakietu `sp` - wszystkie z nich zawierają dwie dodatkowe informacje:
+    - bounding box (`bbox`) - obwiednia - określa zasięg danych
+    - CRS (`proj4string`) - układ współrzędnych
+- Najczęściej stosowane obiekty klasy `Spatial*` to `SpatialPointsDataFrame`, `SpatialPolygonsDataFrame` oraz `SpatialGridDataFrame`
+- Obiekty klasy `Raster*` z pakietu `raster`, tj. `RasterLayer`, `RasterStack`, `RasterBrick`
 - Inne
 
 ### GDAL/OGR
 - http://www.gdal.org/
 - GDAL to biblioteka zawierająca funkcje służące do odczytywania i zapiswania danych w formatach rastrowych
 - OGR to bibioteka służąca to odczytywania i zapiswania danych w formatach wektorowych
-- Pakiet **rgdal** pozwala na wykorzystanie bibliotek GDAL/OGR w R
+- Pakiet `rgdal` pozwala na wykorzystanie bibliotek GDAL/OGR w R
 
 ### PROJ.4
 - Dane przestrzenne powinny być zawsze powiązane z układem współrzednych
@@ -55,24 +81,23 @@ http://www.spatialreference.org/
 
 "+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 
-lub
+- ...lub też za pomocą kodu EPSG:
 
 "+init=epsg:2180"
 
 ### Układ geograficzny
-- Proporcje pomiędzy współrzedną X (długość) a Y (szerokość) nie są 1:1
+- Proporcje pomiędzy współrzedną oznaczjącą długość geograficzną (X) a oznaczającą szerokość geograficzną (Y) nie są równe 1:1
 - Wielkość oczka siatki jest zmienna 
-- Nie pozwala na proste określanie odległości czy powierzchni
+- Nie pozwala to na proste określanie odległości czy powierzchni
 - Jednostka mapy jest abstrakcyjna
 
-- Do większości algorytmów w geostatystyce wykorzystywane są układy prostokątne płaskie
+- Do większości algorytmów w geostatystyce wykorzystywane są układy współrzędnych prostokątnych płaskich
 
 ## Import danych
 
 ### Dane punktowe (format csv)
 
 ```{r}
-library('sp')
 dane_punktowe <- read.csv('dane/punkty.csv')
 ```
 
@@ -115,7 +140,6 @@ sp_na_omit <- function(x, margin=1) {
 ### Dane poligonowe (formaty gisowe)
 
 ```{r}
-library('rgdal')
 granica <- readOGR(dsn='dane', layer='granica', verbose=FALSE)
 plot(granica)
 ```
@@ -123,8 +147,7 @@ plot(granica)
 ### Rastry
 
 ```{r}
-library('raster')
-siatka_raster <- raster("dane/siatka.tif")
+siatka_raster <- raster('dane/siatka.tif')
 plot(siatka_raster)
 ```
 
@@ -133,42 +156,41 @@ plot(siatka_raster)
 ### Zapisywanie danych wektorowych
 
 ```{r zapis_wektora, eval=FALSE}
-library('rgdal')
-writeOGR(poligon, dsn="nazwa_folderu", layer="nowy_poligon", driver="ESRI Shapefile")
+writeOGR(poligon, dsn='nazwa_folderu', layer='nowy_poligon', driver='ESRI Shapefile')
 ```
 
 ### Zapisywanie danych rastrowych
 
 ```{r zapis_rastra, eval=FALSE}
-library('raster')
-writeRaster(siatka_raster, filename="nazwa_folderu/nowy_raster.tif")
+writeRaster(siatka_raster, filename='nazwa_folderu/nowy_raster.tif')
 ```
 
 ## Wizualizacja danych 2D
+
 ### Dane punktowe
 
-```{r }
-spplot(dane_punktowe, "temp")
+```{r}
+plot(dane_punktowe)
 ```
 
-### Dane punktowe
+```{r }
+spplot(dane_punktowe, 'temp')
+```
 
 ```{r }
-spplot(dane_punktowe, "srtm")
+spplot(dane_punktowe, 'srtm')
 ```
 
 ### Dane punktowe - kategorie
 
 ```{r }
 dane_punktowe@data$clc <- as.factor(dane_punktowe@data$clc)
-spplot(dane_punktowe, "clc")
+spplot(dane_punktowe, 'clc')
 ```
 
 ### Rastry
 
 ```{r, message=FALSE, warning=FALSE}
-library('raster')
-library('rasterVis')
 levelplot(siatka_raster, margin=FALSE)
 ```
 
@@ -179,7 +201,6 @@ levelplot(siatka_raster, margin=FALSE)
 bbox(dane_punktowe)
 extent(dane_punktowe)
 ```
-
 
 ```{r }
 siatka <- expand.grid(x = seq(from = 745050, to = 757050, by = 500),
@@ -204,10 +225,9 @@ plot(siatka)
 plot(dane_punktowe, add=TRUE)
 ```
 
-### Siatki nieregularne
+### Siatki nieregularne - klasa `RasterLayer`
 
 ```{r }
-library('raster')
 granica <- readOGR(dsn='dane', layer='granica')
 siatka_n <- raster(extent(granica))
 res(siatka_n) <- c(500, 500)
@@ -220,7 +240,7 @@ siatka_n <- mask(siatka_n, granica)
 levelplot(siatka_n, margin=FALSE)
 ```
 
-### Siatki nieregularne
+### Siatki nieregularne - klasa `SpatialPixelsDataFrame`
 
 ```{r }
 siatka_n <- as(siatka_n, 'SpatialPointsDataFrame')

@@ -31,7 +31,6 @@ proj4string(punkty) <- '+init=epsg:2180'
 - Optymalnie wartość średniego błędu estymacji powinna być jak najbliżej 0
 
 $$ ME=\frac{\sum_{i=1}^{n}(\hat{v}_i-v_i)}{n} $$     
-
 ### Pierwiastek średniego błędu kwadratowego
 - Optymalnie wartość pierwiastka średniego błędu kwadratowego powinna być jak najmniejsza
 
@@ -43,8 +42,6 @@ $$ RMSE=\sqrt{\frac{\sum_{i=1}^{n}(\hat{v}_i-v_i)^2}{n}} $$
 ### Statystyki jakości estymacji | Mapa
 
 ```{r mapa, echo=FALSE}
-library('caret')
-library('gstat')
 set.seed(124)
 indeks <- as.vector(createDataPartition(punkty$temp, p=0.75, list=FALSE))
 train <- punkty[indeks, ]
@@ -56,20 +53,19 @@ test_sk <- krige(temp~1, train, test, model=fitted, beta=15.324)
 reszta_sk <-  test_sk$var1.pred - test$temp
 test_sk$reszty <- reszta_sk
 test_sk$true <-  test$temp
-spplot(test_sk, "reszty", main="Reszty z modelu", colorkey=TRUE)
+spplot(test_sk, 'reszty', main='Reszty z modelu', colorkey=TRUE)
 ```
 
 ### Statystyki jakości estymacji | Histogram
 
 ```{r hist, echo=FALSE}
-library('ggplot2')
-ggplot(as.data.frame(test_sk), aes(reszty)) + geom_histogram() + xlab("Reszty z modelu") + ylab('Liczebność')
+ggplot(as.data.frame(test_sk), aes(reszty)) + geom_histogram() + xlab('Reszty z modelu') + ylab('Liczebność')
 ```
 
 ### Statystyki jakości estymacji | Wykres rozrzutu
 
 ```{r point, echo=FALSE}
-ggplot(as.data.frame(test_sk), aes(var1.pred, true)) + geom_point() + xlab("Predykcja") + ylab("Zmierzona wartość")
+ggplot(as.data.frame(test_sk), aes(var1.pred, true)) + geom_point() + xlab('Predykcja') + ylab('Zmierzona wartość')
 ```
 
 ## Walidacja wyników estymacji
@@ -89,7 +85,6 @@ ggplot(as.data.frame(test_sk), aes(var1.pred, true)) + geom_point() + xlab("Pred
 ### Walidacja podzbiorem 
 
 ```{r }
-library('caret')
 set.seed(124)
 indeks <- as.vector(createDataPartition(punkty$temp, p=0.75, list=FALSE))
 indeks
@@ -117,7 +112,7 @@ R2 <- 1 - sum(reszta_sk^2)/sum(srednia_reszta^2)
 R2
 
 test_sk$reszty <- reszta_sk
-spplot(test_sk, "reszty")
+spplot(test_sk, 'reszty')
 ```
 
 
@@ -132,10 +127,9 @@ spplot(test_sk, "reszty")
     - Wyliczenie reszty (ang. *residual*), czyli różnicy pomiędzy znaną wartością a obserwacją
 3. Podsumowanie otrzymanych wyników
     
-- W pakiecie **gstat**, kroswalidacja LOO jest dostępna w funkcjach *krige.cv* oraz *gstat.cv*
+- W pakiecie `gstat`, kroswalidacja LOO jest dostępna w funkcjach `krige.cv` oraz `gstat.cv`
 
 ### Kroswalidacja 
-
 
 ```{r loovv}
 vario <- variogram(temp~1, data=punkty)
@@ -144,7 +138,7 @@ fitted <- fit.variogram(vario, model)
 
 cv_sk <- krige.cv(temp~1, punkty, model=fitted, beta=15.324)
 summary(cv_sk)
-spplot(cv_sk, "residual")
+spplot(cv_sk, 'residual')
 ```
 
 <!-- 
@@ -154,18 +148,15 @@ spplot(cv_sk, "residual")
 # summary(ok_loocv)
 ```
 
-
 - Tutaj inne przykłady
 - Wykresy z loocv
 - wykresy porównujące
-
 
 ```{r, eval=FALSE}
 # ok_fit <- gstat(formula=temp~1, data=punkty, model=model_zl2)
 # ok_loocv <- gstat.cv(OK_fit, debug.level=0, random=FALSE)
 # spplot(pe[6])
 ```
-
 
 ## 
 - prezentacja 5 Ani
@@ -206,5 +197,4 @@ krige.cv
 # spplot(grid, 'KU_pred')
 # spplot(grid, 'KU_se')
 ```
-
 -->

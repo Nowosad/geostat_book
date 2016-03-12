@@ -12,7 +12,7 @@ sp_na_omit <- function(x, margin=1) {
         }
 }
 
-spatial_pixels_to_points <- function(spatial_pixels, type, ...){
+spatial_pixels_to_points <- function(spatial_pixels, type, only_ndvi=FALSE, ...){
         if (type==1){
                 type <- "random"
         } else if (type==2){
@@ -32,6 +32,9 @@ spatial_pixels_to_points <- function(spatial_pixels, type, ...){
         sample_points <- sp::over(sample_points, spatial_pixels) %>% SpatialPointsDataFrame(sample_points, .)
         coordnames(sample_points) <- c('x', 'y')
         sample_points <- sp_na_omit(sample_points)
+        if (only_ndvi){
+                sample_points@data <- sample_points@data['ndvi']
+        }
         sample_points
 }
 

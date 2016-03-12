@@ -1,3 +1,4 @@
 book_filename: "Geostatystyka.Rmd"
 chapter_name: "Rodział "
-new_session: yes
+before_chapter_script: "lista_pakietow.R"
+new_session: no

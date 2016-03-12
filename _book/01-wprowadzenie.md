@@ -4,20 +4,39 @@ knit: bookdown::preview_chapter
 
 # Wprowadzenie {#intro}
 
-## Suwalski Park Krajobrazowy
-    
+## Wymagania wstępne
+
+Oprogramowanie, pakiety i dane.
+
+### Oprogramowanie
+
+- R (www.r-project.org)
+- RStudio (www.rstudio.com) - https://www.rstudio.com/products/rstudio/download/
+
+### Dane
+
+- Adres
+- Pliki + ryciny
+
 ## R a dane przestrzenne
     
 ### Pakiety
     
-- GIS - **sp, rgdal, raster, rasterVis, rgeos, maptools, GeoXp, deldir, pgirmess**
+- GIS - `sp`, `rgdal`, `raster`, `rasterVis`, `rgeos`, `maptools`, `GeoXp`, `deldir`, `pgirmess`
 - Geostatystyka - **gstat, geoR, geoRglm, fields, spBayes, RandomFields, vardiag**
 - Inne - **ggplot2, corrplot, caret**
 
 
 ```r
-install.packages(c('sp', 'rgdal', 'raster', 'rasterVis', 'gstat', 'ggplot2', 'corrplot', 'deldir', 'fields', 'geoR', 'pgirmess', 'caret'))
+pakiety <- (c('sp', 'rgdal', 'raster', 'rasterVis', 'gstat', 'ggplot2', 'corrplot', 'deldir', 'fields', 'geoR', 'pgirmess', 'caret'))
 ```
+
+
+```r
+install.packages(pakiety)
+```
+
+
 
 ### Reprezentacja danych nieprzestrzennych
     
@@ -84,13 +103,13 @@ head(dane_punktowe)
 ```
 
 ```
-##       srtm clc     temp      ndvi      savi        x        y
-## 1 184.4150   1 17.82931 0.5490699 0.3642284 752244.9 716188.1
-## 2 220.3998   2 16.76045 0.6070772 0.3425520 751900.9 714991.4
-## 3 242.2178   2 10.08023 0.5999830 0.3975228 750204.8 718884.6
-## 4 204.4045   1 18.60791 0.7228759 0.4889487 753276.1 714766.4
-## 5 202.6243   1 17.85643 0.4998576 0.3347926 753895.0 720630.3
-## 6 196.3847   1 20.45337 0.5463166 0.3275971 754495.3 715109.0
+##       srtm clc      temp      ndvi      savi        x        y
+## 1 225.0000   4  8.445198 0.2714581 0.1336594 748318.6 718215.9
+## 2 226.2811   1 26.459794 0.3990652 0.2777170 746796.4 713105.3
+## 3 202.1949   1 16.224041 0.5414072 0.3192062 755746.5 717561.6
+## 4 218.4167   1 19.477969 0.5021783 0.2769863 752826.7 713117.8
+## 5 196.3150   1 20.679498 0.4138057 0.2240249 748584.1 712664.4
+## 6 212.1392   2 20.844318 0.5492478 0.2501368 753884.3 713267.7
 ```
 
 
@@ -103,26 +122,26 @@ summary(dane_punktowe)
 ## Object of class SpatialPointsDataFrame
 ## Coordinates:
 ##        min      max
-## x 745573.7 756977.8
-## y 712659.1 721228.1
+## x 745619.3 756963.6
+## y 712664.4 721253.9
 ## Is projected: NA 
 ## proj4string : [NA]
-## Number of points: 244
+## Number of points: 252
 ## Data attributes:
 ##       srtm            clc             temp             ndvi       
-##  Min.   :145.0   Min.   :1.000   Min.   : 7.805   Min.   :0.1465  
-##  1st Qu.:188.5   1st Qu.:1.000   1st Qu.:12.192   1st Qu.:0.4590  
-##  Median :213.2   Median :1.000   Median :15.134   Median :0.5163  
-##  Mean   :211.6   Mean   :1.418   Mean   :15.324   Mean   :0.5033  
-##  3rd Qu.:236.7   3rd Qu.:2.000   3rd Qu.:17.343   3rd Qu.:0.5660  
-##  Max.   :283.0   Max.   :4.000   Max.   :26.072   Max.   :0.7229  
+##  Min.   :145.8   Min.   :1.000   Min.   : 8.153   Min.   :0.1772  
+##  1st Qu.:184.6   1st Qu.:1.000   1st Qu.:12.459   1st Qu.:0.4520  
+##  Median :215.0   Median :1.000   Median :15.210   Median :0.5105  
+##  Mean   :211.4   Mean   :1.508   Mean   :15.522   Mean   :0.4974  
+##  3rd Qu.:235.4   3rd Qu.:2.000   3rd Qu.:18.258   3rd Qu.:0.5587  
+##  Max.   :277.0   Max.   :4.000   Max.   :26.700   Max.   :0.6955  
 ##       savi        
-##  Min.   :0.04552  
-##  1st Qu.:0.29080  
-##  Median :0.32742  
-##  Mean   :0.32071  
-##  3rd Qu.:0.36468  
-##  Max.   :0.48895
+##  Min.   :0.05808  
+##  1st Qu.:0.27785  
+##  Median :0.31928  
+##  Mean   :0.31185  
+##  3rd Qu.:0.35793  
+##  Max.   :0.46736
 ```
 
 
@@ -135,29 +154,29 @@ summary(dane_punktowe)
 ## Object of class SpatialPointsDataFrame
 ## Coordinates:
 ##        min      max
-## x 745573.7 756977.8
-## y 712659.1 721228.1
+## x 745619.3 756963.6
+## y 712664.4 721253.9
 ## Is projected: TRUE 
 ## proj4string :
 ## [+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993
 ## +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0
 ## +units=m +no_defs]
-## Number of points: 244
+## Number of points: 252
 ## Data attributes:
 ##       srtm            clc             temp             ndvi       
-##  Min.   :145.0   Min.   :1.000   Min.   : 7.805   Min.   :0.1465  
-##  1st Qu.:188.5   1st Qu.:1.000   1st Qu.:12.192   1st Qu.:0.4590  
-##  Median :213.2   Median :1.000   Median :15.134   Median :0.5163  
-##  Mean   :211.6   Mean   :1.418   Mean   :15.324   Mean   :0.5033  
-##  3rd Qu.:236.7   3rd Qu.:2.000   3rd Qu.:17.343   3rd Qu.:0.5660  
-##  Max.   :283.0   Max.   :4.000   Max.   :26.072   Max.   :0.7229  
+##  Min.   :145.8   Min.   :1.000   Min.   : 8.153   Min.   :0.1772  
+##  1st Qu.:184.6   1st Qu.:1.000   1st Qu.:12.459   1st Qu.:0.4520  
+##  Median :215.0   Median :1.000   Median :15.210   Median :0.5105  
+##  Mean   :211.4   Mean   :1.508   Mean   :15.522   Mean   :0.4974  
+##  3rd Qu.:235.4   3rd Qu.:2.000   3rd Qu.:18.258   3rd Qu.:0.5587  
+##  Max.   :277.0   Max.   :4.000   Max.   :26.700   Max.   :0.6955  
 ##       savi        
-##  Min.   :0.04552  
-##  1st Qu.:0.29080  
-##  Median :0.32742  
-##  Mean   :0.32071  
-##  3rd Qu.:0.36468  
-##  Max.   :0.48895
+##  Min.   :0.05808  
+##  1st Qu.:0.27785  
+##  Median :0.31928  
+##  Mean   :0.31185  
+##  3rd Qu.:0.35793  
+##  Max.   :0.46736
 ```
 
 <!--
@@ -209,7 +228,7 @@ granica <- readOGR(dsn='dane', layer='granica', verbose=FALSE)
 plot(granica)
 ```
 
-![](01-wprowadzenie_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](01-wprowadzenie_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 ### Rastry
 
@@ -220,7 +239,7 @@ siatka_raster <- raster("dane/siatka.tif")
 plot(siatka_raster)
 ```
 
-![](01-wprowadzenie_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](01-wprowadzenie_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 ## Eksport danych
 
@@ -248,7 +267,7 @@ writeRaster(siatka_raster, filename="nazwa_folderu/nowy_raster.tif")
 spplot(dane_punktowe, "temp")
 ```
 
-![](01-wprowadzenie_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](01-wprowadzenie_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 ### Dane punktowe
 
@@ -257,7 +276,7 @@ spplot(dane_punktowe, "temp")
 spplot(dane_punktowe, "srtm")
 ```
 
-![](01-wprowadzenie_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](01-wprowadzenie_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 ### Dane punktowe - kategorie
 
@@ -267,7 +286,7 @@ dane_punktowe@data$clc <- as.factor(dane_punktowe@data$clc)
 spplot(dane_punktowe, "clc")
 ```
 
-![](01-wprowadzenie_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](01-wprowadzenie_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 ### Rastry
 
@@ -278,7 +297,7 @@ library('rasterVis')
 levelplot(siatka_raster, margin=FALSE)
 ```
 
-![](01-wprowadzenie_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+![](01-wprowadzenie_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
 ## Tworzenie siatek
 ### Siatki regularne
@@ -290,8 +309,8 @@ bbox(dane_punktowe)
 
 ```
 ##        min      max
-## x 745573.7 756977.8
-## y 712659.1 721228.1
+## x 745619.3 756963.6
+## y 712664.4 721253.9
 ```
 
 ```r
@@ -300,10 +319,10 @@ extent(dane_punktowe)
 
 ```
 ## class       : Extent 
-## xmin        : 745573.7 
-## xmax        : 756977.8 
-## ymin        : 712659.1 
-## ymax        : 721228.1
+## xmin        : 745619.3 
+## xmax        : 756963.6 
+## ymin        : 712664.4 
+## ymax        : 721253.9
 ```
 
 
@@ -333,7 +352,7 @@ plot(siatka)
 plot(dane_punktowe, add=TRUE)
 ```
 
-![](01-wprowadzenie_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+![](01-wprowadzenie_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
 
 ### Siatki nieregularne
 
@@ -363,7 +382,7 @@ siatka_n <- mask(siatka_n, granica)
 levelplot(siatka_n, margin=FALSE)
 ```
 
-![](01-wprowadzenie_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+![](01-wprowadzenie_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
 
 ### Siatki nieregularne
 
@@ -375,4 +394,4 @@ gridded(siatka_n) <- TRUE
 plot(siatka_n)
 ```
 
-![](01-wprowadzenie_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+![](01-wprowadzenie_files/figure-html/unnamed-chunk-19-1.png)<!-- -->

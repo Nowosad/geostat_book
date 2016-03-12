@@ -18,6 +18,7 @@ targets:
       - dane/siatka.shp
       - dane/siatka.csv
       - dane/punkty_pref.csv
+      - dane/punkty_ndvi.csv
 
   data:
     depends:
@@ -80,6 +81,9 @@ targets:
   points_pref:
     command: spatial_pixels_to_points(spdf_all, n=250, type=3)
     cleanup_level: never   
+  ndvi_points:
+    command: spatial_pixels_to_points(spdf_all, n=1000, type=1, only_ndvi=TRUE)
+    cleanup_level: never     
     
   dane/punkty.rds:
     command: saveRDS(points, "dane/punkty.rds")
@@ -98,8 +102,12 @@ targets:
   dane/siatka.tif:
     command: writeRaster(raster_stack, "dane/siatka.tif", overwrite=TRUE)
   dane/siatka.shp:
-    command: shapefile(spdf_all_without_temp, "dane/siatka.shp")
+    command: shapefile(spdf_all_without_temp, "dane/siatka.shp", overwrite=TRUE)
   dane/siatka.rds:  
     command: saveRDS(spdf_all_without_temp, "dane/siatka.rds")
   dane/granica.shp:
-    command: shapefile(granica_spk, "dane/granica.shp")
+    command: shapefile(granica_spk, "dane/granica.shp", overwrite=TRUE)
+  ndvi_points_df:
+    command: as.data.frame(ndvi_points)
+  dane/punkty_ndvi.csv:
+    command: write.csv(ndvi_points_df, "dane/punkty_ndvi.csv", row.names=FALSE)    

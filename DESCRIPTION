@@ -9,23 +9,18 @@ Imports:
   bookdown, 
   caret,
   corrplot,
-  deldir, 
+  dismo,
   fields,
   geoR, 
-  geoRglm,
   ggplot2,
+  gridExtra,
   gstat,
-  maptools,
   pgirmess, 
-  RandomFields,
   raster,
   rasterVis,  
   rgdal,
-  rgl,
   rgeos,
-  sp,
-  spBayes, 
-  vardiag
+  sp
 
 Remotes:
   nowosad/geoplus

@@ -15,12 +15,10 @@ opts_chunk$set(warning=FALSE, message=FALSE)
 - Określenie przestrzennego/czasowego typu próbkowania
 - Informacja o relacji pomiędzy lokalizacją obserwacji a czynnikami wpływającymi na zmienność przestrzenną cechy
 
-## Dane Wolin
-### Dane Wolin
+## Dane
+### Dane 
 
 ```{r, message=FALSE, warning=FALSE}
-library('sp')
-library('rgdal')
 punkty <- read.csv('dane/punkty.csv')
 coordinates(punkty) <- ~x+y
 
@@ -35,14 +33,12 @@ granica <- readOGR('dane', 'granica')
 plot(granica, add=TRUE)
 ```
 
-
 ## Statystyki opisowe
 ### Statystyki opisowe
 
 ```{r }
 summary(punkty@data)
 ```
-
 
 ### Statystyki opisowe | średnia i mediana
 
@@ -51,17 +47,16 @@ median(punkty$temp, na.rm=TRUE)
 mean(punkty$temp, na.rm=TRUE)
 ```
 
-
 ### Statystyki opisowe | średnia i mediana
-- w wypadku symetrycznego rozkładu te dwie cechy są równe
-- średnia jest bardziej wrażliwa na wartości odstające
-- mediana jest lepszą miarą środka danych, jeżeli są one skośne
+- W wypadku symetrycznego rozkładu te dwie cechy są równe
+- Średnia jest bardziej wrażliwa na wartości odstające
+- Mediana jest lepszą miarą środka danych, jeżeli są one skośne
 
 Po co używać średniej?
 
-- przydatniejsza w przypadku małych zbiorów danych
-- gdy rozkład danych jest symetryczny
-- (jednak) często warto podawać obie miary
+- Bardziej przydatna w przypadku małych zbiorów danych
+- Gdy rozkład danych jest symetryczny
+- (Jednak) często warto podawać obie miary
   
 ### Statystyki opisowe | minimum i maksimum
 
@@ -70,7 +65,6 @@ min(punkty$temp, na.rm=TRUE)
 max(punkty$temp, na.rm=TRUE)
 ```
 
-
 ### Statystyki opisowe | ochylenie standardowe
 ![](figs/sd.png)
 
@@ -78,12 +72,10 @@ max(punkty$temp, na.rm=TRUE)
 sd(punkty$temp, na.rm=TRUE)
 ```
 
-
 ## Wykresy
 ### Histogram
 
 ```{r }
-library('ggplot2')
 ggplot(punkty@data, aes(temp)) + geom_histogram()
 ```
 
@@ -99,39 +91,22 @@ ggplot(punkty@data, aes(temp)) + geom_histogram()
 ggplot(punkty@data, aes(temp)) + geom_density()
 ```
 
-
 ### Wykresy kwantyl-kwantyl (ang.*quantile-quantile*)
 
 ```{r }
 ggplot(punkty@data, aes(sample=temp)) + stat_qq()
 ```
 
-
 ### Wykresy kwantyl-kwantyl (ang. *quantile-quantile*)
 http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot
 ![http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot](figs/qq.png)
 
-<!--    
-## [analiza typu rozkładu jednej zmiennej i porównanie rozkładów dwóch zmiennych (wykresy q-q i p-p)]
-    
-
-```{r, eval=FALSE }
-df <- as.data.frame(qqplot(punkty$temp, punkty$X1999.09.13_NDVI, plot.it=FALSE))
-ggplot(df) + geom_point(aes(x=x, y=y)) + xlab('TPZ') + ylab('NDVI')
-
-ggplot(punkty@data) + geom_point(aes(x=temp, y=X1999.09.13_NDVI)) + xlab('TPZ') + ylab('NDVI')
-```
-
--->
-
 ### Dystrybuanta (CDF)
-- Dystrybuanta (ang. conditional density function - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości
-
+- Dystrybuanta (ang. *conditional density function* - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości
 
 ```{r }
 ggplot(punkty@data, aes(temp)) + stat_ecdf()
 ```
-
 
 ## Porównanie zmiennych
 
@@ -144,11 +119,9 @@ ggplot(punkty@data, aes(temp)) + stat_ecdf()
 - Wielkość samej kowariancji uzależniona jest od przyjętej skali zmiennej (jednostki)
 - Inne wyniku uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wieku i dochodu w złotówkach a inne dla wieku i dochodu w dolarach
 
-
 ```{r }
-cov(punkty$temp, punkty$ndvi, use= "complete.obs")
+cov(punkty$temp, punkty$ndvi, use= 'complete.obs')
 ```
-
 
 ### Współczynnik korelacji
 - Wspołczynnik korelacji to unormowana miara zależności pomiędzy dwiema zmiennymi, przyjmująca wartości od -1 do 1
@@ -157,7 +130,7 @@ cov(punkty$temp, punkty$ndvi, use= "complete.obs")
 
 ```{r }
 ggplot(punkty@data, aes(temp, ndvi)) + geom_point()
-cor(punkty$temp, punkty$ndvi, use=  "complete.obs")
+cor(punkty$temp, punkty$ndvi, use= 'complete.obs')
 ```
 
 ```{r }
@@ -165,12 +138,11 @@ cor.test(punkty$temp, punkty$ndvi)
 ```
 
 ```{r }
-cor(punkty@data[c(1, 3:5)], use= "complete.obs")
+cor(punkty@data[c(1, 3:5)], use= 'complete.obs')
 ```
 
 ```{r }
-library('corrplot')
-corrplot(cor(punkty@data[c(1, 3:5)], use= "complete.obs"))
+corrplot(cor(punkty@data[c(1, 3:5)], use= 'complete.obs'))
 ```
 
 ### Wykresy pudełkowe
@@ -180,10 +152,10 @@ punkty$clc <- as.factor(punkty$clc)
 ggplot(punkty@data, aes(clc, temp)) + geom_boxplot()
 ```
 
-- obrazuje pięc podstawowych <br> statystyk opisowych oraz wartości odstające
-- pudełko to zakres międzykwantylowy
-- linie oznaczają najbardziej ekstremalne wartości, ale nie odstające. Górna to 1,5\*IQR ponad krawędź pudełka, dolna to 1,5\*IQR poniżej wartości dolnej krawędzi pudełka
-- linia środkowa to mediana
+- Obrazuje pięc podstawowych statystyk opisowych oraz wartości odstające
+- Pudełko to zakres międzykwantylowy
+- Linie oznaczają najbardziej ekstremalne wartości, ale nie odstające. Górna to 1,5\*IQR ponad krawędź pudełka, dolna to 1,5\*IQR poniżej wartości dolnej krawędzi pudełka
+- Linia środkowa to mediana
 
 <!--
 1. Tereny komunikacyjne i porty
@@ -209,7 +181,7 @@ dev.off()
 ```
 
 ```{r }
-tukey <- TukeyHSD(aov_test, "clc")
+tukey <- TukeyHSD(aov_test, 'clc')
 plot(tukey, las=1)
 ```
 
@@ -249,7 +221,6 @@ ggplot(punkty@data, aes(pow_tpz)) + geom_density()
 ### Transformacja danych | Rodzina transformacji Boxa Coxa
 
 ```{r }
-library('caret')
 ggplot(punkty@data, aes(temp)) + geom_density()
 transformacja <- BoxCoxTrans(punkty$temp)
 transformacja
@@ -330,20 +301,18 @@ plot(pref)
 
 ```{r }
 par(mar=c(rep(0, 4)))
-library('rgdal')
 granica <- readOGR(dsn='dane', layer='granica', verbose=FALSE) 
 plot(granica) 
 plot(punkty, add=TRUE) 
 ```
 
 ```{r klik, eval=FALSE}
-library('sp')
 # select.spatial(punkty, digitize=FALSE, rownames=TRUE)
-spplot(punkty, "temp", identify=TRUE)
+spplot(punkty, 'temp', identify=TRUE)
 ```
 
 ```{r }
-spplot(punkty, "temp", sp.layout = granica)
+spplot(punkty, 'temp', sp.layout = granica)
 ```
 
 ## Rozgrupowanie danych
@@ -357,11 +326,10 @@ spplot(punkty, "temp", sp.layout = granica)
 ### Rozgrupowanie danych
 
 ```{r }
-library('sp')
 punkty_pref <- read.csv('dane/punkty_pref.csv')
 coordinates(punkty_pref) <- ~x+y
 proj4string(punkty_pref) <- '+init=epsg:2180'
-spplot(punkty_pref, "temp")
+spplot(punkty_pref, 'temp')
 summary(punkty_pref$temp)
 ```
 
@@ -377,26 +345,23 @@ punkty_pref <- read.csv('dane/punkty_pref.csv')
 punkty_pref$id <- 1:nrow(punkty_pref)
 coordinates(punkty_pref) <- ~x+y
 proj4string(punkty_pref) <- '+init=epsg:2180'
-spplot(punkty_pref, "id", colorkey=TRUE)
+spplot(punkty_pref, 'id', colorkey=TRUE)
 
-library('rgdal')
-library("raster")
-library('rgeos')
-granica <- readOGR(dsn = "dane", layer = "granica", verbose = FALSE)
+granica <- readOGR(dsn = 'dane', layer = 'granica', verbose = FALSE)
 siatka_n <- raster(extent(granica))
 # siatka_n <- raster(xmn=450000, xmx=485000, ymn=5960000, ymx=5989000)
 res(siatka_n) <- c(500, 500)
 siatka_n[] <- 0
 proj4string(siatka_n) <- CRS(proj4string(punkty_pref))
 siatka_n <- mask(siatka_n, gBuffer(granica, width = 500))
-siatka_n <- as(siatka_n, "SpatialPolygonsDataFrame")
+siatka_n <- as(siatka_n, 'SpatialPolygonsDataFrame')
 siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
 plot(siatka_n)
 plot(punkty_pref, add=TRUE)
 
 punkty_pref$liczebnosc <- rep(0, length(punkty_pref))
 siatka_nr <- aggregate(punkty_pref['liczebnosc'], by = siatka_n, FUN = length) 
-spplot(siatka_nr, "liczebnosc")
+spplot(siatka_nr, 'liczebnosc')
 
 liczba <- over(punkty_pref, siatka_nr)
 punkty_pref$waga <- ((1/liczba$liczebnosc)/sum(!is.na(siatka_nr$liczebnosc))) * length(punkty_pref)
@@ -406,7 +371,6 @@ spplot(punkty_pref, 'waga')
 srednia_arytmetyczna <- mean(punkty_pref$temp)
 srednia_wazona_c1 <- mean(punkty_pref$temp * punkty_pref$waga, na.rm=TRUE)
 ```
-
 
 ### Rozgrupowanie komórkowe II | (ang. *cell declustering*)
 <!--
@@ -420,14 +384,12 @@ polygon.
 -->
 
 ```{r }
-library('gstat')
 punkty_pref <- read.csv('dane/punkty_pref.csv')
 punkty_pref$id <- 1:nrow(punkty_pref)
 coordinates(punkty_pref) <- ~x+y
 proj4string(punkty_pref) <- '+init=epsg:2180'
-spplot(punkty_pref, "id", colorkey=TRUE)
+spplot(punkty_pref, 'id', colorkey=TRUE)
 
-library('raster')
 granica <- readOGR(dsn='dane', layer='granica', verbose=FALSE)
 siatka_n <- raster(extent(granica))
 res(siatka_n) <- c(500, 500)
@@ -442,13 +404,13 @@ plot(siatka_n)
 
 ```{r }
 out <-  krige(id~1, punkty_pref, siatka_n, nmax=1)
-spplot(out, "var1.pred")
+spplot(out, 'var1.pred')
 df <- as.data.frame(table(out[[1]]))
 df$waga <- df$Freq/sum(df$Freq)
-punkty_pref <- merge(punkty_pref, df, by.x="id", by.y="Var1")
+punkty_pref <- merge(punkty_pref, df, by.x='id', by.y='Var1')
 summary(punkty_pref$waga)
-spplot(out, "var1.pred", sp.layout=list("sp.points", punkty_pref))
-spplot(punkty_pref["waga"])
+spplot(out, 'var1.pred', sp.layout=list('sp.points', punkty_pref))
+spplot(punkty_pref['waga'])
 
 srednia_arytmetyczna <- mean(punkty_pref$temp)
 srednia_wazona_c2 <- sum(punkty_pref$temp * punkty_pref$waga, na.rm=TRUE)
@@ -465,14 +427,12 @@ punkty_pref <- read.csv('dane/punkty_pref.csv')
 punkty_pref$id <- 1:nrow(punkty_pref)
 coordinates(punkty_pref) <- ~x+y
 proj4string(punkty_pref) <- '+init=epsg:2180'
-spplot(punkty_pref, "id", colorkey=TRUE)
+spplot(punkty_pref, 'id', colorkey=TRUE)
 
-library('dismo')
 v <- voronoi(punkty_pref)
 plot(punkty_pref, cex=0.2, col='red')
 plot(v, add=TRUE)
 
-library('rgeos')
 v_intersect <-intersect(granica, v)
 plot(punkty_pref, cex=0.2, col='red')
 plot(v_intersect, add=TRUE)

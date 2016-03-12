@@ -150,7 +150,7 @@ fitted_nug
 
 ```
 ##   model    psill range
-## 1   Nug 4.452686     0
+## 1   Nug 4.356675     0
 ```
 
 ```r
@@ -191,8 +191,8 @@ fitted_sph
 ```
 
 ```
-##   model    psill    range
-## 1   Sph 11.62526 3656.101
+##   model   psill    range
+## 1   Sph 13.5325 4570.822
 ```
 
 ```r
@@ -234,7 +234,7 @@ fitted_gau
 
 ```
 ##   model    psill    range
-## 1   Gau 8.474184 806.0176
+## 1   Gau 8.361489 761.2621
 ```
 
 ```r
@@ -276,7 +276,7 @@ fitted_pow
 
 ```
 ##   model      psill     range
-## 1   Pow 0.03578134 0.7082075
+## 1   Pow 0.02920527 0.7371518
 ```
 
 ```r
@@ -317,8 +317,8 @@ fitted_exp
 ```
 
 ```
-##   model    psill    range
-## 1   Exp 15.44448 2611.625
+##   model   psill    range
+## 1   Exp 17.9672 3217.767
 ```
 
 ```r
@@ -355,8 +355,8 @@ fitted_zl1
 
 ```
 ##   model      psill    range
-## 1   Nug  0.7886708    0.000
-## 2   Sph 11.9758279 4637.317
+## 1   Nug  0.8981984    0.000
+## 2   Sph 14.8165152 6117.773
 ```
 
 ```r
@@ -430,24 +430,20 @@ plot(vario_kier, vario_kier_fit, as.table=TRUE)
 
 ### Modelowanie krossemiwariogramów
 
-toDo
-
-<!--
 
 ```r
-punkty_255 <- punkty[!is.na(punkty$temp), ]
-punkty_750 <- punkty
+punkty_ndvi <- read.csv('dane/punkty_ndvi.csv')
+coordinates(punkty_ndvi) <- ~x+y
+proj4string(punkty_ndvi) <- '+init=epsg:2180'
 
 library('gstat')
-g <- gstat(NULL, id="TPZ1999", form = temp~1, data = punkty_255)
-g <- gstat(g, id="TPZ2002", form = temp~1, data = punkty_750)
+g <- gstat(NULL, id="SAVI", form = savi~1, data = punkty)
+g <- gstat(g, id="NDVI", form = ndvi~1, data = punkty_ndvi)
 g
 v <- variogram(g)
 plot(v)
-g <- gstat(g, model=vgm(17, "Sph", 12000, 5), fill.all=TRUE)
-g_fit <- fit.lmc(v, g, fit.ranges = FALSE, fit.method=1)
+g <- gstat(g, model=vgm(0.006, "Sph", 2000, 0.001), fill.all=TRUE)
+g_fit <- fit.lmc(v, g, fit.method=1)
 g_fit
 plot(v, g_fit)
 ```
-
--->
