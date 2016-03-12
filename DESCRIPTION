@@ -1,11 +1,24 @@
 Package: geostat_book
 Title: Analiza danych przestrzennych w R.
-Version: 0.01
+Version: 0.02
 Authors@R: c(
   person("Jakub", "Nowosad", , "nowosad.jakub@gmail.com", c("aut", "cre"))
 Depends: R (>= 3.2.0)
 URL: https://gitlab.com/nowosad/geostat_book
 Imports:
-  bookdown
+  bookdown, 
+  caret,
+  corrplot,
+  deldir, 
+  fields,
+  geoR,   
+  ggplot2,
+  gstat,
+  pgirmess,  
+  raster,
+  rasterVis,  
+  rgdal,
+  sp
+
 Remotes:
   nowosad/geoplus

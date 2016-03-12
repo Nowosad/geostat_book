@@ -10,13 +10,8 @@ packages:
 targets:
   all:
     depends:
-      - granica_spk
-      - data/clc06_spk.tif
-      - data/srtm_spk.tif
-      - data/landsat8_temperature_spk.tif
-      - data/landsat8_ndvi_spk.tif
-      - data/landsat8_savi_spk.tif
-      - data/raster_stack.rds
+      - dane/punkty.rds
+      - dane/siatka.rds
 
   data:
     depends:
@@ -68,4 +63,16 @@ targets:
   data/raster_stack.rds:
     command: saveRDS(raster_stack, "data/raster_stack.rds")
     cleanup_level: never 
-
+  spdf_all:
+    command: raster_to_sp(raster_stack)
+  spdf_all_without_temp:
+    command: raster_to_sp2(raster_stack)  
+    
+  points:
+    command: spatial_pixels_to_points(spdf_all, n=50, type=1)
+    cleanup_level: never 
+    
+  dane/punkty.rds:
+    command: saveRDS(points, "dane/punkty.rds")
+  dane/siatka.rds:  
+    command: saveRDS(spdf_all_without_temp, "dane/siatka.rds")
