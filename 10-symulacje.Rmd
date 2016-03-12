@@ -71,14 +71,14 @@ proj4string(grid) <- proj4string(punkty)
 gridded(grid) <- TRUE
 ```
 
-```{r }
+```{r sym_bezw1, cache=TRUE}
 library('gstat')
 sym_bezw1 <- krige(formula=z~1, locations=NULL, newdata=grid, dummy=TRUE,
                          beta=1, model=vgm(psill=0.025,model='Exp',range=100), nsim=4, nmax=30)
 spplot(sym_bezw1, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=100, model wykładniczy")
 ```
 
-```{r }
+```{r sym_bezw2, cache=TRUE}
 sym_bezw2 <- krige(formula=z~1, locations=NULL, newdata=grid, dummy=TRUE, 
                    beta=1, model=vgm(psill=0.025,model='Exp',range=1500), nsim=4, nmax=30)
 spplot(sym_bezw2, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=1500, model wykładniczy")
@@ -105,7 +105,7 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 
 ### Sekwencyjna symulacja gaussowska (ang. *Sequential Gaussian simulation*)
 
-```{r }
+```{r sym_ok, cache=TRUE}
 vario <- variogram(temp~1, punkty)
 model <- vgm(10, model = 'Sph', range = 4500, nugget=1)
 fitted <- fit.variogram(vario, model)
@@ -133,7 +133,7 @@ punkty$temp_ind <- punkty$temp < 12
 summary(punkty$temp_ind) 
 ```
 
-```{r }
+```{r sym_ind, cache=TRUE}
 vario_ind <- variogram(temp_ind~1, punkty)         
 plot(vario_ind)
 model_ind <- vgm(0.14, model = 'Sph', range = 2000, nugget = 0.02)

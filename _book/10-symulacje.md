@@ -79,7 +79,7 @@ sym_bezw1 <- krige(formula=z~1, locations=NULL, newdata=grid, dummy=TRUE,
 spplot(sym_bezw1, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=100, model wykładniczy")
 ```
 
-![](10-symulacje_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+![](10-symulacje_files/figure-html/sym_bezw1-1.png)<!-- -->
 
 
 ```r
@@ -95,7 +95,7 @@ sym_bezw2 <- krige(formula=z~1, locations=NULL, newdata=grid, dummy=TRUE,
 spplot(sym_bezw2, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=1500, model wykładniczy")
 ```
 
-![](10-symulacje_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](10-symulacje_files/figure-html/sym_bezw2-1.png)<!-- -->
 
 <!--
 sym_bezw_model3 <- gstat(formula=~1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
@@ -126,7 +126,7 @@ fitted <- fit.variogram(vario, model)
 plot(vario, model=fitted)
 ```
 
-![](10-symulacje_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+![](10-symulacje_files/figure-html/sym_ok-1.png)<!-- -->
 
 ```r
 sym_ok <- krige(temp~1, punkty, grid, model=fitted, nsim=4, nmax=30)
@@ -141,7 +141,7 @@ sym_ok <- krige(temp~1, punkty, grid, model=fitted, nsim=4, nmax=30)
 spplot(sym_ok)
 ```
 
-![](10-symulacje_files/figure-html/unnamed-chunk-4-2.png)<!-- -->
+![](10-symulacje_files/figure-html/sym_ok-2.png)<!-- -->
 
 ### Sekwencyjna symulacja gaussowska (ang. *Sequential Gaussian simulation*)
 
@@ -192,14 +192,14 @@ vario_ind <- variogram(temp_ind~1, punkty)
 plot(vario_ind)
 ```
 
-![](10-symulacje_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](10-symulacje_files/figure-html/sym_ind-1.png)<!-- -->
 
 ```r
 model_ind <- vgm(0.14, model = 'Sph', range = 2000, nugget = 0.02)
 plot(vario_ind, model=model_ind)
 ```
 
-![](10-symulacje_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
+![](10-symulacje_files/figure-html/sym_ind-2.png)<!-- -->
 
 ```r
 fitted_ind <- fit.variogram(vario_ind, model_ind)
@@ -216,7 +216,7 @@ fitted_ind
 plot(vario_ind, model=fitted_ind)
 ```
 
-![](10-symulacje_files/figure-html/unnamed-chunk-6-3.png)<!-- -->
+![](10-symulacje_files/figure-html/sym_ind-3.png)<!-- -->
 
 ```r
 sym_ind <- krige(temp_ind~1, punkty, grid, model=fitted_ind, indicators=TRUE, nsim=4, nmax=30)
@@ -231,7 +231,7 @@ sym_ind <- krige(temp_ind~1, punkty, grid, model=fitted_ind, indicators=TRUE, ns
 spplot(sym_ind, main='Symulacje warunkowe')
 ```
 
-![](10-symulacje_files/figure-html/unnamed-chunk-6-4.png)<!-- -->
+![](10-symulacje_files/figure-html/sym_ind-4.png)<!-- -->
 
 <!--
 łączenie sis - wiele symulacji

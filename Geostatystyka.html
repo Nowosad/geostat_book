@@ -2893,12 +2893,12 @@ sym_bezw1 &lt;-<span class="st"> </span><span class="kw">krige</span>(<span clas
                          <span class="dt">beta=</span><span class="dv">1</span>, <span class="dt">model=</span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="fl">0.025</span>,<span class="dt">model=</span><span class="st">&#39;Exp&#39;</span>,<span class="dt">range=</span><span class="dv">100</span>), <span class="dt">nsim=</span><span class="dv">4</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre></div>
 <pre><code>## [using unconditional Gaussian simulation]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_bezw1, <span class="dt">main=</span><span class="st">&quot;Przestrzennie skorelowana powierzchnia </span><span class="ch">\n</span><span class="st">średnia=1, sill=0.025, zasięg=100, model wykładniczy&quot;</span>)</code></pre></div>
-<p><img src="10-symulacje_files/figure-html/unnamed-chunk-2-1.png" alt="" /><!-- --></p>
+<p><img src="10-symulacje_files/figure-html/sym_bezw1-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_bezw2 &lt;-<span class="st"> </span><span class="kw">krige</span>(<span class="dt">formula=</span>z~<span class="dv">1</span>, <span class="dt">locations=</span><span class="ot">NULL</span>, <span class="dt">newdata=</span>grid, <span class="dt">dummy=</span><span class="ot">TRUE</span>, 
                    <span class="dt">beta=</span><span class="dv">1</span>, <span class="dt">model=</span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="fl">0.025</span>,<span class="dt">model=</span><span class="st">&#39;Exp&#39;</span>,<span class="dt">range=</span><span class="dv">1500</span>), <span class="dt">nsim=</span><span class="dv">4</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre></div>
 <pre><code>## [using unconditional Gaussian simulation]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_bezw2, <span class="dt">main=</span><span class="st">&quot;Przestrzennie skorelowana powierzchnia </span><span class="ch">\n</span><span class="st">średnia=1, sill=0.025, zasięg=1500, model wykładniczy&quot;</span>)</code></pre></div>
-<p><img src="10-symulacje_files/figure-html/unnamed-chunk-3-1.png" alt="" /><!-- --></p>
+<p><img src="10-symulacje_files/figure-html/sym_bezw2-1.png" alt="" /><!-- --></p>
 <!--
 sym_bezw_model3 <- gstat(formula=~1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
 sym_bezw3 <- predict(sym_bezw_model3, newdata=grid, nsim=4)
@@ -2927,12 +2927,12 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 model &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4500</span>, <span class="dt">nugget=</span><span class="dv">1</span>)
 fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model)
 <span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted)</code></pre></div>
-<p><img src="10-symulacje_files/figure-html/unnamed-chunk-4-1.png" alt="" /><!-- --></p>
+<p><img src="10-symulacje_files/figure-html/sym_ok-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_ok &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty, grid, <span class="dt">model=</span>fitted, <span class="dt">nsim=</span><span class="dv">4</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre></div>
 <pre><code>## drawing 4 GLS realisations of beta...
 ## [using conditional Gaussian simulation]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_ok)</code></pre></div>
-<p><img src="10-symulacje_files/figure-html/unnamed-chunk-4-2.png" alt="" /><!-- --></p>
+<p><img src="10-symulacje_files/figure-html/sym_ok-2.png" alt="" /><!-- --></p>
 </div>
 <div id="sekwencyjna-symulacja-gaussowska-ang.-sequential-gaussian-simulation-2" class="section level3">
 <h3><span class="header-section-number">10.4.3</span> Sekwencyjna symulacja gaussowska (ang. <em>Sequential Gaussian simulation</em>)</h3>
@@ -2958,22 +2958,22 @@ sym_sk_sd &lt;-<span class="st"> </span><span class="kw">calc</span>(sym_sk, <sp
 ## logical     188      56       0</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_ind &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp_ind~<span class="dv">1</span>, punkty)         
 <span class="kw">plot</span>(vario_ind)</code></pre></div>
-<p><img src="10-symulacje_files/figure-html/unnamed-chunk-6-1.png" alt="" /><!-- --></p>
+<p><img src="10-symulacje_files/figure-html/sym_ind-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_ind &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="fl">0.14</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">2000</span>, <span class="dt">nugget =</span> <span class="fl">0.02</span>)
 <span class="kw">plot</span>(vario_ind, <span class="dt">model=</span>model_ind)</code></pre></div>
-<p><img src="10-symulacje_files/figure-html/unnamed-chunk-6-2.png" alt="" /><!-- --></p>
+<p><img src="10-symulacje_files/figure-html/sym_ind-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_ind &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_ind, model_ind)
 fitted_ind</code></pre></div>
 <pre><code>##   model      psill    range
 ## 1   Nug 0.03275448    0.000
 ## 2   Sph 0.13398278 1922.352</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_ind, <span class="dt">model=</span>fitted_ind)</code></pre></div>
-<p><img src="10-symulacje_files/figure-html/unnamed-chunk-6-3.png" alt="" /><!-- --></p>
+<p><img src="10-symulacje_files/figure-html/sym_ind-3.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_ind &lt;-<span class="st"> </span><span class="kw">krige</span>(temp_ind~<span class="dv">1</span>, punkty, grid, <span class="dt">model=</span>fitted_ind, <span class="dt">indicators=</span><span class="ot">TRUE</span>, <span class="dt">nsim=</span><span class="dv">4</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre></div>
 <pre><code>## drawing 4 GLS realisations of beta...
 ## [using conditional indicator simulation]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_ind, <span class="dt">main=</span><span class="st">&#39;Symulacje warunkowe&#39;</span>)</code></pre></div>
-<p><img src="10-symulacje_files/figure-html/unnamed-chunk-6-4.png" alt="" /><!-- --></p>
+<p><img src="10-symulacje_files/figure-html/sym_ind-4.png" alt="" /><!-- --></p>
 <!--
 łączenie sis - wiele symulacji
 -->
