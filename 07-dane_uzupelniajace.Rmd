@@ -12,9 +12,9 @@ library('methods')
 library('knitr')
 opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE) 
 library('sp')
-wolin_lato_los <- read.csv('data/Wolin_TPZ_p_lato_750losN.csv', na.strings=-999.00)
-coordinates(wolin_lato_los) <- ~X+Y
-proj4string(wolin_lato_los) <- '+init=epsg:32633'
+punkty <- read.csv('dane/punkty.csv')
+coordinates(punkty) <- ~x+y
+proj4string(punkty) <- '+init=epsg:2180'
 ```
 
 ## Kriging stratyfikowany (ang. *Kriging within strata*)
@@ -27,90 +27,73 @@ proj4string(wolin_lato_los) <- '+init=epsg:32633'
 
 ```{r }
 library('gstat')
-grid <- read.csv("data/siatka_wolin_lato.csv")
+grid <- read.csv("dane/siatka.csv")
 head(grid)
-coordinates(grid) <- ~X+Y
-proj4string(grid) <- proj4string(wolin_lato_los)
+coordinates(grid) <- ~x+y
+proj4string(grid) <- proj4string(punkty)
 gridded(grid) <- TRUE
 
-spplot(grid, "CLC06_p_lato")
+grid$clc <- as.factor(grid$clc)
+spplot(grid, "clc")
 
-vario_kws1 <- variogram(X2002.08.20_TPZ~1, wolin_lato_los[wolin_lato_los$CLC06_p_lato==1, ])
+vario_kws1 <- variogram(temp~1, punkty[punkty$clc==1, ])
 plot(vario_kws1)
-fitted_kws1 <- fit.variogram(vario_kws1, vgm(8, model = 'Sph', range = 1500, nugget = 1))
+fitted_kws1 <- fit.variogram(vario_kws1, vgm(10, model = 'Sph', range = 4500, nugget = 0.5))
 plot(vario_kws1, fitted_kws1)
 
-vario_kws2 <- variogram(X2002.08.20_TPZ~1, wolin_lato_los[wolin_lato_los$CLC06_p_lato==2, ])
+vario_kws2 <- variogram(temp~1, punkty[punkty$clc==2, ])
 plot(vario_kws2)
-fitted_kws2 <- fit.variogram(vario_kws2, vgm(8, model = 'Sph', range = 2000, nugget = 4))
+fitted_kws2 <- fit.variogram(vario_kws2, vgm(5, model = 'Sph', range = 4500, nugget = 0.1))
 plot(vario_kws2, fitted_kws2)
 
-vario_kws3 <- variogram(X2002.08.20_TPZ~1, wolin_lato_los[wolin_lato_los$CLC06_p_lato==3, ])
-plot(vario_kws3)
-fitted_kws3 <- fit.variogram(vario_kws3, vgm(15, model = 'Sph', range = 2000, nugget = 5))
-plot(vario_kws3, fitted_kws3)
-
-vario_kws4 <- variogram(X2002.08.20_TPZ~1, wolin_lato_los[wolin_lato_los$CLC06_p_lato==4, ])
+vario_kws4 <- variogram(temp~1, punkty[punkty$clc==4, ])
 plot(vario_kws4)
-fitted_kws4 <- fit.variogram(vario_kws4, vgm(4, model = 'Gau', range = 10000, nugget = 2))
+fitted_kws4 <- fit.variogram(vario_kws4, vgm(0.5, model = 'Nug'))
 plot(vario_kws4, fitted_kws4)
 
-vario_kws5 <- variogram(X2002.08.20_TPZ~1, wolin_lato_los[wolin_lato_los$CLC06_p_lato==5, ])
-plot(vario_kws5)
-fitted_kws5 <- fit.variogram(vario_kws5, vgm(2, model = 'Sph', range = 2000, nugget = 1))
-plot(vario_kws5, fitted_kws5)
+kws1 <- krige(temp~1, punkty[punkty$clc==1, ], grid[na.omit(grid$clc==1), ], model = fitted_kws1, nmax = 50)
+kws2 <- krige(temp~1, punkty[punkty$clc==2, ], grid[na.omit(grid$clc==2), ], model = fitted_kws2, nmax = 50)
+kws4 <- krige(temp~1, punkty[punkty$clc==4, ], grid[na.omit(grid$clc==4), ], model = fitted_kws4, nmax = 50)
 
-vario_kws6 <- variogram(X2002.08.20_TPZ~1, wolin_lato_los[wolin_lato_los$CLC06_p_lato==6, ])
-plot(vario_kws6)
-fitted_kws6 <- fit.variogram(vario_kws6, vgm(1, model = 'Gau', range = 2500, nugget = 0.4))
-plot(vario_kws6, fitted_kws6)
-
-kws1 <- krige(X2002.08.20_TPZ~1, wolin_lato_los[wolin_lato_los$CLC06_p_lato==1, ], grid[grid$CLC06_p_lato==1, ], model = fitted_kws1, maxdist = 500)
-kws2 <- krige(X2002.08.20_TPZ~1, wolin_lato_los[wolin_lato_los$CLC06_p_lato==2, ], grid[grid$CLC06_p_lato==2, ], model = fitted_kws2, maxdist = 200)
-kws3 <- krige(X2002.08.20_TPZ~1, wolin_lato_los[wolin_lato_los$CLC06_p_lato==3, ], grid[grid$CLC06_p_lato==3, ], model = fitted_kws3, maxdist = 1000)
-kws4 <- krige(X2002.08.20_TPZ~1, wolin_lato_los[wolin_lato_los$CLC06_p_lato==4, ], grid[grid$CLC06_p_lato==4, ], model = fitted_kws4, maxdist = 1000)
-kws5 <- krige(X2002.08.20_TPZ~1, wolin_lato_los[wolin_lato_los$CLC06_p_lato==5, ], grid[grid$CLC06_p_lato==5, ], model = fitted_kws5, maxdist = 500)
-kws6 <- krige(X2002.08.20_TPZ~1, wolin_lato_los[wolin_lato_los$CLC06_p_lato==6, ], grid[grid$CLC06_p_lato==6, ], model = fitted_kws6, maxdist = 500)
-
-kws <- rbind(as.data.frame(kws1), as.data.frame(kws2), as.data.frame(kws3), as.data.frame(kws4), as.data.frame(kws5), as.data.frame(kws6))
-coordinates(kws) <- ~X+Y
+kws <- rbind(as.data.frame(kws1), as.data.frame(kws2), as.data.frame(kws4))
+coordinates(kws) <- ~x+y
 kws <- as(kws, "SpatialPixelsDataFrame")
-spplot(kws, "var1.pred", sp.layout=(list=SpatialPoints(wolin_lato_los)))
+spplot(kws, "var1.pred", sp.layout=(list=SpatialPoints(punkty)))
 ```
-
 
 ## Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)
 ### Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)
 - Prosty kriging ze zmiennymi średnimi lokalnymi zamiast znanej (stałej) stacjonarnej średniej wykorzystuje zmienne średnie lokalne uzyskane na podstawie innej informacji
 - Lokalna średnia może być uzyskana za pomocą wyliczenia regresji liniowej pomiędzy zmienną badaną a zmienną dodatkową
 
-
 ### Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)
 
 ```{r }
-coef <- lm(X2002.08.20_TPZ~sqrt(odl_od_morza), wolin_lato_los)$coef
+coef <- lm(temp~srtm, punkty)$coef
 coef
 
-vario <- variogram(X2002.08.20_TPZ~sqrt(odl_od_morza), wolin_lato_los)
-model_sim <- vgm(9, model = 'Sph', range = 4000, nugget = 7)
+vario <- variogram(temp~srtm, punkty)
+model_sim <- vgm(10, model = 'Sph', range = 4000, nugget = 1)
 model_sim
 fitted_sim <- fit.variogram(vario, model_sim)
 fitted_sim
 plot(vario, model=fitted_sim)
 
-sk_lvm <- krige(X2002.08.20_TPZ~sqrt(odl_od_morza), wolin_lato_los, grid, model=fitted_sim, beta = coef)
+sk_lvm <- krige(temp~srtm, punkty, grid, model=fitted_sim, beta = coef)
 summary(sk_lvm)
+```
+
 ```{r plotsylvm1, eval=FALSE}
 spplot(sk_lvm, "var1.pred")
 spplot(sk_lvm, "var1.var")
+```
+
 ```{r plotsylvm2, echo=FALSE}
 library('gridExtra')
 p1 <- spplot(sk_lvm, "var1.pred", main='Predykcja SK LVM')
 p2 <- spplot(sk_lvm, "var1.var", main='Wariancja predykcji SK LVM')
 grid.arrange(p1, p2, ncol=2)
 ```
-
-
 
 ## Kriging uniwersalny (ang. *Universal kriging*)
 ### Kriging uniwersalny (ang. *Universal kriging*)
@@ -120,9 +103,8 @@ grid.arrange(p1, p2, ncol=2)
 ### Kriging uniwersalny (ang. *Universal kriging*)
 
 <!--
-
-```{r }
-# vario_ku <- variogram(X2002.08.20_TPZ~odl_od_morza, data=wolin_lato_los)
+```{r, eval=FALSE}
+# vario_ku <- variogram(temp~odl_od_morza, data=punkty)
 # plot(vario_ku)
 # model_ku <- vgm(psill = 17, model = 'Sph', range = 12000, nugget = 5)
 # fitted_ku <- fit.variogram(vario_ku, model_ku)
@@ -130,33 +112,31 @@ grid.arrange(p1, p2, ncol=2)
 # plot(vario_ku, fitted_ku)
 ```
 
-
 -->
 
 
 ```{r }
-wolin_lato_los$CLC06_p_lato <- as.factor(wolin_lato_los$CLC06_p_lato)
-vario_uk1 <- variogram(X2002.08.20_TPZ~CLC06_p_lato, wolin_lato_los)
+punkty$clc <- as.factor(punkty$clc)
+vario_uk1 <- variogram(temp~clc, punkty)
 vario_uk1
 plot(vario_uk1)
-model_uk1 <- vgm(3, model = 'Sph', range = 2300, nugget = 7)
+model_uk1 <- vgm(8, model = 'Sph', range = 3000, nugget = 1)
 vario_fit_uk1 <- fit.variogram(vario_uk1, model=model_uk1)
 vario_fit_uk1
 plot(vario_uk1, vario_fit_uk1)
 ```
 
-
 <!--
 
-```{r }
+```{r, eval=FALSE}
 # przygotowanie siatki
 # grid <- read.csv("data/Wolin_TPZ_p_lato_popN.csv")
 # head(grid)
 # coordinates(grid) <- ~X+Y
-# proj4string(grid) <- proj4string(wolin_lato_los)
+# proj4string(grid) <- proj4string(punkty)
 # gridded(grid) <- TRUE
 # plot(grid)
-# names(grid)[6] <- c("CLC06_p_lato")
+# names(grid)[6] <- c("clc")
 # names(grid)[7] <- c("odl_od_morza")
 # grid@data <- grid@data[c(2, 4:9)]
 # # grid@data <- cbind(grid@data, as.data.frame(coordinates(grid)))
@@ -164,17 +144,19 @@ plot(vario_uk1, vario_fit_uk1)
 # spplot(grid)
 ```
 
-
 -->
 
-
 ```{r }
-grid$CLC06_p_lato <- as.factor(grid$CLC06_p_lato)
-spplot(grid, "CLC06_p_lato")
-uk1 <- krige(X2002.08.20_TPZ~CLC06_p_lato, locations = wolin_lato_los, newdata=grid, model=vario_fit_uk1)
+grid$clc <- as.factor(grid$clc)
+spplot(grid, "clc")
+uk1 <- krige(temp~clc, locations = punkty, newdata=grid, model=vario_fit_uk1)
+```
+
 ```{r plotsy3uk1, eval=FALSE}
 spplot(uk1, "var1.pred")
 spplot(uk1, "var1.var")
+```
+
 ```{r plotsy4uk1, echo=FALSE}
 library('gridExtra')
 p1 <- spplot(uk1, "var1.pred", main='Predykcja KED')
@@ -182,28 +164,26 @@ p2 <- spplot(uk1, "var1.var", main='Wariancja predykcji KED')
 grid.arrange(p1, p2, ncol=2)
 ```
 
-
-
-
 ```{r }
-vario_uk2 <- variogram(X2002.08.20_TPZ~X2002.08.20_NDVI+odl_od_morza, wolin_lato_los)
+vario_uk2 <- variogram(temp~ndvi+srtm, punkty)
 vario_uk2
 plot(vario_uk2)
-model <- vgm(5, model = 'Sph', range = 2300, nugget = 5)
+model <- vgm(8, model = 'Sph', range = 3000, nugget = 1)
 vario_fit_uk2 <- fit.variogram(vario_uk2, model=model)
 vario_fit_uk2
 plot(vario_uk2, vario_fit_uk2)
 
-uk2 <- krige(X2002.08.20_TPZ~X2002.08.20_NDVI+odl_od_morza, locations = wolin_lato_los, newdata=grid, model=vario_fit_uk2)
+uk2 <- krige(temp~ndvi+srtm, locations = punkty, newdata=grid, model=vario_fit_uk2)
+```
+
 ```{r plotsy3ked, eval=FALSE}
 spplot(uk2, "var1.pred")
 spplot(uk2, "var1.var")
+```
+
 ```{r plotsy4ked, echo=FALSE}
 library('gridExtra')
 p1 <- spplot(uk2, "var1.pred", main='Predykcja KED')
 p2 <- spplot(uk2, "var1.var", main='Wariancja predykcji KED')
 grid.arrange(p1, p2, ncol=2)
 ```
-
-
-

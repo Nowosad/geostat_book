@@ -24,8 +24,6 @@ knit: bookdown::preview_chapter
 - Wykładniczy (ang. *Exponential model*)
 - Inne
 
-### Modele podstawowe 
-
 
 ```r
 library('gstat')
@@ -57,17 +55,11 @@ vgm()
 ```
 
 
-### Modele podstawowe
-
-
 ```r
 show.vgms()
 ```
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
-
-
-### Modele podstawowe
 
 
 ```r
@@ -76,16 +68,12 @@ show.vgms(models=c("Nug", "Sph", "Gau", "Pow", "Exp"), range=1.4, max=2.5)
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
-### Modele podstawowe
-
 
 ```r
 show.vgms(models=c("Nug", "Sph", "Gau", "Pow", "Exp"), range=1.4, max=2.5, as.groups = TRUE)
 ```
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
-
-  
 
 ## Metody modelowania
 
@@ -109,10 +97,8 @@ show.vgms(models=c("Nug", "Sph", "Gau", "Pow", "Exp"), range=1.4, max=2.5, as.gr
 ### Modelowanie semiwariogramu | funkcja *fit.variogram*
 - Funkcja *fit.variogram* dopasowuje zasięg oraz semiwariancję progową w oparciu o ustalone "ręcznie" parametry modelu
 
-
 <!--
  Modelowanie semiwariogramu
-
 
 
 
@@ -125,10 +111,9 @@ show.vgms(models=c("Nug", "Sph", "Gau", "Pow", "Exp"), range=1.4, max=2.5, as.gr
 
 ```r
 library('geoR')
-v_eye <- eyefit(variog(as.geodata(wolin_lato_los, "X2002.08.20_TPZ")))
+v_eye <- eyefit(variog(as.geodata(punkty, "temp")))
 ve_fit <- as.vgm.variomodel(v_eye[[1]])
 ```
-
 
 ### Modelowanie izotropowe | Model nuggetowy
 
@@ -136,7 +121,7 @@ ve_fit <- as.vgm.variomodel(v_eye[[1]])
 ```r
 library('raster')
 library('gstat')
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
+vario <- variogram(temp~1, punkty)
 plot(vario)
 ```
 
@@ -165,7 +150,7 @@ fitted_nug
 
 ```
 ##   model    psill range
-## 1   Nug 12.60929     0
+## 1   Nug 4.452686     0
 ```
 
 ```r
@@ -174,25 +159,24 @@ plot(vario, model=fitted_nug)
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-5-3.png)<!-- -->
 
-
 ### Modelowanie izotropowe | Model sferyczny
 
 
 ```r
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
+vario <- variogram(temp~1, punkty)
 plot(vario)
 ```
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 ```r
-model_sph <- vgm(psill=15, model = 'Sph', range=2500)
+model_sph <- vgm(psill=10, model = 'Sph', range=3000)
 model_sph
 ```
 
 ```
 ##   model psill range
-## 1   Sph    15  2500
+## 1   Sph    10  3000
 ```
 
 ```r
@@ -208,7 +192,7 @@ fitted_sph
 
 ```
 ##   model    psill    range
-## 1   Sph 14.88507 1298.071
+## 1   Sph 11.62526 3656.101
 ```
 
 ```r
@@ -217,12 +201,11 @@ plot(vario, model=fitted_sph)
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-6-3.png)<!-- -->
 
-
 ### Modelowanie izotropowe | Model Gaussowski
 
 
 ```r
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
+vario <- variogram(temp~1, punkty)
 plot(vario)
 ```
 
@@ -251,7 +234,7 @@ fitted_gau
 
 ```
 ##   model    psill    range
-## 1   Gau 14.93177 590.2896
+## 1   Gau 8.474184 806.0176
 ```
 
 ```r
@@ -260,25 +243,24 @@ plot(vario, model=fitted_gau)
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-7-3.png)<!-- -->
 
-
 ### Modelowanie izotropowe | Model potęgowy
 
 
 ```r
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
+vario <- variogram(temp~1, punkty)
 plot(vario)
 ```
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 ```r
-model_pow <- vgm(psill=2, model = 'Pow', range=0.25)
+model_pow <- vgm(psill=1, model = 'Pow', range=0.30)
 model_pow
 ```
 
 ```
 ##   model psill range
-## 1   Pow     2  0.25
+## 1   Pow     1   0.3
 ```
 
 ```r
@@ -293,8 +275,8 @@ fitted_pow
 ```
 
 ```
-##   model    psill     range
-## 1   Pow 1.827893 0.2613741
+##   model      psill     range
+## 1   Pow 0.03578134 0.7082075
 ```
 
 ```r
@@ -303,25 +285,24 @@ plot(vario, model=fitted_pow)
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-8-3.png)<!-- -->
 
-
 ### Modelowanie izotropowe | Model wykładniczy
 
 
 ```r
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
+vario <- variogram(temp~1, punkty)
 plot(vario)
 ```
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 ```r
-model_exp <- vgm(psill=15, model = 'Exp', range=900)
+model_exp <- vgm(psill=10, model = 'Exp', range=900)
 model_exp
 ```
 
 ```
 ##   model psill range
-## 1   Exp    15   900
+## 1   Exp    10   900
 ```
 
 ```r
@@ -337,7 +318,7 @@ fitted_exp
 
 ```
 ##   model    psill    range
-## 1   Exp 16.32313 755.2052
+## 1   Exp 15.44448 2611.625
 ```
 
 ```r
@@ -346,21 +327,26 @@ plot(vario, model=fitted_exp)
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-9-3.png)<!-- -->
 
-
 ### Modelowanie izotropowe | Modele złożone I
 
 
 ```r
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
-model_zl1 <- vgm(psill=10, model = 'Sph', range = 9000, add.to = vgm(9, "Nug"))
+vario <- variogram(temp~1, punkty)
+model_zl1 <- vgm(psill=10, model = 'Sph', range = 3000, add.to = vgm(0.5, "Nug"))
 model_zl1
 ```
 
 ```
 ##   model psill range
-## 1   Nug     9     0
-## 2   Sph    10  9000
+## 1   Nug   0.5     0
+## 2   Sph  10.0  3000
 ```
+
+```r
+plot(vario, model=model_zl1)
+```
+
+![](04-modelowanie_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 ```r
 fitted_zl1 <- fit.variogram(vario, model_zl1)
@@ -368,40 +354,45 @@ fitted_zl1
 ```
 
 ```
-##   model     psill    range
-## 1   Nug  9.021726    0.000
-## 2   Sph 11.023669 9009.149
+##   model      psill    range
+## 1   Nug  0.7886708    0.000
+## 2   Sph 11.9758279 4637.317
 ```
 
 ```r
 plot(vario, model=fitted_zl1)
 ```
 
-![](04-modelowanie_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
-
+![](04-modelowanie_files/figure-html/unnamed-chunk-10-2.png)<!-- -->
 
 ### Modelowanie izotropowe | Modele złożone II
 
 
 ```r
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
-model_zl2 <- vgm(8, "Gau", 7000, add.to = vgm(10, model = 'Sph', range = 2000, nugget = 4))
+vario <- variogram(temp~1, punkty)
+model_zl2 <- vgm(2, "Gau", 3000, add.to = vgm(8, model = 'Sph', range = 2000, nugget = 0.5))
 model_zl2
 ```
 
 ```
 ##   model psill range
-## 1   Nug     4     0
-## 2   Sph    10  2000
-## 3   Gau     8  7000
+## 1   Nug   0.5     0
+## 2   Sph   8.0  2000
+## 3   Gau   2.0  3000
 ```
+
+```r
+plot(vario, model=model_zl2)
+```
+
+![](04-modelowanie_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 ```r
 fitted_zl2 <- fit.variogram(vario, model_zl2)
 plot(vario, model=fitted_zl2)
 ```
 
-![](04-modelowanie_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+![](04-modelowanie_files/figure-html/unnamed-chunk-11-2.png)<!-- -->
 
 ## Modelowanie anizotropowe
 
@@ -412,23 +403,22 @@ plot(vario, model=fitted_zl2)
 - Proporcję anizotropii, czyli relację pomiędzy zasięgiem w dominującym kierunku a zasięgiem w przeciwległym kierunku
 
 
-
 ```r
-vario_map <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, cutoff=12000, width=1200, map=TRUE)
+vario_map <- variogram(temp~1, punkty, cutoff=4000, width=400, map=TRUE)
 plot(vario_map)
 ```
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
 ```r
-vario_kier <- variogram(X2002.08.20_TPZ~1, wolin_lato_los, alpha = c(60, 105, 150, 195), cutoff=20000)
+vario_kier <- variogram(temp~1, punkty, alpha = c(60, 105, 150, 195), cutoff=20000)
 plot(vario_kier, plot.numbers=TRUE)
 ```
 
 ![](04-modelowanie_files/figure-html/unnamed-chunk-12-2.png)<!-- -->
 
 ```r
-vario_kier_fit <- vgm(psill=10, model="Sph", range=10000, nugget=8, anis = c(60, .25))
+vario_kier_fit <- vgm(psill=8, model="Sph", range=4000, nugget=0.5, anis = c(60, .4))
 plot(vario_kier, vario_kier_fit, as.table=TRUE)
 ```
 
@@ -440,53 +430,24 @@ plot(vario_kier, vario_kier_fit, as.table=TRUE)
 
 ### Modelowanie krossemiwariogramów
 
+toDo
+
+<!--
 
 ```r
-wolin_lato_los_255 <- wolin_lato_los[!is.na(wolin_lato_los$X1999.09.13_TPZ), ]
-wolin_lato_los_750 <- wolin_lato_los
+punkty_255 <- punkty[!is.na(punkty$temp), ]
+punkty_750 <- punkty
 
 library('gstat')
-g <- gstat(NULL, id="TPZ1999", form = X1999.09.13_TPZ~1, data = wolin_lato_los_255)
-g <- gstat(g, id="TPZ2002", form = X2002.08.20_TPZ~1, data = wolin_lato_los_750)
+g <- gstat(NULL, id="TPZ1999", form = temp~1, data = punkty_255)
+g <- gstat(g, id="TPZ2002", form = temp~1, data = punkty_750)
 g
-```
-
-```
-## data:
-## TPZ1999 : formula = X1999.09.13_TPZ`~`1 ; data dim = 255 x 9
-## TPZ2002 : formula = X2002.08.20_TPZ`~`1 ; data dim = 750 x 9
-```
-
-```r
 v <- variogram(g)
 plot(v)
-```
-
-![](04-modelowanie_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
-
-```r
 g <- gstat(g, model=vgm(17, "Sph", 12000, 5), fill.all=TRUE)
 g_fit <- fit.lmc(v, g, fit.ranges = FALSE, fit.method=1)
 g_fit
-```
-
-```
-## data:
-## TPZ1999 : formula = X1999.09.13_TPZ`~`1 ; data dim = 255 x 9
-## TPZ2002 : formula = X2002.08.20_TPZ`~`1 ; data dim = 750 x 9
-## variograms:
-##                    model     psill range
-## TPZ1999[1]           Nug  5.325525     0
-## TPZ1999[2]           Sph 11.441263 12000
-## TPZ2002[1]           Nug 10.042044     0
-## TPZ2002[2]           Sph 11.626818 12000
-## TPZ1999.TPZ2002[1]   Nug  7.312944     0
-## TPZ1999.TPZ2002[2]   Sph 10.911990 12000
-```
-
-```r
 plot(v, g_fit)
 ```
 
-![](04-modelowanie_files/figure-html/unnamed-chunk-13-2.png)<!-- -->
-
+-->

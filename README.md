@@ -1,4 +1,5 @@
 # toDo:
+1. Kokriging!!
 1. Jak walidować dane Indicator Kriging?
 2. Dodać informację dlaczego wartości  IK są poniżej/powyżej wartości 0/1
 3. Zmienić skale kolorystyczne - jak to ustawić globalnie?

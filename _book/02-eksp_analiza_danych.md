@@ -18,70 +18,63 @@ knit: bookdown::preview_chapter
 ```r
 library('sp')
 library('rgdal')
+punkty <- read.csv('dane/punkty.csv')
+coordinates(punkty) <- ~x+y
 
-wolin_lato_los <- read.csv('data/Wolin_TPZ_p_lato_750losN.csv', na.strings=-999.00)
-coordinates(wolin_lato_los) <- ~X+Y
-proj4string(wolin_lato_los) <- '+init=epsg:32633'
+proj4string(punkty) <- '+init=epsg:2180'
 par(mar=c(rep(0, 4)))
-plot(wolin_lato_los)
-str(wolin_lato_los)
+plot(punkty)
+
+str(punkty)
 ```
 
 ```
 ## Formal class 'SpatialPointsDataFrame' [package "sp"] with 5 slots
-##   ..@ data       :'data.frame':	750 obs. of  9 variables:
-##   .. ..$ X1999.09.13_TPZ : num [1:750] 20.5 24.8 26.9 21 23 ...
-##   .. ..$ X1999.09.13_NDVI: num [1:750] 0.47 0.328 0.279 0.492 0.433 ...
-##   .. ..$ X2002.08.20_TPZ : num [1:750] 20 28.5 29.3 22.4 23.7 ...
-##   .. ..$ X2002.08.20_NDVI: num [1:750] 0.492 0.12 0.224 0.441 0.405 ...
-##   .. ..$ CLC06           : int [1:750] 411 312 112 231 242 211 411 211 231 211 ...
-##   .. ..$ CLC06_p_lato    : int [1:750] 5 4 2 3 2 3 5 3 3 3 ...
-##   .. ..$ odl_od_morza    : num [1:750] 14982 14946 14091 12572 12646 ...
-##   .. ..$ InsCalk_1999.09 : num [1:750] 48.9 47.6 48.5 48.3 48.6 ...
-##   .. ..$ InsCalk_2002.08 : num [1:750] 64.6 63.5 64.3 64.2 64.4 ...
-##   ..@ coords.nrs : int [1:2] 1 2
-##   ..@ coords     : num [1:750, 1:2] 472920 473970 474210 472140 472500 ...
+##   ..@ data       :'data.frame':	244 obs. of  5 variables:
+##   .. ..$ srtm: num [1:244] 184 220 242 204 203 ...
+##   .. ..$ clc : int [1:244] 1 2 2 1 1 1 2 2 4 4 ...
+##   .. ..$ temp: num [1:244] 17.8 16.8 10.1 18.6 17.9 ...
+##   .. ..$ ndvi: num [1:244] 0.549 0.607 0.6 0.723 0.5 ...
+##   .. ..$ savi: num [1:244] 0.364 0.343 0.398 0.489 0.335 ...
+##   ..@ coords.nrs : int [1:2] 6 7
+##   ..@ coords     : num [1:244, 1:2] 752245 751901 750205 753276 753895 ...
 ##   .. ..- attr(*, "dimnames")=List of 2
-##   .. .. ..$ : chr [1:750] "1" "2" "3" "4" ...
-##   .. .. ..$ : chr [1:2] "X" "Y"
-##   ..@ bbox       : num [1:2, 1:2] 451470 5962620 483570 5985510
+##   .. .. ..$ : chr [1:244] "1" "2" "3" "4" ...
+##   .. .. ..$ : chr [1:2] "x" "y"
+##   ..@ bbox       : num [1:2, 1:2] 745574 712659 756978 721228
 ##   .. ..- attr(*, "dimnames")=List of 2
-##   .. .. ..$ : chr [1:2] "X" "Y"
+##   .. .. ..$ : chr [1:2] "x" "y"
 ##   .. .. ..$ : chr [1:2] "min" "max"
 ##   ..@ proj4string:Formal class 'CRS' [package "sp"] with 1 slot
-##   .. .. ..@ projargs: chr "+init=epsg:32633 +proj=utm +zone=33 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"
+##   .. .. ..@ projargs: chr "+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m"| __truncated__
 ```
 
 ```r
-str(wolin_lato_los@data)
+str(punkty@data)
 ```
 
 ```
-## 'data.frame':	750 obs. of  9 variables:
-##  $ X1999.09.13_TPZ : num  20.5 24.8 26.9 21 23 ...
-##  $ X1999.09.13_NDVI: num  0.47 0.328 0.279 0.492 0.433 ...
-##  $ X2002.08.20_TPZ : num  20 28.5 29.3 22.4 23.7 ...
-##  $ X2002.08.20_NDVI: num  0.492 0.12 0.224 0.441 0.405 ...
-##  $ CLC06           : int  411 312 112 231 242 211 411 211 231 211 ...
-##  $ CLC06_p_lato    : int  5 4 2 3 2 3 5 3 3 3 ...
-##  $ odl_od_morza    : num  14982 14946 14091 12572 12646 ...
-##  $ InsCalk_1999.09 : num  48.9 47.6 48.5 48.3 48.6 ...
-##  $ InsCalk_2002.08 : num  64.6 63.5 64.3 64.2 64.4 ...
+## 'data.frame':	244 obs. of  5 variables:
+##  $ srtm: num  184 220 242 204 203 ...
+##  $ clc : int  1 2 2 1 1 1 2 2 4 4 ...
+##  $ temp: num  17.8 16.8 10.1 18.6 17.9 ...
+##  $ ndvi: num  0.549 0.607 0.6 0.723 0.5 ...
+##  $ savi: num  0.364 0.343 0.398 0.489 0.335 ...
 ```
 
 ```r
-poligon <- readOGR('data', 'wolin_polygon')
+granica <- readOGR('dane', 'granica')
 ```
 
 ```
 ## OGR data source with driver: ESRI Shapefile 
-## Source: "data", layer: "wolin_polygon"
+## Source: "dane", layer: "granica"
 ## with 1 features
-## It has 11 fields
+## It has 3 fields
 ```
 
 ```r
-plot(poligon, add=TRUE)
+plot(granica, add=TRUE)
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
@@ -92,34 +85,24 @@ plot(poligon, add=TRUE)
 
 
 ```r
-summary(wolin_lato_los@data)
+summary(punkty@data)
 ```
 
 ```
-##  X1999.09.13_TPZ X1999.09.13_NDVI  X2002.08.20_TPZ X2002.08.20_NDVI 
-##  Min.   :16.01   Min.   :-0.2273   Min.   :17.11   Min.   :-0.2500  
-##  1st Qu.:20.24   1st Qu.: 0.3207   1st Qu.:20.48   1st Qu.: 0.2673  
-##  Median :21.46   Median : 0.4101   Median :21.89   Median : 0.3766  
-##  Mean   :22.86   Mean   : 0.3627   Mean   :23.56   Mean   : 0.3295  
-##  3rd Qu.:24.92   3rd Qu.: 0.4752   3rd Qu.:25.81   3rd Qu.: 0.4483  
-##  Max.   :33.19   Max.   : 0.5912   Max.   :41.79   Max.   : 0.5724  
-##  NA's   :495     NA's   :495                                        
-##      CLC06      CLC06_p_lato    odl_od_morza   InsCalk_1999.09
-##  Min.   :112   Min.   :1.000   Min.   :    0   Min.   :31.89  
-##  1st Qu.:231   1st Qu.:3.000   1st Qu.: 1928   1st Qu.:47.89  
-##  Median :311   Median :4.000   Median : 4259   Median :48.25  
-##  Mean   :282   Mean   :3.603   Mean   : 4940   Mean   :48.03  
-##  3rd Qu.:312   3rd Qu.:4.000   3rd Qu.: 7127   3rd Qu.:48.45  
-##  Max.   :512   Max.   :6.000   Max.   :16276   Max.   :54.55  
-##                                                               
-##  InsCalk_2002.08
-##  Min.   :47.02  
-##  1st Qu.:63.78  
-##  Median :64.09  
-##  Mean   :63.87  
-##  3rd Qu.:64.26  
-##  Max.   :69.44  
-## 
+##       srtm            clc             temp             ndvi       
+##  Min.   :145.0   Min.   :1.000   Min.   : 7.805   Min.   :0.1465  
+##  1st Qu.:188.5   1st Qu.:1.000   1st Qu.:12.192   1st Qu.:0.4590  
+##  Median :213.2   Median :1.000   Median :15.134   Median :0.5163  
+##  Mean   :211.6   Mean   :1.418   Mean   :15.324   Mean   :0.5033  
+##  3rd Qu.:236.7   3rd Qu.:2.000   3rd Qu.:17.343   3rd Qu.:0.5660  
+##  Max.   :283.0   Max.   :4.000   Max.   :26.072   Max.   :0.7229  
+##       savi        
+##  Min.   :0.04552  
+##  1st Qu.:0.29080  
+##  Median :0.32742  
+##  Mean   :0.32071  
+##  3rd Qu.:0.36468  
+##  Max.   :0.48895
 ```
 
 
@@ -127,19 +110,19 @@ summary(wolin_lato_los@data)
 
 
 ```r
-median(wolin_lato_los$X1999.09.13_TPZ, na.rm=TRUE)
+median(punkty$temp, na.rm=TRUE)
 ```
 
 ```
-## [1] 21.45667
+## [1] 15.13433
 ```
 
 ```r
-mean(wolin_lato_los$X1999.09.13_TPZ, na.rm=TRUE)
+mean(punkty$temp, na.rm=TRUE)
 ```
 
 ```
-## [1] 22.86002
+## [1] 15.32378
 ```
 
 
@@ -158,19 +141,19 @@ Po co używać średniej?
 
 
 ```r
-min(wolin_lato_los$X1999.09.13_TPZ, na.rm=TRUE)
+min(punkty$temp, na.rm=TRUE)
 ```
 
 ```
-## [1] 16.00699
+## [1] 7.804768
 ```
 
 ```r
-max(wolin_lato_los$X1999.09.13_TPZ, na.rm=TRUE)
+max(punkty$temp, na.rm=TRUE)
 ```
 
 ```
-## [1] 33.18976
+## [1] 26.07235
 ```
 
 
@@ -179,11 +162,11 @@ max(wolin_lato_los$X1999.09.13_TPZ, na.rm=TRUE)
 
 
 ```r
-sd(wolin_lato_los$X1999.09.13_TPZ, na.rm=TRUE)
+sd(punkty$temp, na.rm=TRUE)
 ```
 
 ```
-## [1] 3.661502
+## [1] 3.883714
 ```
 
 
@@ -193,7 +176,7 @@ sd(wolin_lato_los$X1999.09.13_TPZ, na.rm=TRUE)
 
 ```r
 library('ggplot2')
-ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + geom_histogram()
+ggplot(punkty@data, aes(temp)) + geom_histogram()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
@@ -208,7 +191,7 @@ ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + geom_histogram()
 
 
 ```r
-ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + geom_density()
+ggplot(punkty@data, aes(temp)) + geom_density()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
@@ -218,7 +201,7 @@ ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + geom_density()
 
 
 ```r
-ggplot(wolin_lato_los@data, aes(sample=X1999.09.13_TPZ)) + stat_qq()
+ggplot(punkty@data, aes(sample=temp)) + stat_qq()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
@@ -234,17 +217,11 @@ http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot
 
 
 ```r
-df <- as.data.frame(qqplot(wolin_lato_los$X1999.09.13_TPZ, wolin_lato_los$X1999.09.13_NDVI, plot.it=FALSE))
+df <- as.data.frame(qqplot(punkty$temp, punkty$X1999.09.13_NDVI, plot.it=FALSE))
 ggplot(df) + geom_point(aes(x=x, y=y)) + xlab('TPZ') + ylab('NDVI')
+
+ggplot(punkty@data) + geom_point(aes(x=temp, y=X1999.09.13_NDVI)) + xlab('TPZ') + ylab('NDVI')
 ```
-
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
-
-```r
-ggplot(wolin_lato_los@data) + geom_point(aes(x=X1999.09.13_TPZ, y=X1999.09.13_NDVI)) + xlab('TPZ') + ylab('NDVI')
-```
-
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-9-2.png)<!-- -->
 
 -->
 
@@ -254,7 +231,7 @@ ggplot(wolin_lato_los@data) + geom_point(aes(x=X1999.09.13_TPZ, y=X1999.09.13_ND
 
 
 ```r
-ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + stat_ecdf()
+ggplot(punkty@data, aes(temp)) + stat_ecdf()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
@@ -274,11 +251,11 @@ ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ)) + stat_ecdf()
 
 
 ```r
-cov(wolin_lato_los$X1999.09.13_TPZ, wolin_lato_los$X1999.09.13_NDVI, use=  "complete.obs")
+cov(punkty$temp, punkty$ndvi, use= "complete.obs")
 ```
 
 ```
-## [1] -0.4454703
+## [1] 0.03160881
 ```
 
 
@@ -289,152 +266,111 @@ cov(wolin_lato_los$X1999.09.13_TPZ, wolin_lato_los$X1999.09.13_NDVI, use=  "comp
 
 
 ```r
-ggplot(wolin_lato_los@data, aes(X1999.09.13_TPZ, X1999.09.13_NDVI)) + geom_point()
+ggplot(punkty@data, aes(temp, ndvi)) + geom_point()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
 ```r
-cor(wolin_lato_los$X1999.09.13_TPZ, wolin_lato_los$X1999.09.13_NDVI, use=  "complete.obs")
+cor(punkty$temp, punkty$ndvi, use=  "complete.obs")
 ```
 
 ```
-## [1] -0.7036398
+## [1] 0.0852945
 ```
-
-
-### Współczynnik korelacji
 
 
 ```r
-cor.test(wolin_lato_los$X1999.09.13_TPZ, wolin_lato_los$X1999.09.13_NDVI)
+cor.test(punkty$temp, punkty$ndvi)
 ```
 
 ```
 ## 
 ## 	Pearson's product-moment correlation
 ## 
-## data:  wolin_lato_los$X1999.09.13_TPZ and wolin_lato_los$X1999.09.13_NDVI
-## t = -15.751, df = 253, p-value < 2.2e-16
+## data:  punkty$temp and punkty$ndvi
+## t = 1.3317, df = 242, p-value = 0.1842
 ## alternative hypothesis: true correlation is not equal to 0
 ## 95 percent confidence interval:
-##  -0.7607274 -0.6357494
+##  -0.04072759  0.20864535
 ## sample estimates:
-##        cor 
-## -0.7036398
+##       cor 
+## 0.0852945
 ```
-
-
-### Współczynnik korelacji
 
 
 ```r
-cor(wolin_lato_los@data[c(1:4, 7:9)], use= "complete.obs")
+cor(punkty@data[c(1, 3:5)], use= "complete.obs")
 ```
 
 ```
-##                  X1999.09.13_TPZ X1999.09.13_NDVI X2002.08.20_TPZ
-## X1999.09.13_TPZ        1.0000000      -0.70363978       0.9041594
-## X1999.09.13_NDVI      -0.7036398       1.00000000      -0.6389463
-## X2002.08.20_TPZ        0.9041594      -0.63894626       1.0000000
-## X2002.08.20_NDVI      -0.6348066       0.89587063      -0.6752586
-## odl_od_morza           0.3924286      -0.15757467       0.3481699
-## InsCalk_1999.09        0.1431125       0.03585373       0.1180259
-## InsCalk_2002.08        0.1549011       0.03858753       0.1300928
-##                  X2002.08.20_NDVI odl_od_morza InsCalk_1999.09
-## X1999.09.13_TPZ       -0.63480660    0.3924286      0.14311253
-## X1999.09.13_NDVI       0.89587063   -0.1575747      0.03585373
-## X2002.08.20_TPZ       -0.67525858    0.3481699      0.11802594
-## X2002.08.20_NDVI       1.00000000   -0.1381452      0.04653160
-## odl_od_morza          -0.13814523    1.0000000      0.13097399
-## InsCalk_1999.09        0.04653160    0.1309740      1.00000000
-## InsCalk_2002.08        0.04930027    0.1331220      0.99738708
-##                  InsCalk_2002.08
-## X1999.09.13_TPZ       0.15490106
-## X1999.09.13_NDVI      0.03858753
-## X2002.08.20_TPZ       0.13009279
-## X2002.08.20_NDVI      0.04930027
-## odl_od_morza          0.13312196
-## InsCalk_1999.09       0.99738708
-## InsCalk_2002.08       1.00000000
+##             srtm        temp      ndvi       savi
+## srtm  1.00000000 -0.14468277 0.1054047 0.08462306
+## temp -0.14468277  1.00000000 0.0852945 0.06513805
+## ndvi  0.10540468  0.08529450 1.0000000 0.94461511
+## savi  0.08462306  0.06513805 0.9446151 1.00000000
 ```
-
-
-### Współczynnik korelacji
 
 
 ```r
 library('corrplot')
-corrplot(cor(wolin_lato_los@data[c(1:4, 7:9)], use= "complete.obs"))
+corrplot(cor(punkty@data[c(1, 3:5)], use= "complete.obs"))
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
-
-
-<!--    
-### Dane odstające
--->
-
 
 ### Wykresy pudełkowe
 
 
 ```r
-wolin_lato_los$CLC06_p_lato <- as.factor(wolin_lato_los$CLC06_p_lato)
-ggplot(wolin_lato_los@data, aes(CLC06_p_lato, X1999.09.13_TPZ)) + geom_boxplot()
+punkty$clc <- as.factor(punkty$clc)
+ggplot(punkty@data, aes(clc, temp)) + geom_boxplot()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
-
 
 - obrazuje pięc podstawowych <br> statystyk opisowych oraz wartości odstające
 - pudełko to zakres międzykwantylowy
 - linie oznaczają najbardziej ekstremalne wartości, ale nie odstające. Górna to 1,5\*IQR ponad krawędź pudełka, dolna to 1,5\*IQR poniżej wartości dolnej krawędzi pudełka
 - linia środkowa to mediana
 
-### Wykresy pudełkowe
-
-
-```r
-ggplot(wolin_lato_los@data, aes(CLC06_p_lato, X1999.09.13_TPZ)) + geom_boxplot()
-```
-
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
-
+<!--
 1. Tereny komunikacyjne i porty
 2. Zabudowa luźna, złożone systemy upraw i działek
 3. Grunty orne, Łąki
 4. Lasy liściaste,  Lasy iglaste, mieszane
 5. Bagna, Torfowiska
 6. Zbiorniki wodne
+-->
 
 ### Testowanie istotności różnić średniej pomiędzy grupami
 
 
-
 ```r
-wolin_lato_los$CLC06_p_lato <- as.factor(wolin_lato_los$CLC06_p_lato)
-aov_test <- aov(X1999.09.13_TPZ~CLC06_p_lato, data=wolin_lato_los)
+punkty$clc <- as.factor(punkty$clc)
+aov_test <- aov(temp~clc, data=punkty)
 summary(aov_test)
 ```
 
 ```
-##               Df Sum Sq Mean Sq F value Pr(>F)    
-## CLC06_p_lato   5   1665   333.1   47.66 <2e-16 ***
-## Residuals    249   1740     7.0                   
+##              Df Sum Sq Mean Sq F value Pr(>F)    
+## clc           2   1098   549.1   51.55 <2e-16 ***
+## Residuals   241   2567    10.7                   
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 495 observations deleted due to missingness
 ```
-
-
 
 ### Testowanie istotności różnić średniej pomiędzy grupami
 
 
+```
+## null device 
+##           1
+```
+
 
 ```r
-tukey <- TukeyHSD(aov_test, "CLC06_p_lato")
+tukey <- TukeyHSD(aov_test, "clc")
 plot(tukey, las=1)
 ```
 
@@ -456,97 +392,94 @@ plot(tukey, las=1)
 ### Transformacja danych | Logarytmizacja
 
 
-
 ```r
-ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + geom_density()
+ggplot(punkty@data, aes(temp)) + geom_density()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
 
 ```r
-wolin_lato_los$log_tpz <- log(wolin_lato_los$X2002.08.20_TPZ)
-ggplot(wolin_lato_los@data, aes(log_tpz)) + geom_density()
+punkty$log_tpz <- log(punkty$temp)
+ggplot(punkty@data, aes(log_tpz)) + geom_density()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-2.png)<!-- -->
 
 ```r
-wolin_lato_los$exp_tpz <- exp(wolin_lato_los$log_tpz)
-ggplot(wolin_lato_los@data, aes(exp_tpz)) + geom_density()
+punkty$exp_tpz <- exp(punkty$log_tpz)
+ggplot(punkty@data, aes(exp_tpz)) + geom_density()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-20-3.png)<!-- -->
-
 
 ### Transformacja danych | Pierwiastkowanie
 
 
 ```r
-ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + geom_density()
+ggplot(punkty@data, aes(temp)) + geom_density()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
 
 ```r
-wolin_lato_los$sqrt_tpz <- sqrt(wolin_lato_los$X2002.08.20_TPZ)
-ggplot(wolin_lato_los@data, aes(sqrt_tpz)) + geom_density()
+punkty$sqrt_tpz <- sqrt(punkty$temp)
+ggplot(punkty@data, aes(sqrt_tpz)) + geom_density()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-2.png)<!-- -->
 
 ```r
-wolin_lato_los$pow_tpz <- wolin_lato_los$sqrt_tpz^2
-ggplot(wolin_lato_los@data, aes(pow_tpz)) + geom_density()
+punkty$pow_tpz <- punkty$sqrt_tpz^2
+ggplot(punkty@data, aes(pow_tpz)) + geom_density()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-21-3.png)<!-- -->
-
 
 ### Transformacja danych | Rodzina transformacji Boxa Coxa
 
 
 ```r
 library('caret')
-ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + geom_density()
+ggplot(punkty@data, aes(temp)) + geom_density()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
 
 ```r
-transformacja <- BoxCoxTrans(wolin_lato_los$X2002.08.20_TPZ)
+transformacja <- BoxCoxTrans(punkty$temp)
 transformacja
 ```
 
 ```
 ## Box-Cox Transformation
 ## 
-## 750 data points used to estimate Lambda
+## 244 data points used to estimate Lambda
 ## 
 ## Input data summary:
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   17.11   20.48   21.89   23.56   25.81   41.79 
+##   7.805  12.190  15.130  15.320  17.340  26.070 
 ## 
-## Largest/Smallest: 2.44 
-## Sample Skewness: 1.34 
+## Largest/Smallest: 3.34 
+## Sample Skewness: 0.508 
 ## 
-## Estimated Lambda: -2
+## Estimated Lambda: 0.1 
+## With fudge factor, Lambda = 0 will be used for transformations
 ```
 
 ```r
-wolin_lato_los$bc_tpz <- predict(transformacja, wolin_lato_los$X2002.08.20_TPZ)
-ggplot(wolin_lato_los@data, aes(bc_tpz)) + geom_density()
+punkty$bc_tpz <- predict(transformacja, punkty$temp)
+ggplot(punkty@data, aes(bc_tpz)) + geom_density()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-2.png)<!-- -->
 
 ```r
 invBoxCox <- function(x, lambda) if (lambda == 0) exp(x) else (lambda*x + 1)^(1/lambda) 
-wolin_lato_los$bc_tpz_inv <- invBoxCox(wolin_lato_los$bc_tpz, lambda=-2)
-ggplot(wolin_lato_los@data, aes(bc_tpz_inv)) + geom_density()
+punkty$bc_tpz_inv <- invBoxCox(punkty$bc_tpz, lambda=-0.3)
+ggplot(punkty@data, aes(bc_tpz_inv)) + geom_density()
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-22-3.png)<!-- -->
-
 
 ## Mapy 
 
@@ -572,7 +505,7 @@ ggplot(wolin_lato_los@data, aes(bc_tpz_inv)) + geom_density()
 
 ```r
 set.seed(225)
-regularny <- spsample(poligon, 150, type = 'regular')
+regularny <- spsample(granica, 150, type = 'regular')
 plot(regularny)
 ```
 
@@ -585,12 +518,11 @@ plot(regularny)
 
 ```r
 set.seed(301)
-losowy <- spsample(poligon, 150, type = 'random')
+losowy <- spsample(granica, 150, type = 'random')
 plot(losowy)
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
-
 
 - Każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia
 - Każdy punkt jest losowany niezależnie od pozostałych
@@ -600,40 +532,33 @@ plot(losowy)
 
 ```r
 set.seed(125)
-strat <- spsample(poligon, 150, type = 'stratified')
+strat <- spsample(granica, 150, type = 'stratified')
 plot(strat)
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
 
-
 ### Typ próbowania | Preferencyjny I
-
 
 
 ```r
 set.seed(425)
-pref <- spsample(poligon, 150, type = 'clustered', nclusters=80)
+pref <- spsample(granica, 150, type = 'clustered', nclusters=80)
 plot(pref)
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
 
-
 ### Typ próbowania | Liniowy
 
 
 ```r
-library('rgdal')
-linia <- readOGR("data", "linia", verbose=FALSE)
-set.seed(224)
-izoliniowy <- spsample(linia, 150, type = 'regular')
-plot(izoliniowy)
+# library('rgdal')
+# linia <- readOGR("data", "linia", verbose=FALSE)
+# set.seed(224)
+# izoliniowy <- spsample(linia, 150, type = 'regular')
+# plot(izoliniowy)
 ```
-
-![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
-
-
 
 ### Mapy punktowe i dane lokalnie odstające
 
@@ -641,141 +566,26 @@ plot(izoliniowy)
 ```r
 par(mar=c(rep(0, 4)))
 library('rgdal')
-poligon <- readOGR(dsn='data', layer='wolin_polygon', verbose=FALSE) 
-plot(poligon) 
-plot(wolin_lato_los, add=TRUE) 
+granica <- readOGR(dsn='dane', layer='granica', verbose=FALSE) 
+plot(granica) 
+plot(punkty, add=TRUE) 
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
 
 
-### Mapy punktowe i dane lokalnie odstające
-
-
 ```r
 library('sp')
-# select.spatial(wolin_lato_los, digitize=FALSE, rownames=TRUE)
-spplot(wolin_lato_los, "X2002.08.20_TPZ", identify=TRUE)
+# select.spatial(punkty, digitize=FALSE, rownames=TRUE)
+spplot(punkty, "temp", identify=TRUE)
 ```
 
 
-### Mapy punktowe i dane lokalnie odstające
-
-
 ```r
-spplot(wolin_lato_los, "X2002.08.20_TPZ", sp.layout = poligon)
+spplot(punkty, "temp", sp.layout = granica)
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-29-1.png)<!-- -->
-
-
-<!--
-### Mapy punktowe i dane lokalnie odstające
-
-
-```r
-library('GeoXp')
-options(device="windows") #X11
-# clear all plots
-dev.new()
-boxplotmap(wolin_lato_los, "X2002.08.20_TPZ")
-driftmap(wolin_lato_los, "X2002.08.20_TPZ")
-plot3dmap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI', 'odl_od_morza'))
-```
-
-
--->
-
-
-<!--
-
-### Mapy punktowe i dane lokalnie odstające
-
-
-```r
-# library('GeoXp')
-# options(device="windows") #X11
-# # clear all plots
-# dev.new()
-# boxplotmap(wolin_lato_los, "X2002.08.20_TPZ")
-# driftmap(wolin_lato_los, "X2002.08.20_TPZ")
-# plot3dmap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI', 'odl_od_morza'))
-```
-
-
-## Średnia lokalna i wariancja lokaln
-### Średnia lokalna 
-library('gplots')
-wapply(wolin_lato_los_df$X,wolin_lato_los$X2002.08.20_TPZ, fun=mean, n=10)
-#' 
-#' ### Wariancja lokalna 
-wapply(wolin_lato_los_df$X,wolin_lato_los$X2002.08.20_TPZ, fun=var, n=10)
-#' 
-wolin_lato_los_df <- as.data.frame(wolin_lato_los)
-library("ggplot2")
-ggplot(wolin_lato_los_df, aes(X, X2002.08.20_TPZ)) + geom_point() + geom_smooth()
-ggplot(wolin_lato_los_df, aes(X2002.08.20_TPZ, Y)) + geom_point() + geom_smooth() + coord_flip()
-
-library("gstat")
-wolin_lato_pref <- read.csv("data/Wolin_TPZ_p_lato_754prefN.csv", na.strings = -999)
-wolin_lato_pref$rn <- 1:nrow(wolin_lato_pref)
-coordinates(wolin_lato_pref) <- ~X + Y
-proj4string(wolin_lato_pref) <- "+init=epsg:32633"
-spplot(wolin_lato_pref, "rn", colorkey=TRUE)
-
-library('rgdal')
-library("raster")
-library('rgeos')
-poligon_shp <- readOGR(dsn = "data", layer = "wolin_polygon", verbose = FALSE)
-siatka_n <- raster(extent(poligon_shp))
-res(siatka_n) <- c(5000, 5000)
-siatka_n[] <- 0
-proj4string(siatka_n) <- CRS(proj4string(wolin_lato_pref))
-siatka_n <- mask(siatka_n, gBuffer(poligon_shp, width = 2500))
-siatka_n <- as(siatka_n, "SpatialPolygonsDataFrame")
-siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
-plot(siatka_n)
-plot(wolin_lato_pref, add=TRUE)
-
-lok_srednia <- aggregate(wolin_lato_pref['X2002.08.20_TPZ'], by = siatka_n, FUN = mean) 
-lok_wariancja <- aggregate(wolin_lato_pref['X2002.08.20_TPZ'], by = siatka_n, FUN = var) 
-
-lokalne <- cbind(lok_srednia@data, lok_wariancja@data)
-names(lokalne) <- c("srednia", "wariancja")
-ggplot(lokalne, aes(srednia, wariancja)) + geom_point()
-
-spplot(siatka_nr, "liczebnosc")
-
-
-[statystyki lokalne w ruchomym oknie (średnia lokalna i wariancja lokalna)]
-    
-    GeoXp
-    
-    
-    library('GeoXp')
-    options(device="X11")
-    dev.new()
-    # angleplotmap(wolin_lato_los, "X2002.08.20_TPZ") # zapycha pamięć
-    barmap(wolin_lato_los, "X2002.08.20_TPZ") # klikadło wykresowe
-    boxplotmap(wolin_lato_los, "X2002.08.20_TPZ")
-    densitymap(wolin_lato_los, "X2002.08.20_TPZ")
-    driftmap(wolin_lato_los, "X2002.08.20_TPZ")
-    ginimap(wolin_lato_los, "X2002.08.20_TPZ")
-    histomap(wolin_lato_los, "X2002.08.20_TPZ")
-    variocloudmap(wolin_lato_los, "X2002.08.20_TPZ") dłuugo
-    
-    clustermap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI'), 3) ## ?
-    dbledensitymap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI'))
-    dblehistomap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI'))
-    histobarmap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI'))
-    pcamap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI'))
-    plot3dmap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI', 'odl_od_morza'))
-    scattermap(wolin_lato_los, c('X2002.08.20_TPZ', 'X2002.08.20_NDVI'))
-
-    [efekt proporcjonalności]
-    
-    Efekt proporcjonalności średniej lokalnej do wariancji lokalnej)
--->
 
 ## Rozgrupowanie danych
 
@@ -790,23 +600,22 @@ spplot(siatka_nr, "liczebnosc")
 
 ```r
 library('sp')
-wolin_lato_pref <- read.csv('data/Wolin_TPZ_p_lato_754prefN.csv', na.strings=-999.00)
-coordinates(wolin_lato_pref) <- ~X+Y
-proj4string(wolin_lato_pref) <- '+init=epsg:32633'
-spplot(wolin_lato_pref, "X2002.08.20_TPZ")
+punkty_pref <- read.csv('dane/punkty_pref.csv')
+coordinates(punkty_pref) <- ~x+y
+proj4string(punkty_pref) <- '+init=epsg:2180'
+spplot(punkty_pref, "temp")
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-30-1.png)<!-- -->
 
 ```r
-summary(wolin_lato_pref$X2002.08.20_TPZ)
+summary(punkty_pref$temp)
 ```
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   18.14   21.96   26.16   26.54   30.07   44.22
+##   8.705  12.500  15.380  15.520  17.960  25.520
 ```
-
 
 ### Rozgrupowanie komórkowe I | (ang. *cell declustering*)
 
@@ -816,14 +625,12 @@ $$w'_j=\frac{\frac{1}{n_i}}{\text{liczba komórek z danymi}} \cdot n$$
 ### Rozgrupowanie komórkowe I | (ang. *cell declustering*)
 
 
-
-
 ```r
-wolin_lato_pref <- read.csv("data/Wolin_TPZ_p_lato_754prefN.csv", na.strings = -999)
-wolin_lato_pref$id <- 1:nrow(wolin_lato_pref)
-coordinates(wolin_lato_pref) <- ~X + Y
-proj4string(wolin_lato_pref) <- "+init=epsg:32633"
-spplot(wolin_lato_pref, "id", colorkey=TRUE)
+punkty_pref <- read.csv('dane/punkty_pref.csv')
+punkty_pref$id <- 1:nrow(punkty_pref)
+coordinates(punkty_pref) <- ~x+y
+proj4string(punkty_pref) <- '+init=epsg:2180'
+spplot(punkty_pref, "id", colorkey=TRUE)
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-1.png)<!-- -->
@@ -832,41 +639,41 @@ spplot(wolin_lato_pref, "id", colorkey=TRUE)
 library('rgdal')
 library("raster")
 library('rgeos')
-poligon_shp <- readOGR(dsn = "data", layer = "wolin_polygon", verbose = FALSE)
-siatka_n <- raster(extent(poligon_shp))
+granica <- readOGR(dsn = "dane", layer = "granica", verbose = FALSE)
+siatka_n <- raster(extent(granica))
 # siatka_n <- raster(xmn=450000, xmx=485000, ymn=5960000, ymx=5989000)
-res(siatka_n) <- c(1000, 1000)
+res(siatka_n) <- c(500, 500)
 siatka_n[] <- 0
-proj4string(siatka_n) <- CRS(proj4string(wolin_lato_pref))
-siatka_n <- mask(siatka_n, gBuffer(poligon_shp, width = 500))
+proj4string(siatka_n) <- CRS(proj4string(punkty_pref))
+siatka_n <- mask(siatka_n, gBuffer(granica, width = 500))
 siatka_n <- as(siatka_n, "SpatialPolygonsDataFrame")
 siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
 plot(siatka_n)
-plot(wolin_lato_pref, add=TRUE)
+plot(punkty_pref, add=TRUE)
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-2.png)<!-- -->
 
 ```r
-wolin_lato_pref$liczebnosc <- rep(0, length(wolin_lato_pref))
-siatka_nr <- aggregate(wolin_lato_pref['liczebnosc'], by = siatka_n, FUN = length) 
+punkty_pref$liczebnosc <- rep(0, length(punkty_pref))
+siatka_nr <- aggregate(punkty_pref['liczebnosc'], by = siatka_n, FUN = length) 
 spplot(siatka_nr, "liczebnosc")
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-3.png)<!-- -->
 
 ```r
-liczba <- over(wolin_lato_pref, siatka_nr)
-wolin_lato_pref$waga <- ((1/liczba$liczebnosc)/sum(!is.na(siatka_nr$liczebnosc))) * length(wolin_lato_pref)
+liczba <- over(punkty_pref, siatka_nr)
+punkty_pref$waga <- ((1/liczba$liczebnosc)/sum(!is.na(siatka_nr$liczebnosc))) * length(punkty_pref)
 
-spplot(wolin_lato_pref, 'waga')
+spplot(punkty_pref, 'waga')
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-31-4.png)<!-- -->
 
 ```r
-srednia_arytmetyczna <- mean(wolin_lato_pref$X2002.08.20_TPZ)
-srednia_wazona_c1 <- mean(wolin_lato_pref$X2002.08.20_TPZ * wolin_lato_pref$waga, na.rm=TRUE)
+srednia_arytmetyczna <- mean(punkty_pref$temp)
+srednia_wazona_c1 <- mean(punkty_pref$temp * punkty_pref$waga, na.rm=TRUE)
 ```
 
 
@@ -882,27 +689,25 @@ polygon.
 -->
 
 
-
-
 ```r
 library('gstat')
-wolin_lato_pref <- read.csv('data/Wolin_TPZ_p_lato_754prefN.csv', na.strings=-999.00)
-wolin_lato_pref$id <- 1:nrow(wolin_lato_pref)
-coordinates(wolin_lato_pref) <- ~X+Y
-proj4string(wolin_lato_pref) <- '+init=epsg:32633'
-spplot(wolin_lato_pref, "id")
+punkty_pref <- read.csv('dane/punkty_pref.csv')
+punkty_pref$id <- 1:nrow(punkty_pref)
+coordinates(punkty_pref) <- ~x+y
+proj4string(punkty_pref) <- '+init=epsg:2180'
+spplot(punkty_pref, "id", colorkey=TRUE)
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
 
 ```r
 library('raster')
-poligon_shp <- readOGR(dsn='data', layer='wolin_polygon', verbose=FALSE)
-siatka_n <- raster(extent(poligon_shp))
-res(siatka_n) <- c(100, 100)
+granica <- readOGR(dsn='dane', layer='granica', verbose=FALSE)
+siatka_n <- raster(extent(granica))
+res(siatka_n) <- c(500, 500)
 siatka_n[] <- 0
-proj4string(siatka_n) <- CRS(proj4string(wolin_lato_pref))
-siatka_n <- mask(siatka_n, poligon_shp)
+proj4string(siatka_n) <- CRS(proj4string(punkty_pref))
+siatka_n <- mask(siatka_n, granica)
 siatka_n <- as(siatka_n, 'SpatialPointsDataFrame')
 siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
 gridded(siatka_n) <- TRUE
@@ -912,11 +717,8 @@ plot(siatka_n)
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-32-2.png)<!-- -->
 
 
-### Rozgrupowanie komórkowe II | (ang. *cell declustering*)
-
-
 ```r
-out <-  krige(id~1, wolin_lato_pref, siatka_n, nmax=1)
+out <-  krige(id~1, punkty_pref, siatka_n, nmax=1)
 ```
 
 ```
@@ -932,32 +734,31 @@ spplot(out, "var1.pred")
 ```r
 df <- as.data.frame(table(out[[1]]))
 df$waga <- df$Freq/sum(df$Freq)
-wolin_lato_pref <- merge(wolin_lato_pref, df, by.x="id", by.y="Var1")
-summary(wolin_lato_pref$waga)
+punkty_pref <- merge(punkty_pref, df, by.x="id", by.y="Var1")
+summary(punkty_pref$waga)
 ```
 
 ```
-##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-## 3.822e-05 4.682e-04 8.791e-04 1.326e-03 1.682e-03 8.829e-03
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+## 0.00389 0.00389 0.00389 0.00552 0.00778 0.01556      61
 ```
 
 ```r
-spplot(out, "var1.pred", sp.layout=list("sp.points", wolin_lato_pref))
+spplot(out, "var1.pred", sp.layout=list("sp.points", punkty_pref))
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-2.png)<!-- -->
 
 ```r
-spplot(wolin_lato_pref["waga"])
+spplot(punkty_pref["waga"])
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-33-3.png)<!-- -->
 
 ```r
-srednia_arytmetyczna <- mean(wolin_lato_pref$X2002.08.20_TPZ)
-srednia_wazona_c2 <- sum(wolin_lato_pref$X2002.08.20_TPZ * wolin_lato_pref$waga, na.rm=TRUE)
+srednia_arytmetyczna <- mean(punkty_pref$temp)
+srednia_wazona_c2 <- sum(punkty_pref$temp * punkty_pref$waga, na.rm=TRUE)
 ```
-
 
 ### Rozgrupowanie poligonowe | (ang. *polygon declustering*)
 $$w'_j=\frac{area_j}{\sum_{j=1}^{n}area_j} \cdot n$$
@@ -967,19 +768,19 @@ $$w'_j=\frac{area_j}{\sum_{j=1}^{n}area_j} \cdot n$$
 
 
 ```r
-wolin_lato_pref <- read.csv('data/Wolin_TPZ_p_lato_754prefN.csv', na.strings=-999.00)
-wolin_lato_pref$id <- 1:nrow(wolin_lato_pref)
-coordinates(wolin_lato_pref) <- ~X+Y
-proj4string(wolin_lato_pref) <- '+init=epsg:32633'
-spplot(wolin_lato_pref, "id")
+punkty_pref <- read.csv('dane/punkty_pref.csv')
+punkty_pref$id <- 1:nrow(punkty_pref)
+coordinates(punkty_pref) <- ~x+y
+proj4string(punkty_pref) <- '+init=epsg:2180'
+spplot(punkty_pref, "id", colorkey=TRUE)
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-1.png)<!-- -->
 
 ```r
 library('dismo')
-v <- voronoi(wolin_lato_pref)
-plot(wolin_lato_pref, cex=0.2, col='red')
+v <- voronoi(punkty_pref)
+plot(punkty_pref, cex=0.2, col='red')
 plot(v, add=TRUE)
 ```
 
@@ -987,8 +788,8 @@ plot(v, add=TRUE)
 
 ```r
 library('rgeos')
-v_intersect <-intersect(poligon_shp, v)
-plot(wolin_lato_pref, cex=0.2, col='red')
+v_intersect <-intersect(granica, v)
+plot(punkty_pref, cex=0.2, col='red')
 plot(v_intersect, add=TRUE)
 ```
 
@@ -996,34 +797,31 @@ plot(v_intersect, add=TRUE)
 
 ```r
 v_intersect$pow <- area(v_intersect)
-v_intersect$waga <- v_intersect$pow/sum(v_intersect$pow) * length(wolin_lato_pref)
+v_intersect$waga <- v_intersect$pow/sum(v_intersect$pow) * length(punkty_pref)
 
-wolin_lato_pref <- merge(wolin_lato_pref, v_intersect[c('id', 'waga')], by='id')
-spplot(wolin_lato_pref, 'waga')
+punkty_pref <- merge(punkty_pref, v_intersect[c('id', 'waga')], by='id')
+spplot(punkty_pref, 'waga')
 ```
 
 ![](02-eksp_analiza_danych_files/figure-html/unnamed-chunk-34-4.png)<!-- -->
 
 ```r
-srednia_arytmetyczna <- mean(wolin_lato_pref$X2002.08.20_TPZ)
-srednia_wazona_p <- mean(wolin_lato_pref$X2002.08.20_TPZ*wolin_lato_pref$waga)
+srednia_arytmetyczna <- mean(punkty_pref$temp, na.rm=TRUE)
+srednia_wazona_p <- mean(punkty_pref$temp*punkty_pref$waga, na.rm=TRUE)
 ```
-
 
 
 
                               Średnia arytmetyczna
 ---------------------------  ---------------------
-Populacja                                 23.46969
-Próba                                     26.54119
-Rozgrupowanie komórkowe I                 24.55135
-Rozgrupowanie komórkowe II                24.08124
-Rozgrupowanie poligonowe                  24.07996
-
+Populacja                                 15.59128
+Próba                                     15.52427
+Rozgrupowanie komórkowe I                 17.53834
+Rozgrupowanie komórkowe II                15.32633
+Rozgrupowanie poligonowe                  18.33385
 
 <!--
 polygon declustering - http://gis.stackexchange.com/questions/122376/cell-declustering-using-open-source-software
 cell declustering - https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html
 http://gaa.org.au/pdf/DeclusterDebias-CCG.pdf
 -->
-

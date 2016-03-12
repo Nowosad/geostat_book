@@ -25,7 +25,6 @@ knit: bookdown::preview_chapter
 - Kokriging (ang. *Co-kriging*)
 - Inne
 
-
 ## Kriging prosty (ang. *Simple kriging*)
 ### Kriging prosty (ang. *Simple kriging*)
 - Zakłada, że średnia jest znana i stała na całym obszarze
@@ -35,32 +34,31 @@ knit: bookdown::preview_chapter
 
 ```r
 library('raster')
-ras <- raster('data/siatka_raster.tif')
+ras <- raster('dane/siatka.tif')
 grid <- as(ras, "SpatialGridDataFrame")
-proj4string(grid) <- proj4string(wolin_lato_los)
+proj4string(grid) <- proj4string(punkty)
 
 library('gstat')
-vario <- variogram(X2002.08.20_TPZ~1, wolin_lato_los)
-model_zl2 <- vgm(10, model = 'Sph', range = 4000, add.to = vgm(5, "Gau", 8000, nugget = 5))
-model_zl2
+vario <- variogram(temp~1, punkty)
+model <- vgm(10, model = 'Sph', range = 4000, nugget = 0.5)
+model
 ```
 
 ```
 ##   model psill range
-## 1   Nug     5     0
-## 2   Gau     5  8000
-## 3   Sph    10  4000
+## 1   Nug   0.5     0
+## 2   Sph  10.0  4000
 ```
 
 ```r
-fitted_zl2 <- fit.variogram(vario, model_zl2)
-plot(vario, model=fitted_zl2)
+fitted <- fit.variogram(vario, model)
+plot(vario, model=fitted)
 ```
 
 ![](05-estymacje_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
 
 ```r
-sk <- krige(X2002.08.20_TPZ~1, wolin_lato_los, grid, model=model_zl2, beta=23.6)
+sk <- krige(temp~1, punkty, grid, model=fitted, beta=15.324)
 ```
 
 ```
@@ -74,35 +72,36 @@ summary(sk)
 ```
 ## Object of class SpatialGridDataFrame
 ## Coordinates:
-##          min       max
-## s1  451080.5  484780.5
-## s2 5961519.5 5986319.5
+##         min      max
+## s1 745541.7 757001.7
+## s2 712646.2 721256.2
 ## Is projected: TRUE 
 ## proj4string :
-## [+init=epsg:32633 +proj=utm +zone=33 +datum=WGS84 +units=m +no_defs
-## +ellps=WGS84 +towgs84=0,0,0]
+## [+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993
+## +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0
+## +units=m +no_defs]
 ## Grid attributes:
 ##    cellcentre.offset cellsize cells.dim
-## s1          451130.5      100       337
-## s2         5961569.5      100       248
+## s1          745556.7       30       382
+## s2          712661.2       30       287
 ## Data attributes:
-##    var1.pred        var1.var    
-##  Min.   :18.14   Min.   : 6.05  
-##  1st Qu.:21.01   1st Qu.: 6.91  
-##  Median :22.40   Median : 7.20  
-##  Mean   :23.41   Mean   : 7.34  
-##  3rd Qu.:25.41   3rd Qu.: 7.57  
-##  Max.   :35.49   Max.   :15.74  
-##  NA's   :57412   NA's   :57412
+##    var1.pred         var1.var    
+##  Min.   : 8.316   Min.   :1.134  
+##  1st Qu.:12.545   1st Qu.:2.022  
+##  Median :14.927   Median :2.373  
+##  Mean   :15.469   Mean   :2.462  
+##  3rd Qu.:18.070   3rd Qu.:2.751  
+##  Max.   :25.362   Max.   :6.317  
+##  NA's   :11142    NA's   :11142
 ```
+
 
 ```r
 spplot(sk, "var1.pred")
 spplot(sk, "var1.var")
 ```
+
 ![](05-estymacje_files/figure-html/plotsy2-1.png)<!-- -->
-
-
 
 ## Kriging zwykły (ang. *Ordinary kriging*)
 ### Kriging zwykły (ang. *Ordinary kriging*)
@@ -113,7 +112,7 @@ spplot(sk, "var1.var")
 
 
 ```r
-ok <- krige(X2002.08.20_TPZ~1, wolin_lato_los, grid, model=model_zl2, maxdist=1000)
+ok <- krige(temp~1, punkty, grid, model=fitted, maxdist=1000)
 ```
 
 ```
@@ -121,23 +120,28 @@ ok <- krige(X2002.08.20_TPZ~1, wolin_lato_los, grid, model=model_zl2, maxdist=10
 ```
 
 ```r
+# ok <- krige(temp~1, punkty, grid, model=fitted, nmax=30)
+```
+
+
+```r
 spplot(ok, "var1.pred")
 spplot(ok, "var1.var")
 ```
-![](05-estymacje_files/figure-html/plotsy2ok2-1.png)<!-- -->
 
+![](05-estymacje_files/figure-html/plotsy2ok2-1.png)<!-- -->
 
 <!--
 
 
 ```r
-spplot(ok, "var1.pred", sp.layout=list(wolin_lato_los, pch=21, col="white"))
+spplot(ok, "var1.pred", sp.layout=list(punkty, pch=21, col="white"))
 ```
 
 ![](05-estymacje_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
 ```r
-spplot(ok, "var1.var", sp.layout=list(wolin_lato_los, pch=21, col="white"))
+spplot(ok, "var1.var", sp.layout=list(punkty, pch=21, col="white"))
 ```
 
 ![](05-estymacje_files/figure-html/unnamed-chunk-3-2.png)<!-- -->
@@ -149,22 +153,22 @@ spplot(ok, "var1.var", sp.layout=list(wolin_lato_los, pch=21, col="white"))
 
 
 ```r
-vario_kzt <- variogram(X2002.08.20_TPZ~X+Y, data=wolin_lato_los)
+vario_kzt <- variogram(temp~x+y, data=punkty)
 plot(vario_kzt)
 ```
 
 ![](05-estymacje_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
 ```r
-model_kzt <- vgm(psill = 17, model = 'Sph', range = 12000, nugget = 5)
+model_kzt <- vgm(psill = 5, model = 'Sph', range = 2500, nugget = 1)
 fitted_kzt <- fit.variogram(vario_kzt, model_kzt)
 fitted_kzt
 ```
 
 ```
-##   model    psill    range
-## 1   Nug 6.931465    0.000
-## 2   Sph 8.460149 2930.277
+##   model     psill    range
+## 1   Nug 0.7272135    0.000
+## 2   Sph 6.1096673 2355.502
 ```
 
 ```r
@@ -175,29 +179,25 @@ plot(vario_kzt, fitted_kzt)
 
 ```r
 grid_sp <- as(ras, "SpatialPixelsDataFrame")
-proj4string(grid_sp) <- proj4string(wolin_lato_los)
+proj4string(grid_sp) <- proj4string(punkty)
 grid_sp@data <- as.data.frame(coordinates(grid_sp))
-names(grid_sp) <- c("X", "Y")
 
-wolin_lato_los@data <- cbind(wolin_lato_los@data, as.data.frame(coordinates(wolin_lato_los)))
-kzt <- krige(X2002.08.20_TPZ~X+Y, wolin_lato_los, grid_sp, model=fitted_kzt)
+punkty@data <- cbind(punkty@data, as.data.frame(coordinates(punkty)))
+kzt <- krige(temp~x+y, punkty, grid_sp, model=fitted_kzt)
 ```
 
 ```
 ## [using universal kriging]
 ```
 
+
 ```r
 spplot(kzt, "var1.pred")
 spplot(kzt, "var1.var")
 ```
-![](05-estymacje_files/figure-html/plotsy2kzt-1.png)<!-- -->
 
+![](05-estymacje_files/figure-html/plotsy2kzt-1.png)<!-- -->
 
 ## Porównanie wyników SK, OK i KZT
 
-
 ![](05-estymacje_files/figure-html/ploty_trzy-1.png)<!-- -->
-
-
-

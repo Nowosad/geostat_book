@@ -9,11 +9,11 @@ library('knitr')
 opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE) 
 library('raster')
 library('sp')
-wolin_lato_los <- read.csv('data/Wolin_TPZ_p_lato_750losN.csv', na.strings=-999.00)
-coordinates(wolin_lato_los) <- ~X+Y
-proj4string(wolin_lato_los) <- '+init=epsg:32633'
-ras <- raster('data/siatka_raster.tif', level=0)
-crs(ras) <- proj4string(wolin_lato_los)
+punkty <- read.csv('dane/punkty.csv')
+coordinates(punkty) <- ~x+y
+proj4string(punkty) <- '+init=epsg:2180'
+ras <- raster('dane/siatka.tif')
+crs(ras) <- proj4string(punkty)
 grid <- as(ras, "SpatialGridDataFrame")
 ```
 
@@ -45,17 +45,16 @@ http://geostat-course.org/system/files/geostat13_ind.pdf
 ### Binaryzacja danych
 
 ```{r }
-summary(wolin_lato_los$X2002.08.20_TPZ) 
-wolin_lato_los$temp_ind <- wolin_lato_los$X2002.08.20_TPZ < 20
-summary(wolin_lato_los$temp_ind) 
+summary(punkty$temp) 
+punkty$temp_ind <- punkty$temp > 20
+summary(punkty$temp_ind) 
 ```
-
 
 ### Eksploracja danych
 
 ```{r }
 library('ggplot2')
-ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + stat_ecdf()
+ggplot(punkty@data, aes(temp)) + stat_ecdf()
 ```
 
     
@@ -63,58 +62,58 @@ ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + stat_ecdf()
 
 ```{r }
 library('gstat')
-vario_ind <- variogram(temp_ind~1, wolin_lato_los)         
+vario_ind <- variogram(temp_ind~1, punkty)         
 plot(vario_ind)
 ```
-
 
 ### Kriging danych kodowanych (ang. *Indicator kriging*) | Modelowanie
 
 ```{r }
-model_ind <- vgm(0.05, model = 'Sph', range = 2000, add.to = vgm(0.05, "Exp", 6000, nugget = 0.05))   
+model_ind <- vgm(0.07, model = 'Sph', range = 3000,  nugget = 0.01)  
 plot(vario_ind, model=model_ind)
 fitted_ind <- fit.variogram(vario_ind, model_ind)
 fitted_ind
 plot(vario_ind, model=fitted_ind)
 ```
 
-
 ### Kriging danych kodowanych (ang. *Indicator kriging*) | Interpolacja
 
 ```{r }
-ik <- krige(temp_ind~1, wolin_lato_los, grid, model=fitted_ind)
+ik <- krige(temp_ind~1, punkty, grid, model=fitted_ind)
+```
+
 ```{r plotsy1ok, eval=FALSE}
 spplot(ik, "var1.pred")
 spplot(ik, "var1.var")
+```
+
 ```{r plotsy2ok, echo=FALSE}
 library('gridExtra')
 library('sp')
-p1 <- spplot(ik, "var1.pred", main='Prawdopodobieństwo Temp < 20')
+p1 <- spplot(ik, "var1.pred", main='Prawdopodobieństwo Temp > 20')
 p2 <- spplot(ik, "var1.var", main='Wariancja predykcji IK')
 grid.arrange(p1, p2, ncol=2)
 ```
 
-
 ### Kriging danych kodowanych (ang. *Indicator kriging*)
 
 ```{r }
-vario_ind20 <- variogram(I(X2002.08.20_TPZ>20)~1, wolin_lato_los)  
-fitted_ind20 <- fit.variogram(vario_ind20, vgm(0.1, "Exp", 9000, nugget=0.05))
-vario_ind22 <- variogram(I(X2002.08.20_TPZ>22)~1, wolin_lato_los)  
-fitted_ind22 <- fit.variogram(vario_ind22, vgm(0.15, "Exp", 9000, nugget=0.1))
-vario_ind25 <- variogram(I(X2002.08.20_TPZ>25)~1, wolin_lato_los)  
-fitted_ind25 <- fit.variogram(vario_ind25, vgm(0.1, "Exp", 9000, nugget=0.1))
+vario_ind20 <- variogram(I(temp<20)~1, punkty)  
+fitted_ind20 <- fit.variogram(vario_ind20, vgm(0.08, "Sph", 3500, nugget=0.01))
+vario_ind16 <- variogram(I(temp<16)~1, punkty)  
+fitted_ind16 <- fit.variogram(vario_ind16, vgm(0.18, "Sph", 3500, nugget=0.03))
+vario_ind12 <- variogram(I(temp<12)~1, punkty)  
+fitted_ind12 <- fit.variogram(vario_ind12, vgm(0.13, "Sph", 2000, nugget=0.03))
 
-ik20 <- krige(I(X2002.08.20_TPZ>20)~1, wolin_lato_los, grid, model=fitted_ind20, nmax=10)
-ik22 <- krige(I(X2002.08.20_TPZ>22)~1, wolin_lato_los, grid, model=fitted_ind22, nmax=10)
-ik25 <- krige(I(X2002.08.20_TPZ>25)~1, wolin_lato_los, grid, model=fitted_ind25, nmax=10)
+ik20 <- krige(I(temp<20)~1, punkty, grid, model=fitted_ind20, nmax=30)
+ik16 <- krige(I(temp<16)~1, punkty, grid, model=fitted_ind16, nmax=30)
+ik12 <- krige(I(temp<12)~1, punkty, grid, model=fitted_ind12, nmax=30)
+```
 
 ```{r ploty_trzyik, echo=FALSE, fig.height=8}
 library('gridExtra')
-p1 <- spplot(ik20, "var1.pred", main="Prawdopodobieństwo Temp > 20")
-p2 <- spplot(ik22, "var1.pred", main="Prawdopodobieństwo Temp > 22")
-p3 <- spplot(ik25, "var1.pred", main="Prawdopodobieństwo Temp > 25")
+p1 <- spplot(ik20, "var1.pred", main="Prawdopodobieństwo Temp < 20")
+p2 <- spplot(ik16, "var1.pred", main="Prawdopodobieństwo Temp < 16")
+p3 <- spplot(ik12, "var1.pred", main="Prawdopodobieństwo Temp < 12")
 grid.arrange(p1, p2, p3, ncol=1)
 ```
-
-    

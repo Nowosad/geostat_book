@@ -35,31 +35,30 @@ http://geostat-course.org/system/files/geostat13_ind.pdf
 
 
 ```r
-summary(wolin_lato_los$X2002.08.20_TPZ) 
+summary(punkty$temp) 
 ```
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   17.11   20.48   21.89   23.56   25.81   41.79
+##   7.805  12.190  15.130  15.320  17.340  26.070
 ```
 
 ```r
-wolin_lato_los$temp_ind <- wolin_lato_los$X2002.08.20_TPZ < 20
-summary(wolin_lato_los$temp_ind) 
+punkty$temp_ind <- punkty$temp > 20
+summary(punkty$temp_ind) 
 ```
 
 ```
 ##    Mode   FALSE    TRUE    NA's 
-## logical     630     120       0
+## logical     212      32       0
 ```
-
 
 ### Eksploracja danych
 
 
 ```r
 library('ggplot2')
-ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + stat_ecdf()
+ggplot(punkty@data, aes(temp)) + stat_ecdf()
 ```
 
 ![](08-dane_kodowane_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
@@ -70,18 +69,17 @@ ggplot(wolin_lato_los@data, aes(X2002.08.20_TPZ)) + stat_ecdf()
 
 ```r
 library('gstat')
-vario_ind <- variogram(temp_ind~1, wolin_lato_los)         
+vario_ind <- variogram(temp_ind~1, punkty)         
 plot(vario_ind)
 ```
 
 ![](08-dane_kodowane_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
-
 ### Kriging danych kodowanych (ang. *Indicator kriging*) | Modelowanie
 
 
 ```r
-model_ind <- vgm(0.05, model = 'Sph', range = 2000, add.to = vgm(0.05, "Exp", 6000, nugget = 0.05))   
+model_ind <- vgm(0.07, model = 'Sph', range = 3000,  nugget = 0.01)  
 plot(vario_ind, model=model_ind)
 ```
 
@@ -93,10 +91,9 @@ fitted_ind
 ```
 
 ```
-##   model      psill     range
-## 1   Nug 0.05007591     0.000
-## 2   Exp 0.07173086 12927.822
-## 3   Sph 0.05970977  1790.056
+##   model      psill    range
+## 1   Nug 0.01191334    0.000
+## 2   Sph 0.07626873 3533.054
 ```
 
 ```r
@@ -105,45 +102,37 @@ plot(vario_ind, model=fitted_ind)
 
 ![](08-dane_kodowane_files/figure-html/unnamed-chunk-4-2.png)<!-- -->
 
-
 ### Kriging danych kodowanych (ang. *Indicator kriging*) | Interpolacja
 
 
 ```r
-ik <- krige(temp_ind~1, wolin_lato_los, grid, model=fitted_ind)
+ik <- krige(temp_ind~1, punkty, grid, model=fitted_ind)
 ```
 
 ```
 ## [using ordinary kriging]
 ```
+
 
 ```r
 spplot(ik, "var1.pred")
 spplot(ik, "var1.var")
 ```
-![](08-dane_kodowane_files/figure-html/plotsy2ok-1.png)<!-- -->
 
+![](08-dane_kodowane_files/figure-html/plotsy2ok-1.png)<!-- -->
 
 ### Kriging danych kodowanych (ang. *Indicator kriging*)
 
 
 ```r
-vario_ind20 <- variogram(I(X2002.08.20_TPZ>20)~1, wolin_lato_los)  
-fitted_ind20 <- fit.variogram(vario_ind20, vgm(0.1, "Exp", 9000, nugget=0.05))
-vario_ind22 <- variogram(I(X2002.08.20_TPZ>22)~1, wolin_lato_los)  
-fitted_ind22 <- fit.variogram(vario_ind22, vgm(0.15, "Exp", 9000, nugget=0.1))
-vario_ind25 <- variogram(I(X2002.08.20_TPZ>25)~1, wolin_lato_los)  
-fitted_ind25 <- fit.variogram(vario_ind25, vgm(0.1, "Exp", 9000, nugget=0.1))
+vario_ind20 <- variogram(I(temp<20)~1, punkty)  
+fitted_ind20 <- fit.variogram(vario_ind20, vgm(0.08, "Sph", 3500, nugget=0.01))
+vario_ind16 <- variogram(I(temp<16)~1, punkty)  
+fitted_ind16 <- fit.variogram(vario_ind16, vgm(0.18, "Sph", 3500, nugget=0.03))
+vario_ind12 <- variogram(I(temp<12)~1, punkty)  
+fitted_ind12 <- fit.variogram(vario_ind12, vgm(0.13, "Sph", 2000, nugget=0.03))
 
-ik20 <- krige(I(X2002.08.20_TPZ>20)~1, wolin_lato_los, grid, model=fitted_ind20, nmax=10)
-```
-
-```
-## [using ordinary kriging]
-```
-
-```r
-ik22 <- krige(I(X2002.08.20_TPZ>22)~1, wolin_lato_los, grid, model=fitted_ind22, nmax=10)
+ik20 <- krige(I(temp<20)~1, punkty, grid, model=fitted_ind20, nmax=30)
 ```
 
 ```
@@ -151,12 +140,19 @@ ik22 <- krige(I(X2002.08.20_TPZ>22)~1, wolin_lato_los, grid, model=fitted_ind22,
 ```
 
 ```r
-ik25 <- krige(I(X2002.08.20_TPZ>25)~1, wolin_lato_los, grid, model=fitted_ind25, nmax=10)
+ik16 <- krige(I(temp<16)~1, punkty, grid, model=fitted_ind16, nmax=30)
 ```
 
 ```
 ## [using ordinary kriging]
 ```
+
+```r
+ik12 <- krige(I(temp<12)~1, punkty, grid, model=fitted_ind12, nmax=30)
+```
+
+```
+## [using ordinary kriging]
+```
+
 ![](08-dane_kodowane_files/figure-html/ploty_trzyik-1.png)<!-- -->
-
-    

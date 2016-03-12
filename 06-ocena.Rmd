@@ -9,11 +9,10 @@ knit: bookdown::preview_chapter
 library('knitr')
 opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE) 
 library('sp')
-wolin_lato_los <- read.csv('data/Wolin_TPZ_p_lato_750losN.csv', na.strings=-999.00)
-coordinates(wolin_lato_los) <- ~X+Y
-proj4string(wolin_lato_los) <- '+init=epsg:32633'
+punkty <- read.csv('dane/punkty.csv')
+coordinates(punkty) <- ~x+y
+proj4string(punkty) <- '+init=epsg:2180'
 ```
-
 
 ## Statystyki jakości estymacji
 ### Statystyki jakości estymacji
@@ -28,7 +27,6 @@ proj4string(wolin_lato_los) <- '+init=epsg:32633'
 - Idealna estymacja dawałaby brak błędu oraz wspołczynnik korelacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1
 - Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystapieniu wartości odstających
 
-    
 ### Średni błąd estymacji
 - Optymalnie wartość średniego błędu estymacji powinna być jak najbliżej 0
 
@@ -48,22 +46,20 @@ $$ RMSE=\sqrt{\frac{\sum_{i=1}^{n}(\hat{v}_i-v_i)^2}{n}} $$
 library('caret')
 library('gstat')
 set.seed(124)
-indeks <- as.vector(createDataPartition(wolin_lato_los$X2002.08.20_TPZ, p=0.75, list=FALSE))
-train <- wolin_lato_los[indeks, ]
-test <- wolin_lato_los[-indeks, ]
-vario <- variogram(X2002.08.20_TPZ~1, data=train)
-model_zl2 <- vgm(10, model = 'Sph', range = 4000, add.to = vgm(5, "Gau", 8000, nugget = 5))
-fitted_zl2 <- fit.variogram(vario, model_zl2)
-test_sk <- krige(X2002.08.20_TPZ~1, train, test, model=fitted_zl2, beta=23.6, debug.level=0)
-reszta_sk <-  test_sk$var1.pred - test$X2002.08.20_TPZ
+indeks <- as.vector(createDataPartition(punkty$temp, p=0.75, list=FALSE))
+train <- punkty[indeks, ]
+test <- punkty[-indeks, ]
+vario <- variogram(temp~1, data=train)
+model <- vgm(10, model = 'Sph', range = 4000, nugget = 0.5)
+fitted <- fit.variogram(vario, model)
+test_sk <- krige(temp~1, train, test, model=fitted, beta=15.324)
+reszta_sk <-  test_sk$var1.pred - test$temp
 test_sk$reszty <- reszta_sk
-test_sk$true <-  test$X2002.08.20_TPZ
+test_sk$true <-  test$temp
 spplot(test_sk, "reszty", main="Reszty z modelu", colorkey=TRUE)
 ```
 
-
 ### Statystyki jakości estymacji | Histogram
-
 
 ```{r hist, echo=FALSE}
 library('ggplot2')
@@ -72,11 +68,9 @@ ggplot(as.data.frame(test_sk), aes(reszty)) + geom_histogram() + xlab("Reszty z 
 
 ### Statystyki jakości estymacji | Wykres rozrzutu
 
-
 ```{r point, echo=FALSE}
 ggplot(as.data.frame(test_sk), aes(var1.pred, true)) + geom_point() + xlab("Predykcja") + ylab("Zmierzona wartość")
 ```
-
 
 ## Walidacja wyników estymacji
 
@@ -97,20 +91,19 @@ ggplot(as.data.frame(test_sk), aes(var1.pred, true)) + geom_point() + xlab("Pred
 ```{r }
 library('caret')
 set.seed(124)
-indeks <- as.vector(createDataPartition(wolin_lato_los$X2002.08.20_TPZ, p=0.75, list=FALSE))
+indeks <- as.vector(createDataPartition(punkty$temp, p=0.75, list=FALSE))
 indeks
-train <- wolin_lato_los[indeks, ]
-test <- wolin_lato_los[-indeks, ]
-vario <- variogram(X2002.08.20_TPZ~1, data=train)
-model_zl2 <- vgm(10, model = 'Sph', range = 4000, add.to = vgm(5, "Gau", 8000, nugget = 5))
-model_zl2
-fitted_zl2 <- fit.variogram(vario, model_zl2)
-plot(vario, model=fitted_zl2)
+train <- punkty[indeks, ]
+test <- punkty[-indeks, ]
+vario <- variogram(temp~1, data=train)
+model <- vgm(10, model = 'Sph', range = 4000, nugget = 0.5)
+fitted <- fit.variogram(vario, model)
+plot(vario, model=fitted)
 
-test_sk <- krige(X2002.08.20_TPZ~1, train, test, model=fitted_zl2, beta=23.6)
+test_sk <- krige(temp~1, train, test, model=fitted, beta=15.324)
 summary(test_sk)
 
-reszta_sk <-  test_sk$var1.pred - test$X2002.08.20_TPZ
+reszta_sk <-  test_sk$var1.pred - test$temp
 summary(reszta_sk)
 
 ME <- sum(reszta_sk)/length(reszta_sk)
@@ -119,7 +112,7 @@ ME
 RMSE <- sqrt(sum(reszta_sk^2)/length(reszta_sk))
 RMSE
 
-srednia_reszta <- test$X2002.08.20_TPZ - mean(test$X2002.08.20_TPZ)
+srednia_reszta <- test$temp - mean(test$temp)
 R2 <- 1 - sum(reszta_sk^2)/sum(srednia_reszta^2)
 R2
 
@@ -145,20 +138,19 @@ spplot(test_sk, "reszty")
 
 
 ```{r loovv}
-vario <- variogram(X2002.08.20_TPZ~1, data=wolin_lato_los)
-model_zl2 <- vgm(10, model = 'Sph', range = 4000, add.to = vgm(5, "Gau", 8000, nugget = 5))
-fitted_zl2 <- fit.variogram(vario, model_zl2)
+vario <- variogram(temp~1, data=punkty)
+model <- vgm(10, model = 'Sph', range = 4000, nugget = 0.5)
+fitted <- fit.variogram(vario, model)
 
-cv_sk <- krige.cv(X2002.08.20_TPZ~1, wolin_lato_los, model=fitted_zl2, beta=23.6)
+cv_sk <- krige.cv(temp~1, punkty, model=fitted, beta=15.324)
 summary(cv_sk)
 spplot(cv_sk, "residual")
 ```
 
-
 <!-- 
 
-```{r }
-# ok_loocv <- krige.cv(X2002.08.20_TPZ~1, wolin_lato_los, model=model_zl2)
+```{r, eval=FALSE}
+# ok_loocv <- krige.cv(temp~1, punkty, model=model_zl2)
 # summary(ok_loocv)
 ```
 
@@ -168,17 +160,12 @@ spplot(cv_sk, "residual")
 - wykresy porównujące
 
 
-```{r }
-# ok_fit <- gstat(formula=X2002.08.20_TPZ~1, data=wolin_lato_los, model=model_zl2)
+```{r, eval=FALSE}
+# ok_fit <- gstat(formula=temp~1, data=punkty, model=model_zl2)
 # ok_loocv <- gstat.cv(OK_fit, debug.level=0, random=FALSE)
 # spplot(pe[6])
 ```
 
-
-
-```{r }
-#
-```
 
 ## 
 - prezentacja 5 Ani
@@ -190,8 +177,8 @@ spplot(cv_sk, "residual")
 ### Walidacja wyników estymacji |  Kriging zwykły - LOO crossvalidation
 krige.cv
 
-```{r }
-# OK_fit <- gstat(id="OK_fit", formula=X2002.08.20_TPZ~1, data=wolin_lato_los, model=fitted)
+```{r, eval=FALSE }
+# OK_fit <- gstat(id="OK_fit", formula=temp~1, data=punkty, model=fitted)
 # pe <- gstat.cv(OK_fit, debug.level=0, random=FALSE)
 # spplot(pe[6])
 # 
@@ -206,8 +193,8 @@ krige.cv
 
 ### Walidacja wyników estymacji |  K  Kriging uniwersalny - LOO crossvalidation
 
-```{r }
-# KU_fit <- gstat(id="KU_fit", formula=X2002.08.20_TPZ~odl_od_morza, data=wolin_lato_los, model=fitted_ku)
+```{r, eval=FALSE }
+# KU_fit <- gstat(id="KU_fit", formula=temp~odl_od_morza, data=punkty, model=fitted_ku)
 # pe <- gstat.cv(KU_fit, debug.level=0, random=FALSE)
 # spplot(pe[6])
 
@@ -220,7 +207,4 @@ krige.cv
 # spplot(grid, 'KU_se')
 ```
 
-
 -->
-
-

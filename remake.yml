@@ -12,6 +12,12 @@ targets:
     depends:
       - dane/punkty.rds
       - dane/siatka.rds
+      - dane/punkty.csv
+      - dane/granica.shp
+      - dane/siatka.tif
+      - dane/siatka.shp
+      - dane/siatka.csv
+      - dane/punkty_pref.csv
 
   data:
     depends:
@@ -59,7 +65,7 @@ targets:
     cleanup_level: never
     
   raster_stack:
-    command: data_merger(granica_spk, "data/clc06_spk.tif", "data/srtm_spk.tif", "data/landsat8_temperature_spk.tif", "data/landsat8_ndvi_spk.tif", "data/landsat8_savi_spk.tif")
+    command: data_merger(granica_spk, "data/srtm_spk.tif", "data/clc06_spk.tif", "data/landsat8_temperature_spk.tif", "data/landsat8_ndvi_spk.tif", "data/landsat8_savi_spk.tif")
   data/raster_stack.rds:
     command: saveRDS(raster_stack, "data/raster_stack.rds")
     cleanup_level: never 
@@ -69,10 +75,31 @@ targets:
     command: raster_to_sp2(raster_stack)  
     
   points:
-    command: spatial_pixels_to_points(spdf_all, n=50, type=1)
+    command: spatial_pixels_to_points(spdf_all, n=250, type=1)
     cleanup_level: never 
+  points_pref:
+    command: spatial_pixels_to_points(spdf_all, n=250, type=3)
+    cleanup_level: never   
     
   dane/punkty.rds:
     command: saveRDS(points, "dane/punkty.rds")
+  points_df:
+    command: as.data.frame(points)
+  siatka_df:
+    command: as.data.frame(spdf_all_without_temp)
+  dane/siatka.csv:
+    command: write.csv(siatka_df, "dane/siatka.csv", row.names=FALSE)  
+  dane/punkty.csv:
+    command: write.csv(points_df, "dane/punkty.csv", row.names=FALSE)  
+  points_df_pref:
+    command: as.data.frame(points_pref)
+  dane/punkty_pref.csv:
+    command: write.csv(points_df_pref, "dane/punkty_pref.csv", row.names=FALSE)      
+  dane/siatka.tif:
+    command: writeRaster(raster_stack, "dane/siatka.tif", overwrite=TRUE)
+  dane/siatka.shp:
+    command: shapefile(spdf_all_without_temp, "dane/siatka.shp")
   dane/siatka.rds:  
     command: saveRDS(spdf_all_without_temp, "dane/siatka.rds")
+  dane/granica.shp:
+    command: shapefile(granica_spk, "dane/granica.shp")

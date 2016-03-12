@@ -4,76 +4,7 @@ knit: bookdown::preview_chapter
 
 # Wprowadzenie {#intro}
 
-## Wprowadzenie
-
-### Program zajęć
-1. Wstęp do R
-2. Nieprzestrzenna i przestrzenna eksploracyjna analiza danych
-3. Przestrzenna eksploracyjna analiza danych
-4. Matematyczne modelowanie autokorelacji przestrzennej
-5. Estymacje jednozmienne
-6. Ocena jakości estymacji
-7. Wykorzystanie do estymacji danych uzupełniających 8. Estymacja lokalnego rozkładu prawdopodobieństwa
-9. Estymacje wielozmienne
-10. Symulacje przestrzenne
-
-### Formy oceny
-- Dwa krótkie (0,5 godziny) kolokwia okresowe – na zajęciach, przy komputerach – po 15% wagi przy końcowej ocenie
-- Projekt do wykonania w domu – końcowe 2 tygodnie semestru – 20% wagi przy końcowej ocenie
-- Kolokwium końcowe – 1,5 godziny przy komputerach na ostatnich zajęciach w semestrze  - 50% wagi przy końcowej ocenie
-- Zaliczenie zajęć (ocena dostateczna) – co najmniej 55% maksymalnej punktacji
-
-### Kodeks honorowy
-- Wszelkie prace domowe czy zaliczeniowe muszą być samodzielne oraz odzwierciedlać sposób myślenia i pracy ich twórcy
-
-### Źródła wiedzy
-- [An Introduction to R](http://cran.r-project.org/doc/manuals/R-intro.pdf) - oficjalne wprowadzenie do R
-- [Przewodnik po pakiecie R](http://www.biecek.pl/R/), [Programowanie w języku R](http://rksiazka.rexamine.com/),  [Statystyczna analiza danych z wykorzystaniem programu R](http://ksiegarnia.pwn.pl/7371_pozycja.html?npt=233) - polskie wydawnictwa
-- [Applied Spatial Dala Analysis with R](http://www.asdar-book.org/)
-- [A Practical Guide to Geostatistical Mapping](http://spatial-analyst.net/book/system/files/Hengl_2009_GEOSTATe2c1w.pdf)
-- [gstat user's manual](http://www.gstat.org/gstat.pdf)
-- [CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html)
-- [Applied Geostatistics](https://books.google.pl/books?id=vC2dcXFLI3YC), [Statistics for spatial data](https://books.google.pl/books?id=4SdRAAAAMAAJ)
-- [Praktyczny poradnik - jak szybko zrozumieć i wykorzystać geostatystykę w pracy badawczej](http://www.geoinfo.amu.edu.pl/staff/astach/www_geostat/programy/A_Stach_%20poradnik_geostatystyki.pdf)
-- Wyszukiwarki internetowe [Rseek](http://www.rseek.org/), [Duckduckgo](http://duckduckgo.com/), [Google](http://google.com/), [Bing](http://bing.com/), itd.
-
-## Wolin
-
-### Mapa topograficzna
-
-![](figs/wolin_topo.png)
-    
-### Obraz satelitarny
-   
-![](figs/wolin_sat.png)
-    
-### Rzeźba terenu
-    
-![Uproszczona mapa geomorfologiczna wyspy Wolin (Karczewski 1968, zmienione). Objaśnienia: 1 – plaża, 2 – wydmy i powierzchnie piasków eolicznych, 3 – fluwioglacjalne poziomy terasowe, 4 – dna rynien glacjalnych, 5 – wysoczyzna morenowa, 6 – wzgórza moreny czołowej, 7 – sandry, 8 – jeziora.](figs/wolin_rze.png)
-
-Uproszczona mapa geomorfologiczna wyspy Wolin (Karczewski 1968, zmienione). 
-
-Objaśnienia:
-1 – plaża
-2 – wydmy i powierzchnie piasków eolicznych
-3 – fluwioglacjalne poziomy terasowe
-4 – dna rynien glacjalnych
-5 – wysoczyzna morenowa
-6 – wzgórza moreny czołowej
-7 – sandry
-8 – jeziora
-        
-### Pokrycie/użytkowanie terenu
-    
-![](figs/wolin_COR.png)
-    
-### Litologia
-    
-![](figs/wolin_lit.png)
-    
-### Wilgotność gruntu
-    
-![](figs/wolin_wil.png)
+## Suwalski Park Krajobrazowy
     
 ## R a dane przestrzenne
     
@@ -94,7 +25,7 @@ install.packages(c('sp', 'rgdal', 'raster', 'rasterVis', 'gstat', 'ggplot2', 'co
     - znakowe (ang. *character*) - c('jeden', 'dwa', 'trzy')
     - logiczne (ang. *logical*) - c(TRUE, FALSE)
     - czynnikowe (ang. *factor*) - c('jeden', 'dwa', 'trzy', 'jeden')
-- Ramki danych (ang. *data.frame*) - to zbiór zmiennych (kolumn) oraz obserwacji (wierszy) zawierających różne typt danych
+- Ramki danych (ang. *data.frame*) - to zbiór zmiennych (kolumn) oraz obserwacji (wierszy) zawierających różne typy danych
 - Macierze (ang. *matrix*)
 - Listy (ang. *list*)
 
@@ -142,23 +73,24 @@ lub
 
 ```{r}
 library('sp')
-wolin_lato_los <- read.csv('data/Wolin_TPZ_p_lato_750losN.csv', na.strings=-999.00)
+dane_punktowe <- read.csv('dane/punkty.csv')
 ```
-
-### Dane punktowe (format csv)
 
 ```{r}
-coordinates(wolin_lato_los) <- ~X+Y
-summary(wolin_lato_los)
+head(dane_punktowe)
 ```
-
-### Dane punktowe (format csv)
 
 ```{r}
-proj4string(wolin_lato_los) <- '+init=epsg:32633'
-summary(wolin_lato_los)
+coordinates(dane_punktowe) <- ~x+y
+summary(dane_punktowe)
 ```
 
+```{r}
+proj4string(dane_punktowe) <- '+init=epsg:2180'
+summary(dane_punktowe)
+```
+
+<!--
 ### Usuwanie punktów zawierających braki wartości
 
 ```{r }
@@ -175,38 +107,25 @@ sp_na_omit <- function(x, margin=1) {
         return( x[,-na.index]  ) 
     }
 }
-wolin_lato_los2 <- sp_na_omit(wolin_lato_los) 
-summary(wolin_lato_los2)
+# wolin_lato_los2 <- sp_na_omit(wolin_lato_los) 
+# summary(wolin_lato_los2)
 ```
+-->
 
 ### Dane poligonowe (formaty gisowe)
 
 ```{r}
 library('rgdal')
-poligon <- readOGR(dsn='data', layer='wolin_polygon', verbose=FALSE)
-plot(poligon)
+granica <- readOGR(dsn='dane', layer='granica', verbose=FALSE)
+plot(granica)
 ```
 
 ### Rastry
 
 ```{r}
 library('raster')
-siatka_raster <- raster("data/siatka_raster.tif")
+siatka_raster <- raster("dane/siatka.tif")
 plot(siatka_raster)
-```
-
-### Siatki regularne
-
-```{r }
-siatka_shp <- readOGR(dsn='data', layer='siatka', verbose=FALSE)
-plot(siatka_shp)
-```
-
-### Siatki nieregularne
-
-```{r }
-siatka_n_shp <- readOGR(dsn='data', layer='siatka_n', verbose=FALSE)
-plot(siatka_n_shp)
 ```
 
 ## Eksport danych
@@ -229,20 +148,20 @@ writeRaster(siatka_raster, filename="nazwa_folderu/nowy_raster.tif")
 ### Dane punktowe
 
 ```{r }
-spplot(wolin_lato_los, "X1999.09.13_TPZ")
+spplot(dane_punktowe, "temp")
 ```
 
 ### Dane punktowe
 
 ```{r }
-spplot(wolin_lato_los, "odl_od_morza")
+spplot(dane_punktowe, "srtm")
 ```
 
 ### Dane punktowe - kategorie
 
 ```{r }
-wolin_lato_los@data$CLC06_p_lato <- as.factor(wolin_lato_los@data$CLC06_p_lato)
-spplot(wolin_lato_los, "CLC06_p_lato")
+dane_punktowe@data$clc <- as.factor(dane_punktowe@data$clc)
+spplot(dane_punktowe, "clc")
 ```
 
 ### Rastry
@@ -256,33 +175,46 @@ levelplot(siatka_raster, margin=FALSE)
 ## Tworzenie siatek
 ### Siatki regularne
 
+```{r}
+bbox(dane_punktowe)
+extent(dane_punktowe)
+```
+
+
 ```{r }
-siatka <- expand.grid(X = seq(from = 451470, to = 483570, by = 1000),
-                      Y = seq(from = 5962620, to = 5986000, by = 1000))
-coordinates(siatka) <- ~X + Y
+siatka <- expand.grid(x = seq(from = 745050, to = 757050, by = 500),
+                      y = seq(from = 712650, to = 721650, by = 500))
+coordinates(siatka) <- ~x + y
 gridded(siatka) <- TRUE
+proj4string(siatka) <- proj4string(dane_punktowe)
+```
+
+```{r}
+siatka <- makegrid(dane_punktowe, cellsize=500)
+names(siatka) <- c('x', 'y')
+coordinates(siatka) <- ~x + y
+gridded(siatka) <- TRUE
+proj4string(siatka) <- proj4string(dane_punktowe)
 ```
 
 ### Siatki regularne
 
 ```{r }
 plot(siatka)
-plot(wolin_lato_los, add=TRUE)
+plot(dane_punktowe, add=TRUE)
 ```
 
 ### Siatki nieregularne
 
 ```{r }
 library('raster')
-poligon_shp <- readOGR(dsn='data', layer='wolin_polygon', verbose=FALSE)
-siatka_n <- raster(extent(poligon_shp))
-res(siatka_n) <- c(250, 250)
+granica <- readOGR(dsn='dane', layer='granica')
+siatka_n <- raster(extent(granica))
+res(siatka_n) <- c(500, 500)
 siatka_n[] <- 0
-proj4string(siatka_n) <- CRS(proj4string(poligon_shp))
-siatka_n <- mask(siatka_n, poligon_shp)
+proj4string(siatka_n) <- proj4string(granica)
+siatka_n <- mask(siatka_n, granica)
 ```
-
-### Siatki nieregularne
 
 ```{r }
 levelplot(siatka_n, margin=FALSE)

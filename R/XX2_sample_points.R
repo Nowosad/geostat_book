@@ -1,3 +1,17 @@
+sp_na_omit <- function(x, margin=1) {
+        if (!inherits(x, "SpatialPointsDataFrame") & !inherits(x, "SpatialPolygonsDataFrame")) 
+                stop("MUST BE sp SpatialPointsDataFrame OR SpatialPolygonsDataFrame CLASS OBJECT") 
+        na.index <- unique(as.data.frame(which(is.na(x@data),arr.ind=TRUE))[,margin])
+        if(margin == 1) {  
+                cat("DELETING ROWS: ", na.index, "\n") 
+                return( x[-na.index,]  ) 
+        }
+        if(margin == 2) {  
+                cat("DELETING COLUMNS: ", na.index, "\n") 
+                return( x[,-na.index]  ) 
+        }
+}
+
 spatial_pixels_to_points <- function(spatial_pixels, type, ...){
         if (type==1){
                 type <- "random"
@@ -15,7 +29,10 @@ spatial_pixels_to_points <- function(spatial_pixels, type, ...){
                 type <- "Fibonacci"
         }
         sample_points <- spsample(spatial_pixels, type=type, ...)
-        sp::over(sample_points, spatial_pixels) %>% SpatialPointsDataFrame(sample_points, .)
+        sample_points <- sp::over(sample_points, spatial_pixels) %>% SpatialPointsDataFrame(sample_points, .)
+        coordnames(sample_points) <- c('x', 'y')
+        sample_points <- sp_na_omit(sample_points)
+        sample_points
 }
 
 

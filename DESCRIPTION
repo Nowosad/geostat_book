@@ -11,14 +11,21 @@ Imports:
   corrplot,
   deldir, 
   fields,
-  geoR,   
+  geoR, 
+  geoRglm,
   ggplot2,
   gstat,
-  pgirmess,  
+  maptools,
+  pgirmess, 
+  RandomFields,
   raster,
   rasterVis,  
   rgdal,
-  sp
+  rgl,
+  rgeos,
+  sp,
+  spBayes, 
+  vardiag
 
 Remotes:
   nowosad/geoplus
