@@ -34,10 +34,10 @@ pakiety <- c('caret', 'corrplot', 'dismo', 'fields', 'geoR', 'ggplot2', 'gridExt
 install.packages(pakiety)
 ```
 
-Pakiety R używane w tej książce można również zainstalować poprzez:
+Pakiety R oraz zbiory danych używane w tej książce można również zainstalować poprzez:
 
 ```{r, eval=FALSE}
-devtools::install_github("nowosad/geostat_book")
+devtools::install_github("nowosad/geostatbook")
 ```
 
 ```{r, echo=FALSE, eval=FALSE}

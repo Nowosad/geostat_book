@@ -1,8 +1,7 @@
-Package: geostat_book
+Package: geostatbook
 Title: Analiza danych przestrzennych w R.
 Version: 0.02
-Authors@R: c(
-  person("Jakub", "Nowosad", , "nowosad.jakub@gmail.com", c("aut", "cre"))
+Authors@R: person("Jakub", "Nowosad", email="nowosad.jakub@gmail.com", role=c("aut", "cre"))
 Depends: R (>= 3.2.0)
 URL: https://gitlab.com/nowosad/geostat_book
 Imports:
@@ -21,6 +20,5 @@ Imports:
   rgdal,
   rgeos,
   sp
-
 Remotes:
   nowosad/geoplus
