@@ -78,9 +78,11 @@ targets:
   points:
     command: spatial_pixels_to_points(spdf_all, n=250, type=1)
     cleanup_level: never 
-  points_pref:
-    command: spatial_pixels_to_points(spdf_all, n=250, type=3)
+  points2:
+    command: spatial_pixels_to_points(spdf_all, n=500, type=1)
     cleanup_level: never   
+  points_pref:
+    command: spatial_points_stratified(points2, threshold=16, prop=0.25)
   ndvi_points:
     command: spatial_pixels_to_points(spdf_all, n=1000, type=1, only_ndvi=TRUE)
     cleanup_level: never     

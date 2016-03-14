@@ -1,0 +1,307 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# ... - geostatystyka
+
+
+### Modele statystyczne
+- Parametry modeli są określane w oparciu o teorię prawdopodobieństwa. Dodatkowo wynik estymacji zawiera oszacowanie błędu. Np.:
+    - Kriging
+    - Modele regresyjne
+    - Modele bayesowe
+    - Modele hybrydowe
+
+<!--
+http://www.inside-r.org/packages/cran/raster/docs/interpolate
+![](fig_skrypt/m_feat.png)
+-->
+
+## Geostatystyka - prolog
+
+### Geostatystyka
+- Zbiór narzędzi statystycznych uwzględniających w analizie danych ich przestrzenną i czasową lokalizację, a opartych o teorię funkcji losowych.
+
+<!--
+### Geostatystyka a klasyczna statystyka
+- Isnieje informacja o lokalizacji obserwacji
+-->
+
+### Geostatystyka | Funkcje
+- Identyfikacja i modelowanie struktury przestrzennej/czasowej zjawiska
+- Estymacja - szacowanie wartości badanej zmiennej w nieopróbowanym miejscu i/lub momencie czasu
+- Symulacja - generowanie alternatywnych obrazów, które honorują wyniki pomiarów i strukturę przestrzenną/czasową zjawiska
+- Optymalizacja próbkowania/sieci pomiarowej 
+
+### Geostatystyczna analiza danych
+
+```{r diagram, include=FALSE, eval=FALSE}
+library('DiagrammeR')
+library('trelliscope')
+p <- DiagrammeR("
+                graph TB;
+                hw((Dane pomiarowe)) -->Analiza[<center>Analiza <br>i interpretacja <br>struktury przestrzennej</center>];
+                Analiza -->Modelowanie[<center>Modelowanie matematyczne <br>struktury przestrzennej</center>]
+                Modelowanie -->Estymacja;
+                Modelowanie -->Optymalizacja;
+                Modelowanie -->Symulacja;
+                ")
+```
+
+![](figs/diag.png)
+
+### Geostatystyka | Dane wejściowe
+1. Wystarczająca duża liczba punktów (minimalnie >30, ale zazwyczaj więcej niż 100/150)
+2. Są reprezentatywne
+3. Są niezależne
+4. Były stworzone używając stałej metodyki
+5. Są wystarczająco dokładne
+
+<!--
+### Geostatystyka | Cele
+- Charakterystyka struktury przestrzennej badanego zjawiska
+- Uwzględnienie przestrzennych relacji między zmiennymi
+- Interpolacja wartości
+- Wizualizacja
+- Określenie niepewności danych
+- Stwierdzenie niepewności estymacji
+-->
+
+### Geostatystyka | Podstawowe etapy
+
+1. Zaprojektowanie sposobu (typu) próbkowania oraz organizacji zadań
+2. Zebranie danych, analiza labolatoryjna
+3. Wstepna eksploracja danych, ocena ich jakości
+4. Modelowanie semiwariogramów na podstawie dostępnych danych
+5. Estymacja badanej cechy
+6. Porównanie i ocena modeli
+7. Stworzenie wynikowego produktu i jego dystrybucja
+
+## Przestrzenna kowariancja, korelacja i semiwariancja
+
+### Przestrzenna kowariancja, korelacja i semiwariancja | Założenia
+1. Przestrzennej ciągłości - przestrzenna korelacja między zmienny w dwóch lokalizacjach zależy tylko od ich odległości (oraz czasem kierunku), lecz nie od tego gdzie są one położone
+2. Stacjonarności - średnia i wariancja są stałe na całym badanym obszarze
+
+### Przestrzenna kowariancja, korelacja i semiwariancja
+- $u$ - wektor współrzędnych
+- $z(u)$ - badana zmienna jako funkcja położenia - inaczej określany jako ogon (ang. *tail*)
+- $h$ - lag - odstęp pomiędzy dwoma lokalizacjami
+- $z(u+h)$ - wartość badanej zmiennej odległej o odstęp $h$ - inaczej określany jako głowa (ang. *head*)
+
+### Przestrzenna kowariancja, korelacja i semiwariancja
+- Kowariancja i korelacja to miary podobieństwa pomiędzy dwoma zmiennymi
+- Przenosząc to na aspekt przestrzenny, badamy jedną zmienną ale pomiędzy dwoma punktami odległymi od siebie o pewien dystans (okreslany jako lag)
+- W efekcie otrzymujemy miarę podobieństwa pomiędzy wartością głowy i ogona
+- Trzecią miarę charakteryzującą relację między obserwacjami odległymi o kolejne odstępy jest semiwariancja
+- Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji
+- Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo
+- Jednocześnie, dla potrzeb interpretacji relacji kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
+
+```{r z_przs0, echo=FALSE}
+hscat(temp~1, punkty, breaks=c(0, 200))
+```
+
+### Wykres rozrzutu z przesunięciem
+
+```{r z_przs, fig.height=7}
+hscat(temp~1, punkty, breaks=seq(0, 4000, by=500))
+```
+
+### Autokowariancja
+- Autokowariancja pokazuje jak mocno są ze sobą powiązane przestrzennie wartości pary obserwacji odległych od siebie o kolejne przedziały 
+
+```{r }
+kowario <- variogram(temp~1, punkty, covariogram = TRUE)
+plot(kowario)
+```
+
+### Autokorelacja
+- Autokorelogram jest wykresem pokazującym jedną z miar autokorelacji (np. I Morana lub C Geary'ego) w stosunku do odległości
+ 
+```{r }
+wsp <- coordinates(punkty)
+kor <- correlog(wsp, punkty$temp)
+kor <- as.data.frame(kor)
+ggplot(kor, aes(dist.class, coef)) + geom_smooth(linetype=0) + geom_line() + geom_point(size=5)
+```
+
+### Semiwariancja
+- Zmienność przestrzenna może być określona za pomocą semiwariancji. Jest to połowa średniej kwadratu różnicy pomiędzy wartościami badanej zmiennej w dwóch lokalizacjach odległych o wektor $h$
+$$ \gamma(h) = \frac{1}{2}E[(z(s) - z(s+h))^2] $$
+
+### Określenie występowania autokorelacji przestrzennej | Chmura semiwariogramu
+- Jeżeli w badanej próbie mamy $n$ obserwacji oznacza to, że możemy zaobserwować $\frac{1}{2}n(n-1)$ par obserwacji
+- Każda para obserwacji daje nam informacje o semiwariancji występującej wraz z odległością
+- Semiwariancję można zaprezentować na wykresie zwanym chumrą semiwariogramu
+
+### Semiwariancja | Przykładowe obliczenia
+
+```{r }
+odl <- dist(coordinates(punkty)[c(1, 2), ])
+gamma <- 0.5 * (punkty$temp[1] - punkty$temp[2])^2
+gamma
+```
+
+### Określenie występowania autokorelacji przestrzennej | Chmura semiwariogramu
+
+```{r }
+vario_cloud <- variogram(temp~1, punkty, cloud=TRUE)
+plot(vario_cloud) 
+```
+
+### Określenie występowania autokorelacji przestrzennej | Chmura semiwariogramu
+
+```{r chmurkowanie, eval=FALSE}
+vario_cloud_sel <- plot(variogram(temp~1, punkty, cloud=TRUE), digitize=TRUE)
+plot(vario_cloud_sel, punkty) 
+```
+
+### Semiwariogram | Charakterystyka struktury przestrzennej
+- Semiwariogram to wykres pokazujący relację pomiędzy odległością a semiwariancją
+- Jest to uśrednieniem semiwariancji dla kolejnych odstępów (lagów)
+- W oparciu o semiwariogram empiryczny możemy następnie dopasować do niego model/e
+
+$$ \hat{\gamma}(h) = \frac{1}{2N(h)}\sum_{i=1}^{N(h)}(z(s_i) - z(s_i+h))^2 $$
+
+gdzie $N(h)$ oznacza liczbę par punktów w odstępie $h$
+
+### Semiwariogram
+- Nugget - efekt nuggetowy - pozwala na określenie błędu w danych wejściowych oraz zmienności na dystansie krótszym niż pierwszy odstęp
+- Sill - semiwariancja progowa - oznacza wariancję badanej zmiennej
+- Range - zasięg - to odległość do której istnieje przestrzenna korelacja
+
+### Semiwariogram | Rules of thumb
+- W każdym odstępie powinno się znaleźć co najmniej 30 par punktów
+- Maksymalny zasięg semiwariogramu (ang. *cutoff distance*) to 1/2 pierwiastka z badanej powierzchni (inne źródła mówią o połowie z przekątnej badanego obszaru/jednej trzeciej)
+- Liczba odstępów powinna nie być mniejsza niż 10
+- Optymalnie maksymalny zasięg semiwariogramu powinien być dłuższy o 10-15% od zasięgu zjawiska
+- Optymalnie odstępy powinny być jak najbliżej siebie i jednocześnie nie być chaotyczne
+- Warto metodą prób i błędów określić optymalne parametry semiwariogramu
+- Należy określić czy zjawisko wykazuje anizotropię przestrzenną
+
+### Semiwariogram | Obliczenia pomocnicze
+- Liczba par obserwacji
+
+```{r }
+0.5*length(punkty)*(length(punkty)-1)
+```
+
+- Połowa pierwiastka powierzchni
+
+```{r }
+pow <- area(granica)
+as.vector(0.5*sqrt(pow))
+```
+
+ <!--
+- Połowa przekątnej obszaru
+Twierdzenie Pitagorasa
+
+$$x^2 + y^2 = z^2$$
+
+```{r, eval=FALSE }
+wierz <- as.vector(extent(poligon))
+kraw_x <- wierz[2] - wierz[1]
+kraw_y <- wierz[4] - wierz[3]
+z_kwadrat <- kraw_x^2 + kraw_y^2
+0.5*sqrt(z_kwadrat)
+```
+
+-->
+- Powierzchnia zajmowana przez jedną próbkę
+
+```{r }
+pow_pr <- area(granica)/length(punkty)
+pow_pr
+```
+
+- Średnia odległość między punktami 
+
+```{r }
+sqrt(pow_pr)
+```
+
+### Semiwariogram | Maksymalny zasięg semiwariogramu (ang. *Cutoff distance*)
+- Maksymalny zasięg semiwariogramu (ang. *Cutoff distance*) jest domyślnie wyliczany w pakiecie `gstat` jako 1/3 z najdłuższej przekątnej badanego obszaru
+
+```{r }
+vario_par <- variogram(temp~1, punkty)
+vario_par
+plot(vario_par, plot.numbers=TRUE)
+vario_par <- variogram(temp~1, punkty, cutoff = 4000)
+plot(vario_par)
+```
+
+### Semiwariogram | Odległość między przedziałami (ang. *Interval width*)
+- Domyślnie to maksymalny zasięg semiwariogramu podzielony przez 15 dahe odległość między przedziałami  (ang. *Interval width*)
+
+```{r }
+vario_par <- variogram(temp~1, punkty, cutoff = 1000, width = 250)
+plot(vario_par)
+```
+
+<!--
+## Wpływa danych odstających
+
+Tak jak inne statystyki typu wariancji, wartości kowariancji i semiwariogramu są bardzo czułe na występowanie danych ekstremalnych – potencjalnie błędnych. Stosuje się trzy sposoby aby ten problem rozwiązać:
+Transformację matematyczną danych (logarytmowanie, pierwiastkowanie itp.) , aby zredukować skośność ich histogramu,
+Usuwanie par danych, które zaburzają wartość semiwariancji dla określonych odstępów h. Procedura ta zwana jest czyszczeniem wykresu rozrzutu z przesunięciem („h-scattergram cleansing”).
+Używanie innych statystyk h-scattergramu, które są mniej czułe na występowanie danych ekstremalnych.
+### Rodogram/madogram
+
+```{r }
+# library('SpatialExtremes')
+# n.site <- 15
+# locations <- matrix(runif(2*n.site, 0, 10), ncol = 2)
+# colnames(locations) <- c("lon", "lat")
+# 
+# ##Simulate a max-stable process - with unit Frechet margins
+# data <- rmaxstab(40, locations, cov.mod = "whitmat", nugget = 0, range = 1,
+#                  smooth = 2)
+# 
+# ##Compute the madogram
+# madogram(data, locations)
+# data2 <- matrix(c(punkty$temp, punkty$X2002.08.20_NDVI), nrow=2)
+# locations2 <- coordinates(punkty)
+# colnames(locations2) <- c("lon", "lat")
+# madogram(data2, locations2)
+```
+
+-->
+
+## Anizotropia
+
+### Anizotropia struktury przestrzennej
+- W wielu rzeczywistych sytuacjach, wartość cechy zależy nie tylko od odległości, ale także od kierunku
+
+### Mapa semiwariogramu
+- Mapa semiwariogramu (powierzchnia semiwariogramu) służy do określenia czy struktura przestrzenna zjawiska posiada anizotropię, a jeżeli tak to w jakim kierunku
+- Na podstawie mapy semiwariogramu identyfikuje się parametry potrzebne do zbudowania semiwariogramów kierunkowych
+
+```{r }
+vario_map <- variogram(temp~1, punkty, cutoff=4000, width=400, map=TRUE)
+plot(vario_map, threshold=30) # co najmniej 30 par punktów
+```
+
+### Mapa semiwariogramu | 3D
+
+```{r mapa_semi, eval=FALSE}
+plot3D(raster(vario_map$map), col=rainbow)
+```
+
+### Semiwariogramy kierunkowe | Kierunki
+- W przypadku, gdy zjawisko wykazuje anizotropię przestrzenną, możliwe jest stworzenie semiwariogramów dla różnych wybranych kierunków
+- Przykładowo, dla argumentu *alpha = c(0, 45, 90, 135)* cztery główne kierunki to 0, 45, 90 i 135 stopni. Oznacza to, że dla kierunku 45 stopni brane pod uwagę będą wszystkie pary punktów pomiędzy 22,5 a 67,5 stopnia.
+
+```{r }
+vario_kier <- variogram(temp~1, punkty, alpha = c(0, 45, 90, 135))
+plot(vario_kier)
+```
+
+### Semiwariogramy kierunkowe | Kierunki
+ 
+```{r }
+vario_kier <- variogram(temp~1, punkty, alpha = c(60, 105, 150, 195))
+plot(vario_kier)
+```

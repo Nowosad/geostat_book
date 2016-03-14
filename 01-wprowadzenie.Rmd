@@ -2,22 +2,6 @@
 knit: bookdown::preview_chapter
 ---
 
-# Wprowadzenie {#intro}
-
-## Wymagania wstępne
-
-Oprogramowanie, pakiety i dane.
-
-### Oprogramowanie
-
-- [R](www.r-project.org) - https://cloud.r-project.org/
-- [RStudio](www.rstudio.com) - https://www.rstudio.com/products/rstudio/download/
-
-### Dane
-
-- Adres
-- Pliki + ryciny
-
 ## R a dane przestrzenne
     
 ### Pakiety
@@ -26,7 +10,7 @@ Oprogramowanie, pakiety i dane.
 - Geostatystyka - `gstat`, `geoR`, `geoRglm`, `fields`, `spBayes`, `RandomFields`, `vardiag`
 - Inne - `ggplot2`, `corrplot`, `caret`
 
-```{r pakiety}
+```{r pakietyy}
 pakiety <- c('caret', 'corrplot', 'dismo', 'fields', 'geoR', 'ggplot2', 'gridExtra', 'gstat', 'pgirmess', 'raster', 'rasterVis', 'rgdal', 'rgeos', 'sp')
 ```
 

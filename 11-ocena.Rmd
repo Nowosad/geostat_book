@@ -1,0 +1,201 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Ocena jakości estymacji [UWAGA POMIESZANY ME Z RESZTĄ!!]
+
+
+```{r setup6, echo=FALSE, include=FALSE}
+library('knitr')
+opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE) 
+```
+
+## Statystyki jakości estymacji
+### Statystyki jakości estymacji
+- Służą do oceny i porównania jakości estymacji
+- Do podstawowych statystyk ocen jakości estymacji należą:
+    - Średni błąd estymacji (ME, ang. *mean error*)
+    - Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root square prediction error*)
+    - Współczynnik korelacji
+    - Rozkład błędu (np. 5. percentyl, mediana, 95. percentyl)
+    
+### Statystyki jakości estymacji
+- Idealna estymacja dawałaby brak błędu oraz wspołczynnik korelacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1
+- Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystapieniu wartości odstających
+
+### Średni błąd estymacji
+- Optymalnie wartość średniego błędu estymacji powinna być jak najbliżej 0
+
+$$ ME=\frac{\sum_{i=1}^{n}(\hat{v}_i-v_i)}{n} $$     
+### Pierwiastek średniego błędu kwadratowego
+- Optymalnie wartość pierwiastka średniego błędu kwadratowego powinna być jak najmniejsza
+
+$$ RMSE=\sqrt{\frac{\sum_{i=1}^{n}(\hat{v}_i-v_i)^2}{n}} $$     
+
+### Współczynnik korelacji
+- Optymalnie wartość współczynnika korelacji powinna być jak najwyższa
+
+### Statystyki jakości estymacji | Mapa
+
+```{r}
+library('geostatbook')
+data(punkty)
+```
+
+```{r mapa, echo=FALSE}
+set.seed(124)
+indeks <- as.vector(createDataPartition(punkty$temp, p=0.75, list=FALSE))
+train <- punkty[indeks, ]
+test <- punkty[-indeks, ]
+vario <- variogram(temp~1, data=train)
+model <- vgm(10, model = 'Sph', range = 4000, nugget = 0.5)
+fitted <- fit.variogram(vario, model)
+test_sk <- krige(temp~1, train, test, model=fitted, beta=15.324)
+reszta_sk <-  test_sk$var1.pred - test$temp
+test_sk$reszty <- reszta_sk
+test_sk$true <-  test$temp
+spplot(test_sk, 'reszty', main='Reszty z modelu', colorkey=TRUE)
+```
+
+### Statystyki jakości estymacji | Histogram
+
+```{r hist, echo=FALSE}
+ggplot(as.data.frame(test_sk), aes(reszty)) + geom_histogram() + xlab('Reszty z modelu') + ylab('Liczebność')
+```
+
+### Statystyki jakości estymacji | Wykres rozrzutu
+
+```{r point, echo=FALSE}
+ggplot(as.data.frame(test_sk), aes(var1.pred, true)) + geom_point() + xlab('Predykcja') + ylab('Zmierzona wartość')
+```
+
+## Walidacja wyników estymacji
+
+### Walidacja wyników estymacji
+- Dokładne dopasowanie modelu do danych może w efekcie nie dawać najlepszych wyników
+- W efekcie ważne jest stosowanie metod pozwalających na wybranie optymalnego modelu
+- Do takich metod należy, między innymi, walidacja podzbiorem (ang. *jackknifing*) oraz kroswalidacja (ang. *crossvalidation*)
+
+### Walidacja podzbiorem 
+- Polega na podziale zbioru danych na dwa podzbiory - treningowy i testowy
+- Zbiór treningowy służy do estymacji wartości
+- Wynik estymacji porównywany jest z rzeczywistymi wartościami ze zbioru testowego
+- Zaletą tego podejścia jest stosowanie danych niezależnych od estymacji
+- Wadą jest konieczność posiadania dużego zbioru danych
+
+### Walidacja podzbiorem 
+
+```{r }
+set.seed(124)
+indeks <- as.vector(createDataPartition(punkty$temp, p=0.75, list=FALSE))
+indeks
+train <- punkty[indeks, ]
+test <- punkty[-indeks, ]
+vario <- variogram(temp~1, data=train)
+model <- vgm(10, model = 'Sph', range = 4000, nugget = 0.5)
+fitted <- fit.variogram(vario, model)
+plot(vario, model=fitted)
+
+test_sk <- krige(temp~1, train, test, model=fitted, beta=15.324)
+summary(test_sk)
+
+reszta_sk <-  test_sk$var1.pred - test$temp
+summary(reszta_sk)
+
+ME <- sum(reszta_sk)/length(reszta_sk)
+ME
+
+RMSE <- sqrt(sum(reszta_sk^2)/length(reszta_sk))
+RMSE
+
+srednia_reszta <- test$temp - mean(test$temp)
+R2 <- 1 - sum(reszta_sk^2)/sum(srednia_reszta^2)
+R2
+
+test_sk$reszty <- reszta_sk
+spplot(test_sk, 'reszty')
+```
+
+
+### Kroswalidacja
+- W przypadku kroswalidacji te same dane wykorzystywane są do budowy modelu, estymacji, a następnie do oceny prognozy
+- Procedura kroswalidacji LOO (ang. *leave-one-out cross-validation*)
+
+1. Zbudowanie matematycznego modelu z dostępnych obserwacji
+2. Dla każdej znanej obserwacji następuje:
+    - Usunięcie jej ze zbioru danych
+    - Użycie modelu do wykonania predykcji w miejscu tej obserwacji
+    - Wyliczenie reszty (ang. *residual*), czyli różnicy pomiędzy znaną wartością a obserwacją
+3. Podsumowanie otrzymanych wyników
+    
+- W pakiecie `gstat`, kroswalidacja LOO jest dostępna w funkcjach `krige.cv` oraz `gstat.cv`
+
+### Kroswalidacja 
+
+```{r loovv}
+vario <- variogram(temp~1, data=punkty)
+model <- vgm(10, model = 'Sph', range = 4000, nugget = 0.5)
+fitted <- fit.variogram(vario, model)
+
+cv_sk <- krige.cv(temp~1, punkty, model=fitted, beta=15.324)
+summary(cv_sk)
+spplot(cv_sk, 'residual')
+```
+
+<!-- 
+
+```{r, eval=FALSE}
+# ok_loocv <- krige.cv(temp~1, punkty, model=model_zl2)
+# summary(ok_loocv)
+```
+
+- Tutaj inne przykłady
+- Wykresy z loocv
+- wykresy porównujące
+
+```{r, eval=FALSE}
+# ok_fit <- gstat(formula=temp~1, data=punkty, model=model_zl2)
+# ok_loocv <- gstat.cv(OK_fit, debug.level=0, random=FALSE)
+# spplot(pe[6])
+```
+
+## 
+- prezentacja 5 Ani
+- spatinter folder
+- AIC
+
+## Walidacja wyników estymacji
+
+### Walidacja wyników estymacji |  Kriging zwykły - LOO crossvalidation
+krige.cv
+
+```{r, eval=FALSE }
+# OK_fit <- gstat(id="OK_fit", formula=temp~1, data=punkty, model=fitted)
+# pe <- gstat.cv(OK_fit, debug.level=0, random=FALSE)
+# spplot(pe[6])
+# 
+# z <- predict(OK_fit, newdata = grid, debug.level = 0)
+# grid2 <- grid
+# grid2$OK_pred <- z$OK_fit.pred
+# grid2$OK_se <- sqrt(z$OK_fit.var)
+# library('rasterVis')
+# spplot(grid2, 'OK_pred')
+# spplot(grid2, 'OK_se')
+```
+
+### Walidacja wyników estymacji |  K  Kriging uniwersalny - LOO crossvalidation
+
+```{r, eval=FALSE }
+# KU_fit <- gstat(id="KU_fit", formula=temp~odl_od_morza, data=punkty, model=fitted_ku)
+# pe <- gstat.cv(KU_fit, debug.level=0, random=FALSE)
+# spplot(pe[6])
+
+# dodanie odległości od morza do siatki !!
+# z_KU <- predict(KU_fit, newdata = grid, debug.level = 0)
+# grid$KU_pred <- z$KU_fit.pred
+# grid$KU_se <- sqrt(z$KU_fit.var)
+# library('rasterVis')
+# spplot(grid, 'KU_pred')
+# spplot(grid, 'KU_se')
+```
+-->

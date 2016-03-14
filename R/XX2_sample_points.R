@@ -1,15 +1,18 @@
-sp_na_omit <- function(x, margin=1) {
+sp_na_omit <- function(x, margin) {
         if (!inherits(x, "SpatialPointsDataFrame") & !inherits(x, "SpatialPolygonsDataFrame")) 
                 stop("MUST BE sp SpatialPointsDataFrame OR SpatialPolygonsDataFrame CLASS OBJECT") 
-        na.index <- unique(as.data.frame(which(is.na(x@data),arr.ind=TRUE))[,margin])
-        if(margin == 1) {  
+        na.index <- try(unique(as.data.frame(which(is.na(x@data), arr.ind=TRUE))[ ,margin]), silent = TRUE)
+        if (inherits(na.index, 'try-error')){
+                cat("DELETING: NONE\n") 
+                return(x)
+        } else if(margin == 1) {  
                 cat("DELETING ROWS: ", na.index, "\n") 
-                return( x[-na.index,]  ) 
-        }
-        if(margin == 2) {  
+                return(x[-na.index, ]) 
+        } else if(margin == 2) {  
                 cat("DELETING COLUMNS: ", na.index, "\n") 
-                return( x[,-na.index]  ) 
+                return(x[, -na.index]) 
         }
+        return(x)
 }
 
 spatial_pixels_to_points <- function(spatial_pixels, type, only_ndvi=FALSE, ...){
@@ -31,11 +34,17 @@ spatial_pixels_to_points <- function(spatial_pixels, type, only_ndvi=FALSE, ...)
         sample_points <- spsample(spatial_pixels, type=type, ...)
         sample_points <- sp::over(sample_points, spatial_pixels) %>% SpatialPointsDataFrame(sample_points, .)
         coordnames(sample_points) <- c('x', 'y')
-        sample_points <- sp_na_omit(sample_points)
+        sample_points2 <- sp_na_omit(sample_points, 1)
         if (only_ndvi){
                 sample_points@data <- sample_points@data['ndvi']
         }
         sample_points
 }
 
-
+spatial_points_stratified <- function(spatial_points, threshold, prop){
+        above <- spatial_points[spatial_points@data[, 'temp']>threshold, ]
+        above <- above[sample(1:length(above), size=nrow(above)*prop), ]
+        below <- spatial_points[spatial_points@data[, 'temp']<threshold, ]
+        below <- below[sample(1:length(below), size=nrow(below)*(1-prop)), ]
+        rbind(below, above)
+}

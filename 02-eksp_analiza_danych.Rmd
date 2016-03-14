@@ -18,18 +18,20 @@ opts_chunk$set(warning=FALSE, message=FALSE)
 ## Dane
 ### Dane 
 
-```{r, message=FALSE, warning=FALSE}
-punkty <- read.csv('dane/punkty.csv')
-coordinates(punkty) <- ~x+y
+```{r}
+library('geostatbook')
+data(punkty)
+```
 
-proj4string(punkty) <- '+init=epsg:2180'
+
+```{r, message=FALSE, warning=FALSE}
 par(mar=c(rep(0, 4)))
 plot(punkty)
 
 str(punkty)
 str(punkty@data)
 
-granica <- readOGR('dane', 'granica')
+data(granica)
 plot(granica, add=TRUE)
 ```
 
@@ -120,7 +122,7 @@ ggplot(punkty@data, aes(temp)) + stat_ecdf()
 - Inne wyniku uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wieku i dochodu w złotówkach a inne dla wieku i dochodu w dolarach
 
 ```{r }
-cov(punkty$temp, punkty$ndvi, use= 'complete.obs')
+cov(punkty$temp, punkty$ndvi, use='complete.obs')
 ```
 
 ### Współczynnik korelacji
@@ -130,7 +132,7 @@ cov(punkty$temp, punkty$ndvi, use= 'complete.obs')
 
 ```{r }
 ggplot(punkty@data, aes(temp, ndvi)) + geom_point()
-cor(punkty$temp, punkty$ndvi, use= 'complete.obs')
+cor(punkty$temp, punkty$ndvi, use='complete.obs')
 ```
 
 ```{r }
@@ -138,11 +140,11 @@ cor.test(punkty$temp, punkty$ndvi)
 ```
 
 ```{r }
-cor(punkty@data[c(1, 3:5)], use= 'complete.obs')
+cor(punkty@data[c(1, 3:5)], use='complete.obs')
 ```
 
 ```{r }
-corrplot(cor(punkty@data[c(1, 3:5)], use= 'complete.obs'))
+corrplot(cor(punkty@data[c(1, 3:5)], use='complete.obs'))
 ```
 
 ### Wykresy pudełkowe
@@ -231,233 +233,3 @@ punkty$bc_tpz_inv <- invBoxCox(punkty$bc_tpz, lambda=-0.3)
 ggplot(punkty@data, aes(bc_tpz_inv)) + geom_density()
 ```
 
-## Mapy 
-
-### Podstawowe terminy | Kontekst przestrzenny
-- Populacja - cały obszar, dla którego chcemy określić wybrane właściwości
-- Próba - zbiór obserwacji, dla których mamy informacje. Inaczej, próba to podzbiór populacji. Zazwyczaj niemożliwe (lub bardzo kosztowne) jest zdobycie informacji o całej populacji. Z tego powodu bardzo cenne jest odpowiednie wykorzystanie informacji z próby.
-
-### Mapy punktowe | Cel
-- Sprawdzenie poprawności współrzędnych
-- Wgląd w typ próbkowania
-- Sprawdzenie poprawności danych - dane odstające lokalnie
-- Identyfikacja głównych cech struktury przestrzennej zjawiska (np. trend)
-
-### Typ próbowania
-- Regularny
-- Losowy
-- Losowy stratyfikowany
-- Preferencyjny
-- Liniowy
-
-### Typ próbowania | Regularny
-
-```{r }
-set.seed(225)
-regularny <- spsample(granica, 150, type = 'regular')
-plot(regularny)
-```
-
-- Zmienna *offset*
-
-### Typ próbowania | Losowy
-
-```{r }
-set.seed(301)
-losowy <- spsample(granica, 150, type = 'random')
-plot(losowy)
-```
-
-- Każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia
-- Każdy punkt jest losowany niezależnie od pozostałych
-
-### Typ próbowania | Losowy stratyfikowany
-
-```{r }
-set.seed(125)
-strat <- spsample(granica, 150, type = 'stratified')
-plot(strat)
-```
-
-### Typ próbowania | Preferencyjny I
-
-```{r }
-set.seed(425)
-pref <- spsample(granica, 150, type = 'clustered', nclusters=80)
-plot(pref)
-```
-
-### Typ próbowania | Liniowy
-
-```{r }
-# library('rgdal')
-# linia <- readOGR("data", "linia", verbose=FALSE)
-# set.seed(224)
-# izoliniowy <- spsample(linia, 150, type = 'regular')
-# plot(izoliniowy)
-```
-
-### Mapy punktowe i dane lokalnie odstające
-
-```{r }
-par(mar=c(rep(0, 4)))
-granica <- readOGR(dsn='dane', layer='granica', verbose=FALSE) 
-plot(granica) 
-plot(punkty, add=TRUE) 
-```
-
-```{r klik, eval=FALSE}
-# select.spatial(punkty, digitize=FALSE, rownames=TRUE)
-spplot(punkty, 'temp', identify=TRUE)
-```
-
-```{r }
-spplot(punkty, 'temp', sp.layout = granica)
-```
-
-## Rozgrupowanie danych
-
-### Rozgrupowanie danych
-- Istnieje szereg metod rozgrupowywania danych, między innymi:
-    - Rozgrupowywanie komórkowe
-    - Rozgrupowywanie poligonowe
-- Celem tych metod jest nadanie wag obserwacjom w celu zapewnienia reprezentatywności przestrzennej danych
-
-### Rozgrupowanie danych
-
-```{r }
-punkty_pref <- read.csv('dane/punkty_pref.csv')
-coordinates(punkty_pref) <- ~x+y
-proj4string(punkty_pref) <- '+init=epsg:2180'
-spplot(punkty_pref, 'temp')
-summary(punkty_pref$temp)
-```
-
-### Rozgrupowanie komórkowe I | (ang. *cell declustering*)
-
-$$w'_j=\frac{\frac{1}{n_i}}{\text{liczba komórek z danymi}} \cdot n$$
-, gdzie $n_i$ to liczba obserwacji w komórce, a $n$ to łączna liczba obserwacji
-
-### Rozgrupowanie komórkowe I | (ang. *cell declustering*)
-
-```{r }
-punkty_pref <- read.csv('dane/punkty_pref.csv')
-punkty_pref$id <- 1:nrow(punkty_pref)
-coordinates(punkty_pref) <- ~x+y
-proj4string(punkty_pref) <- '+init=epsg:2180'
-spplot(punkty_pref, 'id', colorkey=TRUE)
-
-granica <- readOGR(dsn = 'dane', layer = 'granica', verbose = FALSE)
-siatka_n <- raster(extent(granica))
-# siatka_n <- raster(xmn=450000, xmx=485000, ymn=5960000, ymx=5989000)
-res(siatka_n) <- c(500, 500)
-siatka_n[] <- 0
-proj4string(siatka_n) <- CRS(proj4string(punkty_pref))
-siatka_n <- mask(siatka_n, gBuffer(granica, width = 500))
-siatka_n <- as(siatka_n, 'SpatialPolygonsDataFrame')
-siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
-plot(siatka_n)
-plot(punkty_pref, add=TRUE)
-
-punkty_pref$liczebnosc <- rep(0, length(punkty_pref))
-siatka_nr <- aggregate(punkty_pref['liczebnosc'], by = siatka_n, FUN = length) 
-spplot(siatka_nr, 'liczebnosc')
-
-liczba <- over(punkty_pref, siatka_nr)
-punkty_pref$waga <- ((1/liczba$liczebnosc)/sum(!is.na(siatka_nr$liczebnosc))) * length(punkty_pref)
-
-spplot(punkty_pref, 'waga')
-
-srednia_arytmetyczna <- mean(punkty_pref$temp)
-srednia_wazona_c1 <- mean(punkty_pref$temp * punkty_pref$waga, na.rm=TRUE)
-```
-
-### Rozgrupowanie komórkowe II | (ang. *cell declustering*)
-<!--
-- Przygotowanie danych
-https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html
-
-When "interpolating" with nmax=1, you basically assign the value of the 
-nearest observation to each grid cell, so, honoustly, it's hard to call 
-this interpolation, it is rather something of a discretized Thiessen 
-polygon.
--->
-
-```{r }
-punkty_pref <- read.csv('dane/punkty_pref.csv')
-punkty_pref$id <- 1:nrow(punkty_pref)
-coordinates(punkty_pref) <- ~x+y
-proj4string(punkty_pref) <- '+init=epsg:2180'
-spplot(punkty_pref, 'id', colorkey=TRUE)
-
-granica <- readOGR(dsn='dane', layer='granica', verbose=FALSE)
-siatka_n <- raster(extent(granica))
-res(siatka_n) <- c(500, 500)
-siatka_n[] <- 0
-proj4string(siatka_n) <- CRS(proj4string(punkty_pref))
-siatka_n <- mask(siatka_n, granica)
-siatka_n <- as(siatka_n, 'SpatialPointsDataFrame')
-siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
-gridded(siatka_n) <- TRUE
-plot(siatka_n)
-```
-
-```{r }
-out <-  krige(id~1, punkty_pref, siatka_n, nmax=1)
-spplot(out, 'var1.pred')
-df <- as.data.frame(table(out[[1]]))
-df$waga <- df$Freq/sum(df$Freq)
-punkty_pref <- merge(punkty_pref, df, by.x='id', by.y='Var1')
-summary(punkty_pref$waga)
-spplot(out, 'var1.pred', sp.layout=list('sp.points', punkty_pref))
-spplot(punkty_pref['waga'])
-
-srednia_arytmetyczna <- mean(punkty_pref$temp)
-srednia_wazona_c2 <- sum(punkty_pref$temp * punkty_pref$waga, na.rm=TRUE)
-```
-
-### Rozgrupowanie poligonowe | (ang. *polygon declustering*)
-$$w'_j=\frac{area_j}{\sum_{j=1}^{n}area_j} \cdot n$$
-, gdzie $area_j$ powierzchnia dla wybranej obserwacji, a $n$ to łączna liczba obserwacji
-
-### Rozgrupowanie poligonowe | (ang. *polygon declustering*)
-
-```{r }
-punkty_pref <- read.csv('dane/punkty_pref.csv')
-punkty_pref$id <- 1:nrow(punkty_pref)
-coordinates(punkty_pref) <- ~x+y
-proj4string(punkty_pref) <- '+init=epsg:2180'
-spplot(punkty_pref, 'id', colorkey=TRUE)
-
-v <- voronoi(punkty_pref)
-plot(punkty_pref, cex=0.2, col='red')
-plot(v, add=TRUE)
-
-v_intersect <-intersect(granica, v)
-plot(punkty_pref, cex=0.2, col='red')
-plot(v_intersect, add=TRUE)
-
-v_intersect$pow <- area(v_intersect)
-v_intersect$waga <- v_intersect$pow/sum(v_intersect$pow) * length(punkty_pref)
-
-punkty_pref <- merge(punkty_pref, v_intersect[c('id', 'waga')], by='id')
-spplot(punkty_pref, 'waga')
-
-srednia_arytmetyczna <- mean(punkty_pref$temp, na.rm=TRUE)
-srednia_wazona_p <- mean(punkty_pref$temp*punkty_pref$waga, na.rm=TRUE)
-```
-
-
-```{r tab_dec_1, echo=FALSE}
-library('knitr')
-srednia_arytmetyczna_pop <- 15.5912781
-df <- data.frame(sa=c(srednia_arytmetyczna_pop, srednia_arytmetyczna, srednia_wazona_c1, srednia_wazona_c2, srednia_wazona_p))
-rownames(df) <- c('Populacja', 'Próba', "Rozgrupowanie komórkowe I", "Rozgrupowanie komórkowe II", "Rozgrupowanie poligonowe")
-kable(df, col.names='Średnia arytmetyczna', row.names=TRUE)
-```
-
-<!--
-polygon declustering - http://gis.stackexchange.com/questions/122376/cell-declustering-using-open-source-software
-cell declustering - https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html
-http://gaa.org.au/pdf/DeclusterDebias-CCG.pdf
--->

@@ -1,0 +1,125 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Symulacje
+
+```{r setup10, echo=FALSE, include=FALSE}
+library('knitr')
+opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE) 
+```
+
+<!--
+## Symulacje przestrzenne 1:
+ sekwencyjna symulacja i ko symulacja gaussowska,
+  sekwencyjna symulacja danych kodowanych, 
+  przetwarzanie (postprocesing) wyników symulacji
+-->  
+
+## Symulacje geostatystyczne
+### Symulacje geostatystyczne
+- Kriging daje optymalne predykcje, czyli wyznacza najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji
+- Dodatkowo, efektem krigingu jest wygładzony obraz. W konsekwencji wyniki estymacji różnią się od danych pomiarowych
+- Jest to tylko (aż?) predykcja. Prawdziwa wartość jest niepewna ...
+- Korzystając z symulacji geostatystycznych nie tworzymy predykcji, ale generujemy równie prawdopodobne możliwości poprzez symulację z rozkładu prawdopodobieństwa (wykorzystując genereator liczb losowych)
+
+### Symulacje geostatystyczne | Cel
+
+- Efekt symulacji ma bardziej realistyczny przestrzenny wzór (ang. *pattern*) niż kriging, którego efektem jest wygładzona reprezentacja rzeczywistości
+- Każda z symulowanych map jest równie prawdopodobna
+- Symulacje pozwalają na przedstawianie niepewności interpolacji
+- Jednocześnie - kriging jest znacznie lepszy, gdy naszym celem jest jak najdokładniejsza predykcja
+
+## Typy symulacji
+### Typy symulacji
+- Symulacje bezwarunkowe (ang. Unconditional Simulations) - wykorzystuje semiwariogram, żeby włączyć informację przestrzenną, ale wartości ze zmierzonych punktów nie są wykorzystywane. 
+- Symulacje warunkowe (ang. Conditional Simulations) - opiera się ona o średnią wartość, strukturę kowariancji oraz obserwowane wartości
+
+## Symulacje bezwarunkowe
+
+<!--
+http://santiago.begueria.es/2010/10/generating-spatially-correlated-random-fields-with-r/
+-->
+
+```{r}
+library('geostatbook')
+data(punkty)
+data(siatka)
+```
+
+```{r sym_bezw1, cache=TRUE}
+sym_bezw1 <- krige(formula=z~1, locations=NULL, newdata=siatka, dummy=TRUE,
+                         beta=1, model=vgm(psill=0.025,model='Exp',range=100), nsim=4, nmax=30)
+spplot(sym_bezw1, main='Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=100, model wykładniczy')
+```
+
+```{r sym_bezw2, cache=TRUE}
+sym_bezw2 <- krige(formula=z~1, locations=NULL, newdata=siatka, dummy=TRUE, 
+                   beta=1, model=vgm(psill=0.025,model='Exp',range=1500), nsim=4, nmax=30)
+spplot(sym_bezw2, main='Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=1500, model wykładniczy')
+```
+
+<!--
+sym_bezw_model3 <- gstat(formula=~1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
+sym_bezw3 <- predict(sym_bezw_model3, newdata=siatka, nsim=4)
+spplot(sym_bezw3, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=1500, model wykładniczy \ntrend na osi y = 0.005")
+
+sym_bezw_model4 <- gstat(formula=~1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0.02,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
+sym_bezw4 <- predict(sym_bezw_model4, newdata=siatka, nsim=4)
+spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=500, model wykładniczy \ntrend na osi x = 0.02, trend na osi y = 0.005")
+-->
+
+## Symulacje warunkowe
+
+### Sekwencyjna symulacja gaussowska (ang. *Sequential Gaussian simulation*)
+1. Wybranie lokalizacji nie posiadającej zmierzonej wartości badanej zmiennej
+2. Kriging wartości tej lokalizacji korzystając z dostepnych danych, co pozwala na uzyskanie rozkładu prawdopodobieństwa badanej zmiennej
+3. Wylosowanie wartości z rozkładu prawdopodobieństwa za pomocą generatora liczba losowych i przypisanie tej wartości do lokalizacji
+4. Dodanie symulowaniej wartości do zbioru danych i przejście do kolejnej lokalizacji
+5. Powtórzenie poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja
+
+### Sekwencyjna symulacja gaussowska (ang. *Sequential Gaussian simulation*)
+
+```{r sym_ok, cache=TRUE}
+vario <- variogram(temp~1, punkty)
+model <- vgm(10, model = 'Sph', range = 4500, nugget=1)
+fitted <- fit.variogram(vario, model)
+plot(vario, model=fitted)
+sym_ok <- krige(temp~1, punkty, siatka, model=fitted, nsim=4, nmax=30)
+spplot(sym_ok)
+```
+
+### Sekwencyjna symulacja gaussowska (ang. *Sequential Gaussian simulation*)
+
+```{r master_symulation, cache=TRUE}
+sym_sk <- krige(temp~1, punkty, siatka, model=fitted, beta=15.324, nsim=100, nmax=30)
+
+sym_sk <- stack(sym_sk)
+sym_sk_sd <- calc(sym_sk, fun = sd)
+spplot(sym_sk_sd)
+```
+
+## Sekwencyjna symulacja danych kodowanych (ang. *Sequential indicator simulation*)
+### Sekwencyjna symulacja danych kodowanych (ang. *Sequential indicator simulation*)
+
+```{r }
+summary(punkty$temp) 
+punkty$temp_ind <- punkty$temp < 12
+summary(punkty$temp_ind) 
+```
+
+```{r sym_ind, cache=TRUE}
+vario_ind <- variogram(temp_ind~1, punkty)         
+plot(vario_ind)
+model_ind <- vgm(0.14, model = 'Sph', range = 2000, nugget = 0.02)
+plot(vario_ind, model=model_ind)
+fitted_ind <- fit.variogram(vario_ind, model_ind)
+fitted_ind
+plot(vario_ind, model=fitted_ind)
+sym_ind <- krige(temp_ind~1, punkty, siatka, model=fitted_ind, indicators=TRUE, nsim=4, nmax=30)
+spplot(sym_ind, main='Symulacje warunkowe')
+```
+
+<!--
+łączenie sis - wiele symulacji
+-->

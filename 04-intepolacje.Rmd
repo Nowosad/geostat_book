@@ -1,0 +1,91 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Eksploracyjna analiza danych - geostatystyka
+
+## Interpolacja 
+
+### Modele deterministyczne
+- Parametry tych modeli są zazwyczaj ustalane w oparciu o funkcję odległości lub powierzchni. Brakuje również szacunków na temat oceny błędu modelu. Np:
+    - Funkcje wielomianowe
+    - Funkcje sklejane (ang. *Splines*)
+    - Triangulacje 
+    - IDW (ang. *Inverse Distance Weighted*)
+
+http://neondataskills.org/Data-Workshops/ESA15-Going-On-The-Grid-Spatial-Interpolation-Basics/
+
+### Modele deterministyczne 
+
+```{r, interpolate_init}
+library('geostatbook')
+data(punkty)
+data(siatka)
+data(granica)
+```
+
+### Modele deterministyczne | Funkcje wielomianowe
+
+```{r }
+wielomian_1 <- gstat(formula=temp~1, data=punkty, degree=1)
+wielomian_1_pred <- predict(wielomian_1, newdata=siatka)
+spplot(wielomian_1_pred[1], contour=TRUE,main='Powierzchnia trendu - wielomian pierwszego stopnia')
+wielomian_2 <- gstat(formula=temp~1, data=punkty, degree=2)
+wielomian_2_pred <- predict(wielomian_2, newdata=siatka)
+spplot(wielomian_2_pred[1], contour=TRUE,main='Powierzchnia trendu - wielomian drugiego stopnia')
+wielomian_3 <- gstat(formula=temp~1, data=punkty, degree=3)
+wielomian_3_pred <- predict(wielomian_3, newdata=siatka)
+spplot(wielomian_3_pred[1], contour=TRUE,main='Powierzchnia trendu - wielomian trzeciego stopnia')
+```
+
+<!--
+library('rasterVis')
+xx <- as(wielomian_1_pred[1], "SpatialPointsDataFrame")
+raster <- raster(extent(wielomian_1_pred))
+res(raster) <- c(100, 100)
+raster <- rasterize(x=xx, y=raster)
+plot3D(raster[[1]])
+-->
+
+### Modele deterministyczne | Funkcje sklejane
+
+```{r }
+tps <- Tps(coordinates(punkty), punkty@data$temp)
+ras <- raster(siatka)
+spline <- interpolate(ras, tps)
+spline <- mask(spline, ras)
+spplot(spline, contour=TRUE , main='Funkcje sklejane')
+```
+
+
+### Modele deterministyczne | Triangulacje (Thiessen)
+
+```{r }
+voronoi_interp <- voronoi(punkty)
+voronoi_interp <- intersect(granica, voronoi_interp)
+spplot(voronoi_interp, 'temp', contour=TRUE, main='Poligony Voronoia')
+```
+
+### Modele deterministyczne | IDW
+
+```{r }
+idw_wolin <- idw(temp~1, punkty, siatka, idp=2)
+spplot(idw_wolin, 'var1.pred', contour=TRUE, main='IDW')
+```
+
+<!--
+dodaj wykresy idw
+https://rpubs.com/DonalOLeary/80504
+-->
+
+### Modele deterministyczne | Porównanie
+
+```{r echo=FALSE}
+library('gridExtra')
+p1 <- spplot(wielomian_3_pred[1] , main='Wielomiany')
+p2 <- spplot(spline, main='Funkcje sklejane')
+p3 <- spplot(voronoi_interp, 'temp', main='Poligony Voronoia')
+p4 <- spplot(idw_wolin, 'var1.pred', main='IDW')
+grid.arrange(p1, p2, p3, p4)
+```
+
