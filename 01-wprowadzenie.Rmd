@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-## R a dane przestrzenne
+# R a dane przestrzenne
     
 ### Pakiety
     

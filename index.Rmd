@@ -20,9 +20,6 @@ Kłaniam się.
 
 <iframe src="http://giphy.com/embed/cNb6ey1bD9uPC" width="480" height="360" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="http://giphy.com/gifs/george-costanza-dapper-cNb6ey1bD9uPC">via GIPHY</a></p>
 
-
-# Wprowadzenie {#intro}
-
 ## Wymagania wstępne
 
 Oprogramowanie, pakiety i dane.

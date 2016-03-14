@@ -22,8 +22,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="symulacje.html">
-
+<link rel="prev" href="index.html">
+<link rel="next" href="eksploracyjna-analiza-danych.html">
 
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -377,17 +377,290 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bibliografia" class="section level1">
-<h1><span class="header-section-number">Rodział 14</span> Bibliografia</h1>
+<div id="r-a-dane-przestrzenne" class="section level1">
+<h1><span class="header-section-number">Rodział 2</span> R a dane przestrzenne</h1>
+<div id="pakiety" class="section level3">
+<h3><span class="header-section-number">2.0.1</span> Pakiety</h3>
+<ul>
+<li>GIS - <code>sp</code>, <code>rgdal</code>, <code>raster</code>, <code>rasterVis</code>, <code>rgeos</code>, <code>maptools</code>, <code>GeoXp</code>, <code>deldir</code>, <code>pgirmess</code></li>
+<li>Geostatystyka - <code>gstat</code>, <code>geoR</code>, <code>geoRglm</code>, <code>fields</code>, <code>spBayes</code>, <code>RandomFields</code>, <code>vardiag</code></li>
+<li>Inne - <code>ggplot2</code>, <code>corrplot</code>, <code>caret</code></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pakiety &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;caret&#39;</span>, <span class="st">&#39;corrplot&#39;</span>, <span class="st">&#39;dismo&#39;</span>, <span class="st">&#39;fields&#39;</span>, <span class="st">&#39;geoR&#39;</span>, <span class="st">&#39;ggplot2&#39;</span>, <span class="st">&#39;gridExtra&#39;</span>, <span class="st">&#39;gstat&#39;</span>, <span class="st">&#39;pgirmess&#39;</span>, <span class="st">&#39;raster&#39;</span>, <span class="st">&#39;rasterVis&#39;</span>, <span class="st">&#39;rgdal&#39;</span>, <span class="st">&#39;rgeos&#39;</span>, <span class="st">&#39;sp&#39;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(pakiety)</code></pre></div>
+<p>Pakiety R oraz zbiory danych używane w tej książce można również zainstalować poprzez:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;nowosad/geostatbook&quot;</span>)</code></pre></div>
+</div>
+<div id="reprezentacja-danych-nieprzestrzennych" class="section level3">
+<h3><span class="header-section-number">2.0.2</span> Reprezentacja danych nieprzestrzennych</h3>
+<ul>
+<li>Wektory (ang. <em>vector</em>):
+<ul>
+<li>liczbowe (ang. <em>integer</em>, <em>numeric</em>) - c(1, 2, 3) i c(1.21, 3.32, 4.43)</li>
+<li>znakowe (ang. <em>character</em>) - c(‘jeden’, ‘dwa’, ‘trzy’)</li>
+<li>logiczne (ang. <em>logical</em>) - c(TRUE, FALSE)</li>
+<li>czynnikowe (ang. <em>factor</em>) - c(‘jeden’, ‘dwa’, ‘trzy’, ‘jeden’)</li>
+</ul></li>
+<li>Ramki danych (ang. <em>data.frame</em>) - to zbiór zmiennych (kolumn) oraz obserwacji (wierszy) zawierających różne typy danych</li>
+<li>Macierze (ang. <em>matrix</em>)</li>
+<li>Listy (ang. <em>list</em>)</li>
+</ul>
+</div>
+<div id="reprezentacja-danych-przestrzennych" class="section level3">
+<h3><span class="header-section-number">2.0.3</span> Reprezentacja danych przestrzennych</h3>
+<ul>
+<li>Obiekty klasy <code>Spatial*</code> z pakietu <code>sp</code> - wszystkie z nich zawierają dwie dodatkowe informacje:
+<ul>
+<li>bounding box (<code>bbox</code>) - obwiednia - określa zasięg danych</li>
+<li>CRS (<code>proj4string</code>) - układ współrzędnych</li>
+</ul></li>
+<li>Najczęściej stosowane obiekty klasy <code>Spatial*</code> to <code>SpatialPointsDataFrame</code>, <code>SpatialPolygonsDataFrame</code> oraz <code>SpatialGridDataFrame</code></li>
+<li>Obiekty klasy <code>Raster*</code> z pakietu <code>raster</code>, tj. <code>RasterLayer</code>, <code>RasterStack</code>, <code>RasterBrick</code></li>
+<li>Inne</li>
+</ul>
+</div>
+<div id="gdalogr" class="section level3">
+<h3><span class="header-section-number">2.0.4</span> GDAL/OGR</h3>
+<ul>
+<li><a href="http://www.gdal.org/" class="uri">http://www.gdal.org/</a></li>
+<li>GDAL to biblioteka zawierająca funkcje służące do odczytywania i zapiswania danych w formatach rastrowych</li>
+<li>OGR to bibioteka służąca to odczytywania i zapiswania danych w formatach wektorowych</li>
+<li>Pakiet <code>rgdal</code> pozwala na wykorzystanie bibliotek GDAL/OGR w R</li>
+</ul>
+</div>
+<div id="proj.4" class="section level3">
+<h3><span class="header-section-number">2.0.5</span> PROJ.4</h3>
+<ul>
+<li>Dane przestrzenne powinny być zawsze powiązane z układem współrzednych</li>
+<li>PROJ.4 - to biblioteka pozwalająca na identyfiację oraz konwersję pomiędzy różnymi układami współrzędnych <a href="http://www.spatialreference.org/" class="uri">http://www.spatialreference.org/</a></li>
+</ul>
+</div>
+<div id="epsg" class="section level3">
+<h3><span class="header-section-number">2.0.6</span> EPSG</h3>
+<ul>
+<li>Kod EPSG (ang. <em>European Petroleum Survey Group</em>) pozwala na łatwe identyfikowanie układów współrzędnych</li>
+<li>Przykładowo, układ PL 1992 może być określony jako:</li>
+</ul>
+<p>“+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs”</p>
+<ul>
+<li>…lub też za pomocą kodu EPSG:</li>
+</ul>
+<p>“+init=epsg:2180”</p>
+</div>
+<div id="ukad-geograficzny" class="section level3">
+<h3><span class="header-section-number">2.0.7</span> Układ geograficzny</h3>
+<ul>
+<li>Proporcje pomiędzy współrzedną oznaczjącą długość geograficzną (X) a oznaczającą szerokość geograficzną (Y) nie są równe 1:1</li>
+<li>Wielkość oczka siatki jest zmienna</li>
+<li>Nie pozwala to na proste określanie odległości czy powierzchni</li>
+<li><p>Jednostka mapy jest abstrakcyjna</p></li>
+<li><p>Do większości algorytmów w geostatystyce wykorzystywane są układy współrzędnych prostokątnych płaskich</p></li>
+</ul>
+</div>
+<div id="import-danych" class="section level2">
+<h2><span class="header-section-number">2.1</span> Import danych</h2>
+<div id="dane-punktowe-format-csv" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Dane punktowe (format csv)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dane_punktowe &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;dane/punkty.csv&#39;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(dane_punktowe)</code></pre></div>
+<pre><code>##       srtm clc      temp      ndvi       savi        x        y
+## 1 223.7413   2 16.686657 0.5824910 0.34681170 750794.1 714358.7
+## 2 182.1080   4 15.433375 0.1390970 0.04292461 754097.3 714523.3
+## 3 207.2538   1 16.177960 0.4633545 0.31007461 754421.8 720854.1
+## 4 172.1708   1 14.381898 0.5805432 0.38777806 750261.2 716601.2
+## 5 225.0000   4  9.389477 0.2140123 0.08478602 748175.4 718660.5
+## 6 260.5744   2 10.215618 0.5307761 0.32831149 750605.8 719174.1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coordinates</span>(dane_punktowe) &lt;-<span class="st"> </span><span class="er">~</span>x+y
+<span class="kw">summary</span>(dane_punktowe)</code></pre></div>
+<pre><code>## Object of class SpatialPointsDataFrame
+## Coordinates:
+##        min      max
+## x 745751.4 756397.3
+## y 712639.5 721183.7
+## Is projected: NA 
+## proj4string : [NA]
+## Number of points: 241
+## Data attributes:
+##       srtm            clc             temp             ndvi       
+##  Min.   :146.6   Min.   :1.000   Min.   : 7.618   Min.   :0.1391  
+##  1st Qu.:189.0   1st Qu.:1.000   1st Qu.:12.301   1st Qu.:0.4534  
+##  Median :219.9   Median :1.000   Median :15.225   Median :0.5113  
+##  Mean   :214.6   Mean   :1.442   Mean   :15.846   Mean   :0.4980  
+##  3rd Qu.:234.0   3rd Qu.:2.000   3rd Qu.:18.924   3rd Qu.:0.5560  
+##  Max.   :281.7   Max.   :4.000   Max.   :25.729   Max.   :0.6547  
+##  NA&#39;s   :1       NA&#39;s   :1                                        
+##       savi        
+##  Min.   :0.04292  
+##  1st Qu.:0.28451  
+##  Median :0.31848  
+##  Mean   :0.31309  
+##  3rd Qu.:0.35672  
+##  Max.   :0.46381  
+## </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">proj4string</span>(dane_punktowe) &lt;-<span class="st"> &#39;+init=epsg:2180&#39;</span>
+<span class="kw">summary</span>(dane_punktowe)</code></pre></div>
+<pre><code>## Object of class SpatialPointsDataFrame
+## Coordinates:
+##        min      max
+## x 745751.4 756397.3
+## y 712639.5 721183.7
+## Is projected: TRUE 
+## proj4string :
+## [+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993
+## +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0
+## +units=m +no_defs]
+## Number of points: 241
+## Data attributes:
+##       srtm            clc             temp             ndvi       
+##  Min.   :146.6   Min.   :1.000   Min.   : 7.618   Min.   :0.1391  
+##  1st Qu.:189.0   1st Qu.:1.000   1st Qu.:12.301   1st Qu.:0.4534  
+##  Median :219.9   Median :1.000   Median :15.225   Median :0.5113  
+##  Mean   :214.6   Mean   :1.442   Mean   :15.846   Mean   :0.4980  
+##  3rd Qu.:234.0   3rd Qu.:2.000   3rd Qu.:18.924   3rd Qu.:0.5560  
+##  Max.   :281.7   Max.   :4.000   Max.   :25.729   Max.   :0.6547  
+##  NA&#39;s   :1       NA&#39;s   :1                                        
+##       savi        
+##  Min.   :0.04292  
+##  1st Qu.:0.28451  
+##  Median :0.31848  
+##  Mean   :0.31309  
+##  3rd Qu.:0.35672  
+##  Max.   :0.46381  
+## </code></pre>
+<!--
+### Usuwanie punktów zawierających braki wartości
 
+
+```r
+sp_na_omit <- function(x, margin=1) {
+    if (!inherits(x, "SpatialPointsDataFrame") & !inherits(x, "SpatialPolygonsDataFrame")) 
+        stop("MUST BE sp SpatialPointsDataFrame OR SpatialPolygonsDataFrame CLASS OBJECT") 
+    na.index <- unique(as.data.frame(which(is.na(x@data),arr.ind=TRUE))[,margin])
+    if(margin == 1) {  
+        cat("DELETING ROWS: ", na.index, "\n") 
+        return( x[-na.index,]  ) 
+    }
+    if(margin == 2) {  
+        cat("DELETING COLUMNS: ", na.index, "\n") 
+        return( x[,-na.index]  ) 
+    }
+}
+# wolin_lato_los2 <- sp_na_omit(wolin_lato_los) 
+# summary(wolin_lato_los2)
+```
+-->
+</div>
+<div id="dane-poligonowe-formaty-gisowe" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> Dane poligonowe (formaty gisowe)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;dane&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;granica&#39;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
+<span class="kw">plot</span>(granica)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-10-1.png" alt="" /><!-- --></p>
+</div>
+<div id="rastry" class="section level3">
+<h3><span class="header-section-number">2.1.3</span> Rastry</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka_raster &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="st">&#39;dane/siatka.tif&#39;</span>)
+<span class="kw">plot</span>(siatka_raster)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-11-1.png" alt="" /><!-- --></p>
+</div>
+</div>
+<div id="eksport-danych" class="section level2">
+<h2><span class="header-section-number">2.2</span> Eksport danych</h2>
+<div id="zapisywanie-danych-wektorowych" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Zapisywanie danych wektorowych</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">writeOGR</span>(poligon, <span class="dt">dsn=</span><span class="st">&#39;nazwa_folderu&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;nowy_poligon&#39;</span>, <span class="dt">driver=</span><span class="st">&#39;ESRI Shapefile&#39;</span>)</code></pre></div>
+</div>
+<div id="zapisywanie-danych-rastrowych" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Zapisywanie danych rastrowych</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">writeRaster</span>(siatka_raster, <span class="dt">filename=</span><span class="st">&#39;nazwa_folderu/nowy_raster.tif&#39;</span>)</code></pre></div>
+</div>
+</div>
+<div id="wizualizacja-danych-2d" class="section level2">
+<h2><span class="header-section-number">2.3</span> Wizualizacja danych 2D</h2>
+<div id="dane-punktowe" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Dane punktowe</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(dane_punktowe)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-12-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(dane_punktowe, <span class="st">&#39;temp&#39;</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-13-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(dane_punktowe, <span class="st">&#39;srtm&#39;</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-14-1.png" alt="" /><!-- --></p>
+</div>
+<div id="dane-punktowe---kategorie" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> Dane punktowe - kategorie</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dane_punktowe@data$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(dane_punktowe@data$clc)
+<span class="kw">spplot</span>(dane_punktowe, <span class="st">&#39;clc&#39;</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-15-1.png" alt="" /><!-- --></p>
+</div>
+<div id="rastry-1" class="section level3">
+<h3><span class="header-section-number">2.3.3</span> Rastry</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">levelplot</span>(siatka_raster, <span class="dt">margin=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-16-1.png" alt="" /><!-- --></p>
+</div>
+</div>
+<div id="tworzenie-siatek" class="section level2">
+<h2><span class="header-section-number">2.4</span> Tworzenie siatek</h2>
+<div id="siatki-regularne" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> Siatki regularne</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bbox</span>(dane_punktowe)</code></pre></div>
+<pre><code>##        min      max
+## x 745751.4 756397.3
+## y 712639.5 721183.7</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">extent</span>(dane_punktowe)</code></pre></div>
+<pre><code>## class       : Extent 
+## xmin        : 745751.4 
+## xmax        : 756397.3 
+## ymin        : 712639.5 
+## ymax        : 721183.7</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">745050</span>, <span class="dt">to =</span> <span class="dv">757050</span>, <span class="dt">by =</span> <span class="dv">500</span>),
+                      <span class="dt">y =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">712650</span>, <span class="dt">to =</span> <span class="dv">721650</span>, <span class="dt">by =</span> <span class="dv">500</span>))
+<span class="kw">coordinates</span>(siatka) &lt;-<span class="st"> </span><span class="er">~</span>x +<span class="st"> </span>y
+<span class="kw">gridded</span>(siatka) &lt;-<span class="st"> </span><span class="ot">TRUE</span>
+<span class="kw">proj4string</span>(siatka) &lt;-<span class="st"> </span><span class="kw">proj4string</span>(dane_punktowe)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka &lt;-<span class="st"> </span><span class="kw">makegrid</span>(dane_punktowe, <span class="dt">cellsize=</span><span class="dv">500</span>)
+<span class="kw">names</span>(siatka) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;x&#39;</span>, <span class="st">&#39;y&#39;</span>)
+<span class="kw">coordinates</span>(siatka) &lt;-<span class="st"> </span><span class="er">~</span>x +<span class="st"> </span>y
+<span class="kw">gridded</span>(siatka) &lt;-<span class="st"> </span><span class="ot">TRUE</span>
+<span class="kw">proj4string</span>(siatka) &lt;-<span class="st"> </span><span class="kw">proj4string</span>(dane_punktowe)</code></pre></div>
+</div>
+<div id="siatki-regularne-1" class="section level3">
+<h3><span class="header-section-number">2.4.2</span> Siatki regularne</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(siatka)
+<span class="kw">plot</span>(dane_punktowe, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-20-1.png" alt="" /><!-- --></p>
+</div>
+<div id="siatki-nieregularne---klasa-rasterlayer" class="section level3">
+<h3><span class="header-section-number">2.4.3</span> Siatki nieregularne - klasa <code>RasterLayer</code></h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;dane&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;granica&#39;</span>)</code></pre></div>
+<pre><code>## OGR data source with driver: ESRI Shapefile 
+## Source: &quot;dane&quot;, layer: &quot;granica&quot;
+## with 1 features
+## It has 3 fields</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka_n &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(granica))
+<span class="kw">res</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">500</span>, <span class="dv">500</span>)
+siatka_n[] &lt;-<span class="st"> </span><span class="dv">0</span>
+<span class="kw">proj4string</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">proj4string</span>(granica)
+siatka_n &lt;-<span class="st"> </span><span class="kw">mask</span>(siatka_n, granica)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">levelplot</span>(siatka_n, <span class="dt">margin=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-22-1.png" alt="" /><!-- --></p>
+</div>
+<div id="siatki-nieregularne---klasa-spatialpixelsdataframe" class="section level3">
+<h3><span class="header-section-number">2.4.4</span> Siatki nieregularne - klasa <code>SpatialPixelsDataFrame</code></h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka_n &lt;-<span class="st"> </span><span class="kw">as</span>(siatka_n, <span class="st">&#39;SpatialPointsDataFrame&#39;</span>)
+siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(siatka_n@data$layer), ]
+<span class="kw">gridded</span>(siatka_n) &lt;-<span class="st"> </span><span class="ot">TRUE</span>
+<span class="kw">plot</span>(siatka_n)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-23-1.png" alt="" /><!-- --></p>
+
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="symulacje.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="eksploracyjna-analiza-danych.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -414,7 +687,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://gitlab.com/nowosad/geostat_book/edit/master/13-references.Rmd",
+"link": "https://gitlab.com/nowosad/geostat_book/edit/master/01-wprowadzenie.Rmd",
 "text": "Edycja"
 },
 "download": null,

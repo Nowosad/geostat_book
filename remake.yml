@@ -26,50 +26,51 @@ targets:
 
   data/parki_krajobrazowe_pl.zip:
     command: download_granica_spk(target_name)
+    cleanup_level: never    
   granica_spk:
     command: process_granica_spk("data/parki_krajobrazowe_pl.zip")
-    cleanup_level: never
 
   data/clc/g100_06.tif:
     command: download_clc()
+    cleanup_level: never    
   data/clc06_spk.tif:
     command: process_clc("data/clc/g100_06.tif", granica_spk)
-    cleanup_level: never
-    
+
   data/srtm_41_02.zip:
     command: download_srtm(target_name)
+    cleanup_level: never
   data/srtm_spk.tif:
     command: process_srtm("data/srtm_41_02.zip", granica_spk)
-    cleanup_level: never
+
     
   data/LC81870222015186LGN00_B10.tif:
     command: download_landsat8(target_name, band=10)
+    cleanup_level: never
   data/LC81870222015186LGN00_B11.tif:
     command: download_landsat8(target_name, band=11)
+    cleanup_level: never
   cropped_landsat1011:  
     command: crop_landsat("data/LC81870222015186LGN00_B10.tif", "data/LC81870222015186LGN00_B11.tif", granica_spk)
   data/landsat8_temperature_spk.tif:
    command: process_landsat8_temp(cropped_landsat1011)
-   cleanup_level: never
    
   data/LC81870222015186LGN00_B4.tif:
     command: download_landsat8(target_name, band=4)
+    cleanup_level: never
   data/LC81870222015186LGN00_B5.tif:
     command: download_landsat8(target_name, band=5)
+    cleanup_level: never
   cropped_landsat45:  
     command: crop_landsat("data/LC81870222015186LGN00_B4.tif", "data/LC81870222015186LGN00_B5.tif", granica_spk)
   data/landsat8_ndvi_spk.tif:  
     command: process_landsat8_ndvi(cropped_landsat45, type=1)
-    cleanup_level: never
   data/landsat8_savi_spk.tif:  
     command: process_landsat8_ndvi(cropped_landsat45, type=2)  
-    cleanup_level: never
-    
+
   raster_stack:
     command: data_merger(granica_spk, "data/srtm_spk.tif", "data/clc06_spk.tif", "data/landsat8_temperature_spk.tif", "data/landsat8_ndvi_spk.tif", "data/landsat8_savi_spk.tif")
   data/raster_stack.rds:
     command: saveRDS(raster_stack, "data/raster_stack.rds")
-    cleanup_level: never 
   spdf_all:
     command: raster_to_sp(raster_stack)
   spdf_all_without_temp:
@@ -77,16 +78,13 @@ targets:
     
   points:
     command: spatial_pixels_to_points(spdf_all, n=250, type=1)
-    cleanup_level: never 
   points2:
     command: spatial_pixels_to_points(spdf_all, n=500, type=1)
-    cleanup_level: never   
   points_pref:
     command: spatial_points_stratified(points2, threshold=16, prop=0.25)
   ndvi_points:
     command: spatial_pixels_to_points(spdf_all, n=1000, type=1, only_ndvi=TRUE)
-    cleanup_level: never     
-    
+
   dane/punkty.rds:
     command: saveRDS(points, "dane/punkty.rds")
   points_df:
