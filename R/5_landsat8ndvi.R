@@ -20,7 +20,7 @@ process_landsat8_ndvi <- function(input, type){
                         l=0.5
                         ((y-x) / (y+x+l)) * (1+l)
                 })
-                writeRaster(savi, 'data/landsat8_savi_spk.tif', overwrite=TRUE )
+                writeRaster(savi, 'data/landsat8_savi_spk.tif', overwrite=TRUE)
         }
 }
 

@@ -10,6 +10,6 @@ process_srtm <- function(zipper, spk){
         r2 <- crop(r, spk10) %>% projectRaster(., crs=proj4string(spk))
         spk1 <- gBuffer(spk, width=1000)
         r3 <- crop(r2, spk1) %>% mask(., spk1)
-        writeRaster(r3, 'data/srtm_spk.tif')
+        writeRaster(r3, 'data/srtm_spk.tif', overwrite=TRUE)
         
 }

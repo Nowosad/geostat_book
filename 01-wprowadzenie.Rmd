@@ -10,7 +10,7 @@ knit: bookdown::preview_chapter
 - Geostatystyka - `gstat`, `geoR`, `geoRglm`, `fields`, `spBayes`, `RandomFields`, `vardiag`
 - Inne - `ggplot2`, `corrplot`, `caret`
 
-```{r pakietyy}
+```{r pakietsy}
 pakiety <- c('caret', 'corrplot', 'dismo', 'fields', 'geoR', 'ggplot2', 'gridExtra', 'gstat', 'pgirmess', 'raster', 'rasterVis', 'rgdal', 'rgeos', 'sp')
 ```
 

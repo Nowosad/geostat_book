@@ -31,19 +31,19 @@ spatial_pixels_to_points <- function(spatial_pixels, type, only_ndvi=FALSE, ...)
         } else if (type==7){
                 type <- "Fibonacci"
         }
-        set.seed(25)
+        set.seed(14032016)
         sample_points <- spsample(spatial_pixels, type=type, ...)
         sample_points <- sp::over(sample_points, spatial_pixels) %>% SpatialPointsDataFrame(sample_points, .)
         coordnames(sample_points) <- c('x', 'y')
         sample_points2 <- sp_na_omit(sample_points, 1)
         if (only_ndvi){
-                sample_points@data <- sample_points@data['ndvi']
+                sample_points2@data <- sample_points2@data['ndvi']
         }
-        sample_points
+        sample_points2
 }
 
 spatial_points_stratified <- function(spatial_points, threshold, prop){
-        set.seed(25)
+        set.seed(255)
         above <- spatial_points[spatial_points@data[, 'temp']>threshold, ]
         above <- above[sample(1:length(above), size=nrow(above)*prop), ]
         below <- spatial_points[spatial_points@data[, 'temp']<threshold, ]

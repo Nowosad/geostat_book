@@ -10,7 +10,11 @@ packages:
 targets:
   all:
     depends:
-      - dane/punkty.rds
+      - pakiet
+
+  data:
+    depends:
+      - dane/punkty.rds      
       - dane/siatka.rds
       - dane/punkty.csv
       - dane/granica.shp
@@ -19,30 +23,33 @@ targets:
       - dane/siatka.csv
       - dane/punkty_pref.csv
       - dane/punkty_ndvi.csv
-
-  data:
+      
+  pakiet:
     depends:
-      - granica_spk 
+      - pakiet/granica.rda
+      - pakiet/punkty.rda
+      - pakiet/punkty_ndvi.rda
+      - pakiet/punkty_pref.rda
+      - pakiet/siatka.rda
 
   data/parki_krajobrazowe_pl.zip:
     command: download_granica_spk(target_name)
     cleanup_level: never    
-  granica_spk:
+  granica:
     command: process_granica_spk("data/parki_krajobrazowe_pl.zip")
 
   data/clc/g100_06.tif:
     command: download_clc()
     cleanup_level: never    
   data/clc06_spk.tif:
-    command: process_clc("data/clc/g100_06.tif", granica_spk)
+    command: process_clc("data/clc/g100_06.tif", granica)
 
   data/srtm_41_02.zip:
     command: download_srtm(target_name)
     cleanup_level: never
   data/srtm_spk.tif:
-    command: process_srtm("data/srtm_41_02.zip", granica_spk)
+    command: process_srtm("data/srtm_41_02.zip", granica)
 
-    
   data/LC81870222015186LGN00_B10.tif:
     command: download_landsat8(target_name, band=10)
     cleanup_level: never
@@ -50,7 +57,7 @@ targets:
     command: download_landsat8(target_name, band=11)
     cleanup_level: never
   cropped_landsat1011:  
-    command: crop_landsat("data/LC81870222015186LGN00_B10.tif", "data/LC81870222015186LGN00_B11.tif", granica_spk)
+    command: crop_landsat("data/LC81870222015186LGN00_B10.tif", "data/LC81870222015186LGN00_B11.tif", granica)
   data/landsat8_temperature_spk.tif:
    command: process_landsat8_temp(cropped_landsat1011)
    
@@ -61,53 +68,64 @@ targets:
     command: download_landsat8(target_name, band=5)
     cleanup_level: never
   cropped_landsat45:  
-    command: crop_landsat("data/LC81870222015186LGN00_B4.tif", "data/LC81870222015186LGN00_B5.tif", granica_spk)
+    command: crop_landsat("data/LC81870222015186LGN00_B4.tif", "data/LC81870222015186LGN00_B5.tif", granica)
   data/landsat8_ndvi_spk.tif:  
     command: process_landsat8_ndvi(cropped_landsat45, type=1)
   data/landsat8_savi_spk.tif:  
     command: process_landsat8_ndvi(cropped_landsat45, type=2)  
 
   raster_stack:
-    command: data_merger(granica_spk, "data/srtm_spk.tif", "data/clc06_spk.tif", "data/landsat8_temperature_spk.tif", "data/landsat8_ndvi_spk.tif", "data/landsat8_savi_spk.tif")
+    command: data_merger(granica, "data/srtm_spk.tif", "data/clc06_spk.tif", "data/landsat8_temperature_spk.tif", "data/landsat8_ndvi_spk.tif", "data/landsat8_savi_spk.tif")
   data/raster_stack.rds:
     command: saveRDS(raster_stack, "data/raster_stack.rds")
   spdf_all:
     command: raster_to_sp(raster_stack)
-  spdf_all_without_temp:
+  siatka:
     command: raster_to_sp2(raster_stack)  
     
-  points:
+  punkty:
     command: spatial_pixels_to_points(spdf_all, n=250, type=1)
   points2:
     command: spatial_pixels_to_points(spdf_all, n=500, type=1)
-  points_pref:
+  punkty_pref:
     command: spatial_points_stratified(points2, threshold=16, prop=0.25)
-  ndvi_points:
+  punkty_ndvi:
     command: spatial_pixels_to_points(spdf_all, n=1000, type=1, only_ndvi=TRUE)
 
   dane/punkty.rds:
-    command: saveRDS(points, "dane/punkty.rds")
+    command: saveRDS(punkty, "dane/punkty.rds")
   points_df:
-    command: as.data.frame(points)
+    command: as.data.frame(punkty)
   siatka_df:
-    command: as.data.frame(spdf_all_without_temp)
+    command: as.data.frame(siatka)
   dane/siatka.csv:
     command: write.csv(siatka_df, "dane/siatka.csv", row.names=FALSE)  
   dane/punkty.csv:
     command: write.csv(points_df, "dane/punkty.csv", row.names=FALSE)  
   points_df_pref:
-    command: as.data.frame(points_pref)
+    command: as.data.frame(punkty_pref)
   dane/punkty_pref.csv:
     command: write.csv(points_df_pref, "dane/punkty_pref.csv", row.names=FALSE)      
   dane/siatka.tif:
     command: writeRaster(raster_stack, "dane/siatka.tif", overwrite=TRUE)
   dane/siatka.shp:
-    command: shapefile(spdf_all_without_temp, "dane/siatka.shp", overwrite=TRUE)
+    command: shapefile(siatka, "dane/siatka.shp", overwrite=TRUE)
   dane/siatka.rds:  
-    command: saveRDS(spdf_all_without_temp, "dane/siatka.rds")
+    command: saveRDS(siatka, "dane/siatka.rds")
   dane/granica.shp:
-    command: shapefile(granica_spk, "dane/granica.shp", overwrite=TRUE)
+    command: shapefile(granica, "dane/granica.shp", overwrite=TRUE)
   ndvi_points_df:
-    command: as.data.frame(ndvi_points)
+    command: as.data.frame(punkty_ndvi)
   dane/punkty_ndvi.csv:
     command: write.csv(ndvi_points_df, "dane/punkty_ndvi.csv", row.names=FALSE)    
+
+  pakiet/granica.rda:
+    command: save(granica, file="pakiet/granica.rda")
+  pakiet/punkty.rda:
+    command: save(punkty, file="pakiet/punkty.rda")
+  pakiet/punkty_ndvi.rda:
+    command: save(punkty_ndvi, file="pakiet/punkty_ndvi.rda")
+  pakiet/punkty_pref.rda:
+    command: save(punkty_pref, file="pakiet/punkty_pref.rda")
+  pakiet/siatka.rda:
+    command: save(siatka, file="pakiet/siatka.rda")

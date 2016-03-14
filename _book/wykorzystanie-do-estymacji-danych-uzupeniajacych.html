@@ -14,7 +14,7 @@
 
 <meta name="date" content="2016-03-14">
 
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
   <meta name="HandheldFriendly" content="true">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -40,41 +40,23 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
 table.sourceCode { width: 100%; line-height: 100%; }
 td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
 td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -391,41 +373,41 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="kriging-stratyfikowany-ang.-kriging-within-strata-2" class="section level3">
 <h3><span class="header-section-number">11.1.2</span> Kriging stratyfikowany (ang. <em>Kriging within strata</em>)</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;geostatbook&#39;</span>)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;geostatbook&#39;</span>)
 <span class="kw">data</span>(punkty)
-<span class="kw">data</span>(siatka)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(siatka$clc)
-<span class="kw">spplot</span>(siatka, <span class="st">&#39;clc&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kws1 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">1</span>, ])
-<span class="kw">plot</span>(vario_kws1)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-2.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_kws1 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_kws1, <span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4500</span>, <span class="dt">nugget =</span> <span class="fl">0.5</span>))
-<span class="kw">plot</span>(vario_kws1, fitted_kws1)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-3.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kws2 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">2</span>, ])
-<span class="kw">plot</span>(vario_kws2)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-4.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_kws2 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_kws2, <span class="kw">vgm</span>(<span class="dv">5</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4500</span>, <span class="dt">nugget =</span> <span class="fl">0.1</span>))
-<span class="kw">plot</span>(vario_kws2, fitted_kws2)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-5.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kws4 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">4</span>, ])
-<span class="kw">plot</span>(vario_kws4)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-6.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_kws4 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_kws4, <span class="kw">vgm</span>(<span class="fl">0.5</span>, <span class="dt">model =</span> <span class="st">&#39;Nug&#39;</span>))
-<span class="kw">plot</span>(vario_kws4, fitted_kws4)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-7.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kws1 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">1</span>, ], siatka[<span class="kw">na.omit</span>(siatka$clc==<span class="dv">1</span>), ], <span class="dt">model =</span> fitted_kws1, <span class="dt">nmax =</span> <span class="dv">50</span>)</code></pre></div>
+<span class="kw">data</span>(siatka)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">siatka$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(siatka$clc)
+<span class="kw">spplot</span>(siatka, <span class="st">&#39;clc&#39;</span>)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">vario_kws1 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">1</span>, ])
+<span class="kw">plot</span>(vario_kws1)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-2.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">fitted_kws1 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_kws1, <span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4500</span>, <span class="dt">nugget =</span> <span class="fl">0.5</span>))
+<span class="kw">plot</span>(vario_kws1, fitted_kws1)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-3.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">vario_kws2 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">2</span>, ])
+<span class="kw">plot</span>(vario_kws2)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-4.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">fitted_kws2 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_kws2, <span class="kw">vgm</span>(<span class="dv">5</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4500</span>, <span class="dt">nugget =</span> <span class="fl">0.1</span>))
+<span class="kw">plot</span>(vario_kws2, fitted_kws2)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-5.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">vario_kws4 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">4</span>, ])
+<span class="kw">plot</span>(vario_kws4)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-6.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">fitted_kws4 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_kws4, <span class="kw">vgm</span>(<span class="fl">0.5</span>, <span class="dt">model =</span> <span class="st">&#39;Nug&#39;</span>))
+<span class="kw">plot</span>(vario_kws4, fitted_kws4)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-7.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">kws1 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">1</span>, ], siatka[<span class="kw">na.omit</span>(siatka$clc==<span class="dv">1</span>), ], <span class="dt">model =</span> fitted_kws1, <span class="dt">nmax =</span> <span class="dv">50</span>)</code></pre>
 <pre><code>## [using ordinary kriging]</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kws2 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">2</span>, ], siatka[<span class="kw">na.omit</span>(siatka$clc==<span class="dv">2</span>), ], <span class="dt">model =</span> fitted_kws2, <span class="dt">nmax =</span> <span class="dv">50</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">kws2 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">2</span>, ], siatka[<span class="kw">na.omit</span>(siatka$clc==<span class="dv">2</span>), ], <span class="dt">model =</span> fitted_kws2, <span class="dt">nmax =</span> <span class="dv">50</span>)</code></pre>
 <pre><code>## [using ordinary kriging]</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kws4 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">4</span>, ], siatka[<span class="kw">na.omit</span>(siatka$clc==<span class="dv">4</span>), ], <span class="dt">model =</span> fitted_kws4, <span class="dt">nmax =</span> <span class="dv">50</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">kws4 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">4</span>, ], siatka[<span class="kw">na.omit</span>(siatka$clc==<span class="dv">4</span>), ], <span class="dt">model =</span> fitted_kws4, <span class="dt">nmax =</span> <span class="dv">50</span>)</code></pre>
 <pre><code>## [using ordinary kriging]</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kws &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">as.data.frame</span>(kws1), <span class="kw">as.data.frame</span>(kws2), <span class="kw">as.data.frame</span>(kws4))
+<pre class="sourceCode r"><code class="sourceCode r">kws &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">as.data.frame</span>(kws1), <span class="kw">as.data.frame</span>(kws2), <span class="kw">as.data.frame</span>(kws4))
 <span class="kw">coordinates</span>(kws) &lt;-<span class="st"> </span><span class="er">~</span>x+y
 kws &lt;-<span class="st"> </span><span class="kw">as</span>(kws, <span class="st">&#39;SpatialPixelsDataFrame&#39;</span>)
-<span class="kw">spplot</span>(kws, <span class="st">&#39;var1.pred&#39;</span>, <span class="dt">sp.layout=</span>(<span class="dt">list=</span><span class="kw">SpatialPoints</span>(punkty)))</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-8.png" alt="" /><!-- --></p>
+<span class="kw">spplot</span>(kws, <span class="st">&#39;var1.pred&#39;</span>, <span class="dt">sp.layout=</span>(<span class="dt">list=</span><span class="kw">SpatialPoints</span>(punkty)))</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-117-8.png" /><!-- --></p>
 </div>
 </div>
 <div id="prosty-kriging-ze-zmiennymi-srednimi-lokalnymi-lvm" class="section level2">
@@ -439,26 +421,26 @@ kws &lt;-<span class="st"> </span><span class="kw">as</span>(kws, <span class="s
 </div>
 <div id="prosty-kriging-ze-zmiennymi-srednimi-lokalnymi-lvm-2" class="section level3">
 <h3><span class="header-section-number">11.2.2</span> Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">coef &lt;-<span class="st"> </span><span class="kw">lm</span>(temp~srtm, punkty)$coef
-coef</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">coef &lt;-<span class="st"> </span><span class="kw">lm</span>(temp~srtm, punkty)$coef
+coef</code></pre>
 <pre><code>##  (Intercept)         srtm 
 ## 16.480355788 -0.004535255</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~srtm, punkty)
+<pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~srtm, punkty)
 model_sim &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4000</span>, <span class="dt">nugget =</span> <span class="dv">1</span>)
-model_sim</code></pre></div>
+model_sim</code></pre>
 <pre><code>##   model psill range
 ## 1   Nug     1     0
 ## 2   Sph    10  4000</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_sim &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_sim)
-fitted_sim</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">fitted_sim &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_sim)
+fitted_sim</code></pre>
 <pre><code>##   model      psill    range
 ## 1   Nug  0.9382992    0.000
 ## 2   Sph 14.5761601 6027.977</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_sim)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-118-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sk_lvm &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~srtm, punkty, siatka, <span class="dt">model=</span>fitted_sim, <span class="dt">beta =</span> coef)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_sim)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-118-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">sk_lvm &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~srtm, punkty, siatka, <span class="dt">model=</span>fitted_sim, <span class="dt">beta =</span> coef)</code></pre>
 <pre><code>## [using simple kriging]</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(sk_lvm)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(sk_lvm)</code></pre>
 <pre><code>## Object of class SpatialPixelsDataFrame
 ## Coordinates:
 ##        min      max
@@ -483,9 +465,9 @@ fitted_sim</code></pre></div>
 ##  3rd Qu.:17.875   3rd Qu.:2.853  
 ##  Max.   :25.922   Max.   :5.313  
 ##  NA&#39;s   :43       NA&#39;s   :43</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sk_lvm, <span class="st">&#39;var1.pred&#39;</span>)
-<span class="kw">spplot</span>(sk_lvm, <span class="st">&#39;var1.var&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/plotsylvm2-1.png" alt="" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sk_lvm, <span class="st">&#39;var1.pred&#39;</span>)
+<span class="kw">spplot</span>(sk_lvm, <span class="st">&#39;var1.var&#39;</span>)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/plotsylvm2-1.png" /><!-- --></p>
 </div>
 </div>
 <div id="kriging-uniwersalny-ang.-universal-kriging" class="section level2">
@@ -511,9 +493,11 @@ fitted_sim</code></pre></div>
 ```
 
 -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(punkty$clc)
+
+
+<pre class="sourceCode r"><code class="sourceCode r">punkty$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(punkty$clc)
 vario_uk1 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~clc, punkty)
-vario_uk1</code></pre></div>
+vario_uk1</code></pre>
 <pre><code>##      np      dist    gamma dir.hor dir.ver   id
 ## 1   131  218.6119 1.492195       0       0 var1
 ## 2   312  490.7338 2.692324       0       0 var1
@@ -530,16 +514,16 @@ vario_uk1</code></pre></div>
 ## 13 1485 3952.0183 8.361701       0       0 var1
 ## 14 1494 4268.2314 9.018930       0       0 var1
 ## 15 1478 4585.7878 9.241991       0       0 var1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_uk1)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-120-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_uk1 &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">8</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">3000</span>, <span class="dt">nugget =</span> <span class="dv">1</span>)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_uk1)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-120-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">model_uk1 &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">8</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">3000</span>, <span class="dt">nugget =</span> <span class="dv">1</span>)
 vario_fit_uk1 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_uk1, <span class="dt">model=</span>model_uk1)
-vario_fit_uk1</code></pre></div>
+vario_fit_uk1</code></pre>
 <pre><code>##   model    psill    range
 ## 1   Nug 1.292171    0.000
 ## 2   Sph 7.441007 4763.345</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_uk1, vario_fit_uk1)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-120-2.png" alt="" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_uk1, vario_fit_uk1)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-120-2.png" /><!-- --></p>
 <!--
 
 
@@ -560,16 +544,18 @@ vario_fit_uk1</code></pre></div>
 ```
 
 -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(siatka$clc)
-<span class="kw">spplot</span>(siatka, <span class="st">&#39;clc&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-122-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">uk1 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~clc, <span class="dt">locations =</span> punkty, <span class="dt">newdata=</span>siatka, <span class="dt">model=</span>vario_fit_uk1)</code></pre></div>
+
+
+<pre class="sourceCode r"><code class="sourceCode r">siatka$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(siatka$clc)
+<span class="kw">spplot</span>(siatka, <span class="st">&#39;clc&#39;</span>)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-122-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">uk1 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~clc, <span class="dt">locations =</span> punkty, <span class="dt">newdata=</span>siatka, <span class="dt">model=</span>vario_fit_uk1)</code></pre>
 <pre><code>## [using universal kriging]</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(uk1, <span class="st">&#39;var1.pred&#39;</span>)
-<span class="kw">spplot</span>(uk1, <span class="st">&#39;var1.var&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/plotsy4uk1-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_uk2 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~ndvi+srtm, punkty)
-vario_uk2</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(uk1, <span class="st">&#39;var1.pred&#39;</span>)
+<span class="kw">spplot</span>(uk1, <span class="st">&#39;var1.var&#39;</span>)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/plotsy4uk1-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">vario_uk2 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~ndvi+srtm, punkty)
+vario_uk2</code></pre>
 <pre><code>##      np      dist     gamma dir.hor dir.ver   id
 ## 1   131  218.6119  1.386828       0       0 var1
 ## 2   312  490.7338  2.822672       0       0 var1
@@ -586,21 +572,23 @@ vario_uk2</code></pre></div>
 ## 13 1485 3952.0183 13.053957       0       0 var1
 ## 14 1494 4268.2314 14.252817       0       0 var1
 ## 15 1478 4585.7878 14.968739       0       0 var1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_uk2)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-123-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">8</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">3000</span>, <span class="dt">nugget =</span> <span class="dv">1</span>)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_uk2)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-123-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">model &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">8</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">3000</span>, <span class="dt">nugget =</span> <span class="dv">1</span>)
 vario_fit_uk2 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_uk2, <span class="dt">model=</span>model)
-vario_fit_uk2</code></pre></div>
+vario_fit_uk2</code></pre>
 <pre><code>##   model      psill    range
 ## 1   Nug  0.8470453    0.000
 ## 2   Sph 14.8073531 6243.382</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_uk2, vario_fit_uk2)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-123-2.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">uk2 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~ndvi+srtm, <span class="dt">locations =</span> punkty, <span class="dt">newdata=</span>siatka, <span class="dt">model=</span>vario_fit_uk2)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_uk2, vario_fit_uk2)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-123-2.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">uk2 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~ndvi+srtm, <span class="dt">locations =</span> punkty, <span class="dt">newdata=</span>siatka, <span class="dt">model=</span>vario_fit_uk2)</code></pre>
 <pre><code>## [using universal kriging]</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(uk2, <span class="st">&#39;var1.pred&#39;</span>)
-<span class="kw">spplot</span>(uk2, <span class="st">&#39;var1.var&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/plotsy4ked-1.png" alt="" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(uk2, <span class="st">&#39;var1.pred&#39;</span>)
+<span class="kw">spplot</span>(uk2, <span class="st">&#39;var1.var&#39;</span>)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/plotsy4ked-1.png" /><!-- --></p>
+
+
 
 </div>
 </div>

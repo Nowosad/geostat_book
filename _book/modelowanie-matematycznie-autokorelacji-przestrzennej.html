@@ -14,7 +14,7 @@
 
 <meta name="date" content="2016-03-14">
 
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
   <meta name="HandheldFriendly" content="true">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -40,41 +40,23 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
 table.sourceCode { width: 100%; line-height: 100%; }
 td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
 td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -403,7 +385,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Wykładniczy (ang. <em>Exponential model</em>)</li>
 <li>Inne</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vgm</span>()</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vgm</span>()</code></pre>
 <pre><code>##    short                                      long
 ## 1    Nug                              Nug (nugget)
 ## 2    Exp                         Exp (exponential)
@@ -425,12 +407,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## 18   Leg                            Leg (Legendre)
 ## 19   Err                   Err (Measurement error)
 ## 20   Int                           Int (Intercept)</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show.vgms</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-84-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show.vgms</span>(<span class="dt">models=</span><span class="kw">c</span>(<span class="st">&#39;Nug&#39;</span>, <span class="st">&#39;Sph&#39;</span>, <span class="st">&#39;Gau&#39;</span>, <span class="st">&#39;Pow&#39;</span>, <span class="st">&#39;Exp&#39;</span>), <span class="dt">range=</span><span class="fl">1.4</span>, <span class="dt">max=</span><span class="fl">2.5</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-85-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show.vgms</span>(<span class="dt">models=</span><span class="kw">c</span>(<span class="st">&#39;Nug&#39;</span>, <span class="st">&#39;Sph&#39;</span>, <span class="st">&#39;Gau&#39;</span>, <span class="st">&#39;Pow&#39;</span>, <span class="st">&#39;Exp&#39;</span>), <span class="dt">range=</span><span class="fl">1.4</span>, <span class="dt">max=</span><span class="fl">2.5</span>, <span class="dt">as.groups =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-86-1.png" alt="" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show.vgms</span>()</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-84-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show.vgms</span>(<span class="dt">models=</span><span class="kw">c</span>(<span class="st">&#39;Nug&#39;</span>, <span class="st">&#39;Sph&#39;</span>, <span class="st">&#39;Gau&#39;</span>, <span class="st">&#39;Pow&#39;</span>, <span class="st">&#39;Exp&#39;</span>), <span class="dt">range=</span><span class="fl">1.4</span>, <span class="dt">max=</span><span class="fl">2.5</span>)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-85-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show.vgms</span>(<span class="dt">models=</span><span class="kw">c</span>(<span class="st">&#39;Nug&#39;</span>, <span class="st">&#39;Sph&#39;</span>, <span class="st">&#39;Gau&#39;</span>, <span class="st">&#39;Pow&#39;</span>, <span class="st">&#39;Exp&#39;</span>), <span class="dt">range=</span><span class="fl">1.4</span>, <span class="dt">max=</span><span class="fl">2.5</span>, <span class="dt">as.groups =</span> <span class="ot">TRUE</span>)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-86-1.png" /><!-- --></p>
 </div>
 </div>
 <div id="metody-modelowania" class="section level2">
@@ -474,133 +456,134 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 Modelowanie semiwariogramu
 
 -->
+
 </div>
 </div>
 <div id="modelowanie-izotropowe" class="section level2">
 <h2><span class="header-section-number">7.4</span> Modelowanie izotropowe</h2>
 <div id="modelowanie-izotropowe-modelowanie-wizualne" class="section level3">
 <h3><span class="header-section-number">7.4.1</span> Modelowanie izotropowe | Modelowanie “wizualne”</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;geostatbook&#39;</span>)
-<span class="kw">data</span>(punkty)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v_eye &lt;-<span class="st"> </span><span class="kw">eyefit</span>(<span class="kw">variog</span>(<span class="kw">as.geodata</span>(punkty, <span class="st">&#39;temp&#39;</span>)))
-ve_fit &lt;-<span class="st"> </span><span class="kw">as.vgm.variomodel</span>(v_eye[[<span class="dv">1</span>]])</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;geostatbook&#39;</span>)
+<span class="kw">data</span>(punkty)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">v_eye &lt;-<span class="st"> </span><span class="kw">eyefit</span>(<span class="kw">variog</span>(<span class="kw">as.geodata</span>(punkty, <span class="st">&#39;temp&#39;</span>)))
+ve_fit &lt;-<span class="st"> </span><span class="kw">as.vgm.variomodel</span>(v_eye[[<span class="dv">1</span>]])</code></pre>
 </div>
 <div id="modelowanie-izotropowe-model-nuggetowy" class="section level3">
 <h3><span class="header-section-number">7.4.2</span> Modelowanie izotropowe | Model nuggetowy</h3>
 <p>toFix</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
+<pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
 <span class="kw">plot</span>(vario)
 model_nug &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Nug&#39;</span>)
 model_nug
 <span class="kw">plot</span>(vario, <span class="dt">model=</span>model_nug)
 fitted_nug &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_nug)
 fitted_nug
-<span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_nug)</code></pre></div>
+<span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_nug)</code></pre>
 </div>
 <div id="modelowanie-izotropowe-model-sferyczny" class="section level3">
 <h3><span class="header-section-number">7.4.3</span> Modelowanie izotropowe | Model sferyczny</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
-<span class="kw">plot</span>(vario)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-89-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_sph &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range=</span><span class="dv">3000</span>)
-model_sph</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
+<span class="kw">plot</span>(vario)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-89-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">model_sph &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range=</span><span class="dv">3000</span>)
+model_sph</code></pre>
 <pre><code>##   model psill range
 ## 1   Sph    10  3000</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>model_sph)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-89-2.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_sph &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_sph)
-fitted_sph</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>model_sph)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-89-2.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">fitted_sph &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_sph)
+fitted_sph</code></pre>
 <pre><code>##   model   psill    range
-## 1   Sph 13.5325 4570.822</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_sph)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-89-3.png" alt="" /><!-- --></p>
+## 1   Sph 12.5445 4440.768</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_sph)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-89-3.png" /><!-- --></p>
 </div>
 <div id="modelowanie-izotropowe-model-gaussowski" class="section level3">
 <h3><span class="header-section-number">7.4.4</span> Modelowanie izotropowe | Model Gaussowski</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
-<span class="kw">plot</span>(vario)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-90-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_gau &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">15</span>, <span class="dt">model =</span> <span class="st">&#39;Gau&#39;</span>, <span class="dt">range=</span><span class="dv">3000</span>)
-model_gau</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
+<span class="kw">plot</span>(vario)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-90-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">model_gau &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">15</span>, <span class="dt">model =</span> <span class="st">&#39;Gau&#39;</span>, <span class="dt">range=</span><span class="dv">3000</span>)
+model_gau</code></pre>
 <pre><code>##   model psill range
 ## 1   Gau    15  3000</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>model_gau)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-90-2.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_gau &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_gau)
-fitted_gau</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>model_gau)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-90-2.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">fitted_gau &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_gau)
+fitted_gau</code></pre>
 <pre><code>##   model    psill    range
-## 1   Gau 8.361489 761.2621</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_gau)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-90-3.png" alt="" /><!-- --></p>
+## 1   Gau 8.085963 798.7454</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_gau)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-90-3.png" /><!-- --></p>
 </div>
 <div id="modelowanie-izotropowe-model-potegowy" class="section level3">
 <h3><span class="header-section-number">7.4.5</span> Modelowanie izotropowe | Model potęgowy</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
-<span class="kw">plot</span>(vario)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-91-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_pow &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">1</span>, <span class="dt">model =</span> <span class="st">&#39;Pow&#39;</span>, <span class="dt">range=</span><span class="fl">0.30</span>)
-model_pow</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
+<span class="kw">plot</span>(vario)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-91-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">model_pow &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">1</span>, <span class="dt">model =</span> <span class="st">&#39;Pow&#39;</span>, <span class="dt">range=</span><span class="fl">0.30</span>)
+model_pow</code></pre>
 <pre><code>##   model psill range
 ## 1   Pow     1   0.3</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>model_pow)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-91-2.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_pow &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_pow)
-fitted_pow</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>model_pow)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-91-2.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">fitted_pow &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_pow)
+fitted_pow</code></pre>
 <pre><code>##   model      psill     range
-## 1   Pow 0.02920527 0.7371518</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_pow)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-91-3.png" alt="" /><!-- --></p>
+## 1   Pow 0.02732271 0.7382383</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_pow)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-91-3.png" /><!-- --></p>
 </div>
 <div id="modelowanie-izotropowe-model-wykadniczy" class="section level3">
 <h3><span class="header-section-number">7.4.6</span> Modelowanie izotropowe | Model wykładniczy</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
-<span class="kw">plot</span>(vario)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-92-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_exp &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Exp&#39;</span>, <span class="dt">range=</span><span class="dv">900</span>)
-model_exp</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
+<span class="kw">plot</span>(vario)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-92-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">model_exp &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Exp&#39;</span>, <span class="dt">range=</span><span class="dv">900</span>)
+model_exp</code></pre>
 <pre><code>##   model psill range
 ## 1   Exp    10   900</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>model_exp)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-92-2.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_exp &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_exp)
-fitted_exp</code></pre></div>
-<pre><code>##   model   psill    range
-## 1   Exp 17.9672 3217.767</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_exp)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-92-3.png" alt="" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>model_exp)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-92-2.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">fitted_exp &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_exp)
+fitted_exp</code></pre>
+<pre><code>##   model    psill    range
+## 1   Exp 16.50715 3083.864</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_exp)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-92-3.png" /><!-- --></p>
 </div>
 <div id="modelowanie-izotropowe-modele-zozone-i" class="section level3">
 <h3><span class="header-section-number">7.4.7</span> Modelowanie izotropowe | Modele złożone I</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
+<pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
 model_zl1 &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">3000</span>, <span class="dt">add.to =</span> <span class="kw">vgm</span>(<span class="fl">0.5</span>, <span class="st">&#39;Nug&#39;</span>))
-model_zl1</code></pre></div>
+model_zl1</code></pre>
 <pre><code>##   model psill range
 ## 1   Nug   0.5    NA
 ## 2   Sph  10.0  3000</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>model_zl1)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-93-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_zl1 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_zl1)
-fitted_zl1</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>model_zl1)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-93-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">fitted_zl1 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_zl1)
+fitted_zl1</code></pre>
 <pre><code>##   model      psill    range
-## 1   Nug  0.8981984    0.000
-## 2   Sph 14.8165152 6117.773</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_zl1)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-93-2.png" alt="" /><!-- --></p>
+## 1   Nug  0.7346354    0.000
+## 2   Sph 13.2621876 5602.027</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_zl1)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-93-2.png" /><!-- --></p>
 </div>
 <div id="modelowanie-izotropowe-modele-zozone-ii" class="section level3">
 <h3><span class="header-section-number">7.4.8</span> Modelowanie izotropowe | Modele złożone II</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
+<pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
 model_zl2 &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">2</span>, <span class="st">&#39;Gau&#39;</span>, <span class="dv">3000</span>, <span class="dt">add.to =</span> <span class="kw">vgm</span>(<span class="dv">8</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">2000</span>, <span class="dt">nugget =</span> <span class="fl">0.5</span>))
-model_zl2</code></pre></div>
+model_zl2</code></pre>
 <pre><code>##   model psill range
 ## 1   Nug   0.5     0
 ## 2   Sph   8.0  2000
 ## 3   Gau   2.0  3000</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>model_zl2)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-94-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_zl2 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_zl2)
-<span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_zl2)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-94-2.png" alt="" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>model_zl2)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-94-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">fitted_zl2 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_zl2)
+<span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_zl2)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-94-2.png" /><!-- --></p>
 </div>
 </div>
 <div id="modelowanie-anizotropowe" class="section level2">
@@ -613,15 +596,17 @@ model_zl2</code></pre></div>
 <li>Kąt określający dominujący kierunek</li>
 <li>Proporcję anizotropii, czyli relację pomiędzy zasięgiem w dominującym kierunku a zasięgiem w przeciwległym kierunku</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_map &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cutoff=</span><span class="dv">4000</span>, <span class="dt">width=</span><span class="dv">400</span>, <span class="dt">map=</span><span class="ot">TRUE</span>)
-<span class="kw">plot</span>(vario_map)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-95-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kier &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">alpha =</span> <span class="kw">c</span>(<span class="dv">60</span>, <span class="dv">105</span>, <span class="dv">150</span>, <span class="dv">195</span>), <span class="dt">cutoff=</span><span class="dv">20000</span>)
-<span class="kw">plot</span>(vario_kier, <span class="dt">plot.numbers=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-95-2.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kier_fit &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">8</span>, <span class="dt">model=</span><span class="st">&#39;Sph&#39;</span>, <span class="dt">range=</span><span class="dv">4000</span>, <span class="dt">nugget=</span><span class="fl">0.5</span>, <span class="dt">anis =</span> <span class="kw">c</span>(<span class="dv">60</span>, .<span class="dv">4</span>))
-<span class="kw">plot</span>(vario_kier, vario_kier_fit, <span class="dt">as.table=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-95-3.png" alt="" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">vario_map &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cutoff=</span><span class="dv">4000</span>, <span class="dt">width=</span><span class="dv">400</span>, <span class="dt">map=</span><span class="ot">TRUE</span>)
+<span class="kw">plot</span>(vario_map)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-95-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">vario_kier &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">alpha =</span> <span class="kw">c</span>(<span class="dv">60</span>, <span class="dv">105</span>, <span class="dv">150</span>, <span class="dv">195</span>), <span class="dt">cutoff=</span><span class="dv">20000</span>)
+<span class="kw">plot</span>(vario_kier, <span class="dt">plot.numbers=</span><span class="ot">TRUE</span>)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-95-2.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">vario_kier_fit &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="dv">8</span>, <span class="dt">model=</span><span class="st">&#39;Sph&#39;</span>, <span class="dt">range=</span><span class="dv">4000</span>, <span class="dt">nugget=</span><span class="fl">0.5</span>, <span class="dt">anis =</span> <span class="kw">c</span>(<span class="dv">60</span>, .<span class="dv">4</span>))
+<span class="kw">plot</span>(vario_kier, vario_kier_fit, <span class="dt">as.table=</span><span class="ot">TRUE</span>)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-95-3.png" /><!-- --></p>
+
+
 
 </div>
 </div>

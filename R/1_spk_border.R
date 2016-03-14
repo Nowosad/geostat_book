@@ -9,6 +9,7 @@ process_granica_spk <- function(zipper){
         # if (file.exists(zipper)) file.remove(zipper)
         pk <- shapefile('data/parki_krajobrazowe_pl/ParkiKrajobrazowePolygon.shp', encoding='CP1250')
         spk <- subset(pk, nazwa=='Suwalski Park Krajobrazowy')
+        proj4string(spk) <- "+init=epsg:2180"
         spk
         # saveRDS(spk, 'data/granica_spk_rds')
 }

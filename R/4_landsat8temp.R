@@ -35,6 +35,6 @@ process_landsat8_temp <- function(input){
         band_10_cel <- input[[1]] %>% radiance_to_kelvin(., 'band10') %>% kelvin_to_celcius(.)
         band_11_cel <- input[[2]] %>% radiance_to_kelvin(., 'band11') %>% kelvin_to_celcius(.)
         r4 <- stack(band_11_cel, band_11_cel)
-        writeRaster(r4[[1]], 'data/landsat8_temperature_spk.tif')
+        writeRaster(r4[[1]], 'data/landsat8_temperature_spk.tif', overwrite=TRUE)
 }
 

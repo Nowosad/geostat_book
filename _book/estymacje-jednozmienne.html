@@ -14,7 +14,7 @@
 
 <meta name="date" content="2016-03-14">
 
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
   <meta name="HandheldFriendly" content="true">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -40,41 +40,23 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
 table.sourceCode { width: 100%; line-height: 100%; }
 td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
 td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -418,21 +400,21 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="kriging-prosty-ang.-simple-kriging-2" class="section level3">
 <h3><span class="header-section-number">8.3.2</span> Kriging prosty (ang. <em>Simple kriging</em>)</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;geostatbook&#39;</span>)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;geostatbook&#39;</span>)
 <span class="kw">data</span>(punkty)
-<span class="kw">data</span>(siatka)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
+<span class="kw">data</span>(siatka)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
 model &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4000</span>, <span class="dt">nugget =</span> <span class="fl">0.5</span>)
-model</code></pre></div>
+model</code></pre>
 <pre><code>##   model psill range
 ## 1   Nug   0.5     0
 ## 2   Sph  10.0  4000</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model)
-<span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-98-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">15.324</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model)
+<span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-98-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">sk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">15.324</span>)</code></pre>
 <pre><code>## [using simple kriging]</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(sk)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(sk)</code></pre>
 <pre><code>## Object of class SpatialPixelsDataFrame
 ## Coordinates:
 ##        min      max
@@ -456,9 +438,9 @@ model</code></pre></div>
 ##  Mean   :15.663   Mean   :2.499  
 ##  3rd Qu.:17.874   3rd Qu.:2.810  
 ##  Max.   :25.938   Max.   :5.266</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sk, <span class="st">&#39;var1.pred&#39;</span>)
-<span class="kw">spplot</span>(sk, <span class="st">&#39;var1.var&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/plotsy2-1.png" alt="" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sk, <span class="st">&#39;var1.pred&#39;</span>)
+<span class="kw">spplot</span>(sk, <span class="st">&#39;var1.var&#39;</span>)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/plotsy2-1.png" /><!-- --></p>
 </div>
 </div>
 <div id="kriging-zwyky-ang.-ordinary-kriging" class="section level2">
@@ -472,12 +454,12 @@ model</code></pre></div>
 </div>
 <div id="kriging-zwyky-ang.-ordinary-kriging-2" class="section level3">
 <h3><span class="header-section-number">8.4.2</span> Kriging zwykły (ang. <em>Ordinary kriging</em>)</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ok &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted, <span class="dt">maxdist=</span><span class="dv">1000</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">ok &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted, <span class="dt">maxdist=</span><span class="dv">1000</span>)</code></pre>
 <pre><code>## [using ordinary kriging]</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ok &lt;- krige(temp~1, punkty, siatka, model=fitted, nmax=30)</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(ok, <span class="st">&#39;var1.pred&#39;</span>)
-<span class="kw">spplot</span>(ok, <span class="st">&#39;var1.var&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/plotsy2ok2-1.png" alt="" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ok &lt;- krige(temp~1, punkty, siatka, model=fitted, nmax=30)</span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(ok, <span class="st">&#39;var1.pred&#39;</span>)
+<span class="kw">spplot</span>(ok, <span class="st">&#39;var1.var&#39;</span>)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/plotsy2ok2-1.png" /><!-- --></p>
 <!--
 
 
@@ -486,31 +468,34 @@ spplot(ok, "var1.pred", sp.layout=list(punkty, pch=21, col="white"))
 ```
 
 ![](Geostatystyka_files/figure-html/unnamed-chunk-100-1.png)<!-- -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(ok, <span class="st">&quot;var1.var&quot;</span>, <span class="dt">sp.layout=</span><span class="kw">list</span>(punkty, <span class="dt">pch=</span><span class="dv">21</span>, <span class="dt">col=</span><span class="st">&quot;white&quot;</span>))</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-100-2.png" alt="" /><!-- --></p>
+
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(ok, <span class="st">&quot;var1.var&quot;</span>, <span class="dt">sp.layout=</span><span class="kw">list</span>(punkty, <span class="dt">pch=</span><span class="dv">21</span>, <span class="dt">col=</span><span class="st">&quot;white&quot;</span>))</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-100-2.png" /><!-- --></p>
 <p>–&gt; ## Kriging z trendem (ang. <em>Kriging with a trend</em>) ### Kriging z trendem (ang. <em>Kriging with a trend</em>)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kzt &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~x+y, <span class="dt">data=</span>punkty)
-<span class="kw">plot</span>(vario_kzt)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-101-1.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_kzt &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill =</span> <span class="dv">5</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">2500</span>, <span class="dt">nugget =</span> <span class="dv">1</span>)
+<pre class="sourceCode r"><code class="sourceCode r">vario_kzt &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~x+y, <span class="dt">data=</span>punkty)
+<span class="kw">plot</span>(vario_kzt)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-101-1.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">model_kzt &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill =</span> <span class="dv">5</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">2500</span>, <span class="dt">nugget =</span> <span class="dv">1</span>)
 fitted_kzt &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_kzt, model_kzt)
-fitted_kzt</code></pre></div>
+fitted_kzt</code></pre>
 <pre><code>##   model     psill range
 ## 1   Nug 0.4470857     0
 ## 2   Sph 6.5817020  2052</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_kzt, fitted_kzt)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-101-2.png" alt="" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty@data &lt;-<span class="st"> </span><span class="kw">cbind</span>(punkty@data, <span class="kw">as.data.frame</span>(<span class="kw">coordinates</span>(punkty)))
-kzt &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~x+y, punkty, siatka, <span class="dt">model=</span>fitted_kzt)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_kzt, fitted_kzt)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-101-2.png" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r">punkty@data &lt;-<span class="st"> </span><span class="kw">cbind</span>(punkty@data, <span class="kw">as.data.frame</span>(<span class="kw">coordinates</span>(punkty)))
+kzt &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~x+y, punkty, siatka, <span class="dt">model=</span>fitted_kzt)</code></pre>
 <pre><code>## [using universal kriging]</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(kzt, <span class="st">&#39;var1.pred&#39;</span>)
-<span class="kw">spplot</span>(kzt, <span class="st">&#39;var1.var&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/plotsy2kzt-1.png" alt="" /><!-- --></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(kzt, <span class="st">&#39;var1.pred&#39;</span>)
+<span class="kw">spplot</span>(kzt, <span class="st">&#39;var1.var&#39;</span>)</code></pre>
+<p><img src="Geostatystyka_files/figure-html/plotsy2kzt-1.png" /><!-- --></p>
 </div>
 </div>
 <div id="porownanie-wynikow-sk-ok-i-kzt" class="section level2">
 <h2><span class="header-section-number">8.5</span> Porównanie wyników SK, OK i KZT</h2>
-<p><img src="Geostatystyka_files/figure-html/ploty_trzy-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/ploty_trzy-1.png" /><!-- --></p>
+
+
 
 </div>
 </div>
