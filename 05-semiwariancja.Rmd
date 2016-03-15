@@ -2,22 +2,18 @@
 knit: bookdown::preview_chapter
 ---
 
-# ... - geostatystyka
+# Geostatystyka - prolog
 
-
-### Modele statystyczne
-- Parametry modeli są określane w oparciu o teorię prawdopodobieństwa. Dodatkowo wynik estymacji zawiera oszacowanie błędu. Np.:
-    - Kriging
-    - Modele regresyjne
-    - Modele bayesowe
-    - Modele hybrydowe
+```{r, echo=FALSE}
+par(mar=c(rep(0, 4)))
+```
 
 <!--
 http://www.inside-r.org/packages/cran/raster/docs/interpolate
 ![](fig_skrypt/m_feat.png)
 -->
 
-## Geostatystyka - prolog
+## Geostatystyka
 
 ### Geostatystyka
 - Zbiór narzędzi statystycznych uwzględniających w analizie danych ich przestrzenną i czasową lokalizację, a opartych o teorię funkcji losowych.
@@ -97,6 +93,13 @@ p <- DiagrammeR("
 - Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji
 - Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo
 - Jednocześnie, dla potrzeb interpretacji relacji kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
+
+```{r}
+library('geostatbook')
+data(punkty)
+data(siatka)
+data(granica)
+```
 
 ```{r z_przs0, echo=FALSE}
 hscat(temp~1, punkty, breaks=c(0, 200))
@@ -184,14 +187,14 @@ gdzie $N(h)$ oznacza liczbę par punktów w odstępie $h$
 - Liczba par obserwacji
 
 ```{r }
-0.5*length(punkty)*(length(punkty)-1)
+0.5 * length(punkty) * (length(punkty) - 1)
 ```
 
 - Połowa pierwiastka powierzchni
 
 ```{r }
 pow <- area(granica)
-as.vector(0.5*sqrt(pow))
+as.vector(0.5 * sqrt(pow))
 ```
 
  <!--
@@ -212,7 +215,7 @@ z_kwadrat <- kraw_x^2 + kraw_y^2
 - Powierzchnia zajmowana przez jedną próbkę
 
 ```{r }
-pow_pr <- area(granica)/length(punkty)
+pow_pr <- area(granica) / length(punkty)
 pow_pr
 ```
 

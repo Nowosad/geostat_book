@@ -17,11 +17,15 @@ http://neondataskills.org/Data-Workshops/ESA15-Going-On-The-Grid-Spatial-Interpo
 
 ### Modele deterministyczne 
 
-```{r, interpolate_init}
+```{r, interpolate_inits}
 library('geostatbook')
 data(punkty)
 data(siatka)
 data(granica)
+```
+
+```{r, echo=FALSE}
+par(mar=c(rep(0, 4)))
 ```
 
 ### Modele deterministyczne | Funkcje wielomianowe
@@ -38,15 +42,6 @@ wielomian_3_pred <- predict(wielomian_3, newdata=siatka)
 spplot(wielomian_3_pred[1], contour=TRUE,main='Powierzchnia trendu - wielomian trzeciego stopnia')
 ```
 
-<!--
-library('rasterVis')
-xx <- as(wielomian_1_pred[1], "SpatialPointsDataFrame")
-raster <- raster(extent(wielomian_1_pred))
-res(raster) <- c(100, 100)
-raster <- rasterize(x=xx, y=raster)
-plot3D(raster[[1]])
--->
-
 ### Modele deterministyczne | Funkcje sklejane
 
 ```{r }
@@ -56,7 +51,6 @@ spline <- interpolate(ras, tps)
 spline <- mask(spline, ras)
 spplot(spline, contour=TRUE , main='Funkcje sklejane')
 ```
-
 
 ### Modele deterministyczne | Triangulacje (Thiessen)
 
@@ -89,3 +83,9 @@ p4 <- spplot(idw_wolin, 'var1.pred', main='IDW')
 grid.arrange(p1, p2, p3, p4)
 ```
 
+### Modele statystyczne
+- Parametry modeli są określane w oparciu o teorię prawdopodobieństwa. Dodatkowo wynik estymacji zawiera oszacowanie błędu. Np.:
+    - Kriging
+    - Modele regresyjne
+    - Modele bayesowe
+    - Modele hybrydowe

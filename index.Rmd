@@ -12,13 +12,9 @@ biblio-style: apalike
 link-citations: yes
 ---
 
-# Dzień dobry
-
-Kłaniam się.
+# Wprowadzenie
 
 > Tutaj będzie wstęp mówiący o tym co znajduje się dalej
-
-<iframe src="http://giphy.com/embed/cNb6ey1bD9uPC" width="480" height="360" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="http://giphy.com/gifs/george-costanza-dapper-cNb6ey1bD9uPC">via GIPHY</a></p>
 
 ## Wymagania wstępne
 
@@ -31,5 +27,11 @@ Oprogramowanie, pakiety i dane.
 
 ### Dane
 
-- Adres
-- Pliki + ryciny
+- [Rozdział drugi](link_do_spakowanego_repo)
+- [Kolejne rozdziały](https://github.com/Nowosad/geostatbook)
+
+```{r}
+# install.packages("devtools")
+devtools::install_github("nowosad/geostatbook")
+```
+

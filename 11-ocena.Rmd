@@ -4,10 +4,13 @@ knit: bookdown::preview_chapter
 
 # Ocena jakości estymacji [UWAGA POMIESZANY ME Z RESZTĄ!!]
 
-
 ```{r setup6, echo=FALSE, include=FALSE}
 library('knitr')
 opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE) 
+```
+
+```{r, echo=FALSE}
+par(mar=c(rep(0, 4)))
 ```
 
 ## Statystyki jakości estymacji

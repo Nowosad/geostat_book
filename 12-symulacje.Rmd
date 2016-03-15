@@ -2,11 +2,15 @@
 knit: bookdown::preview_chapter
 ---
 
-# Symulacje
+# Symulacje [tutaj transformacja!]
 
 ```{r setup10, echo=FALSE, include=FALSE}
 library('knitr')
 opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE) 
+```
+
+```{r, echo=FALSE}
+par(mar=c(rep(0, 4)))
 ```
 
 <!--
@@ -37,9 +41,7 @@ opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE)
 
 ## Symulacje bezwarunkowe
 
-<!--
-http://santiago.begueria.es/2010/10/generating-spatially-correlated-random-fields-with-r/
--->
+<!--http://santiago.begueria.es/2010/10/generating-spatially-correlated-random-fields-with-r/-->
 
 ```{r}
 library('geostatbook')
@@ -78,8 +80,6 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 4. Dodanie symulowaniej wartości do zbioru danych i przejście do kolejnej lokalizacji
 5. Powtórzenie poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja
 
-### Sekwencyjna symulacja gaussowska (ang. *Sequential Gaussian simulation*)
-
 ```{r sym_ok, cache=TRUE}
 vario <- variogram(temp~1, punkty)
 model <- vgm(10, model = 'Sph', range = 4500, nugget=1)
@@ -88,8 +88,6 @@ plot(vario, model=fitted)
 sym_ok <- krige(temp~1, punkty, siatka, model=fitted, nsim=4, nmax=30)
 spplot(sym_ok)
 ```
-
-### Sekwencyjna symulacja gaussowska (ang. *Sequential Gaussian simulation*)
 
 ```{r master_symulation, cache=TRUE}
 sym_sk <- krige(temp~1, punkty, siatka, model=fitted, beta=15.324, nsim=100, nmax=30)

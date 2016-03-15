@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# Eksploracyjna analiza danych
+# Eksploracyjna analiza danych nieprzestrzennych
 
 ```{r setup2, echo=FALSE, include=FALSE}
 library('knitr')
@@ -23,14 +23,17 @@ library('geostatbook')
 data(punkty)
 ```
 
-
-```{r, message=FALSE, warning=FALSE}
-par(mar=c(rep(0, 4)))
-plot(punkty)
-
+```{r}
 str(punkty)
 str(punkty@data)
+```
 
+```{r, echo=FALSE}
+par(mar=c(rep(0, 4)))
+```
+
+```{r, message=FALSE, warning=FALSE}
+plot(punkty)
 data(granica)
 plot(granica, add=TRUE)
 ```
@@ -49,7 +52,6 @@ median(punkty$temp, na.rm=TRUE)
 mean(punkty$temp, na.rm=TRUE)
 ```
 
-### Statystyki opisowe | średnia i mediana
 - W wypadku symetrycznego rozkładu te dwie cechy są równe
 - Średnia jest bardziej wrażliwa na wartości odstające
 - Mediana jest lepszą miarą środka danych, jeżeli są one skośne
@@ -82,10 +84,10 @@ ggplot(punkty@data, aes(temp)) + geom_histogram()
 ```
 
 - Stworzony przez Karla Pearsona
-- Jest graficzną reprezentacją rozkładu <br> danych
+- Jest graficzną reprezentacją rozkładu danych
 - Wartości danych są łączone w przedziały (na osi poziomej) a na osi pionowej jest ukazana liczba punktów (obserwacji) w każdym przedziale
 - Różny dobór przedziałów może dawać inną informację
-- W pakiecie ggplot2, domyślnie przedział to zakres/30
+- W pakiecie `ggplot2`, domyślnie przedział to zakres/30
 
 ### Estymator jądrowy gęstości (ang. *kernel density estimation*)
 
@@ -99,7 +101,6 @@ ggplot(punkty@data, aes(temp)) + geom_density()
 ggplot(punkty@data, aes(sample=temp)) + stat_qq()
 ```
 
-### Wykresy kwantyl-kwantyl (ang. *quantile-quantile*)
 http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot
 ![http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot](figs/qq.png)
 
@@ -175,8 +176,6 @@ punkty$clc <- as.factor(punkty$clc)
 aov_test <- aov(temp~clc, data=punkty)
 summary(aov_test)
 ```
-
-### Testowanie istotności różnić średniej pomiędzy grupami
 
 ```{r, echo=FALSE}
 dev.off()

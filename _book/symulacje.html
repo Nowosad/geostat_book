@@ -12,9 +12,9 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-03-14">
+<meta name="date" content="2016-03-15">
 
-  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
   <meta name="HandheldFriendly" content="true">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -40,23 +40,41 @@
 
 
 <style type="text/css">
+div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
 table.sourceCode { width: 100%; line-height: 100%; }
 td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
 td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; }
-code > span.dt { color: #902000; }
-code > span.dv { color: #40a070; }
-code > span.bn { color: #40a070; }
-code > span.fl { color: #40a070; }
-code > span.ch { color: #4070a0; }
-code > span.st { color: #4070a0; }
-code > span.co { color: #60a0b0; font-style: italic; }
-code > span.ot { color: #007020; }
-code > span.al { color: #ff0000; font-weight: bold; }
-code > span.fu { color: #06287e; }
-code > span.er { color: #ff0000; font-weight: bold; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -366,8 +384,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
  sekwencyjna symulacja i ko symulacja gaussowska,
   sekwencyjna symulacja danych kodowanych, 
   przetwarzanie (postprocesing) wyników symulacji
--->  
-
+-->
 <div id="symulacje-geostatystyczne" class="section level2">
 <h2><span class="header-section-number">13.1</span> Symulacje geostatystyczne</h2>
 <div id="symulacje-geostatystyczne-1" class="section level3">
@@ -404,21 +421,19 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <!--
 http://santiago.begueria.es/2010/10/generating-spatially-correlated-random-fields-with-r/
 -->
-
-
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;geostatbook&#39;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;geostatbook&#39;</span>)
 <span class="kw">data</span>(punkty)
-<span class="kw">data</span>(siatka)</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">sym_bezw1 &lt;-<span class="st"> </span><span class="kw">krige</span>(<span class="dt">formula=</span>z~<span class="dv">1</span>, <span class="dt">locations=</span><span class="ot">NULL</span>, <span class="dt">newdata=</span>siatka, <span class="dt">dummy=</span><span class="ot">TRUE</span>,
-                         <span class="dt">beta=</span><span class="dv">1</span>, <span class="dt">model=</span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="fl">0.025</span>,<span class="dt">model=</span><span class="st">&#39;Exp&#39;</span>,<span class="dt">range=</span><span class="dv">100</span>), <span class="dt">nsim=</span><span class="dv">4</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre>
+<span class="kw">data</span>(siatka)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_bezw1 &lt;-<span class="st"> </span><span class="kw">krige</span>(<span class="dt">formula=</span>z~<span class="dv">1</span>, <span class="dt">locations=</span><span class="ot">NULL</span>, <span class="dt">newdata=</span>siatka, <span class="dt">dummy=</span><span class="ot">TRUE</span>,
+                         <span class="dt">beta=</span><span class="dv">1</span>, <span class="dt">model=</span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="fl">0.025</span>,<span class="dt">model=</span><span class="st">&#39;Exp&#39;</span>,<span class="dt">range=</span><span class="dv">100</span>), <span class="dt">nsim=</span><span class="dv">4</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre></div>
 <pre><code>## [using unconditional Gaussian simulation]</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_bezw1, <span class="dt">main=</span><span class="st">&#39;Przestrzennie skorelowana powierzchnia </span><span class="ch">\n</span><span class="st">średnia=1, sill=0.025, zasięg=100, model wykładniczy&#39;</span>)</code></pre>
-<p><img src="Geostatystyka_files/figure-html/sym_bezw1-1.png" /><!-- --></p>
-<pre class="sourceCode r"><code class="sourceCode r">sym_bezw2 &lt;-<span class="st"> </span><span class="kw">krige</span>(<span class="dt">formula=</span>z~<span class="dv">1</span>, <span class="dt">locations=</span><span class="ot">NULL</span>, <span class="dt">newdata=</span>siatka, <span class="dt">dummy=</span><span class="ot">TRUE</span>, 
-                   <span class="dt">beta=</span><span class="dv">1</span>, <span class="dt">model=</span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="fl">0.025</span>,<span class="dt">model=</span><span class="st">&#39;Exp&#39;</span>,<span class="dt">range=</span><span class="dv">1500</span>), <span class="dt">nsim=</span><span class="dv">4</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_bezw1, <span class="dt">main=</span><span class="st">&#39;Przestrzennie skorelowana powierzchnia </span><span class="ch">\n</span><span class="st">średnia=1, sill=0.025, zasięg=100, model wykładniczy&#39;</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/sym_bezw1-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_bezw2 &lt;-<span class="st"> </span><span class="kw">krige</span>(<span class="dt">formula=</span>z~<span class="dv">1</span>, <span class="dt">locations=</span><span class="ot">NULL</span>, <span class="dt">newdata=</span>siatka, <span class="dt">dummy=</span><span class="ot">TRUE</span>, 
+                   <span class="dt">beta=</span><span class="dv">1</span>, <span class="dt">model=</span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="fl">0.025</span>,<span class="dt">model=</span><span class="st">&#39;Exp&#39;</span>,<span class="dt">range=</span><span class="dv">1500</span>), <span class="dt">nsim=</span><span class="dv">4</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre></div>
 <pre><code>## [using unconditional Gaussian simulation]</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_bezw2, <span class="dt">main=</span><span class="st">&#39;Przestrzennie skorelowana powierzchnia </span><span class="ch">\n</span><span class="st">średnia=1, sill=0.025, zasięg=1500, model wykładniczy&#39;</span>)</code></pre>
-<p><img src="Geostatystyka_files/figure-html/sym_bezw2-1.png" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_bezw2, <span class="dt">main=</span><span class="st">&#39;Przestrzennie skorelowana powierzchnia </span><span class="ch">\n</span><span class="st">średnia=1, sill=0.025, zasięg=1500, model wykładniczy&#39;</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/sym_bezw2-1.png" alt="" /><!-- --></p>
 <!--
 sym_bezw_model3 <- gstat(formula=~1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
 sym_bezw3 <- predict(sym_bezw_model3, newdata=siatka, nsim=4)
@@ -428,7 +443,6 @@ sym_bezw_model4 <- gstat(formula=~1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0.02,
 sym_bezw4 <- predict(sym_bezw_model4, newdata=siatka, nsim=4)
 spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=500, model wykładniczy \ntrend na osi x = 0.02, trend na osi y = 0.005")
 -->
-
 </div>
 <div id="symulacje-warunkowe" class="section level2">
 <h2><span class="header-section-number">13.4</span> Symulacje warunkowe</h2>
@@ -444,62 +458,59 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 </div>
 <div id="sekwencyjna-symulacja-gaussowska-ang.-sequential-gaussian-simulation-1" class="section level3">
 <h3><span class="header-section-number">13.4.2</span> Sekwencyjna symulacja gaussowska (ang. <em>Sequential Gaussian simulation</em>)</h3>
-<pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
 model &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4500</span>, <span class="dt">nugget=</span><span class="dv">1</span>)
 fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model)
-<span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted)</code></pre>
-<p><img src="Geostatystyka_files/figure-html/sym_ok-1.png" /><!-- --></p>
-<pre class="sourceCode r"><code class="sourceCode r">sym_ok &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted, <span class="dt">nsim=</span><span class="dv">4</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre>
+<span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/sym_ok-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_ok &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted, <span class="dt">nsim=</span><span class="dv">4</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre></div>
 <pre><code>## drawing 4 GLS realisations of beta...
 ## [using conditional Gaussian simulation]</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_ok)</code></pre>
-<p><img src="Geostatystyka_files/figure-html/sym_ok-2.png" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_ok)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/sym_ok-2.png" alt="" /><!-- --></p>
 </div>
 <div id="sekwencyjna-symulacja-gaussowska-ang.-sequential-gaussian-simulation-2" class="section level3">
 <h3><span class="header-section-number">13.4.3</span> Sekwencyjna symulacja gaussowska (ang. <em>Sequential Gaussian simulation</em>)</h3>
-<pre class="sourceCode r"><code class="sourceCode r">sym_sk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">15.324</span>, <span class="dt">nsim=</span><span class="dv">100</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_sk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">15.324</span>, <span class="dt">nsim=</span><span class="dv">100</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre></div>
 <pre><code>## [using conditional Gaussian simulation]</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">sym_sk &lt;-<span class="st"> </span><span class="kw">stack</span>(sym_sk)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_sk &lt;-<span class="st"> </span><span class="kw">stack</span>(sym_sk)
 sym_sk_sd &lt;-<span class="st"> </span><span class="kw">calc</span>(sym_sk, <span class="dt">fun =</span> sd)
-<span class="kw">spplot</span>(sym_sk_sd)</code></pre>
-<p><img src="Geostatystyka_files/figure-html/master_symulation-1.png" /><!-- --></p>
+<span class="kw">spplot</span>(sym_sk_sd)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/master_symulation-1.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="sekwencyjna-symulacja-danych-kodowanych-ang.-sequential-indicator-simulation" class="section level2">
 <h2><span class="header-section-number">13.5</span> Sekwencyjna symulacja danych kodowanych (ang. <em>Sequential indicator simulation</em>)</h2>
 <div id="sekwencyjna-symulacja-danych-kodowanych-ang.-sequential-indicator-simulation-1" class="section level3">
 <h3><span class="header-section-number">13.5.1</span> Sekwencyjna symulacja danych kodowanych (ang. <em>Sequential indicator simulation</em>)</h3>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(punkty$temp) </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(punkty$temp) </code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   8.153  12.460  15.210  15.520  18.260  26.700</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">punkty$temp_ind &lt;-<span class="st"> </span>punkty$temp &lt;<span class="st"> </span><span class="dv">12</span>
-<span class="kw">summary</span>(punkty$temp_ind) </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$temp_ind &lt;-<span class="st"> </span>punkty$temp &lt;<span class="st"> </span><span class="dv">12</span>
+<span class="kw">summary</span>(punkty$temp_ind) </code></pre></div>
 <pre><code>##    Mode   FALSE    TRUE    NA&#39;s 
 ## logical     198      54       0</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">vario_ind &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp_ind~<span class="dv">1</span>, punkty)         
-<span class="kw">plot</span>(vario_ind)</code></pre>
-<p><img src="Geostatystyka_files/figure-html/sym_ind-1.png" /><!-- --></p>
-<pre class="sourceCode r"><code class="sourceCode r">model_ind &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="fl">0.14</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">2000</span>, <span class="dt">nugget =</span> <span class="fl">0.02</span>)
-<span class="kw">plot</span>(vario_ind, <span class="dt">model=</span>model_ind)</code></pre>
-<p><img src="Geostatystyka_files/figure-html/sym_ind-2.png" /><!-- --></p>
-<pre class="sourceCode r"><code class="sourceCode r">fitted_ind &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_ind, model_ind)
-fitted_ind</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_ind &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp_ind~<span class="dv">1</span>, punkty)         
+<span class="kw">plot</span>(vario_ind)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/sym_ind-1.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_ind &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="fl">0.14</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">2000</span>, <span class="dt">nugget =</span> <span class="fl">0.02</span>)
+<span class="kw">plot</span>(vario_ind, <span class="dt">model=</span>model_ind)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/sym_ind-2.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_ind &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_ind, model_ind)
+fitted_ind</code></pre></div>
 <pre><code>##   model      psill    range
 ## 1   Nug 0.02543208    0.000
 ## 2   Sph 0.13620532 1565.761</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_ind, <span class="dt">model=</span>fitted_ind)</code></pre>
-<p><img src="Geostatystyka_files/figure-html/sym_ind-3.png" /><!-- --></p>
-<pre class="sourceCode r"><code class="sourceCode r">sym_ind &lt;-<span class="st"> </span><span class="kw">krige</span>(temp_ind~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted_ind, <span class="dt">indicators=</span><span class="ot">TRUE</span>, <span class="dt">nsim=</span><span class="dv">4</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_ind, <span class="dt">model=</span>fitted_ind)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/sym_ind-3.png" alt="" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_ind &lt;-<span class="st"> </span><span class="kw">krige</span>(temp_ind~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted_ind, <span class="dt">indicators=</span><span class="ot">TRUE</span>, <span class="dt">nsim=</span><span class="dv">4</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre></div>
 <pre><code>## drawing 4 GLS realisations of beta...
 ## [using conditional indicator simulation]</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_ind, <span class="dt">main=</span><span class="st">&#39;Symulacje warunkowe&#39;</span>)</code></pre>
-<p><img src="Geostatystyka_files/figure-html/sym_ind-4.png" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_ind, <span class="dt">main=</span><span class="st">&#39;Symulacje warunkowe&#39;</span>)</code></pre></div>
+<p><img src="Geostatystyka_files/figure-html/sym_ind-4.png" alt="" /><!-- --></p>
 <!--
 łączenie sis - wiele symulacji
 -->
-
-
-
 
 </div>
 </div>

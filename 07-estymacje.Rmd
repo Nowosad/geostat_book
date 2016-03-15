@@ -8,6 +8,10 @@ library('knitr')
 opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE) 
 ```
 
+```{r, echo=FALSE}
+par(mar=c(rep(0, 4)))
+```
+
 ## Kriging
 
 ### Kriging | Interpolacja geostatystyczna

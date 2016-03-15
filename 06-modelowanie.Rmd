@@ -9,6 +9,10 @@ library('knitr')
 opts_chunk$set(cache = FALSE, warning=FALSE, message=FALSE) 
 ```
 
+```{r, echo=FALSE}
+par(mar=c(rep(0, 4)))
+```
+
 ### Modelowanie matematycznie autokorelacji przestrzennej
 - Semiwariogram empiryczny jest:
     - Nieciągły - wartości semiwariancji są średnimi przedziałowymi
@@ -64,16 +68,6 @@ show.vgms(models=c('Nug', 'Sph', 'Gau', 'Pow', 'Exp'), range=1.4, max=2.5, as.gr
 ### Modelowanie semiwariogramu | funkcja `fit.variogram`
 - Funkcja `fit.variogram` dopasowuje zasięg oraz semiwariancję progową w oparciu o ustalone "ręcznie" parametry modelu
 
-<!--
-Modelowanie semiwariogramu
-```{r semi_graph, include=FALSE}
-# vario <- variogram(temp~1, punkty)
-# model <- vgm(10, model = 'Sph', range = 4000, add.to = vgm(5, "Gau", 8000, nugget = 5))
-# fitted <- fit.variogram(vario, model)
-# plot(vario, model=fitted)
-```
--->
-
 ## Modelowanie izotropowe
 
 ### Modelowanie izotropowe | Modelowanie "wizualne"
@@ -88,6 +82,7 @@ v_eye <- eyefit(variog(as.geodata(punkty, 'temp')))
 ve_fit <- as.vgm.variomodel(v_eye[[1]])
 ```
 
+<!--
 ### Modelowanie izotropowe | Model nuggetowy
 
 toFix
@@ -102,6 +97,7 @@ fitted_nug <- fit.variogram(vario, model_nug)
 fitted_nug
 plot(vario, model=fitted_nug)
 ```
+-->
 
 ### Modelowanie izotropowe | Model sferyczny
 
@@ -159,7 +155,7 @@ plot(vario, model=fitted_exp)
 
 ```{r }
 vario <- variogram(temp~1, punkty)
-model_zl1 <- vgm(psill=10, model = 'Sph', range = 3000, add.to = vgm(0.5, 'Nug'))
+model_zl1 <- vgm(psill=10, model = 'Sph', range = 3000, nugget = 0.5)
 model_zl1
 plot(vario, model=model_zl1)
 fitted_zl1 <- fit.variogram(vario, model_zl1)
@@ -189,7 +185,7 @@ plot(vario, model=fitted_zl2)
 ```{r }
 vario_map <- variogram(temp~1, punkty, cutoff=4000, width=400, map=TRUE)
 plot(vario_map)
-vario_kier <- variogram(temp~1, punkty, alpha = c(60, 105, 150, 195), cutoff=20000)
+vario_kier <- variogram(temp~1, punkty, alpha = c(60, 105, 150, 195), cutoff=4000)
 plot(vario_kier, plot.numbers=TRUE)
 vario_kier_fit <- vgm(psill=8, model='Sph', range=4000, nugget=0.5, anis = c(60, .4))
 plot(vario_kier, vario_kier_fit, as.table=TRUE)
