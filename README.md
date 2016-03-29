@@ -1,46 +1,9 @@
-# toDo:
-## Rozdział 1
-1. Akapit ogólny
-1. O tym co zawiera książka
-1. O pakietach
-1. O danych
-## Rozdział 2
-1. R a dane przestrzenne
-## Rozdział 3
-1. Eksploracyjna analiza danych
-1. Przeniesienie map i rozgrupowania danych
-## Rozdział 4
-1. Przestrzenna eksploracyjna analiza danych
-1. Może tutaj o R a dane przestrzenne?
-1. ...I rzeczy z wyżej
-1. Inne dane preferencyjne
-## Rozdział 5
-1. Interpolacje
-## Rozdział 6
-1. Podstawy geostatystyki
-## Rozdział 7
-1. Modelowanie
-## Rozdział 8
-1. Estymacje jednozmienne
-## Rozdział 9
-1. Estymacje prawdopodobieństwa
-## Rozdział 10
-1. Estymacje wielozmienne
-## Rozdział 11
-1. Estymacje z danymi uzupełniającymi
-## Rozdział 12
-1. Ocena jakości estymacji
-## Rozdział 13
-1. Symulacje
-## Rodział 14
-1. Bibliografia
-
 # toAdd:
 1. Kokriging - dodaj mapki, etc./ może mniejsza siatka?
 1. Jak walidować dane Indicator Kriging?
 2. Dodać informację dlaczego wartości  IK są poniżej/powyżej wartości 0/1
 3. Zmienić skale kolorystyczne - jak to ustawić globalnie?
-4. Kokriging - wszystko w jednym miejscu + kokriging kierunkowy
+4. Kokriging - kokriging kierunkowy
 5. Kokriging - aniztoropia - jak dodać modele do wykresu? [NOTE w helpie - "plotting models and/or point pair numbers is not supported when a variogram is both directional and multivariable"]
 6. Raster do gstat (działa funkcja interpolate, ale czy robi anizotropię, etc.?)
 8. Dodanie literatury
