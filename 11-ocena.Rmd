@@ -2,7 +2,14 @@
 knit: bookdown::preview_chapter
 ---
 
-# Ocena jakości estymacji [UWAGA POMIESZANY ME Z RESZTĄ!!]
+# Ocena jakości estymacji 
+
+<!--[UWAGA POMIESZANY ME Z RESZTĄ!!]-->
+
+```{r}
+library('geostatbook')
+data(punkty)
+```
 
 ```{r setup6, echo=FALSE, include=FALSE}
 library('knitr')
@@ -17,7 +24,7 @@ par(mar=c(rep(0, 4)))
 ### Statystyki jakości estymacji
 - Służą do oceny i porównania jakości estymacji
 - Do podstawowych statystyk ocen jakości estymacji należą:
-    - Średni błąd estymacji (ME, ang. *mean error*)
+    - Średni błąd predykcji (MPE, ang. *mean prediction error*)
     - Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root square prediction error*)
     - Współczynnik korelacji
     - Rozkład błędu (np. 5. percentyl, mediana, 95. percentyl)
@@ -29,21 +36,17 @@ par(mar=c(rep(0, 4)))
 ### Średni błąd estymacji
 - Optymalnie wartość średniego błędu estymacji powinna być jak najbliżej 0
 
-$$ ME=\frac{\sum_{i=1}^{n}(\hat{v}_i-v_i)}{n} $$     
+$$ MPE=\frac{\sum_{i=1}^{n}(\hat{v}_i-v_i)}{n} $$    
+
 ### Pierwiastek średniego błędu kwadratowego
 - Optymalnie wartość pierwiastka średniego błędu kwadratowego powinna być jak najmniejsza
 
-$$ RMSE=\sqrt{\frac{\sum_{i=1}^{n}(\hat{v}_i-v_i)^2}{n}} $$     
+$$ RMSE=\sqrt{\frac{\sum_{i=1}^{n}(v_i-\hat{v}_i)^2}{n}} $$     
 
 ### Współczynnik korelacji
 - Optymalnie wartość współczynnika korelacji powinna być jak najwyższa
 
 ### Statystyki jakości estymacji | Mapa
-
-```{r}
-library('geostatbook')
-data(punkty)
-```
 
 ```{r mapa, echo=FALSE}
 set.seed(124)
@@ -105,15 +108,11 @@ summary(test_sk)
 reszta_sk <-  test_sk$var1.pred - test$temp
 summary(reszta_sk)
 
-ME <- sum(reszta_sk)/length(reszta_sk)
-ME
+MPE <- mean(test_sk$var1.pred - test$temp)
+MPE
 
-RMSE <- sqrt(sum(reszta_sk^2)/length(reszta_sk))
+RMSE <- sqrt(mean((test$temp-test_sk$var1.pred)^2))
 RMSE
-
-srednia_reszta <- test$temp - mean(test$temp)
-R2 <- 1 - sum(reszta_sk^2)/sum(srednia_reszta^2)
-R2
 
 test_sk$reszty <- reszta_sk
 spplot(test_sk, 'reszty')

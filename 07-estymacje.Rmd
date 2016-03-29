@@ -3,6 +3,12 @@ knit: bookdown::preview_chapter
 ---
 # Estymacje jednozmienne
 
+```{r}
+library('geostatbook')
+data(punkty)
+data(siatka)
+```
+
 ```{r setup5, echo=FALSE, include=FALSE}
 library('knitr')
 opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE) 
@@ -20,7 +26,6 @@ par(mar=c(rep(0, 4)))
 - Główna zasada mówi, że prognoza w danej lokalizacji jest kombinacją obokległych obserwacji
 - Waga nadawana każdej z obserwacji jest zależna od stopnia (przestrzennej) korelacji - stąd też bierze się istotna rola semiwariogramów
 
-## Rodzaje krigingu
 ### Rodzaje krigingu
 - Kriging prosty (ang. *Simple kriging*)
 - Kriging zwykły (ang. *Ordinary kriging*)
@@ -32,17 +37,10 @@ par(mar=c(rep(0, 4)))
 - Kokriging (ang. *Co-kriging*)
 - Inne
 
-## Kriging prosty (ang. *Simple kriging*)
+## Kriging prosty
 ### Kriging prosty (ang. *Simple kriging*)
+
 - Zakłada, że średnia jest znana i stała na całym obszarze
-
-### Kriging prosty (ang. *Simple kriging*)
-
-```{r}
-library('geostatbook')
-data(punkty)
-data(siatka)
-```
 
 ```{r }
 vario <- variogram(temp~1, punkty)
@@ -64,15 +62,14 @@ spplot(sk, 'var1.var')
 library('gridExtra')
 p1 <- spplot(sk, "var1.pred", main='Predykcja SK')
 p2 <- spplot(sk, "var1.var", main='Wariancja predykcji SK')
-grid.arrange(p1, p2, ncol=2)
+grid.arrange(p1, p2, ncol=1)
 ```
 
-## Kriging zwykły (ang. *Ordinary kriging*)
+## Kriging zwykły 
 ### Kriging zwykły (ang. *Ordinary kriging*)
+
 - Średnia traktowana jest jako nieznana
 - Uwzględnia lokalne fluktuacje średniej poprzez stosowanie ruchomego okna
-
-### Kriging zwykły  (ang. *Ordinary kriging*)
 
 ```{r }
 ok <- krige(temp~1, punkty, siatka, model=fitted, maxdist=1000)
@@ -88,19 +85,17 @@ spplot(ok, 'var1.var')
 library('gridExtra')
 p1 <- spplot(ok, "var1.pred", main='Predykcja OK')
 p2 <- spplot(ok, "var1.var", main='Wariancja predykcji OK')
-grid.arrange(p1, p2, ncol=2)
+grid.arrange(p1, p2, ncol=1)
 ```
 
 <!--
-
-```{r }
+```{r , include=FALSE, eval=FALSE}
 spplot(ok, "var1.pred", sp.layout=list(punkty, pch=21, col="white"))
 spplot(ok, "var1.var", sp.layout=list(punkty, pch=21, col="white"))
 ```
-
-
 -->
-## Kriging z trendem (ang. *Kriging with a trend*)
+
+## Kriging z trendem
 ### Kriging z trendem (ang. *Kriging with a trend*)
 
 ```{r }
@@ -124,7 +119,7 @@ spplot(kzt, 'var1.var')
 library('gridExtra')
 p1 <- spplot(kzt, "var1.pred", main='Predykcja OK')
 p2 <- spplot(kzt, "var1.var", main='Wariancja predykcji OK')
-grid.arrange(p1, p2, ncol=2)
+grid.arrange(p1, p2, ncol=1)
 ```
 
 ## Porównanie wyników SK, OK i KZT

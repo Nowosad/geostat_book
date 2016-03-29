@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# Eksploracyjna analiza danych nieprzestrzennych
+# Eksploracja analiza danych nieprzestrzennych
 
 ```{r setup2, echo=FALSE, include=FALSE}
 library('knitr')

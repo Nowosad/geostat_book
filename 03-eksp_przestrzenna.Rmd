@@ -4,13 +4,13 @@ knit: bookdown::preview_chapter
 
 # Eksploracyjna analiza danych przestrzennych
 
-## Mapy 
-
 ```{r, interpolate_init}
 library('geostatbook')
 data(punkty)
 data(granica)
 ```
+
+## Mapy 
 
 ```{r, echo=FALSE}
 par(mar=c(rep(0, 4)))
@@ -29,11 +29,10 @@ par(mar=c(rep(0, 4)))
 ## Próbkowanie
 
 ### Typy próbowania (oferowane przez pakiet `sp`)
-- Regularny
-- Losowy
-- Losowy stratyfikowany
-- Preferencyjny
-- Liniowy
+- Regularny (ang.*regular*)
+- Losowy (ang.*random*)
+- Losowy stratyfikowany (ang.*stratified*)
+- Preferencyjny (ang.*clustered*)
 
 ### Typ próbowania | Regularny
 
@@ -64,11 +63,11 @@ strat <- spsample(granica, 150, type = 'stratified')
 plot(strat)
 ```
 
-### Typ próbowania | Preferencyjny I
+### Typ próbowania | Preferencyjny
 
 ```{r }
 set.seed(425)
-pref <- spsample(granica, 150, type = 'clustered', nclusters=80)
+pref <- spsample(granica, 150, type = 'clustered', nclusters=30)
 plot(pref)
 ```
 
@@ -188,6 +187,25 @@ $$w'_j=\frac{area_j}{\sum_{j=1}^{n}area_j} \cdot n$$
 ### Rozgrupowanie poligonowe | (ang. *polygon declustering*)
 
 ```{r }
+data(punkty_pref)
+punkty_pref$id <- 1:nrow(punkty_pref)
+spplot(punkty_pref, 'id', colorkey=TRUE)
+
+v <- voronoi(punkty_pref)
+plot(punkty_pref, cex=0.2, col='red')
+plot(v, add=TRUE)
+
+v$pow <- area(v)
+v$waga <- v$pow/sum(v$pow) * length(punkty_pref)
+
+punkty_pref <- merge(punkty_pref, v[c('id', 'waga')], by='id')
+spplot(punkty_pref, 'waga')
+
+srednia_arytmetyczna <- mean(punkty_pref$temp, na.rm=TRUE)
+srednia_wazona_p <- mean(punkty_pref$temp*punkty_pref$waga, na.rm=TRUE)
+```
+
+```{r old_with_intersect, echo=FALSE, eval=FALSE}
 data(punkty_pref)
 punkty_pref$id <- 1:nrow(punkty_pref)
 spplot(punkty_pref, 'id', colorkey=TRUE)

@@ -4,6 +4,12 @@ knit: bookdown::preview_chapter
 
 # Wykorzystanie do estymacji danych uzupełniających 
 
+```{r}
+library('geostatbook')
+data(punkty)
+data(siatka)
+```
+
 ```{r, include=FALSE}
 library('methods')
 ```
@@ -17,17 +23,11 @@ opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE)
 par(mar=c(rep(0, 4)))
 ```
 
-## Kriging stratyfikowany (ang. *Kriging within strata*)
+## Kriging stratyfikowany
 ### Kriging stratyfikowany (ang. *Kriging within strata*)
 - Zakłada on, że zmienność badanego zjawiska zależy od zmiennej jakościowej (kategoryzowanej)
 - Przykładowo, zróżnicowanie badanej zmiennej jest różne w zależności od pokrycia terenu
 - Kriging stratyfikowany wymaga posiadania danych zmiennej jakościowej (kategoryzowanej) na całym badanym obszarze
-
-```{r}
-library('geostatbook')
-data(punkty)
-data(siatka)
-```
 
 ```{r }
 siatka$clc <- as.factor(siatka$clc)
@@ -55,8 +55,21 @@ kws4 <- krige(temp~1, punkty[punkty$clc==4, ], siatka[na.omit(siatka$clc==4), ],
 kws <- rbind(as.data.frame(kws1), as.data.frame(kws2), as.data.frame(kws4))
 coordinates(kws) <- ~x+y
 kws <- as(kws, 'SpatialPixelsDataFrame')
-spplot(kws, 'var1.pred', sp.layout=(list=SpatialPoints(punkty)))
 ```
+
+```{r plotsykws1, eval=FALSE}
+spplot(kws, 'var1.pred', sp.layout=punkty)
+spplot(kws, 'var1.var', sp.layout=punkty)
+```
+
+
+```{r plotsykws2, echo=FALSE}
+library('gridExtra')
+p1 <- spplot(kws, "var1.pred", main='Predykcja KWS')
+p2 <- spplot(kws, "var1.var", main='Wariancja predykcji KWS')
+grid.arrange(p1, p2, ncol=1)
+```
+
 
 ## Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)
 ### Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)
@@ -87,7 +100,7 @@ spplot(sk_lvm, 'var1.var')
 library('gridExtra')
 p1 <- spplot(sk_lvm, "var1.pred", main='Predykcja SK LVM')
 p2 <- spplot(sk_lvm, "var1.var", main='Wariancja predykcji SK LVM')
-grid.arrange(p1, p2, ncol=2)
+grid.arrange(p1, p2, ncol=1)
 ```
 
 ## Kriging uniwersalny (ang. *Universal kriging*)
@@ -121,7 +134,7 @@ spplot(uk1, 'var1.var')
 library('gridExtra')
 p1 <- spplot(uk1, "var1.pred", main='Predykcja KED')
 p2 <- spplot(uk1, "var1.var", main='Wariancja predykcji KED')
-grid.arrange(p1, p2, ncol=2)
+grid.arrange(p1, p2, ncol=1)
 ```
 
 ```{r }
@@ -145,5 +158,5 @@ spplot(uk2, 'var1.var')
 library('gridExtra')
 p1 <- spplot(uk2, "var1.pred", main='Predykcja KED')
 p2 <- spplot(uk2, "var1.var", main='Wariancja predykcji KED')
-grid.arrange(p1, p2, ncol=2)
+grid.arrange(p1, p2, ncol=1)
 ```

@@ -2,20 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# Eksploracyjna analiza danych - geostatystyka
-
-## Interpolacja 
-
-### Modele deterministyczne
-- Parametry tych modeli są zazwyczaj ustalane w oparciu o funkcję odległości lub powierzchni. Brakuje również szacunków na temat oceny błędu modelu. Np:
-    - Funkcje wielomianowe
-    - Funkcje sklejane (ang. *Splines*)
-    - Triangulacje 
-    - IDW (ang. *Inverse Distance Weighted*)
-
-http://neondataskills.org/Data-Workshops/ESA15-Going-On-The-Grid-Spatial-Interpolation-Basics/
-
-### Modele deterministyczne 
+# Metody interpolacji
 
 ```{r, interpolate_inits}
 library('geostatbook')
@@ -23,6 +10,19 @@ data(punkty)
 data(siatka)
 data(granica)
 ```
+
+## Modele deterministyczne
+
+### Modele deterministyczne
+- Parametry tych modeli są zazwyczaj ustalane w oparciu o funkcję odległości lub powierzchni. Brakuje również szacunków na temat oceny błędu modelu. Np:
+    - Funkcje wielomianowe (ang. *Polynomials*)
+    - Funkcje sklejane (ang. *Splines*)
+    - Triangulacje  (ang. *Triangulations*)
+    - Metoda średniej ważonej odległością (ang. *Inverse Distance Weighted - IDW*)
+
+<!--http://neondataskills.org/Data-Workshops/ESA15-Going-On-The-Grid-Spatial-Interpolation-Basics/-->
+
+### Modele deterministyczne 
 
 ```{r, echo=FALSE}
 par(mar=c(rep(0, 4)))
@@ -52,7 +52,7 @@ spline <- mask(spline, ras)
 spplot(spline, contour=TRUE , main='Funkcje sklejane')
 ```
 
-### Modele deterministyczne | Triangulacje (Thiessen)
+### Modele deterministyczne | Triangulacje (Voronoi)
 
 ```{r }
 voronoi_interp <- voronoi(punkty)
@@ -83,7 +83,7 @@ p4 <- spplot(idw_wolin, 'var1.pred', main='IDW')
 grid.arrange(p1, p2, p3, p4)
 ```
 
-### Modele statystyczne
+## Modele statystyczne
 - Parametry modeli są określane w oparciu o teorię prawdopodobieństwa. Dodatkowo wynik estymacji zawiera oszacowanie błędu. Np.:
     - Kriging
     - Modele regresyjne

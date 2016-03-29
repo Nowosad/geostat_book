@@ -4,6 +4,13 @@ knit: bookdown::preview_chapter
 
 # Geostatystyka - prolog
 
+```{r}
+library('geostatbook')
+data(punkty)
+data(siatka)
+data(granica)
+```
+
 ```{r, echo=FALSE}
 par(mar=c(rep(0, 4)))
 ```
@@ -16,7 +23,7 @@ http://www.inside-r.org/packages/cran/raster/docs/interpolate
 ## Geostatystyka
 
 ### Geostatystyka
-- Zbiór narzędzi statystycznych uwzględniających w analizie danych ich przestrzenną i czasową lokalizację, a opartych o teorię funkcji losowych.
+- Zbiór narzędzi statystycznych uwzględniających w analizie danych ich przestrzenną i czasową lokalizację, a opartych o teorię funkcji losowych
 
 <!--
 ### Geostatystyka a klasyczna statystyka
@@ -28,6 +35,13 @@ http://www.inside-r.org/packages/cran/raster/docs/interpolate
 - Estymacja - szacowanie wartości badanej zmiennej w nieopróbowanym miejscu i/lub momencie czasu
 - Symulacja - generowanie alternatywnych obrazów, które honorują wyniki pomiarów i strukturę przestrzenną/czasową zjawiska
 - Optymalizacja próbkowania/sieci pomiarowej 
+
+### Geostatystyka | Dane wejściowe
+1. Wystarczająca duża liczba punktów (minimalnie >30, ale zazwyczaj więcej niż 100/150)
+2. Są reprezentatywne
+3. Są niezależne
+4. Były stworzone używając stałej metodyki
+5. Są wystarczająco dokładne
 
 ### Geostatystyczna analiza danych
 
@@ -45,13 +59,6 @@ p <- DiagrammeR("
 ```
 
 ![](figs/diag.png)
-
-### Geostatystyka | Dane wejściowe
-1. Wystarczająca duża liczba punktów (minimalnie >30, ale zazwyczaj więcej niż 100/150)
-2. Są reprezentatywne
-3. Są niezależne
-4. Były stworzone używając stałej metodyki
-5. Są wystarczająco dokładne
 
 <!--
 ### Geostatystyka | Cele
@@ -93,13 +100,6 @@ p <- DiagrammeR("
 - Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji
 - Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo
 - Jednocześnie, dla potrzeb interpretacji relacji kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
-
-```{r}
-library('geostatbook')
-data(punkty)
-data(siatka)
-data(granica)
-```
 
 ```{r z_przs0, echo=FALSE}
 hscat(temp~1, punkty, breaks=c(0, 200))
@@ -153,8 +153,6 @@ vario_cloud <- variogram(temp~1, punkty, cloud=TRUE)
 plot(vario_cloud) 
 ```
 
-### Określenie występowania autokorelacji przestrzennej | Chmura semiwariogramu
-
 ```{r chmurkowanie, eval=FALSE}
 vario_cloud_sel <- plot(variogram(temp~1, punkty, cloud=TRUE), digitize=TRUE)
 plot(vario_cloud_sel, punkty) 
@@ -170,9 +168,9 @@ $$ \hat{\gamma}(h) = \frac{1}{2N(h)}\sum_{i=1}^{N(h)}(z(s_i) - z(s_i+h))^2 $$
 gdzie $N(h)$ oznacza liczbę par punktów w odstępie $h$
 
 ### Semiwariogram
-- Nugget - efekt nuggetowy - pozwala na określenie błędu w danych wejściowych oraz zmienności na dystansie krótszym niż pierwszy odstęp
-- Sill - semiwariancja progowa - oznacza wariancję badanej zmiennej
-- Range - zasięg - to odległość do której istnieje przestrzenna korelacja
+- **Nugget** - efekt nuggetowy - pozwala na określenie błędu w danych wejściowych oraz zmienności na dystansie krótszym niż pierwszy odstęp
+- **Sill** - semiwariancja progowa - oznacza wariancję badanej zmiennej
+- **Range** - zasięg - to odległość do której istnieje przestrzenna korelacja
 
 ### Semiwariogram | Rules of thumb
 - W każdym odstępie powinno się znaleźć co najmniej 30 par punktów
@@ -210,8 +208,8 @@ kraw_y <- wierz[4] - wierz[3]
 z_kwadrat <- kraw_x^2 + kraw_y^2
 0.5*sqrt(z_kwadrat)
 ```
-
 -->
+
 - Powierzchnia zajmowana przez jedną próbkę
 
 ```{r }
@@ -293,18 +291,13 @@ plot(vario_map, threshold=30) # co najmniej 30 par punktów
 plot3D(raster(vario_map$map), col=rainbow)
 ```
 
+![](figs/plot3D.png)
+
 ### Semiwariogramy kierunkowe | Kierunki
 - W przypadku, gdy zjawisko wykazuje anizotropię przestrzenną, możliwe jest stworzenie semiwariogramów dla różnych wybranych kierunków
 - Przykładowo, dla argumentu *alpha = c(0, 45, 90, 135)* cztery główne kierunki to 0, 45, 90 i 135 stopni. Oznacza to, że dla kierunku 45 stopni brane pod uwagę będą wszystkie pary punktów pomiędzy 22,5 a 67,5 stopnia.
 
 ```{r }
 vario_kier <- variogram(temp~1, punkty, alpha = c(0, 45, 90, 135))
-plot(vario_kier)
-```
-
-### Semiwariogramy kierunkowe | Kierunki
- 
-```{r }
-vario_kier <- variogram(temp~1, punkty, alpha = c(60, 105, 150, 195))
 plot(vario_kier)
 ```

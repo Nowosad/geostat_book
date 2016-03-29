@@ -2,7 +2,13 @@
 knit: bookdown::preview_chapter
 ---
 
-# Symulacje [tutaj transformacja!]
+# Symulacje 
+
+```{r}
+library('geostatbook')
+data(punkty)
+data(siatka)
+```
 
 ```{r setup10, echo=FALSE, include=FALSE}
 library('knitr')
@@ -43,12 +49,6 @@ par(mar=c(rep(0, 4)))
 
 <!--http://santiago.begueria.es/2010/10/generating-spatially-correlated-random-fields-with-r/-->
 
-```{r}
-library('geostatbook')
-data(punkty)
-data(siatka)
-```
-
 ```{r sym_bezw1, cache=TRUE}
 sym_bezw1 <- krige(formula=z~1, locations=NULL, newdata=siatka, dummy=TRUE,
                          beta=1, model=vgm(psill=0.025,model='Exp',range=100), nsim=4, nmax=30)
@@ -80,24 +80,45 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 4. Dodanie symulowaniej wartości do zbioru danych i przejście do kolejnej lokalizacji
 5. Powtórzenie poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja
 
+```{r}
+ggplot(punkty@data, aes(temp)) + geom_histogram()
+shapiro.test(punkty$temp)
+qqnorm(punkty$temp);qqline(punkty$temp)
+```
+
+```{r}
+punkty$temp_log <- log(punkty$temp)
+ggplot(punkty@data, aes(temp_log)) + geom_histogram()
+shapiro.test(punkty$temp_log)
+qqnorm(punkty$temp_log);qqline(punkty$temp_log)
+```
+
 ```{r sym_ok, cache=TRUE}
-vario <- variogram(temp~1, punkty)
-model <- vgm(10, model = 'Sph', range = 4500, nugget=1)
+vario <- variogram(temp_log~1, punkty)
+model <- vgm(0.05, model = 'Sph', range = 4500, nugget=0.005)
 fitted <- fit.variogram(vario, model)
 plot(vario, model=fitted)
-sym_ok <- krige(temp~1, punkty, siatka, model=fitted, nsim=4, nmax=30)
+sym_ok <- krige(temp_log~1, punkty, siatka, model=fitted, nsim=4, nmax=30)
+spplot(sym_ok)
+```
+
+```{r}
+summary(sym_ok)
+sym_ok@data <- as.data.frame(apply(sym_ok@data, 2, exp))
+summary(sym_ok)
 spplot(sym_ok)
 ```
 
 ```{r master_symulation, cache=TRUE}
-sym_sk <- krige(temp~1, punkty, siatka, model=fitted, beta=15.324, nsim=100, nmax=30)
+sym_sk <- krige(temp_log~1, punkty, siatka, model=fitted, beta=2.7, nsim=100, nmax=30)
+sym_sk@data <- as.data.frame(apply(sym_sk@data, 2, exp))
 
 sym_sk <- stack(sym_sk)
 sym_sk_sd <- calc(sym_sk, fun = sd)
 spplot(sym_sk_sd)
 ```
 
-## Sekwencyjna symulacja danych kodowanych (ang. *Sequential indicator simulation*)
+## Sekwencyjna symulacja danych kodowanych
 ### Sekwencyjna symulacja danych kodowanych (ang. *Sequential indicator simulation*)
 
 ```{r }
