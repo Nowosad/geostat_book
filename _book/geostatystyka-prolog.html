@@ -465,7 +465,7 @@ http://www.inside-r.org/packages/cran/raster/docs/interpolate
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kowario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">covariogram =</span> <span class="ot">TRUE</span>)
 <span class="kw">plot</span>(kowario)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-73-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-74-1.png" alt="" /><!-- --></p>
 </div>
 <div id="autokorelacja" class="section level3">
 <h3><span class="header-section-number">6.2.6</span> Autokorelacja</h3>
@@ -476,7 +476,7 @@ http://www.inside-r.org/packages/cran/raster/docs/interpolate
 kor &lt;-<span class="st"> </span><span class="kw">correlog</span>(wsp, punkty$temp)
 kor &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(kor)
 <span class="kw">ggplot</span>(kor, <span class="kw">aes</span>(dist.class, coef)) +<span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">linetype=</span><span class="dv">0</span>) +<span class="st"> </span><span class="kw">geom_line</span>() +<span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="dv">5</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-74-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-75-1.png" alt="" /><!-- --></p>
 </div>
 <div id="semiwariancja" class="section level3">
 <h3><span class="header-section-number">6.2.7</span> Semiwariancja</h3>
@@ -503,7 +503,7 @@ gamma</code></pre></div>
 <h3><span class="header-section-number">6.2.10</span> Określenie występowania autokorelacji przestrzennej | Chmura semiwariogramu</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_cloud &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cloud=</span><span class="ot">TRUE</span>)
 <span class="kw">plot</span>(vario_cloud) </code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-76-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-77-1.png" alt="" /><!-- --></p>
 </div>
 <div id="okreslenie-wystepowania-autokorelacji-przestrzennej-chmura-semiwariogramu-2" class="section level3">
 <h3><span class="header-section-number">6.2.11</span> Określenie występowania autokorelacji przestrzennej | Chmura semiwariogramu</h3>
@@ -604,10 +604,10 @@ vario_par</code></pre></div>
 ## 14 1468 4276.0078 13.866888       0       0 var1
 ## 15 1482 4598.4144 15.353206       0       0 var1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_par, <span class="dt">plot.numbers=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-82-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-83-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_par &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cutoff =</span> <span class="dv">4000</span>)
 <span class="kw">plot</span>(vario_par)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-82-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-83-2.png" alt="" /><!-- --></p>
 </div>
 <div id="semiwariogram-odlegosc-miedzy-przedziaami-ang.-interval-width" class="section level3">
 <h3><span class="header-section-number">6.2.17</span> Semiwariogram | Odległość między przedziałami (ang. <em>Interval width</em>)</h3>
@@ -616,7 +616,7 @@ vario_par</code></pre></div>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_par &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cutoff =</span> <span class="dv">1000</span>, <span class="dt">width =</span> <span class="dv">250</span>)
 <span class="kw">plot</span>(vario_par)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-83-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-84-1.png" alt="" /><!-- --></p>
 <!--
 ## Wpływa danych odstających
 
@@ -664,7 +664,7 @@ Używanie innych statystyk h-scattergramu, które są mniej czułe na występowa
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_map &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cutoff=</span><span class="dv">4000</span>, <span class="dt">width=</span><span class="dv">400</span>, <span class="dt">map=</span><span class="ot">TRUE</span>)
 <span class="kw">plot</span>(vario_map, <span class="dt">threshold=</span><span class="dv">30</span>) <span class="co"># co najmniej 30 par punktów</span></code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-85-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-86-1.png" alt="" /><!-- --></p>
 </div>
 <div id="mapa-semiwariogramu-3d" class="section level3">
 <h3><span class="header-section-number">6.3.3</span> Mapa semiwariogramu | 3D</h3>
@@ -678,13 +678,13 @@ Używanie innych statystyk h-scattergramu, które są mniej czułe na występowa
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kier &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">alpha =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">45</span>, <span class="dv">90</span>, <span class="dv">135</span>))
 <span class="kw">plot</span>(vario_kier)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-86-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-87-1.png" alt="" /><!-- --></p>
 </div>
 <div id="semiwariogramy-kierunkowe-kierunki-1" class="section level3">
 <h3><span class="header-section-number">6.3.5</span> Semiwariogramy kierunkowe | Kierunki</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kier &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">alpha =</span> <span class="kw">c</span>(<span class="dv">60</span>, <span class="dv">105</span>, <span class="dv">150</span>, <span class="dv">195</span>))
 <span class="kw">plot</span>(vario_kier)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-87-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-88-1.png" alt="" /><!-- --></p>
 
 </div>
 </div>

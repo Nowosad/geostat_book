@@ -232,3 +232,8 @@ siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
 gridded(siatka_n) <- TRUE
 plot(siatka_n)
 ```
+
+```{r, echo=FALSE}
+zip('dane.zip', 'dane')
+```
+

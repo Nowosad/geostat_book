@@ -30,7 +30,7 @@ Oprogramowanie, pakiety i dane.
 - [Rozdział drugi](link_do_spakowanego_repo)
 - [Kolejne rozdziały](https://github.com/Nowosad/geostatbook)
 
-```{r}
+```{r, eval=FALSE}
 # install.packages("devtools")
 devtools::install_github("nowosad/geostatbook")
 ```

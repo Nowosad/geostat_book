@@ -450,7 +450,7 @@ vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span
 model &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4000</span>, <span class="dt">nugget =</span> <span class="fl">0.5</span>)
 fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model)
 <span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-131-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-132-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test_sk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, train, test, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">15.324</span>)</code></pre></div>
 <pre><code>## [using simple kriging]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(test_sk)</code></pre></div>
@@ -489,7 +489,7 @@ R2</code></pre></div>
 <pre><code>## [1] 0.8138163</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test_sk$reszty &lt;-<span class="st"> </span>reszta_sk
 <span class="kw">spplot</span>(test_sk, <span class="st">&#39;reszty&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-131-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-132-2.png" alt="" /><!-- --></p>
 </div>
 <div id="kroswalidacja" class="section level3">
 <h3><span class="header-section-number">11.2.4</span> Kroswalidacja</h3>

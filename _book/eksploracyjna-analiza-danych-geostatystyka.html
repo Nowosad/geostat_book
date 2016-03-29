@@ -382,17 +382,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 wielomian_1_pred &lt;-<span class="st"> </span><span class="kw">predict</span>(wielomian_1, <span class="dt">newdata=</span>siatka)</code></pre></div>
 <pre><code>## [ordinary or weighted least squares prediction]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(wielomian_1_pred[<span class="dv">1</span>], <span class="dt">contour=</span><span class="ot">TRUE</span>,<span class="dt">main=</span><span class="st">&#39;Powierzchnia trendu - wielomian pierwszego stopnia&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-65-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-66-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wielomian_2 &lt;-<span class="st"> </span><span class="kw">gstat</span>(<span class="dt">formula=</span>temp~<span class="dv">1</span>, <span class="dt">data=</span>punkty, <span class="dt">degree=</span><span class="dv">2</span>)
 wielomian_2_pred &lt;-<span class="st"> </span><span class="kw">predict</span>(wielomian_2, <span class="dt">newdata=</span>siatka)</code></pre></div>
 <pre><code>## [ordinary or weighted least squares prediction]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(wielomian_2_pred[<span class="dv">1</span>], <span class="dt">contour=</span><span class="ot">TRUE</span>,<span class="dt">main=</span><span class="st">&#39;Powierzchnia trendu - wielomian drugiego stopnia&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-65-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-66-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wielomian_3 &lt;-<span class="st"> </span><span class="kw">gstat</span>(<span class="dt">formula=</span>temp~<span class="dv">1</span>, <span class="dt">data=</span>punkty, <span class="dt">degree=</span><span class="dv">3</span>)
 wielomian_3_pred &lt;-<span class="st"> </span><span class="kw">predict</span>(wielomian_3, <span class="dt">newdata=</span>siatka)</code></pre></div>
 <pre><code>## [ordinary or weighted least squares prediction]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(wielomian_3_pred[<span class="dv">1</span>], <span class="dt">contour=</span><span class="ot">TRUE</span>,<span class="dt">main=</span><span class="st">&#39;Powierzchnia trendu - wielomian trzeciego stopnia&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-65-3.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-66-3.png" alt="" /><!-- --></p>
 </div>
 <div id="modele-deterministyczne-funkcje-sklejane" class="section level3">
 <h3><span class="header-section-number">5.1.4</span> Modele deterministyczne | Funkcje sklejane</h3>
@@ -401,21 +401,21 @@ ras &lt;-<span class="st"> </span><span class="kw">raster</span>(siatka)
 spline &lt;-<span class="st"> </span><span class="kw">interpolate</span>(ras, tps)
 spline &lt;-<span class="st"> </span><span class="kw">mask</span>(spline, ras)
 <span class="kw">spplot</span>(spline, <span class="dt">contour=</span><span class="ot">TRUE</span> , <span class="dt">main=</span><span class="st">&#39;Funkcje sklejane&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-66-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-67-1.png" alt="" /><!-- --></p>
 </div>
 <div id="modele-deterministyczne-triangulacje-thiessen" class="section level3">
 <h3><span class="header-section-number">5.1.5</span> Modele deterministyczne | Triangulacje (Thiessen)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">voronoi_interp &lt;-<span class="st"> </span><span class="kw">voronoi</span>(punkty)
 voronoi_interp &lt;-<span class="st"> </span><span class="kw">intersect</span>(granica, voronoi_interp)
 <span class="kw">spplot</span>(voronoi_interp, <span class="st">&#39;temp&#39;</span>, <span class="dt">contour=</span><span class="ot">TRUE</span>, <span class="dt">main=</span><span class="st">&#39;Poligony Voronoia&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-67-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-68-1.png" alt="" /><!-- --></p>
 </div>
 <div id="modele-deterministyczne-idw" class="section level3">
 <h3><span class="header-section-number">5.1.6</span> Modele deterministyczne | IDW</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idw_wolin &lt;-<span class="st"> </span><span class="kw">idw</span>(temp~<span class="dv">1</span>, punkty, siatka, <span class="dt">idp=</span><span class="dv">2</span>)</code></pre></div>
 <pre><code>## [inverse distance weighted interpolation]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(idw_wolin, <span class="st">&#39;var1.pred&#39;</span>, <span class="dt">contour=</span><span class="ot">TRUE</span>, <span class="dt">main=</span><span class="st">&#39;IDW&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-68-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-69-1.png" alt="" /><!-- --></p>
 <!--
 dodaj wykresy idw
 https://rpubs.com/DonalOLeary/80504
@@ -423,7 +423,7 @@ https://rpubs.com/DonalOLeary/80504
 </div>
 <div id="modele-deterministyczne-porownanie" class="section level3">
 <h3><span class="header-section-number">5.1.7</span> Modele deterministyczne | Porównanie</h3>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-69-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-70-1.png" alt="" /><!-- --></p>
 </div>
 <div id="modele-statystyczne" class="section level3">
 <h3><span class="header-section-number">5.1.8</span> Modele statystyczne</h3>
