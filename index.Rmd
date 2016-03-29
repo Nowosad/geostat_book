@@ -14,7 +14,7 @@ link-citations: yes
 
 # Wprowadzenie
 
-> Tutaj będzie wstęp mówiący o tym co znajduje się dalej
+<!--Tutaj będzie wstęp mówiący o tym co znajduje się dalej-->
 
 ## Wymagania wstępne
 
@@ -27,8 +27,8 @@ Oprogramowanie, pakiety i dane.
 
 ### Dane
 
-- [Rozdział drugi](link_do_spakowanego_repo)
-- [Kolejne rozdziały](https://github.com/Nowosad/geostatbook)
+- [Rozdział drugi](https://gitlab.com/nowosad/geostat_book/blob/master/dane.zip)
+- [Kolejne rozdziały:](https://github.com/Nowosad/geostatbook)
 
 ```{r, eval=FALSE}
 # install.packages("devtools")

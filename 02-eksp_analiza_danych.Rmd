@@ -70,7 +70,7 @@ max(punkty$temp, na.rm=TRUE)
 ```
 
 ### Statystyki opisowe | ochylenie standardowe
-![](figs/sd.png)
+![](figs/normal_distribution.png)
 
 ```{r }
 sd(punkty$temp, na.rm=TRUE)
@@ -228,7 +228,7 @@ transformacja
 punkty$bc_tpz <- predict(transformacja, punkty$temp)
 ggplot(punkty@data, aes(bc_tpz)) + geom_density()
 invBoxCox <- function(x, lambda) if (lambda == 0) exp(x) else (lambda*x + 1)^(1/lambda) 
-punkty$bc_tpz_inv <- invBoxCox(punkty$bc_tpz, lambda=-0.3)
+punkty$bc_tpz_inv <- invBoxCox(punkty$bc_tpz, lambda=0.2)
 ggplot(punkty@data, aes(bc_tpz_inv)) + geom_density()
 ```
 

@@ -3,7 +3,9 @@ knit: bookdown::preview_chapter
 ---
 
 # R a dane przestrzenne
-    
+
+## R a dane przestrzenne
+
 ### Pakiety
     
 - GIS - `sp`, `rgdal`, `raster`, `rasterVis`, `rgeos`, `maptools`, `GeoXp`, `deldir`, `pgirmess`
@@ -31,10 +33,10 @@ devtools::session_info(pakiety)
 ### Reprezentacja danych nieprzestrzennych
     
 - Wektory (ang. *vector*):
-    - liczbowe (ang. *integer*, *numeric*) - c(1, 2, 3) i c(1.21, 3.32, 4.43)
-    - znakowe (ang. *character*) - c('jeden', 'dwa', 'trzy')
-    - logiczne (ang. *logical*) - c(TRUE, FALSE)
-    - czynnikowe (ang. *factor*) - c('jeden', 'dwa', 'trzy', 'jeden')
+    - liczbowe (ang. *integer*, *numeric*) - `c(1, 2, 3)` i `c(1.21, 3.32, 4.43)`
+    - znakowe (ang. *character*) - `c('jeden', 'dwa', 'trzy')`
+    - logiczne (ang. *logical*) - `c(TRUE, FALSE)`
+    - czynnikowe (ang. *factor*) - `c('jeden', 'dwa', 'trzy', 'jeden')`
 - Ramki danych (ang. *data.frame*) - to zbiór zmiennych (kolumn) oraz obserwacji (wierszy) zawierających różne typy danych
 - Macierze (ang. *matrix*)
 - Listy (ang. *list*)
@@ -57,7 +59,7 @@ devtools::session_info(pakiety)
 ### PROJ.4
 - Dane przestrzenne powinny być zawsze powiązane z układem współrzednych
 - PROJ.4 - to biblioteka pozwalająca na identyfiację oraz konwersję pomiędzy różnymi układami współrzędnych
-http://www.spatialreference.org/
+- Strona http://www.spatialreference.org/ zawiera bazę danych układów współrzędnych 
 
 ### EPSG
 - Kod EPSG (ang. *European Petroleum Survey Group*) pozwala na łatwe identyfikowanie układów współrzędnych
@@ -74,8 +76,7 @@ http://www.spatialreference.org/
 - Wielkość oczka siatki jest zmienna 
 - Nie pozwala to na proste określanie odległości czy powierzchni
 - Jednostka mapy jest abstrakcyjna
-
-- Do większości algorytmów w geostatystyce wykorzystywane są układy współrzędnych prostokątnych płaskich
+- Powyższe cechy układów geograficznych powodują, że do większości algorytmów w geostatystyce wykorzystywane są układy współrzędnych prostokątnych płaskich
 
 ## Import danych
 
@@ -97,6 +98,10 @@ summary(dane_punktowe)
 ```{r}
 proj4string(dane_punktowe) <- '+init=epsg:2180'
 summary(dane_punktowe)
+```
+
+```{r}
+plot(dane_punktowe)
 ```
 
 <!--
@@ -214,7 +219,7 @@ plot(dane_punktowe, add=TRUE)
 ```{r }
 granica <- readOGR(dsn='dane', layer='granica')
 siatka_n <- raster(extent(granica))
-res(siatka_n) <- c(500, 500)
+res(siatka_n) <- c(250, 250)
 siatka_n[] <- 0
 proj4string(siatka_n) <- proj4string(granica)
 siatka_n <- mask(siatka_n, granica)
