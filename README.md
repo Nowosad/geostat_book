@@ -49,6 +49,7 @@
 11. Może słownik pojęć?
 12. Normalizacja przy symulacjach (GsLIB – metodyka nieparametryczna – strona 141; Wackernagel – metodyka parametryczna (wielomiany Hermite) –   strona 238)
 13. Automatyczne dopasowywanie modeli - http://r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html
+14. geostat i ggplot2 - http://rogiersbart.blogspot.com/2016/03/variography-with-gstat-and-ggplot2.html
 
 ### Źródła wiedzy
 - [An Introduction to R](http://cran.r-project.org/doc/manuals/R-intro.pdf) - oficjalne wprowadzenie do R
