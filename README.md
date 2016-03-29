@@ -48,6 +48,7 @@
 10. Practical range
 11. Może słownik pojęć?
 12. Normalizacja przy symulacjach (GsLIB – metodyka nieparametryczna – strona 141; Wackernagel – metodyka parametryczna (wielomiany Hermite) –   strona 238)
+13. Automatyczne dopasowywanie modeli - http://r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html
 
 ### Źródła wiedzy
 - [An Introduction to R](http://cran.r-project.org/doc/manuals/R-intro.pdf) - oficjalne wprowadzenie do R
