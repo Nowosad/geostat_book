@@ -3,6 +3,7 @@ title: "Geostatystyka"
 author: "Jakub Nowosad"
 date: "`r Sys.Date()`"
 knit: "bookdown::render_book"
+site: bookdown::bookdown_site
 output:
   bookdown::gitbook:
     lib_dir: "book_assets"
