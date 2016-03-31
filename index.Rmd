@@ -15,18 +15,16 @@ link-citations: yes
 
 # Wprowadzenie
 
-<!--Tutaj będzie wstęp mówiący o tym co znajduje się dalej-->
+Znajdujesz się właśnie na stronie zawierającej materiały do ćwiczeń z geostatystyki. Składa się ona z kilkunastu rozdziałów pokazujących jak: dodawać i wizualizować dane przestrzenne w R [r-a-dane-przestrzenne], wykonywać wstępną eksporację danych nieprzestrzennych [eksploracja-analiza-danych-nieprzestrzennych], analizować wstępnie dane przestrzenne [eksploracyjna-analiza-danych-przestrzennych], wykorzystywać deterministyczne metody interpolacji [metody-interpolacji], rozumieć i tworzyć przestrzenne miary podobieństwa i niepodobieństwa [geostatystyka-prolog], modelować semiwariogramy bezkierunkowe i kierunkowe [modelowanie-matematycznie-autokorelacji-przestrzennej], tworzyć estymacje jednozmienne [estymacje-jednozmienne], estymacje danych kodowanych [estymacja-lokalnego-rozkadu-prawdopodobienstwa], estymacje wielozmienne [estymacje-wielozmienne], estymacje wykorzystujące dane uzupełniające [wykorzystanie-do-estymacji-danych-uzupeniajacych], oraz tworzyć symulacje przestrzenne [symulacje]. Wszystkie zaprezentowane przykłady zawierają również kod w języku R.
 
 ## Wymagania wstępne
 
-Oprogramowanie, pakiety i dane.
-
-### Oprogramowanie
+Do odtworzenia przykładów użytych na poniższej stronie konieczna jest podstawowa znajomość R. Aby zainstalować R oraz RStudio można skorzystać z poniższych odnośników:
 
 - [R](www.r-project.org) - https://cloud.r-project.org/
 - [RStudio](www.rstudio.com) - https://www.rstudio.com/products/rstudio/download/
 
-### Dane
+Dane wykorzystywane na tej stronie można pobrać korzystając ze spakowanego archiwum (dla rozdziału drugiego) oraz korzystając z pakietu `geostatbook` (dla kolejnych rozdziałów). Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych na tej stronie.
 
 - [Rozdział drugi](https://gitlab.com/nowosad/geostat_book/blob/master/dane.zip)
 - [Kolejne rozdziały:](https://github.com/Nowosad/geostatbook)
