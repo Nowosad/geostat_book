@@ -16,7 +16,7 @@ library('methods')
 
 ```{r setup7, echo=FALSE, include=FALSE}
 library('knitr')
-opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE) 
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 ```
 
 ```{r, echo=FALSE}

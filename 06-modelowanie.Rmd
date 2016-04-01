@@ -11,7 +11,7 @@ data(punkty)
 
 ```{r setup4, echo=FALSE, include=FALSE}
 library('knitr')
-opts_chunk$set(cache = FALSE, warning=FALSE, message=FALSE) 
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 ```
 
 ```{r, echo=FALSE}

@@ -13,7 +13,7 @@ data(granica)
 ```{r setup2, echo=FALSE, include=FALSE}
 library('knitr')
 library('methods')
-opts_chunk$set(warning=FALSE, message=FALSE) 
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 ```
 
 ## Cele eksploracyjnej analizy danych
@@ -72,6 +72,7 @@ max(punkty$temp, na.rm=TRUE)
 ### Statystyki opisowe | ochylenie standardowe
 
 ```{r, echo=FALSE}
+library('knitr')
 knitr::include_graphics('figs/normal_distribution.png')
 ```
 
@@ -104,11 +105,10 @@ ggplot(punkty@data, aes(temp)) + geom_density()
 ggplot(punkty@data, aes(sample=temp)) + stat_qq()
 ```
 
-http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot
-
 ```{r, echo=FALSE}
 knitr::include_graphics('figs/qq.png')
 ```
+Źródło: http://stats.stackexchange.com/a/101290/37627
 
 ### Dystrybuanta (CDF)
 - Dystrybuanta (ang. *conditional density function* - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości

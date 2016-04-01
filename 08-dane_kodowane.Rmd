@@ -12,7 +12,7 @@ data(siatka)
 
 ```{r setup8, echo=FALSE, include=FALSE}
 library('knitr')
-opts_chunk$set(cache = TRUE, warning=FALSE, message=FALSE) 
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 ```
 
 ```{r, echo=FALSE}
@@ -84,6 +84,7 @@ spplot(ik, 'var1.var')
 
 ```{r plotsy2ok, echo=FALSE, fig.height=8}
 library('gridExtra')
+ps.options(encoding='CP1250')
 p1 <- spplot(ik, "var1.pred", main='Prawdopodobieństwo Temp > 20')
 p2 <- spplot(ik, "var1.var", main='Wariancja predykcji IK')
 grid.arrange(p1, p2, ncol=1)
@@ -106,6 +107,7 @@ ik12 <- krige(I(temp<12)~1, punkty, siatka, model=fitted_ind12, nmax=30)
 
 ```{r ploty_trzyik, echo=FALSE, fig.height=12}
 library('gridExtra')
+ps.options(encoding='CP1250')
 p1 <- spplot(ik20, "var1.pred", main="Prawdopodobieństwo Temp < 20")
 p2 <- spplot(ik16, "var1.pred", main="Prawdopodobieństwo Temp < 16")
 p3 <- spplot(ik12, "var1.pred", main="Prawdopodobieństwo Temp < 12")

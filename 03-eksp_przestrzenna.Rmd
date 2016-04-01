@@ -232,7 +232,7 @@ library('knitr')
 srednia_arytmetyczna_pop <- 15.5912781
 df <- data.frame(sa=c(srednia_arytmetyczna_pop, srednia_arytmetyczna, srednia_wazona_c1, srednia_wazona_c2, srednia_wazona_p))
 rownames(df) <- c('Populacja', 'Próba', "Rozgrupowanie komórkowe I", "Rozgrupowanie komórkowe II", "Rozgrupowanie poligonowe")
-kable(df, col.names='Średnia arytmetyczna', row.names=TRUE)
+knitr::kable(df, col.names='Średnia arytmetyczna', row.names=TRUE)
 ```
 
 <!--

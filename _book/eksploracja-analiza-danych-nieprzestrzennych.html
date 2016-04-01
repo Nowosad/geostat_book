@@ -36,11 +36,11 @@ MathJax.Hub.Config({
 <link rel="prev" href="r-a-dane-przestrzenne.html">
 <link rel="next" href="eksploracyjna-analiza-danych-przestrzennych.html">
 
-<link href="book_assets/gitbook-2.6.7/css/style.css" rel="stylesheet" />
-<link href="book_assets/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
-<link href="book_assets/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
-<link href="book_assets/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
-<link href="book_assets/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
 
 
 
@@ -504,8 +504,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3><span class="header-section-number">3.4.3</span> Wykresy kwantyl-kwantyl (ang.<em>quantile-quantile</em>)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(<span class="dt">sample=</span>temp)) +<span class="st"> </span><span class="kw">stat_qq</span>()</code></pre></div>
 <p><img src="Geostatystyka_files/figure-html/unnamed-chunk-39-1.png" alt="" /><!-- --></p>
-<p><a href="http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot" class="uri">http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot</a></p>
-<p><img src="figs/qq.png" alt="" /><!-- --></p>
+<p><img src="figs/qq.png" alt="" /><!-- --> Źródło: <a href="http://stats.stackexchange.com/a/101290/37627" class="uri">http://stats.stackexchange.com/a/101290/37627</a></p>
 </div>
 <div id="dystrybuanta-cdf" class="section level3">
 <h3><span class="header-section-number">3.4.4</span> Dystrybuanta (CDF)</h3>
@@ -682,13 +681,13 @@ punkty$bc_tpz_inv &lt;-<span class="st"> </span><span class="kw">invBoxCox</span
 <a href="r-a-dane-przestrzenne.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="eksploracyjna-analiza-danych-przestrzennych.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
-<script src="book_assets/gitbook-2.6.7/js/app.js"></script>
-<script src="book_assets/gitbook-2.6.7/js/lunr.js"></script>
-<script src="book_assets/gitbook-2.6.7/js/plugin-search.js"></script>
-<script src="book_assets/gitbook-2.6.7/js/plugin-sharing.js"></script>
-<script src="book_assets/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
-<script src="book_assets/gitbook-2.6.7/js/plugin-bookdown.js"></script>
-<script src="book_assets/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/app.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
 <script>
 require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -710,7 +709,7 @@ gitbook.start({
 "link": "https://gitlab.com/nowosad/geostat_book/edit/master/02-eksp_analiza_danych.Rmd",
 "text": "Edycja"
 },
-"download": ["Geostatystyka.pdf"],
+"download": null,
 "toc": {
 "collapse": "section"
 },
