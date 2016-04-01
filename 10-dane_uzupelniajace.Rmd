@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# Wykorzystanie do estymacji danych uzupełniających 
+# Wykorzystanie do estymacji danych uzupełniających {#wykorzystanie-do-estymacji-danych-uzupeniajacych}
 
 ```{r}
 library('geostatbook')
@@ -63,7 +63,7 @@ spplot(kws, 'var1.var', sp.layout=punkty)
 ```
 
 
-```{r plotsykws2, echo=FALSE}
+```{r plotsykws2, echo=FALSE, fig.height=8}
 library('gridExtra')
 p1 <- spplot(kws, "var1.pred", main='Predykcja KWS')
 p2 <- spplot(kws, "var1.var", main='Wariancja predykcji KWS')
@@ -96,7 +96,7 @@ spplot(sk_lvm, 'var1.pred')
 spplot(sk_lvm, 'var1.var')
 ```
 
-```{r plotsylvm2, echo=FALSE}
+```{r plotsylvm2, echo=FALSE, fig.height=8}
 library('gridExtra')
 p1 <- spplot(sk_lvm, "var1.pred", main='Predykcja SK LVM')
 p2 <- spplot(sk_lvm, "var1.var", main='Wariancja predykcji SK LVM')
@@ -130,7 +130,7 @@ spplot(uk1, 'var1.pred')
 spplot(uk1, 'var1.var')
 ```
 
-```{r plotsy4uk1, echo=FALSE}
+```{r plotsy4uk1, echo=FALSE, fig.height=8}
 library('gridExtra')
 p1 <- spplot(uk1, "var1.pred", main='Predykcja KED')
 p2 <- spplot(uk1, "var1.var", main='Wariancja predykcji KED')
@@ -154,7 +154,7 @@ spplot(uk2, 'var1.pred')
 spplot(uk2, 'var1.var')
 ```
 
-```{r plotsy4ked, echo=FALSE}
+```{r plotsy4ked, echo=FALSE, fig.height=8}
 library('gridExtra')
 p1 <- spplot(uk2, "var1.pred", main='Predykcja KED')
 p2 <- spplot(uk2, "var1.var", main='Wariancja predykcji KED')

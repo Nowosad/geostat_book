@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# Ocena jakości estymacji 
+# Ocena jakości estymacji {#ocena-jakosci-estymacji}
 
 <!--[UWAGA POMIESZANY ME Z RESZTĄ!!]-->
 

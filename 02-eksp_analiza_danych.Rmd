@@ -2,7 +2,13 @@
 knit: bookdown::preview_chapter
 ---
 
-# Eksploracja analiza danych nieprzestrzennych
+# Eksploracja analiza danych nieprzestrzennych {#eksploracja-analiza-danych-nieprzestrzennych}
+
+```{r}
+library('geostatbook')
+data(punkty)
+data(granica)
+```
 
 ```{r setup2, echo=FALSE, include=FALSE}
 library('knitr')
@@ -10,18 +16,13 @@ library('methods')
 opts_chunk$set(warning=FALSE, message=FALSE) 
 ```
 
-## Eksploracyjna analiza danych | Cel
-- Ogólna charakterystyka danych oraz badanego zjawiska
+## Cele eksploracyjnej analizy danych
+- Stworzenie ogólnej charakterystyki danych oraz badanego zjawiska
 - Określenie przestrzennego/czasowego typu próbkowania
-- Informacja o relacji pomiędzy lokalizacją obserwacji a czynnikami wpływającymi na zmienność przestrzenną cechy
+- Uzyskanie informacji o relacji pomiędzy lokalizacją obserwacji a czynnikami wpływającymi na zmienność przestrzenną badanych cech
 
 ## Dane
 ### Dane 
-
-```{r}
-library('geostatbook')
-data(punkty)
-```
 
 ```{r}
 str(punkty)
@@ -34,7 +35,6 @@ par(mar=c(rep(0, 4)))
 
 ```{r, message=FALSE, warning=FALSE}
 plot(punkty)
-data(granica)
 plot(granica, add=TRUE)
 ```
 
@@ -70,7 +70,10 @@ max(punkty$temp, na.rm=TRUE)
 ```
 
 ### Statystyki opisowe | ochylenie standardowe
-![](figs/normal_distribution.png)
+
+```{r, echo=FALSE}
+knitr::include_graphics('figs/normal_distribution.png')
+```
 
 ```{r }
 sd(punkty$temp, na.rm=TRUE)
@@ -102,7 +105,10 @@ ggplot(punkty@data, aes(sample=temp)) + stat_qq()
 ```
 
 http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot
-![http://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot](figs/qq.png)
+
+```{r, echo=FALSE}
+knitr::include_graphics('figs/qq.png')
+```
 
 ### Dystrybuanta (CDF)
 - Dystrybuanta (ang. *conditional density function* - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości

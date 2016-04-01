@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# Geostatystyka - prolog
+# Geostatystyka - prolog {#geostatystyka-prolog}
 
 ```{r}
 library('geostatbook')
@@ -80,7 +80,7 @@ p <- DiagrammeR("
 6. Porównanie i ocena modeli
 7. Stworzenie wynikowego produktu i jego dystrybucja
 
-## Przestrzenna kowariancja, korelacja i semiwariancja
+## Przestrzenna kowariancja i korelacja i semiwariancja
 
 ### Przestrzenna kowariancja, korelacja i semiwariancja | Założenia
 1. Przestrzennej ciągłości - przestrzenna korelacja między zmienny w dwóch lokalizacjach zależy tylko od ich odległości (oraz czasem kierunku), lecz nie od tego gdzie są one położone
@@ -182,13 +182,13 @@ gdzie $N(h)$ oznacza liczbę par punktów w odstępie $h$
 - Należy określić czy zjawisko wykazuje anizotropię przestrzenną
 
 ### Semiwariogram | Obliczenia pomocnicze
-- Liczba par obserwacji
+- Liczba par obserwacji:
 
 ```{r }
 0.5 * length(punkty) * (length(punkty) - 1)
 ```
 
-- Połowa pierwiastka powierzchni
+- Połowa pierwiastka powierzchni:
 
 ```{r }
 pow <- area(granica)
@@ -210,14 +210,14 @@ z_kwadrat <- kraw_x^2 + kraw_y^2
 ```
 -->
 
-- Powierzchnia zajmowana przez jedną próbkę
+- Powierzchnia zajmowana przez jedną próbkę:
 
 ```{r }
 pow_pr <- area(granica) / length(punkty)
 pow_pr
 ```
 
-- Średnia odległość między punktami 
+- Średnia odległość między punktami :
 
 ```{r }
 sqrt(pow_pr)
@@ -235,7 +235,7 @@ plot(vario_par)
 ```
 
 ### Semiwariogram | Odległość między przedziałami (ang. *Interval width*)
-- Domyślnie to maksymalny zasięg semiwariogramu podzielony przez 15 dahe odległość między przedziałami  (ang. *Interval width*)
+- Domyślnie - maksymalny zasięg semiwariogramu podzielony przez 15 daje odległość między przedziałami (ang. *Interval width*)
 
 ```{r }
 vario_par <- variogram(temp~1, punkty, cutoff = 1000, width = 250)
@@ -291,11 +291,13 @@ plot(vario_map, threshold=30) # co najmniej 30 par punktów
 plot3D(raster(vario_map$map), col=rainbow)
 ```
 
-![](figs/plot3D.png)
+```{r, echo=FALSE}
+knitr::include_graphics('figs/plot3D.png')
+```
 
 ### Semiwariogramy kierunkowe | Kierunki
 - W przypadku, gdy zjawisko wykazuje anizotropię przestrzenną, możliwe jest stworzenie semiwariogramów dla różnych wybranych kierunków
-- Przykładowo, dla argumentu *alpha = c(0, 45, 90, 135)* cztery główne kierunki to 0, 45, 90 i 135 stopni. Oznacza to, że dla kierunku 45 stopni brane pod uwagę będą wszystkie pary punktów pomiędzy 22,5 a 67,5 stopnia.
+- Przykładowo, dla argumentu `alpha = c(0, 45, 90, 135)` cztery główne kierunki to 0, 45, 90 i 135 stopni. Oznacza to, że dla kierunku 45 stopni brane pod uwagę będą wszystkie pary punktów pomiędzy 22,5 a 67,5 stopnia.
 
 ```{r }
 vario_kier <- variogram(temp~1, punkty, alpha = c(0, 45, 90, 135))

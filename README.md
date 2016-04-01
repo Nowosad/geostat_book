@@ -1,3 +1,9 @@
+# book_to_fix:
+1. Popraw references
+1. Popraw wielkość obrazków
+1. Zamiana ryciny normalności
+
+
 # toAdd:
 1. Kokriging - dodaj mapki, etc./ może mniejsza siatka?
 1. Jak walidować dane Indicator Kriging?
@@ -13,17 +19,6 @@
 12. Normalizacja przy symulacjach (GsLIB – metodyka nieparametryczna – strona 141; Wackernagel – metodyka parametryczna (wielomiany Hermite) –   strona 238)
 13. Automatyczne dopasowywanie modeli - http://r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html
 14. geostat i ggplot2 - http://rogiersbart.blogspot.com/2016/03/variography-with-gstat-and-ggplot2.html
-
-### Źródła wiedzy
-- [An Introduction to R](http://cran.r-project.org/doc/manuals/R-intro.pdf) - oficjalne wprowadzenie do R
-- [Przewodnik po pakiecie R](http://www.biecek.pl/R/), [Programowanie w języku R](http://rksiazka.rexamine.com/),  [Statystyczna analiza danych z wykorzystaniem programu R](http://ksiegarnia.pwn.pl/7371_pozycja.html?npt=233) - polskie wydawnictwa
-- [Applied Spatial Dala Analysis with R](http://www.asdar-book.org/)
-- [A Practical Guide to Geostatistical Mapping](http://spatial-analyst.net/book/system/files/Hengl_2009_GEOSTATe2c1w.pdf)
-- [gstat user's manual](http://www.gstat.org/gstat.pdf)
-- [CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html)
-- [Applied Geostatistics](https://books.google.pl/books?id=vC2dcXFLI3YC), [Statistics for spatial data](https://books.google.pl/books?id=4SdRAAAAMAAJ)
-- [Praktyczny poradnik - jak szybko zrozumieć i wykorzystać geostatystykę w pracy badawczej](http://www.geoinfo.amu.edu.pl/staff/astach/www_geostat/programy/A_Stach_%20poradnik_geostatystyki.pdf)
-- Wyszukiwarki internetowe [Rseek](http://www.rseek.org/), [Duckduckgo](http://duckduckgo.com/), [Google](http://google.com/), [Bing](http://bing.com/), itd.
 
 # data:
 

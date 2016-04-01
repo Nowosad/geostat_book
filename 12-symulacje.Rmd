@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# Symulacje 
+# Symulacje {#symulacje}
 
 ```{r}
 library('geostatbook')
@@ -42,8 +42,8 @@ par(mar=c(rep(0, 4)))
 
 ## Typy symulacji
 ### Typy symulacji
-- Symulacje bezwarunkowe (ang. Unconditional Simulations) - wykorzystuje semiwariogram, żeby włączyć informację przestrzenną, ale wartości ze zmierzonych punktów nie są wykorzystywane. 
-- Symulacje warunkowe (ang. Conditional Simulations) - opiera się ona o średnią wartość, strukturę kowariancji oraz obserwowane wartości
+- Symulacje bezwarunkowe (ang. *Unconditional Simulations*) - wykorzystuje semiwariogram, żeby włączyć informację przestrzenną, ale wartości ze zmierzonych punktów nie są wykorzystywane. 
+- Symulacje warunkowe (ang. *Conditional Simulations*) - opiera się ona o średnią wartość, strukturę kowariancji oraz obserwowane wartości
 
 ## Symulacje bezwarunkowe
 

@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# Estymacja lokalnego rozkładu prawdopodobieństwa
+# Estymacja lokalnego rozkładu prawdopodobieństwa {#estymacja-lokalnego-rozkadu-prawdopodobienstwa}
 
 ```{r}
 library('geostatbook')
@@ -30,7 +30,7 @@ par(mar=c(rep(0, 4)))
 
 <!--http://geostat-course.org/system/files/geostat13_ind.pdf-->
 
-### Kriging danych kodowanych (ang. *Indicator kriging*)| Wady i zalety
+### Wady i zalety krigingu danych kodowanych
 - Zalety:
     - Możliwość zastosowania, gdy nie interesuje nas konkretna wartość, ale znalezienie obszarów o wartości przekraczającej dany poziom
     - Nie jest istotny kszałt rozkładu
@@ -82,7 +82,7 @@ spplot(ik, 'var1.pred')
 spplot(ik, 'var1.var')
 ```
 
-```{r plotsy2ok, echo=FALSE}
+```{r plotsy2ok, echo=FALSE, fig.height=8}
 library('gridExtra')
 p1 <- spplot(ik, "var1.pred", main='Prawdopodobieństwo Temp > 20')
 p2 <- spplot(ik, "var1.var", main='Wariancja predykcji IK')
@@ -104,7 +104,7 @@ ik16 <- krige(I(temp<16)~1, punkty, siatka, model=fitted_ind16, nmax=30)
 ik12 <- krige(I(temp<12)~1, punkty, siatka, model=fitted_ind12, nmax=30)
 ```
 
-```{r ploty_trzyik, echo=FALSE, fig.height=8}
+```{r ploty_trzyik, echo=FALSE, fig.height=12}
 library('gridExtra')
 p1 <- spplot(ik20, "var1.pred", main="Prawdopodobieństwo Temp < 20")
 p2 <- spplot(ik16, "var1.pred", main="Prawdopodobieństwo Temp < 16")

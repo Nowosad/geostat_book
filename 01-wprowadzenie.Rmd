@@ -2,33 +2,18 @@
 knit: bookdown::preview_chapter
 ---
 
-# R a dane przestrzenne
+# R a dane przestrzenne {#r-a-dane-przestrzenne}
 
 ## R a dane przestrzenne
 
 ### Pakiety
+
+R zawiera wiele funkcji pozwalających na przetwarzanie, wizualizację i analizowanie danych przestrzennych. Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi są to:
     
-- GIS - `sp`, `rgdal`, `raster`, `rasterVis`, `rgeos`, `maptools`, `GeoXp`, `deldir`, `pgirmess`
+- GIS - `sp`, `rgdal`, `raster`, `rasterVis`, `rgeos`, `maptools`, `GeoXp`, `deldir`, `pgirmess`, `spatstat`
 - Geostatystyka - `gstat`, `geoR`, `geoRglm`, `fields`, `spBayes`, `RandomFields`, `vardiag`
-- Inne - `ggplot2`, `corrplot`, `caret`
 
-```{r pakietsy}
-pakiety <- c('caret', 'corrplot', 'dismo', 'fields', 'geoR', 'ggplot2', 'gridExtra', 'gstat', 'pgirmess', 'raster', 'rasterVis', 'rgdal', 'rgeos', 'sp')
-```
-
-```{r pakiety_inst, eval=FALSE}
-install.packages(pakiety)
-```
-
-Pakiety R oraz zbiory danych używane w tej książce można również zainstalować poprzez:
-
-```{r, eval=FALSE}
-devtools::install_github("nowosad/geostatbook")
-```
-
-```{r, echo=FALSE, eval=FALSE}
-devtools::session_info(pakiety)
-```
+Więcej szczegółów na ten temat można znaleźć pod adresem https://cran.r-project.org/web/views/Spatial.html.
 
 ### Reprezentacja danych nieprzestrzennych
     
@@ -65,11 +50,11 @@ devtools::session_info(pakiety)
 - Kod EPSG (ang. *European Petroleum Survey Group*) pozwala na łatwe identyfikowanie układów współrzędnych
 - Przykładowo, układ PL 1992 może być określony jako:
 
-"+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+`'+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'`
 
 - ...lub też za pomocą kodu EPSG:
 
-"+init=epsg:2180"
+`'+init=epsg:2180'`
 
 ### Układ geograficzny
 - Proporcje pomiędzy współrzedną oznaczjącą długość geograficzną (X) a oznaczającą szerokość geograficzną (Y) nie są równe 1:1
@@ -80,7 +65,7 @@ devtools::session_info(pakiety)
 
 ## Import danych
 
-### Dane punktowe (format csv)
+### Dane punktowe (format .csv)
 
 ```{r}
 dane_punktowe <- read.csv('dane/punkty.csv')

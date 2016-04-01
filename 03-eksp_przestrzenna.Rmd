@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# Eksploracyjna analiza danych przestrzennych
+# Eksploracyjna analiza danych przestrzennych {#eksploracyjna-analiza-danych-przestrzennych}
 
 ```{r, interpolate_init}
 library('geostatbook')
@@ -42,8 +42,6 @@ regularny <- spsample(granica, 150, type = 'regular')
 plot(regularny)
 ```
 
-- Zmienna *offset*
-
 ### Typ próbowania | Losowy
 
 ```{r }
@@ -71,7 +69,7 @@ pref <- spsample(granica, 150, type = 'clustered', nclusters=30)
 plot(pref)
 ```
 
-### Mapy punktowe i dane lokalnie odstające
+## Mapy punktowe i dane lokalnie odstające
 
 ```{r}
 data(granica)

@@ -1,7 +1,8 @@
 ---
 knit: bookdown::preview_chapter
 ---
-# Estymacje jednozmienne
+
+# Estymacje jednozmienne {#estymacje-jednozmienne}
 
 ```{r}
 library('geostatbook')
@@ -48,7 +49,11 @@ model <- vgm(10, model = 'Sph', range = 4000, nugget = 0.5)
 model
 fitted <- fit.variogram(vario, model)
 plot(vario, model=fitted)
+```
 
+- Średnia ta jest ustalana za pomocą argumentu `beta`
+
+```{r }
 sk <- krige(temp~1, punkty, siatka, model=fitted, beta=15.324)
 summary(sk)
 ```
@@ -58,7 +63,7 @@ spplot(sk, 'var1.pred')
 spplot(sk, 'var1.var')
 ```
 
-```{r plotsy2, echo=FALSE, eval=TRUE}
+```{r plotsy2, echo=FALSE, eval=TRUE, fig.height=8}
 library('gridExtra')
 p1 <- spplot(sk, "var1.pred", main='Predykcja SK')
 p2 <- spplot(sk, "var1.var", main='Wariancja predykcji SK')
@@ -70,10 +75,13 @@ grid.arrange(p1, p2, ncol=1)
 
 - Średnia traktowana jest jako nieznana
 - Uwzględnia lokalne fluktuacje średniej poprzez stosowanie ruchomego okna
+- Parametry ruchomego okna można określić za pomocą jednego z dwóch argumentów:
+    - `nmax` - użyta zostanie określona liczba najbliższych obserwacji
+    - `maxdist` -  użyte zostaną jedynie obserwacje w zadanej odległości
 
 ```{r }
-ok <- krige(temp~1, punkty, siatka, model=fitted, maxdist=1000)
 # ok <- krige(temp~1, punkty, siatka, model=fitted, nmax=30)
+ok <- krige(temp~1, punkty, siatka, model=fitted, maxdist=1000)
 ```
 
 ```{r plotsy1ok2, eval=FALSE}
@@ -81,7 +89,7 @@ spplot(ok, 'var1.pred')
 spplot(ok, 'var1.var')
 ```
 
-```{r plotsy2ok2, echo=FALSE, eval=TRUE}
+```{r plotsy2ok2, echo=FALSE, eval=TRUE, fig.height=8}
 library('gridExtra')
 p1 <- spplot(ok, "var1.pred", main='Predykcja OK')
 p2 <- spplot(ok, "var1.var", main='Wariancja predykcji OK')
@@ -115,7 +123,7 @@ spplot(kzt, 'var1.pred')
 spplot(kzt, 'var1.var')
 ```
 
-```{r plotsy2kzt, echo=FALSE, eval=TRUE}
+```{r plotsy2kzt, echo=FALSE, eval=TRUE, fig.height=8}
 library('gridExtra')
 p1 <- spplot(kzt, "var1.pred", main='Predykcja OK')
 p2 <- spplot(kzt, "var1.var", main='Wariancja predykcji OK')

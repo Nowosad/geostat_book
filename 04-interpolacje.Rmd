@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# Metody interpolacji
+# Metody interpolacji {#metody-interpolacji}
 
 ```{r, interpolate_inits}
 library('geostatbook')

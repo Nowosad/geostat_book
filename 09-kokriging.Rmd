@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# Estymacje wielozmienne
+# Estymacje wielozmienne {#estymacje-wielozmienne}
 
 ```{r}
 library('geostatbook')
@@ -64,7 +64,7 @@ plot(v)
 
 ```{r}
 g <- gstat(g, model=vgm(0.006, 'Sph', 2000, 0.001), fill.all=TRUE)
-g_fit <- fit.lmc(v, g, correct.diagonal = 1.01) #zmienne są bardzo mocno skorelowane
+g_fit <- fit.lmc(v, g, correct.diagonal = 1.01) #zmienne są bardzo mocno skorelowane - dlatego użyto argumentu correct.diagonal = 1.01
 g_fit
 plot(v, g_fit)
 ```
@@ -89,7 +89,7 @@ spplot(ck, 'SAVI.pred')
 spplot(ck, 'SAVI.var')
 ```
 
-```{r kokriging_predicted, echo=FALSE, cache=TRUE, eval=FALSE}
+```{r kokriging_predicted, echo=FALSE, cache=TRUE, fig.height=8}
 library('gridExtra')
 p1 <- spplot(ck, "SAVI.pred", main='Predykcja CK')
 p2 <- spplot(ck, "SAVI.var", main='Wariancja CK')
@@ -123,7 +123,7 @@ spplot(ck_a, "TPZ1999.pred")
 spplot(ck_a, "TPZ1999.var")
 ```
 
-```{r plotsyck2a, eval=FALSE, echo=FALSE}
+```{r plotsyck2a, eval=FALSE, echo=FALSE, fig.height=8}
 library('gridExtra')
 p1 <- spplot(ck_a, "TPZ1999.pred", main='Predykcja CK - anizotropia')
 p2 <- spplot(ck_a, "TPZ1999.var", main='Wariancja CK - anizotropia')

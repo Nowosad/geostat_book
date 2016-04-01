@@ -15,19 +15,45 @@ link-citations: yes
 
 # Wprowadzenie
 
-Znajdujesz się właśnie na stronie zawierającej materiały do ćwiczeń z geostatystyki. Składa się ona z kilkunastu rozdziałów pokazujących jak: dodawać i wizualizować dane przestrzenne w R [r-a-dane-przestrzenne], wykonywać wstępną eksporację danych nieprzestrzennych [eksploracja-analiza-danych-nieprzestrzennych], analizować wstępnie dane przestrzenne [eksploracyjna-analiza-danych-przestrzennych], wykorzystywać deterministyczne metody interpolacji [metody-interpolacji], rozumieć i tworzyć przestrzenne miary podobieństwa i niepodobieństwa [geostatystyka-prolog], modelować semiwariogramy bezkierunkowe i kierunkowe [modelowanie-matematycznie-autokorelacji-przestrzennej], tworzyć estymacje jednozmienne [estymacje-jednozmienne], estymacje danych kodowanych [estymacja-lokalnego-rozkadu-prawdopodobienstwa], estymacje wielozmienne [estymacje-wielozmienne], estymacje wykorzystujące dane uzupełniające [wykorzystanie-do-estymacji-danych-uzupeniajacych], oraz tworzyć symulacje przestrzenne [symulacje]. Wszystkie zaprezentowane przykłady zawierają również kod w języku R.
+Znajdujesz się właśnie na stronie zawierającej materiały do ćwiczeń z geostatystyki. Składa się ona z kilkunastu rozdziałów pokazujących jak: dodawać i wizualizować dane przestrzenne w R (rozdział \@ref(r-a-dane-przestrzenne)), wykonywać wstępną eksporację danych nieprzestrzennych (rozdział \@ref(eksploracja-analiza-danych-nieprzestrzennych)), analizować wstępnie dane przestrzenne (rozdział \@ref(eksploracyjna-analiza-danych-przestrzennych)), wykorzystywać deterministyczne metody interpolacji (rozdział \@ref(metody-interpolacji)), rozumieć i tworzyć przestrzenne miary podobieństwa i niepodobieństwa (rozdział \@ref(geostatystyka-prolog)), modelować semiwariogramy bezkierunkowe i kierunkowe (rozdział \@ref(modelowanie-matematycznie-autokorelacji-przestrzennej)), tworzyć estymacje jednozmienne (rozdział \@ref(estymacje-jednozmienne)), estymacje danych kodowanych (rozdział \@ref(estymacja-lokalnego-rozkadu-prawdopodobienstwa)), estymacje wielozmienne (rozdział \@ref(estymacje-wielozmienne)), estymacje wykorzystujące dane uzupełniające (rozdział \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych)), oceniać jakość wykonanych estymacji (rozdział \@ref(ocena-jakosci-estymacji)) oraz budować symulacje przestrzenne (rozdział \@ref(symulacje)). Wszystkie zaprezentowane przykłady zawierają również kod w języku R.
 
 ## Wymagania wstępne
+
+### Oprogramowanie
 
 Do odtworzenia przykładów użytych na poniższej stronie konieczna jest podstawowa znajomość R. Aby zainstalować R oraz RStudio można skorzystać z poniższych odnośników:
 
 - [R](www.r-project.org) - https://cloud.r-project.org/
 - [RStudio](www.rstudio.com) - https://www.rstudio.com/products/rstudio/download/
 
-Dane wykorzystywane na tej stronie można pobrać korzystając ze spakowanego archiwum (dla rozdziału drugiego) oraz korzystając z pakietu `geostatbook` (dla kolejnych rozdziałów). Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych na tej stronie.
+Dodatkowo, użyte zostały poniższe pakiety R:
 
-- [Rozdział drugi](https://gitlab.com/nowosad/geostat_book/blob/master/dane.zip)
-- [Kolejne rozdziały:](https://github.com/Nowosad/geostatbook)
+```{r pakietsy}
+pakiety <- c('caret', 'corrplot', 'dismo', 'fields', 'geoR', 'ggplot2', 'gridExtra', 'gstat', 'pgirmess', 'raster', 'rasterVis', 'rgdal', 'rgeos', 'sp')
+```
+
+Pakiety R używane na tej stronie można również zainstalować poprzez:
+
+```{r pakiety_inst, eval=FALSE}
+install.packages(pakiety)
+```
+
+Lub też za pomocą pakietu `geostatbook`:
+
+```{r, eval=FALSE}
+devtools::install_github("nowosad/geostatbook")
+```
+
+```{r, echo=FALSE, eval=FALSE}
+devtools::session_info(pakiety)
+```
+
+### Dane
+
+Dane wykorzystywane na tej stronie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu `geostatbook` (dla kolejnych rozdziałów). Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych na tej stronie.
+
+- [Archiwum zawierające dane do rozdziału drugiego](http://nowosad.github.io/geostat_book/dane.zip)
+- [Dane do kolejnych rozdziałów są zawarte w pakiecie geostatbook:](https://github.com/Nowosad/geostatbook)
 
 ```{r, eval=FALSE}
 # install.packages("devtools")
