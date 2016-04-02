@@ -1,5 +1,5 @@
 # book_to_fix:
-1. Popraw references
+1. Popraw references (np. cytowania pakietów)
 1. Popraw wielkość obrazków
 1. Zamiana ryciny normalności
 

@@ -33,8 +33,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html">
-<link rel="next" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html">
+<link rel="prev" href="zrodla-wiedzy.html">
+
 
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -386,145 +386,66 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="estymacje-wielozmienne" class="section level1">
-<h1><span class="header-section-number">Rodział 10</span> Estymacje wielozmienne</h1>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;geostatbook&#39;</span>)
-<span class="kw">data</span>(punkty)
-<span class="kw">data</span>(punkty_ndvi)
-<span class="kw">data</span>(siatka)</code></pre></div>
-<div id="kokriging-prosty-i-zwyky-sck-i-ock" class="section level2">
-<h2><span class="header-section-number">10.1</span> Kokriging (prosty i zwykły, SCK i OCK)</h2>
-<div id="kokriging-ang.-co-kriging" class="section level3">
-<h3><span class="header-section-number">10.1.1</span> Kokriging (ang. <em>co-kriging</em>)</h3>
-<ul>
-<li>Kokriging pozwala na wykorzystanie dodatkowej zmiennej (ang. <em>auxiliary variable</em>), zwanej inaczej kozmienną (ang. <em>co-variable</em>), która może być użyta do prognozwania wartości badanej zmiennej w nieopróbowanej lokalizacji</li>
-<li>Zmienna dodatkowa może być pomierzona w tych samych miejscach, gdzie badana zmienna, jak też w innych niż badana zmienna</li>
-<li>Możliwa jest też sytuacja, gdy zmienna dodatkowa jest pomierzona w dwóch powyższych przypadkach</li>
-<li>Kokriging wymaga, aby obie zmienne były istotnie ze sobą skorelowane</li>
-<li>Najczęściej kokriging jest stosowany w sytuacji, gdy zmienna dodatkowa jest łatwiejsza (tańsza) do pomierzenia niż zmienna główna</li>
-<li>W efekcie, uzyskany zbiór danych zawiera informacje o badanej zmiennej oraz gęściej opróbowane informacje o zmiennej dodatkowej</li>
-<li>Jeżeli informacje o zmiennej dodatkowej są znane dla całego obszaru wówczas bardziej odpowiednią techniką będzie kriging z zewnątrznym trendem (KED)</li>
-</ul>
-</div>
-<div id="kokriging-wybor-dodatkowej-zmiennej" class="section level3">
-<h3><span class="header-section-number">10.1.2</span> Kokriging | Wybór dodatkowej zmiennej</h3>
-<ul>
-<li>Wybór zmiennej dodatkowej może opierać się na dwóch kryteriach:
-<ul>
-<li>Teoretycznym</li>
-<li>Empirycznym</li>
-</ul></li>
-</ul>
-<!--
-Kroskowariogramy
-Kroskorelogramy
--->
-</div>
-</div>
-<div id="krossemiwariogramy" class="section level2">
-<h2><span class="header-section-number">10.2</span> Krossemiwariogramy</h2>
-<div id="krossemiwariogramy-1" class="section level3">
-<h3><span class="header-section-number">10.2.1</span> Krossemiwariogramy</h3>
-<ul>
-<li>Krossemiwariogram jest to wariancja różnicy pomiędzy dwiema zmiennymi w dwóch lokalizacjach</li>
-<li>Wyliczając Krossemiwariogram otrzymujemy empiryczne semiwatiogramy dla dwóch badanych zmiennych oraz kroswariogram dla kombinacji dwóch zmiennych</li>
-<li>Krossemiwariogram znajduje swoje zastosowanie w technice zwanej kokrigingiem</li>
-</ul>
-</div>
-<div id="krossemiwariogramy-2" class="section level3">
-<h3><span class="header-section-number">10.2.2</span> Krossemiwariogramy</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g &lt;-<span class="st"> </span><span class="kw">gstat</span>(<span class="ot">NULL</span>, <span class="dt">id=</span><span class="st">&#39;SAVI&#39;</span>, <span class="dt">form =</span> savi~<span class="dv">1</span>, <span class="dt">data =</span> punkty)
-g &lt;-<span class="st"> </span><span class="kw">gstat</span>(g, <span class="dt">id=</span><span class="st">&#39;NDVI&#39;</span>, <span class="dt">form =</span> ndvi~<span class="dv">1</span>, <span class="dt">data =</span> punkty_ndvi)
-g</code></pre></div>
-<pre><code>## data:
-## SAVI : formula = savi`~`1 ; data dim = 250 x 5
-## NDVI : formula = ndvi`~`1 ; data dim = 997 x 1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v &lt;-<span class="st"> </span><span class="kw">variogram</span>(g)
-<span class="kw">plot</span>(v)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/krosssemi-1.png" alt="" /><!-- --></p>
-</div>
-</div>
-<div id="modelowanie-krossemiwariogramow" class="section level2">
-<h2><span class="header-section-number">10.3</span> Modelowanie krossemiwariogramów</h2>
-<div id="modelowanie-krossemiwariogramow-fit.lmc" class="section level3">
-<h3><span class="header-section-number">10.3.1</span> Modelowanie krossemiwariogramów | <code>fit.lmc</code></h3>
-<ul>
-<li>Funkcja <code>fit.lmc</code> dopasowuje liniowy model koregionalizacji do semiwariogramów wielozmienych</li>
-</ul>
-</div>
-<div id="modelowanie-krossemiwariogramow-1" class="section level3">
-<h3><span class="header-section-number">10.3.2</span> Modelowanie krossemiwariogramów</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g &lt;-<span class="st"> </span><span class="kw">gstat</span>(g, <span class="dt">model=</span><span class="kw">vgm</span>(<span class="fl">0.006</span>, <span class="st">&#39;Sph&#39;</span>, <span class="dv">2000</span>, <span class="fl">0.001</span>), <span class="dt">fill.all=</span><span class="ot">TRUE</span>)
-g_fit &lt;-<span class="st"> </span><span class="kw">fit.lmc</span>(v, g, <span class="dt">correct.diagonal =</span> <span class="fl">1.01</span>) <span class="co">#zmienne są bardzo mocno skorelowane - dlatego użyto argumentu correct.diagonal = 1.01</span>
-g_fit</code></pre></div>
-<pre><code>## data:
-## SAVI : formula = savi`~`1 ; data dim = 250 x 5
-## NDVI : formula = ndvi`~`1 ; data dim = 997 x 1
-## variograms:
-##              model       psill range
-## SAVI[1]        Nug 0.001278509     0
-## SAVI[2]        Sph 0.003338946  2000
-## NDVI[1]        Nug 0.004065525     0
-## NDVI[2]        Sph 0.005918453  2000
-## SAVI.NDVI[1]   Nug 0.002257298     0
-## SAVI.NDVI[2]   Sph 0.004352821  2000</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(v, g_fit)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-128-1.png" alt="" /><!-- --></p>
-<!--
+<div id="bibliografia" class="section level1">
+<h1><span class="header-section-number">Rodział 15</span> Bibliografia</h1>
 
-```r
-# plot(variogram(g, map=TRUE, cutoff=12000, width=800))
-plot(variogram(g, alpha = c(60, 105, 150, 195)))
-```
--->
+<div id="refs" class="references">
+<div id="ref-R-rmarkdown">
+<p>Allaire, JJ, Joe Cheng, Yihui Xie, Jonathan McPherson, Winston Chang, Jeff Allen, Hadley Wickham, Aron Atkins, and Rob Hyndman. 2016. <em>Rmarkdown: Dynamic Documents for R</em>. <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
 </div>
+<div id="ref-R-gridExtra">
+<p>Auguie, Baptiste. 2016. <em>GridExtra: Miscellaneous Functions for “Grid” Graphics</em>. <a href="https://CRAN.R-project.org/package=gridExtra" class="uri">https://CRAN.R-project.org/package=gridExtra</a>.</p>
 </div>
-<div id="kokriging" class="section level2">
-<h2><span class="header-section-number">10.4</span> Kokriging</h2>
-<div id="kokriging-1" class="section level3">
-<h3><span class="header-section-number">10.4.1</span> Kokriging</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ck &lt;-<span class="st"> </span><span class="kw">predict</span>(g_fit, siatka) </code></pre></div>
-<pre><code>## Linear Model of Coregionalization found. Good.
-## [using ordinary cokriging]</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(ck)</code></pre></div>
-<pre><code>## Object of class SpatialPixelsDataFrame
-## Coordinates:
-##        min      max
-## x 745586.7 756926.7
-## y 712661.2 721211.2
-## Is projected: TRUE 
-## proj4string :
-## [+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993
-## +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0
-## +units=m +no_defs]
-## Number of points: 10993
-## Grid attributes:
-##    cellcentre.offset cellsize cells.dim
-## s1          745586.7       90       127
-## s2          712661.2       90        96
-## Data attributes:
-##    SAVI.pred         SAVI.var          NDVI.pred         NDVI.var       
-##  Min.   :0.1152   Min.   :0.001615   Min.   :0.2336   Min.   :0.004750  
-##  1st Qu.:0.3001   1st Qu.:0.001958   1st Qu.:0.4715   1st Qu.:0.005188  
-##  Median :0.3255   Median :0.002046   Median :0.5056   Median :0.005336  
-##  Mean   :0.3205   Mean   :0.002060   Mean   :0.4996   Mean   :0.005365  
-##  3rd Qu.:0.3480   3rd Qu.:0.002149   3rd Qu.:0.5365   3rd Qu.:0.005513  
-##  Max.   :0.4197   Max.   :0.002862   Max.   :0.6280   Max.   :0.006780  
-##  cov.SAVI.NDVI     
-##  Min.   :0.002658  
-##  1st Qu.:0.003045  
-##  Median :0.003157  
-##  Mean   :0.003178  
-##  3rd Qu.:0.003289  
-##  Max.   :0.004232</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(ck, <span class="st">&#39;SAVI.pred&#39;</span>)
-<span class="kw">spplot</span>(ck, <span class="st">&#39;SAVI.var&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/kokriging_predicted-1.png" alt="" /><!-- --></p>
-<!--   
-## Kokriging pełny i medianowy, kokriging kolokacyjny, 
-## Kokriging na podstawie uproszczonych modeli Markowa I i II
--->
-
+<div id="ref-R-rgeos">
+<p>Bivand, Roger, and Colin Rundel. 2016. <em>Rgeos: Interface to Geometry Engine - Open Source (GEOS)</em>. <a href="https://CRAN.R-project.org/package=rgeos" class="uri">https://CRAN.R-project.org/package=rgeos</a>.</p>
+</div>
+<div id="ref-R-rgdal">
+<p>Bivand, Roger, Tim Keitt, and Barry Rowlingson. 2016. <em>Rgdal: Bindings for the Geospatial Data Abstraction Library</em>. <a href="https://CRAN.R-project.org/package=rgdal" class="uri">https://CRAN.R-project.org/package=rgdal</a>.</p>
+</div>
+<div id="ref-R-pgirmess">
+<p>Giraudoux, Patrick. 2016. <em>Pgirmess: Data Analysis in Ecology</em>. <a href="https://CRAN.R-project.org/package=pgirmess" class="uri">https://CRAN.R-project.org/package=pgirmess</a>.</p>
+</div>
+<div id="ref-R-raster">
+<p>Hijmans, Robert J. 2016. <em>Raster: Geographic Data Analysis and Modeling</em>. <a href="https://R-Forge.R-project.org/projects/raster/" class="uri">https://R-Forge.R-project.org/projects/raster/</a>.</p>
+</div>
+<div id="ref-R-dismo">
+<p>Hijmans, Robert J., Steven Phillips, John Leathwick, and Jane Elith. 2016. <em>Dismo: Species Distribution Modeling</em>. <a href="https://CRAN.R-project.org/package=dismo" class="uri">https://CRAN.R-project.org/package=dismo</a>.</p>
+</div>
+<div id="ref-R-caret">
+<p>Jed Wing, Max Kuhn. Contributions from, Steve Weston, Andre Williams, Chris Keefer, Allan Engelhardt, Tony Cooper, Zachary Mayer, et al. 2016. <em>Caret: Classification and Regression Training</em>. <a href="https://CRAN.R-project.org/package=caret" class="uri">https://CRAN.R-project.org/package=caret</a>.</p>
+</div>
+<div id="ref-R-geoR">
+<p>Jr, Paulo J. Ribeiro, and Peter J. Diggle. 2015. <em>GeoR: Analysis of Geostatistical Data</em>. <a href="https://CRAN.R-project.org/package=geoR" class="uri">https://CRAN.R-project.org/package=geoR</a>.</p>
+</div>
+<div id="ref-R-geostatbook">
+<p>Nowosad, Jakub. 2016. <em>Geostatbook: Geostatystyka W R</em>. <a href="https://github.com/nowosad/geostatbook" class="uri">https://github.com/nowosad/geostatbook</a>.</p>
+</div>
+<div id="ref-R-fields">
+<p>Nychka, Douglas, Reinhard Furrer, John Paige, and Stephan Sain. 2016. <em>Fields: Tools for Spatial Data</em>. <a href="https://CRAN.R-project.org/package=fields" class="uri">https://CRAN.R-project.org/package=fields</a>.</p>
+</div>
+<div id="ref-R-sp">
+<p>Pebesma, Edzer, and Roger Bivand. 2016. <em>Sp: Classes and Methods for Spatial Data</em>. <a href="https://CRAN.R-project.org/package=sp" class="uri">https://CRAN.R-project.org/package=sp</a>.</p>
+</div>
+<div id="ref-R-gstat">
+<p>Pebesma, Edzer, and Benedikt Graeler. 2016. <em>Gstat: Spatial and Spatio-Temporal Geostatistical Modelling, Prediction and Simulation</em>. <a href="https://github.com/edzer/gstat/" class="uri">https://github.com/edzer/gstat/</a>.</p>
+</div>
+<div id="ref-R-rasterVis">
+<p>Perpinan Lamigueiro, Oscar, and Robert Hijmans. 2015. <em>RasterVis: Visualization Methods for Raster Data</em>. <a href="https://CRAN.R-project.org/package=rasterVis" class="uri">https://CRAN.R-project.org/package=rasterVis</a>.</p>
+</div>
+<div id="ref-R-base">
+<p>R Core Team. 2016. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a>.</p>
+</div>
+<div id="ref-R-corrplot">
+<p>Wei, Taiyun. 2013. <em>Corrplot: Visualization of a Correlation Matrix</em>. <a href="https://CRAN.R-project.org/package=corrplot" class="uri">https://CRAN.R-project.org/package=corrplot</a>.</p>
+</div>
+<div id="ref-R-ggplot2">
+<p>Wickham, Hadley, and Winston Chang. 2016. <em>Ggplot2: An Implementation of the Grammar of Graphics</em>. <a href="http://ggplot2.org, https://github.com/hadley/ggplot2" class="uri">http://ggplot2.org, https://github.com/hadley/ggplot2</a>.</p>
+</div>
+<div id="ref-R-bookdown">
+<p>Xie, Yihui. 2016a. <em>Bookdown: Authoring Books with R Markdown</em>. <a href="https://github.com/rstudio/bookdown" class="uri">https://github.com/rstudio/bookdown</a>.</p>
+</div>
+<div id="ref-R-knitr">
+<p>———. 2016b. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in R</em>. <a href="http://yihui.name/knitr/" class="uri">http://yihui.name/knitr/</a>.</p>
 </div>
 </div>
 </div>
@@ -533,8 +454,8 @@ plot(variogram(g, alpha = c(60, 105, 150, 195)))
           </div>
         </div>
       </div>
-<a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="zrodla-wiedzy.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
 
 <script src="libs/gitbook-2.6.7/js/app.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -561,7 +482,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://gitlab.com/nowosad/geostat_book/edit/master/09-kokriging.Rmd",
+"link": "https://gitlab.com/nowosad/geostat_book/edit/master/14-references.Rmd",
 "text": "Edycja"
 },
 "download": null,
