@@ -13,6 +13,7 @@ data(siatka)
 ```{r setup10, echo=FALSE, include=FALSE}
 library('knitr')
 knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+options(device = "cairo_pdf")
 ```
 
 ```{r, echo=FALSE}
@@ -52,13 +53,15 @@ par(mar=c(rep(0, 4)))
 ```{r sym_bezw1, cache=TRUE}
 sym_bezw1 <- krige(formula=z~1, locations=NULL, newdata=siatka, dummy=TRUE,
                          beta=1, model=vgm(psill=0.025,model='Exp',range=100), nsim=4, nmax=30)
-spplot(sym_bezw1, main='Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=100, model wykładniczy')
+spplot(sym_bezw1, main='Przestrzennie skorelowana powierzchnia \nśrednia=1, 
+       sill=0.025, zasięg=100, model wykładniczy')
 ```
 
 ```{r sym_bezw2, cache=TRUE}
 sym_bezw2 <- krige(formula=z~1, locations=NULL, newdata=siatka, dummy=TRUE, 
                    beta=1, model=vgm(psill=0.025,model='Exp',range=1500), nsim=4, nmax=30)
-spplot(sym_bezw2, main='Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=1500, model wykładniczy')
+spplot(sym_bezw2, main='Przestrzennie skorelowana powierzchnia \nśrednia=1, 
+       sill=0.025, zasięg=1500, model wykładniczy')
 ```
 
 <!--

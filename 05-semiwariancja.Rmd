@@ -45,10 +45,10 @@ http://www.inside-r.org/packages/cran/raster/docs/interpolate
 
 ### Geostatystyczna analiza danych
 
-```{r diagram, include=FALSE, eval=FALSE}
+```{r diagram, echo=FALSE}
 library('DiagrammeR')
-library('trelliscope')
-p <- DiagrammeR("
+# library('trelliscope')
+p <- DiagrammeR::mermaid("
                 graph TB;
                 hw((Dane pomiarowe)) -->Analiza[<center>Analiza <br>i interpretacja <br>struktury przestrzennej</center>];
                 Analiza -->Modelowanie[<center>Modelowanie matematyczne <br>struktury przestrzennej</center>]
@@ -58,7 +58,10 @@ p <- DiagrammeR("
                 ")
 ```
 
-![](figs/diag.png)
+```{r, echo=FALSE}
+library('knitr')
+knitr::include_graphics('figs/diag.png')
+```
 
 <!--
 ### Geostatystyka | Cele

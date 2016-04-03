@@ -14,6 +14,8 @@ library('dismo')
 library('pgirmess')
 library('geoR')
 library('gridExtra')
+pdf.options(encoding='CP1250')
+
 
 #01
 library('sp')

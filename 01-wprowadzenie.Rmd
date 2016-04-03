@@ -201,7 +201,7 @@ plot(dane_punktowe, add=TRUE)
 
 ### Siatki nieregularne - klasa `RasterLayer`
 
-```{r }
+```{r siatkaniereg}
 granica <- readOGR(dsn='dane', layer='granica')
 siatka_n <- raster(extent(granica))
 res(siatka_n) <- c(250, 250)

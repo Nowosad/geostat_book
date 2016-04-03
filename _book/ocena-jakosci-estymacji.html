@@ -5,12 +5,12 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Geostatystyka</title>
+  <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Geostatystyka">
+  <meta name="description" content="Geostatystyka w R">
   <meta name="generator" content="bookdown 0.0.60 and GitBook 2.6.7">
 
-  <meta property="og:title" content="Geostatystyka" />
+  <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
   
   
@@ -19,7 +19,7 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-04-02">
+<meta name="date" content="2016-04-03">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -378,7 +378,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Geostatystyka</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Geostatystyka w R</a>
           </h1>
         </div>
 
@@ -490,7 +490,7 @@ vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span
 model &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4000</span>, <span class="dt">nugget =</span> <span class="fl">0.5</span>)
 fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model)
 <span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-142-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-135-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test_sk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, train, test, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">15.324</span>)</code></pre></div>
 <pre><code>## [using simple kriging]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(test_sk)</code></pre></div>
@@ -525,7 +525,7 @@ RMSE</code></pre></div>
 <pre><code>## [1] 1.692512</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test_sk$reszty &lt;-<span class="st"> </span>reszta_sk
 <span class="kw">spplot</span>(test_sk, <span class="st">&#39;reszty&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-142-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-135-2.png" alt="" /><!-- --></p>
 </div>
 <div id="kroswalidacja" class="section level3">
 <h3><span class="header-section-number">12.2.4</span> Kroswalidacja</h3>
@@ -553,7 +553,7 @@ RMSE</code></pre></div>
 model &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4000</span>, <span class="dt">nugget =</span> <span class="fl">0.5</span>)
 fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model)
 
-cv_sk &lt;-<span class="st"> </span><span class="kw">krige.cv</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">15.324</span>)
+cv_sk &lt;-<span class="st"> </span><span class="kw">krige.cv</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">15.324</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
 <span class="kw">summary</span>(cv_sk)</code></pre></div>
 <pre><code>## Object of class SpatialPointsDataFrame
 ## Coordinates:

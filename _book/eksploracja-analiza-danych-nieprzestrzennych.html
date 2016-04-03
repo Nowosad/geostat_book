@@ -5,12 +5,12 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Geostatystyka</title>
+  <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Geostatystyka">
+  <meta name="description" content="Geostatystyka w R">
   <meta name="generator" content="bookdown 0.0.60 and GitBook 2.6.7">
 
-  <meta property="og:title" content="Geostatystyka" />
+  <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
   
   
@@ -19,7 +19,7 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-04-02">
+<meta name="date" content="2016-04-03">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -378,7 +378,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Geostatystyka</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Geostatystyka w R</a>
           </h1>
         </div>
 
@@ -431,7 +431,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ##  $ savi: num  0.357 0.382 0.342 0.345 0.22 ...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(punkty)
 <span class="kw">plot</span>(granica, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-31-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-27-1.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="statystyki-opisowe" class="section level2">
@@ -491,7 +491,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="histogram" class="section level3">
 <h3><span class="header-section-number">3.4.1</span> Histogram</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_histogram</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-37-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-33-1.png" alt="" /><!-- --></p>
 <ul>
 <li>Stworzony przez Karla Pearsona</li>
 <li>Jest graficzną reprezentacją rozkładu danych</li>
@@ -503,13 +503,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="estymator-jadrowy-gestosci-ang.-kernel-density-estimation" class="section level3">
 <h3><span class="header-section-number">3.4.2</span> Estymator jądrowy gęstości (ang. <em>kernel density estimation</em>)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-38-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-34-1.png" alt="" /><!-- --></p>
 </div>
 <div id="wykresy-kwantyl-kwantyl-ang.quantile-quantile" class="section level3">
 <h3><span class="header-section-number">3.4.3</span> Wykresy kwantyl-kwantyl (ang.<em>quantile-quantile</em>)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(<span class="dt">sample=</span>temp)) +<span class="st"> </span><span class="kw">stat_qq</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-39-1.png" alt="" /><!-- --></p>
-<p><img src="figs/qq.png" alt="" /><!-- --> Źródło: <a href="http://stats.stackexchange.com/a/101290/37627" class="uri">http://stats.stackexchange.com/a/101290/37627</a></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-35-1.png" alt="" /><!-- --></p>
+<p><img src="figs/qq_plot_explained.png" alt="" /><!-- --></p>
 </div>
 <div id="dystrybuanta-cdf" class="section level3">
 <h3><span class="header-section-number">3.4.4</span> Dystrybuanta (CDF)</h3>
@@ -517,7 +517,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Dystrybuanta (ang. <em>conditional density function</em> - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">stat_ecdf</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-41-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-37-1.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="porownanie-zmiennych" class="section level2">
@@ -545,7 +545,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Z racji unormowania nie jest ona uzależniona od jednostki</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp, ndvi)) +<span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-43-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-39-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(punkty$temp, punkty$ndvi, <span class="dt">use=</span><span class="st">&#39;complete.obs&#39;</span>)</code></pre></div>
 <pre><code>## [1] 0.07049136</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor.test</span>(punkty$temp, punkty$ndvi)</code></pre></div>
@@ -567,13 +567,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## ndvi  0.05230326  0.070491358 1.00000000  0.889037014
 ## savi  0.03576065 -0.007748702 0.88903701  1.000000000</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">corrplot</span>(<span class="kw">cor</span>(punkty@data[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>:<span class="dv">5</span>)], <span class="dt">use=</span><span class="st">&#39;complete.obs&#39;</span>))</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-46-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-42-1.png" alt="" /><!-- --></p>
 </div>
 <div id="wykresy-pudekowe" class="section level3">
 <h3><span class="header-section-number">3.5.3</span> Wykresy pudełkowe</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(punkty$clc)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(clc, temp)) +<span class="st"> </span><span class="kw">geom_boxplot</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-47-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-43-1.png" alt="" /><!-- --></p>
 <ul>
 <li>Obrazuje pięc podstawowych statystyk opisowych oraz wartości odstające</li>
 <li>Pudełko to zakres międzykwantylowy</li>
@@ -603,7 +603,7 @@ aov_test &lt;-<span class="st"> </span><span class="kw">aov</span>(temp~clc, <sp
 ##           1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tukey &lt;-<span class="st"> </span><span class="kw">TukeyHSD</span>(aov_test, <span class="st">&#39;clc&#39;</span>)
 <span class="kw">plot</span>(tukey, <span class="dt">las=</span><span class="dv">1</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-50-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-46-1.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="transformacje-danych" class="section level2">
@@ -630,29 +630,29 @@ aov_test &lt;-<span class="st"> </span><span class="kw">aov</span>(temp~clc, <sp
 <div id="transformacja-danych-logarytmizacja" class="section level3">
 <h3><span class="header-section-number">3.6.2</span> Transformacja danych | Logarytmizacja</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-51-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-47-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$log_tpz &lt;-<span class="st"> </span><span class="kw">log</span>(punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(log_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-51-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-47-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$exp_tpz &lt;-<span class="st"> </span><span class="kw">exp</span>(punkty$log_tpz)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(exp_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-51-3.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-47-3.png" alt="" /><!-- --></p>
 </div>
 <div id="transformacja-danych-pierwiastkowanie" class="section level3">
 <h3><span class="header-section-number">3.6.3</span> Transformacja danych | Pierwiastkowanie</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-52-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-48-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$sqrt_tpz &lt;-<span class="st"> </span><span class="kw">sqrt</span>(punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(sqrt_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-52-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-48-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$pow_tpz &lt;-<span class="st"> </span>punkty$sqrt_tpz^<span class="dv">2</span>
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(pow_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-52-3.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-48-3.png" alt="" /><!-- --></p>
 </div>
 <div id="transformacja-danych-rodzina-transformacji-boxa-coxa" class="section level3">
 <h3><span class="header-section-number">3.6.4</span> Transformacja danych | Rodzina transformacji Boxa Coxa</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-53-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-49-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">transformacja &lt;-<span class="st"> </span><span class="kw">BoxCoxTrans</span>(punkty$temp)
 transformacja</code></pre></div>
 <pre><code>## Box-Cox Transformation
@@ -669,11 +669,11 @@ transformacja</code></pre></div>
 ## Estimated Lambda: 0.2</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$bc_tpz &lt;-<span class="st"> </span><span class="kw">predict</span>(transformacja, punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(bc_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-53-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-49-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">invBoxCox &lt;-<span class="st"> </span>function(x, lambda) if (lambda ==<span class="st"> </span><span class="dv">0</span>) <span class="kw">exp</span>(x) else (lambda*x +<span class="st"> </span><span class="dv">1</span>)^(<span class="dv">1</span>/lambda) 
 punkty$bc_tpz_inv &lt;-<span class="st"> </span><span class="kw">invBoxCox</span>(punkty$bc_tpz, <span class="dt">lambda=</span><span class="fl">0.2</span>)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(bc_tpz_inv)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-53-3.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-49-3.png" alt="" /><!-- --></p>
 
 </div>
 </div>

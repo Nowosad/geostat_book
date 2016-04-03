@@ -14,6 +14,7 @@ data(punkty)
 ```{r setup6, echo=FALSE, include=FALSE}
 library('knitr')
 knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+options(device = "cairo_pdf")
 ```
 
 ```{r, echo=FALSE}
@@ -134,12 +135,12 @@ spplot(test_sk, 'reszty')
 
 ### Kroswalidacja 
 
-```{r loovv}
+```{r loovv, cache=TRUE}
 vario <- variogram(temp~1, data=punkty)
 model <- vgm(10, model = 'Sph', range = 4000, nugget = 0.5)
 fitted <- fit.variogram(vario, model)
 
-cv_sk <- krige.cv(temp~1, punkty, model=fitted, beta=15.324)
+cv_sk <- krige.cv(temp~1, punkty, model=fitted, beta=15.324, verbose=FALSE)
 summary(cv_sk)
 spplot(cv_sk, 'residual')
 ```

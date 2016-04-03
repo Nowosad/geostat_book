@@ -5,12 +5,12 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Geostatystyka</title>
+  <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Geostatystyka">
+  <meta name="description" content="Geostatystyka w R">
   <meta name="generator" content="bookdown 0.0.60 and GitBook 2.6.7">
 
-  <meta property="og:title" content="Geostatystyka" />
+  <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
   
   
@@ -19,7 +19,7 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-04-02">
+<meta name="date" content="2016-04-03">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -378,7 +378,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Geostatystyka</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Geostatystyka w R</a>
           </h1>
         </div>
 
@@ -429,10 +429,7 @@ http://www.inside-r.org/packages/cran/raster/docs/interpolate
 </div>
 <div id="geostatystyczna-analiza-danych" class="section level3">
 <h3><span class="header-section-number">6.1.4</span> Geostatystyczna analiza danych</h3>
-<div class="figure">
-<img src="figs/diag.png" alt="" />
-
-</div>
+<p><img src="figs/diag.png" alt="" /><!-- --></p>
 <!--
 ### Geostatystyka | Cele
 - Charakterystyka struktury przestrzennej badanego zjawiska
@@ -499,7 +496,7 @@ http://www.inside-r.org/packages/cran/raster/docs/interpolate
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kowario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">covariogram =</span> <span class="ot">TRUE</span>)
 <span class="kw">plot</span>(kowario)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-77-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-70-1.png" alt="" /><!-- --></p>
 </div>
 <div id="autokorelacja" class="section level3">
 <h3><span class="header-section-number">6.2.6</span> Autokorelacja</h3>
@@ -510,7 +507,7 @@ http://www.inside-r.org/packages/cran/raster/docs/interpolate
 kor &lt;-<span class="st"> </span><span class="kw">correlog</span>(wsp, punkty$temp)
 kor &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(kor)
 <span class="kw">ggplot</span>(kor, <span class="kw">aes</span>(dist.class, coef)) +<span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">linetype=</span><span class="dv">0</span>) +<span class="st"> </span><span class="kw">geom_line</span>() +<span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="dv">5</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-78-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-71-1.png" alt="" /><!-- --></p>
 </div>
 <div id="semiwariancja" class="section level3">
 <h3><span class="header-section-number">6.2.7</span> Semiwariancja</h3>
@@ -537,7 +534,7 @@ gamma</code></pre></div>
 <h3><span class="header-section-number">6.2.10</span> Określenie występowania autokorelacji przestrzennej | Chmura semiwariogramu</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_cloud &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cloud=</span><span class="ot">TRUE</span>)
 <span class="kw">plot</span>(vario_cloud) </code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-80-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-73-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_cloud_sel &lt;-<span class="st"> </span><span class="kw">plot</span>(<span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cloud=</span><span class="ot">TRUE</span>), <span class="dt">digitize=</span><span class="ot">TRUE</span>)
 <span class="kw">plot</span>(vario_cloud_sel, punkty) </code></pre></div>
 </div>
@@ -637,10 +634,10 @@ vario_par</code></pre></div>
 ## 14 1468 4276.0078 13.866888       0       0 var1
 ## 15 1482 4598.4144 15.353206       0       0 var1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_par, <span class="dt">plot.numbers=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-86-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-79-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_par &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cutoff =</span> <span class="dv">4000</span>)
 <span class="kw">plot</span>(vario_par)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-86-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-79-2.png" alt="" /><!-- --></p>
 </div>
 <div id="semiwariogram-odlegosc-miedzy-przedziaami-ang.-interval-width" class="section level3">
 <h3><span class="header-section-number">6.2.16</span> Semiwariogram | Odległość między przedziałami (ang. <em>Interval width</em>)</h3>
@@ -649,7 +646,7 @@ vario_par</code></pre></div>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_par &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cutoff =</span> <span class="dv">1000</span>, <span class="dt">width =</span> <span class="dv">250</span>)
 <span class="kw">plot</span>(vario_par)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-87-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-80-1.png" alt="" /><!-- --></p>
 <!--
 ## Wpływa danych odstających
 
@@ -697,7 +694,7 @@ Używanie innych statystyk h-scattergramu, które są mniej czułe na występowa
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_map &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cutoff=</span><span class="dv">4000</span>, <span class="dt">width=</span><span class="dv">400</span>, <span class="dt">map=</span><span class="ot">TRUE</span>)
 <span class="kw">plot</span>(vario_map, <span class="dt">threshold=</span><span class="dv">30</span>) <span class="co"># co najmniej 30 par punktów</span></code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-89-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-82-1.png" alt="" /><!-- --></p>
 </div>
 <div id="mapa-semiwariogramu-3d" class="section level3">
 <h3><span class="header-section-number">6.3.3</span> Mapa semiwariogramu | 3D</h3>
@@ -712,7 +709,7 @@ Używanie innych statystyk h-scattergramu, które są mniej czułe na występowa
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kier &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">alpha =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">45</span>, <span class="dv">90</span>, <span class="dv">135</span>))
 <span class="kw">plot</span>(vario_kier)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-91-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-84-1.png" alt="" /><!-- --></p>
 
 </div>
 </div>

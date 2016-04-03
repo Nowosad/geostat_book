@@ -14,6 +14,7 @@ data(siatka)
 ```{r setup9, echo=FALSE, include=FALSE}
 library('knitr')
 knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+options(device = "cairo_pdf")
 ```
 
 ```{r, echo=FALSE}
@@ -64,7 +65,8 @@ plot(v)
 
 ```{r}
 g <- gstat(g, model=vgm(0.006, 'Sph', 2000, 0.001), fill.all=TRUE)
-g_fit <- fit.lmc(v, g, correct.diagonal = 1.01) #zmienne są bardzo mocno skorelowane - dlatego użyto argumentu correct.diagonal = 1.01
+# zmienne są bardzo mocno skorelowane - dlatego użyto argumentu correct.diagonal = 1.01
+g_fit <- fit.lmc(v, g, correct.diagonal = 1.01)
 g_fit
 plot(v, g_fit)
 ```

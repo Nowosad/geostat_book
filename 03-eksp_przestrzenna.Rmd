@@ -72,7 +72,6 @@ plot(pref)
 ## Mapy punktowe i dane lokalnie odstające
 
 ```{r}
-data(granica)
 plot(granica) 
 plot(punkty, add=TRUE) 
 ```
@@ -108,7 +107,7 @@ $$w'_j=\frac{\frac{1}{n_i}}{\text{liczba komórek z danymi}} \cdot n$$
 
 ### Rozgrupowanie komórkowe I | (ang. *cell declustering*)
 
-```{r }
+```{r rozkom01}
 data(punkty_pref)
 punkty_pref$id <- 1:nrow(punkty_pref)
 spplot(punkty_pref, 'id', colorkey=TRUE)
@@ -147,7 +146,7 @@ this interpolation, it is rather something of a discretized Thiessen
 polygon.
 -->
 
-```{r }
+```{r rozkom02}
 data(punkty_pref)
 punkty_pref$id <- 1:nrow(punkty_pref)
 spplot(punkty_pref, 'id', colorkey=TRUE)
@@ -164,7 +163,7 @@ gridded(siatka_n) <- TRUE
 plot(siatka_n)
 ```
 
-```{r }
+```{r rozkom02b}
 out <-  krige(id~1, punkty_pref, siatka_n, nmax=1)
 spplot(out, 'var1.pred')
 df <- as.data.frame(table(out[[1]]))
@@ -184,7 +183,7 @@ $$w'_j=\frac{area_j}{\sum_{j=1}^{n}area_j} \cdot n$$
 
 ### Rozgrupowanie poligonowe | (ang. *polygon declustering*)
 
-```{r }
+```{r rozpoly}
 data(punkty_pref)
 punkty_pref$id <- 1:nrow(punkty_pref)
 spplot(punkty_pref, 'id', colorkey=TRUE)

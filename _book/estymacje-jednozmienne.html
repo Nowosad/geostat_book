@@ -5,12 +5,12 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Geostatystyka</title>
+  <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Geostatystyka">
+  <meta name="description" content="Geostatystyka w R">
   <meta name="generator" content="bookdown 0.0.60 and GitBook 2.6.7">
 
-  <meta property="og:title" content="Geostatystyka" />
+  <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
   
   
@@ -19,7 +19,7 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-04-02">
+<meta name="date" content="2016-04-03">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -378,7 +378,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Geostatystyka</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Geostatystyka w R</a>
           </h1>
         </div>
 
@@ -432,7 +432,7 @@ model</code></pre></div>
 ## 2   Sph  10.0  4000</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model)
 <span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-111-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-104-1.png" alt="" /><!-- --></p>
 <ul>
 <li>Średnia ta jest ustalana za pomocą argumentu <code>beta</code></li>
 </ul>
@@ -497,7 +497,7 @@ ok &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class=
 <h3><span class="header-section-number">8.4.1</span> Kriging z trendem (ang. <em>Kriging with a trend</em>)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kzt &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~x+y, <span class="dt">data=</span>punkty)
 <span class="kw">plot</span>(vario_kzt)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-115-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-108-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_kzt &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill =</span> <span class="dv">5</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">2500</span>, <span class="dt">nugget =</span> <span class="dv">1</span>)
 fitted_kzt &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_kzt, model_kzt)
 fitted_kzt</code></pre></div>
@@ -505,7 +505,7 @@ fitted_kzt</code></pre></div>
 ## 1   Nug 0.5308819    0.000
 ## 2   Sph 6.6620981 2705.967</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_kzt, fitted_kzt)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-115-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-108-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty@data &lt;-<span class="st"> </span><span class="kw">cbind</span>(punkty@data, <span class="kw">as.data.frame</span>(<span class="kw">coordinates</span>(punkty)))
 kzt &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~x+y, punkty, siatka, <span class="dt">model=</span>fitted_kzt)</code></pre></div>
 <pre><code>## [using universal kriging]</code></pre>

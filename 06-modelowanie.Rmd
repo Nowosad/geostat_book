@@ -12,6 +12,7 @@ data(punkty)
 ```{r setup4, echo=FALSE, include=FALSE}
 library('knitr')
 knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+options(device = "cairo_pdf")
 ```
 
 ```{r, echo=FALSE}

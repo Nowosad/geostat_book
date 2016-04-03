@@ -5,12 +5,12 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Geostatystyka</title>
+  <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Geostatystyka">
+  <meta name="description" content="Geostatystyka w R">
   <meta name="generator" content="bookdown 0.0.60 and GitBook 2.6.7">
 
-  <meta property="og:title" content="Geostatystyka" />
+  <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
   
   
@@ -19,7 +19,7 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-04-02">
+<meta name="date" content="2016-04-03">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -378,7 +378,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Geostatystyka</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Geostatystyka w R</a>
           </h1>
         </div>
 
@@ -538,7 +538,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ##  Max.   :0.4404  
 ##  NA&#39;s   :1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(dane_punktowe)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-10-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-7-1.png" alt="" /><!-- --></p>
 <!--
 ### Usuwanie punktów zawierających braki wartości
 
@@ -566,13 +566,13 @@ sp_na_omit <- function(x, margin=1) {
 <h3><span class="header-section-number">2.2.2</span> Dane poligonowe (formaty gisowe)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;dane&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;granica&#39;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
 <span class="kw">plot</span>(granica)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-12-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-9-1.png" alt="" /><!-- --></p>
 </div>
 <div id="rastry" class="section level3">
 <h3><span class="header-section-number">2.2.3</span> Rastry</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka_raster &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="st">&#39;dane/siatka.tif&#39;</span>)
 <span class="kw">plot</span>(siatka_raster)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-13-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-10-1.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="eksport-danych" class="section level2">
@@ -591,22 +591,22 @@ sp_na_omit <- function(x, margin=1) {
 <div id="dane-punktowe" class="section level3">
 <h3><span class="header-section-number">2.4.1</span> Dane punktowe</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(dane_punktowe)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-14-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-11-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(dane_punktowe, <span class="st">&#39;temp&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-15-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-12-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(dane_punktowe, <span class="st">&#39;srtm&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-16-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-13-1.png" alt="" /><!-- --></p>
 </div>
 <div id="dane-punktowe---kategorie" class="section level3">
 <h3><span class="header-section-number">2.4.2</span> Dane punktowe - kategorie</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dane_punktowe@data$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(dane_punktowe@data$clc)
 <span class="kw">spplot</span>(dane_punktowe, <span class="st">&#39;clc&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-17-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-14-1.png" alt="" /><!-- --></p>
 </div>
 <div id="rastry-1" class="section level3">
 <h3><span class="header-section-number">2.4.3</span> Rastry</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">levelplot</span>(siatka_raster, <span class="dt">margin=</span><span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-18-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-15-1.png" alt="" /><!-- --></p>
 </div>
 </div>
 <div id="tworzenie-siatek" class="section level2">
@@ -638,7 +638,7 @@ sp_na_omit <- function(x, margin=1) {
 <h3><span class="header-section-number">2.5.2</span> Siatki regularne</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(siatka)
 <span class="kw">plot</span>(dane_punktowe, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-22-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-19-1.png" alt="" /><!-- --></p>
 </div>
 <div id="siatki-nieregularne---klasa-rasterlayer" class="section level3">
 <h3><span class="header-section-number">2.5.3</span> Siatki nieregularne - klasa <code>RasterLayer</code></h3>
@@ -653,7 +653,7 @@ siatka_n[] &lt;-<span class="st"> </span><span class="dv">0</span>
 <span class="kw">proj4string</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">proj4string</span>(granica)
 siatka_n &lt;-<span class="st"> </span><span class="kw">mask</span>(siatka_n, granica)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">levelplot</span>(siatka_n, <span class="dt">margin=</span><span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-24-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-20-1.png" alt="" /><!-- --></p>
 </div>
 <div id="siatki-nieregularne---klasa-spatialpixelsdataframe" class="section level3">
 <h3><span class="header-section-number">2.5.4</span> Siatki nieregularne - klasa <code>SpatialPixelsDataFrame</code></h3>
@@ -661,7 +661,7 @@ siatka_n &lt;-<span class="st"> </span><span class="kw">mask</span>(siatka_n, gr
 siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(siatka_n@data$layer), ]
 <span class="kw">gridded</span>(siatka_n) &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 <span class="kw">plot</span>(siatka_n)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-25-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-21-1.png" alt="" /><!-- --></p>
 
 </div>
 </div>
