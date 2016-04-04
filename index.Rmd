@@ -9,6 +9,8 @@ documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
+classoption: a4paper
+cover-image: Rfigs/okladka.png
 ---
 
 # Wprowadzenie
