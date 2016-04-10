@@ -7,25 +7,25 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Geostatystyka w R">
+  <meta name="description" content="Introduction to geostatistics in R (in Polish).">
   <meta name="generator" content="bookdown 0.0.60 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
   
-  <meta property="og:image" content="Rfigs/okladka.png" />
-  
+  <meta property="og:image" content="Rfigs/book_cover.png" />
+  <meta property="og:description" content="Introduction to geostatistics in R (in Polish)." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Geostatystyka w R" />
   
-  
-  <meta name="twitter:image" content="Rfigs/okladka.png" />
+  <meta name="twitter:description" content="Introduction to geostatistics in R (in Polish)." />
+  <meta name="twitter:image" content="Rfigs/book_cover.png" />
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-04-04">
+<meta name="date" content="2016-04-10">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -471,7 +471,7 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 <li>Powtórzenie poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_histogram</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-143-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-144-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shapiro.test</span>(punkty$temp)</code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
@@ -479,10 +479,10 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 ## data:  punkty$temp
 ## W = 0.97683, p-value = 0.0004194</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qqnorm</span>(punkty$temp);<span class="kw">qqline</span>(punkty$temp)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-143-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-144-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$temp_log &lt;-<span class="st"> </span><span class="kw">log</span>(punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp_log)) +<span class="st"> </span><span class="kw">geom_histogram</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-144-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-145-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shapiro.test</span>(punkty$temp_log)</code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
@@ -490,7 +490,7 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 ## data:  punkty$temp_log
 ## W = 0.98907, p-value = 0.05568</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qqnorm</span>(punkty$temp_log);<span class="kw">qqline</span>(punkty$temp_log)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-144-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-145-2.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp_log~<span class="dv">1</span>, punkty)
 model &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="fl">0.05</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4500</span>, <span class="dt">nugget=</span><span class="fl">0.005</span>)
 fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model)
@@ -551,7 +551,7 @@ fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario
 ##  3rd Qu.:18.443   3rd Qu.:18.520   3rd Qu.:18.07   3rd Qu.:18.392  
 ##  Max.   :30.714   Max.   :33.311   Max.   :28.82   Max.   :33.940</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_ok)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-145-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-146-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_sk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp_log~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">2.7</span>, <span class="dt">nsim=</span><span class="dv">100</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre></div>
 <pre><code>## [using conditional Gaussian simulation]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_sk@data &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">apply</span>(sym_sk@data, <span class="dv">2</span>, exp))
