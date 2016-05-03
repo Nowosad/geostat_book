@@ -7,32 +7,31 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Introduction to geostatistics in R (in Polish).">
-  <meta name="generator" content="bookdown 0.0.60 and GitBook 2.6.7">
+  <meta name="description" content="Introduction to geostatistics with R (in Polish).">
+  <meta name="generator" content="bookdown 0.0.70 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
   
   <meta property="og:image" content="Rfigs/book_cover.png" />
-  <meta property="og:description" content="Introduction to geostatistics in R (in Polish)." />
+  <meta property="og:description" content="Introduction to geostatistics with R (in Polish)." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Geostatystyka w R" />
   
-  <meta name="twitter:description" content="Introduction to geostatistics in R (in Polish)." />
+  <meta name="twitter:description" content="Introduction to geostatistics with R (in Polish)." />
   <meta name="twitter:image" content="Rfigs/book_cover.png" />
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-04-10">
+<meta name="date" content="2016-05-03">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   TeX: { equationNumbers: { autoNumber: "AMS" } }
 });
 </script>
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -42,6 +41,7 @@ MathJax.Hub.Config({
 <link rel="prev" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html">
 <link rel="next" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html">
 
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
@@ -126,7 +126,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.1.7" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#ukad-geograficzny"><i class="fa fa-check"></i><b>2.1.7</b> Układ geograficzny</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#import-danych"><i class="fa fa-check"></i><b>2.2</b> Import danych</a><ul>
-<li class="chapter" data-level="2.2.1" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#dane-punktowe-format-.csv"><i class="fa fa-check"></i><b>2.2.1</b> Dane punktowe (format .csv)</a></li>
+<li class="chapter" data-level="2.2.1" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#format-.csv-dane-punktowe"><i class="fa fa-check"></i><b>2.2.1</b> Format .csv (dane punktowe)</a></li>
 <li class="chapter" data-level="2.2.2" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#dane-poligonowe-formaty-gisowe"><i class="fa fa-check"></i><b>2.2.2</b> Dane poligonowe (formaty gisowe)</a></li>
 <li class="chapter" data-level="2.2.3" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#rastry"><i class="fa fa-check"></i><b>2.2.3</b> Rastry</a></li>
 </ul></li>
@@ -146,7 +146,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.5.4" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#siatki-nieregularne---klasa-spatialpixelsdataframe"><i class="fa fa-check"></i><b>2.5.4</b> Siatki nieregularne - klasa <code>SpatialPixelsDataFrame</code></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html"><i class="fa fa-check"></i><b>3</b> Eksploracja analiza danych nieprzestrzennych</a><ul>
+<li class="chapter" data-level="3" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html"><i class="fa fa-check"></i><b>3</b> Eksploracyjna analiza danych nieprzestrzennych</a><ul>
 <li class="chapter" data-level="3.1" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#cele-eksploracyjnej-analizy-danych"><i class="fa fa-check"></i><b>3.1</b> Cele eksploracyjnej analizy danych</a></li>
 <li class="chapter" data-level="3.2" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#dane-1"><i class="fa fa-check"></i><b>3.2</b> Dane</a><ul>
 <li class="chapter" data-level="3.2.1" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#dane-2"><i class="fa fa-check"></i><b>3.2.1</b> Dane</a></li>
@@ -447,7 +447,7 @@ g</code></pre></div>
 ## NDVI : formula = ndvi`~`1 ; data dim = 997 x 1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v &lt;-<span class="st"> </span><span class="kw">variogram</span>(g)
 <span class="kw">plot</span>(v)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/krosssemi-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/krosssemi-1.png" width="672" /></p>
 </div>
 </div>
 <div id="modelowanie-krossemiwariogramow" class="section level2">
@@ -476,7 +476,7 @@ g_fit</code></pre></div>
 ## SAVI.NDVI[1]   Nug 0.002257298     0
 ## SAVI.NDVI[2]   Sph 0.004352821  2000</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(v, g_fit)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-122-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-123-1.png" width="672" /></p>
 <!--
 
 ```r
@@ -526,7 +526,7 @@ plot(variogram(g, alpha = c(60, 105, 150, 195)))
 ##  Max.   :0.004232</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(ck, <span class="st">&#39;SAVI.pred&#39;</span>)
 <span class="kw">spplot</span>(ck, <span class="st">&#39;SAVI.var&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/kokriging_predicted-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/kokriging_predicted-1.png" width="672" /></p>
 <!--   
 ## Kokriging pełny i medianowy, kokriging kolokacyjny, 
 ## Kokriging na podstawie uproszczonych modeli Markowa I i II
@@ -543,7 +543,7 @@ plot(variogram(g, alpha = c(60, 105, 150, 195)))
 <a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
-<script src="libs/gitbook-2.6.7/js/app.js"></script>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -568,8 +568,8 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://gitlab.com/nowosad/geostat_book/edit/master/09-kokriging.Rmd",
-"text": "Edycja"
+"link": null,
+"text": null
 },
 "download": null,
 "toc": {
@@ -582,7 +582,17 @@ gitbook.start({
 });
 </script>
 
-
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

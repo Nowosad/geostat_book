@@ -7,32 +7,31 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Introduction to geostatistics in R (in Polish).">
-  <meta name="generator" content="bookdown 0.0.60 and GitBook 2.6.7">
+  <meta name="description" content="Introduction to geostatistics with R (in Polish).">
+  <meta name="generator" content="bookdown 0.0.70 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
   
   <meta property="og:image" content="Rfigs/book_cover.png" />
-  <meta property="og:description" content="Introduction to geostatistics in R (in Polish)." />
+  <meta property="og:description" content="Introduction to geostatistics with R (in Polish)." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Geostatystyka w R" />
   
-  <meta name="twitter:description" content="Introduction to geostatistics in R (in Polish)." />
+  <meta name="twitter:description" content="Introduction to geostatistics with R (in Polish)." />
   <meta name="twitter:image" content="Rfigs/book_cover.png" />
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-04-10">
+<meta name="date" content="2016-05-03">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   TeX: { equationNumbers: { autoNumber: "AMS" } }
 });
 </script>
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -42,6 +41,7 @@ MathJax.Hub.Config({
 <link rel="prev" href="zrodla-wiedzy.html">
 
 
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
@@ -126,7 +126,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.1.7" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#ukad-geograficzny"><i class="fa fa-check"></i><b>2.1.7</b> Układ geograficzny</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#import-danych"><i class="fa fa-check"></i><b>2.2</b> Import danych</a><ul>
-<li class="chapter" data-level="2.2.1" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#dane-punktowe-format-.csv"><i class="fa fa-check"></i><b>2.2.1</b> Dane punktowe (format .csv)</a></li>
+<li class="chapter" data-level="2.2.1" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#format-.csv-dane-punktowe"><i class="fa fa-check"></i><b>2.2.1</b> Format .csv (dane punktowe)</a></li>
 <li class="chapter" data-level="2.2.2" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#dane-poligonowe-formaty-gisowe"><i class="fa fa-check"></i><b>2.2.2</b> Dane poligonowe (formaty gisowe)</a></li>
 <li class="chapter" data-level="2.2.3" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#rastry"><i class="fa fa-check"></i><b>2.2.3</b> Rastry</a></li>
 </ul></li>
@@ -146,7 +146,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.5.4" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#siatki-nieregularne---klasa-spatialpixelsdataframe"><i class="fa fa-check"></i><b>2.5.4</b> Siatki nieregularne - klasa <code>SpatialPixelsDataFrame</code></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html"><i class="fa fa-check"></i><b>3</b> Eksploracja analiza danych nieprzestrzennych</a><ul>
+<li class="chapter" data-level="3" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html"><i class="fa fa-check"></i><b>3</b> Eksploracyjna analiza danych nieprzestrzennych</a><ul>
 <li class="chapter" data-level="3.1" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#cele-eksploracyjnej-analizy-danych"><i class="fa fa-check"></i><b>3.1</b> Cele eksploracyjnej analizy danych</a></li>
 <li class="chapter" data-level="3.2" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#dane-1"><i class="fa fa-check"></i><b>3.2</b> Dane</a><ul>
 <li class="chapter" data-level="3.2.1" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#dane-2"><i class="fa fa-check"></i><b>3.2.1</b> Dane</a></li>
@@ -396,61 +396,61 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">Rodział 15</span> Bibliografia</h1>
 
 <div id="refs" class="references">
-<div id="ref-R-rmarkdown">
-<p>Allaire, JJ, Joe Cheng, Yihui Xie, Jonathan McPherson, Winston Chang, Jeff Allen, Hadley Wickham, Aron Atkins, and Rob Hyndman. 2016. <em>Rmarkdown: Dynamic Documents for R</em>. <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
+<div>
+<p>Allaire, JJ, Joe Cheng, Yihui Xie, Jonathan McPherson, Winston Chang, Jeff Allen, Hadley Wickham, Aron Atkins, and Rob Hyndman. 2016. <em>Rmarkdown: Dynamic Documents for R</em>. <a href="https://CRAN.R-project.org/package=rmarkdown" class="uri">https://CRAN.R-project.org/package=rmarkdown</a>.</p>
 </div>
-<div id="ref-R-gridExtra">
+<div>
 <p>Auguie, Baptiste. 2016. <em>GridExtra: Miscellaneous Functions for “Grid” Graphics</em>. <a href="https://CRAN.R-project.org/package=gridExtra" class="uri">https://CRAN.R-project.org/package=gridExtra</a>.</p>
 </div>
-<div id="ref-R-rgeos">
+<div>
 <p>Bivand, Roger, and Colin Rundel. 2016. <em>Rgeos: Interface to Geometry Engine - Open Source (GEOS)</em>. <a href="https://CRAN.R-project.org/package=rgeos" class="uri">https://CRAN.R-project.org/package=rgeos</a>.</p>
 </div>
-<div id="ref-R-rgdal">
+<div>
 <p>Bivand, Roger, Tim Keitt, and Barry Rowlingson. 2016. <em>Rgdal: Bindings for the Geospatial Data Abstraction Library</em>. <a href="https://CRAN.R-project.org/package=rgdal" class="uri">https://CRAN.R-project.org/package=rgdal</a>.</p>
 </div>
-<div id="ref-R-pgirmess">
+<div>
 <p>Giraudoux, Patrick. 2016. <em>Pgirmess: Data Analysis in Ecology</em>. <a href="https://CRAN.R-project.org/package=pgirmess" class="uri">https://CRAN.R-project.org/package=pgirmess</a>.</p>
 </div>
-<div id="ref-R-raster">
-<p>Hijmans, Robert J. 2016. <em>Raster: Geographic Data Analysis and Modeling</em>. <a href="https://R-Forge.R-project.org/projects/raster/" class="uri">https://R-Forge.R-project.org/projects/raster/</a>.</p>
+<div>
+<p>Hijmans, Robert J. 2015. <em>Raster: Geographic Data Analysis and Modeling</em>. <a href="https://CRAN.R-project.org/package=raster" class="uri">https://CRAN.R-project.org/package=raster</a>.</p>
 </div>
-<div id="ref-R-dismo">
+<div>
 <p>Hijmans, Robert J., Steven Phillips, John Leathwick, and Jane Elith. 2016. <em>Dismo: Species Distribution Modeling</em>. <a href="https://CRAN.R-project.org/package=dismo" class="uri">https://CRAN.R-project.org/package=dismo</a>.</p>
 </div>
-<div id="ref-R-caret">
+<div>
 <p>Jed Wing, Max Kuhn. Contributions from, Steve Weston, Andre Williams, Chris Keefer, Allan Engelhardt, Tony Cooper, Zachary Mayer, et al. 2016. <em>Caret: Classification and Regression Training</em>. <a href="https://CRAN.R-project.org/package=caret" class="uri">https://CRAN.R-project.org/package=caret</a>.</p>
 </div>
-<div id="ref-R-geoR">
+<div>
 <p>Jr, Paulo J. Ribeiro, and Peter J. Diggle. 2015. <em>GeoR: Analysis of Geostatistical Data</em>. <a href="https://CRAN.R-project.org/package=geoR" class="uri">https://CRAN.R-project.org/package=geoR</a>.</p>
 </div>
-<div id="ref-R-geostatbook">
+<div>
 <p>Nowosad, Jakub. 2016. <em>Geostatbook: Geostatystyka W R</em>. <a href="https://bookdown.org/nowosad/Geostatystyka/" class="uri">https://bookdown.org/nowosad/Geostatystyka/</a>.</p>
 </div>
-<div id="ref-R-fields">
+<div>
 <p>Nychka, Douglas, Reinhard Furrer, John Paige, and Stephan Sain. 2016. <em>Fields: Tools for Spatial Data</em>. <a href="https://CRAN.R-project.org/package=fields" class="uri">https://CRAN.R-project.org/package=fields</a>.</p>
 </div>
-<div id="ref-R-sp">
+<div>
 <p>Pebesma, Edzer, and Roger Bivand. 2016. <em>Sp: Classes and Methods for Spatial Data</em>. <a href="https://CRAN.R-project.org/package=sp" class="uri">https://CRAN.R-project.org/package=sp</a>.</p>
 </div>
-<div id="ref-R-gstat">
-<p>Pebesma, Edzer, and Benedikt Graeler. 2016. <em>Gstat: Spatial and Spatio-Temporal Geostatistical Modelling, Prediction and Simulation</em>. <a href="https://github.com/edzer/gstat/" class="uri">https://github.com/edzer/gstat/</a>.</p>
+<div>
+<p>Pebesma, Edzer, and Benedikt Graeler. 2016. <em>Gstat: Spatial and Spatio-Temporal Geostatistical Modelling, Prediction and Simulation</em>. <a href="https://CRAN.R-project.org/package=gstat" class="uri">https://CRAN.R-project.org/package=gstat</a>.</p>
 </div>
-<div id="ref-R-rasterVis">
-<p>Perpinan Lamigueiro, Oscar, and Robert Hijmans. 2016. <em>RasterVis: Visualization Methods for Raster Data</em>. <a href="http://oscarperpinan.github.io/rastervis" class="uri">http://oscarperpinan.github.io/rastervis</a>.</p>
+<div>
+<p>Perpinan Lamigueiro, Oscar, and Robert Hijmans. 2016. <em>RasterVis: Visualization Methods for Raster Data</em>. <a href="https://CRAN.R-project.org/package=rasterVis" class="uri">https://CRAN.R-project.org/package=rasterVis</a>.</p>
 </div>
-<div id="ref-R-base">
+<div>
 <p>R Core Team. 2016. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a>.</p>
 </div>
-<div id="ref-R-corrplot">
-<p>Wei, Taiyun. 2013. <em>Corrplot: Visualization of a Correlation Matrix</em>. <a href="https://CRAN.R-project.org/package=corrplot" class="uri">https://CRAN.R-project.org/package=corrplot</a>.</p>
+<div>
+<p>Wei, Taiyun, and Viliam Simko. 2016. <em>Corrplot: Visualization of a Correlation Matrix</em>. <a href="https://CRAN.R-project.org/package=corrplot" class="uri">https://CRAN.R-project.org/package=corrplot</a>.</p>
 </div>
-<div id="ref-R-ggplot2">
-<p>Wickham, Hadley, and Winston Chang. 2016. <em>Ggplot2: An Implementation of the Grammar of Graphics</em>. <a href="http://ggplot2.org, https://github.com/hadley/ggplot2" class="uri">http://ggplot2.org, https://github.com/hadley/ggplot2</a>.</p>
+<div>
+<p>Wickham, Hadley, and Winston Chang. 2016. <em>Ggplot2: An Implementation of the Grammar of Graphics</em>. <a href="https://CRAN.R-project.org/package=ggplot2" class="uri">https://CRAN.R-project.org/package=ggplot2</a>.</p>
 </div>
-<div id="ref-R-bookdown">
+<div>
 <p>Xie, Yihui. 2016a. <em>Bookdown: Authoring Books with R Markdown</em>. <a href="https://github.com/rstudio/bookdown" class="uri">https://github.com/rstudio/bookdown</a>.</p>
 </div>
-<div id="ref-R-knitr">
+<div>
 <p>———. 2016b. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in R</em>. <a href="http://yihui.name/knitr/" class="uri">http://yihui.name/knitr/</a>.</p>
 </div>
 </div>
@@ -463,7 +463,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <a href="zrodla-wiedzy.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
 
-<script src="libs/gitbook-2.6.7/js/app.js"></script>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -488,8 +488,8 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://gitlab.com/nowosad/geostat_book/edit/master/14-references.Rmd",
-"text": "Edycja"
+"link": null,
+"text": null
 },
 "download": null,
 "toc": {
@@ -502,7 +502,17 @@ gitbook.start({
 });
 </script>
 
-
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

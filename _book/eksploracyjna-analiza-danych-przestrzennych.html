@@ -7,32 +7,31 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Introduction to geostatistics in R (in Polish).">
-  <meta name="generator" content="bookdown 0.0.60 and GitBook 2.6.7">
+  <meta name="description" content="Introduction to geostatistics with R (in Polish).">
+  <meta name="generator" content="bookdown 0.0.70 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
   
   <meta property="og:image" content="Rfigs/book_cover.png" />
-  <meta property="og:description" content="Introduction to geostatistics in R (in Polish)." />
+  <meta property="og:description" content="Introduction to geostatistics with R (in Polish)." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Geostatystyka w R" />
   
-  <meta name="twitter:description" content="Introduction to geostatistics in R (in Polish)." />
+  <meta name="twitter:description" content="Introduction to geostatistics with R (in Polish)." />
   <meta name="twitter:image" content="Rfigs/book_cover.png" />
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-04-10">
+<meta name="date" content="2016-05-03">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   TeX: { equationNumbers: { autoNumber: "AMS" } }
 });
 </script>
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -42,6 +41,7 @@ MathJax.Hub.Config({
 <link rel="prev" href="eksploracja-analiza-danych-nieprzestrzennych.html">
 <link rel="next" href="metody-interpolacji.html">
 
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
@@ -126,7 +126,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.1.7" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#ukad-geograficzny"><i class="fa fa-check"></i><b>2.1.7</b> Układ geograficzny</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#import-danych"><i class="fa fa-check"></i><b>2.2</b> Import danych</a><ul>
-<li class="chapter" data-level="2.2.1" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#dane-punktowe-format-.csv"><i class="fa fa-check"></i><b>2.2.1</b> Dane punktowe (format .csv)</a></li>
+<li class="chapter" data-level="2.2.1" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#format-.csv-dane-punktowe"><i class="fa fa-check"></i><b>2.2.1</b> Format .csv (dane punktowe)</a></li>
 <li class="chapter" data-level="2.2.2" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#dane-poligonowe-formaty-gisowe"><i class="fa fa-check"></i><b>2.2.2</b> Dane poligonowe (formaty gisowe)</a></li>
 <li class="chapter" data-level="2.2.3" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#rastry"><i class="fa fa-check"></i><b>2.2.3</b> Rastry</a></li>
 </ul></li>
@@ -146,7 +146,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.5.4" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#siatki-nieregularne---klasa-spatialpixelsdataframe"><i class="fa fa-check"></i><b>2.5.4</b> Siatki nieregularne - klasa <code>SpatialPixelsDataFrame</code></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html"><i class="fa fa-check"></i><b>3</b> Eksploracja analiza danych nieprzestrzennych</a><ul>
+<li class="chapter" data-level="3" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html"><i class="fa fa-check"></i><b>3</b> Eksploracyjna analiza danych nieprzestrzennych</a><ul>
 <li class="chapter" data-level="3.1" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#cele-eksploracyjnej-analizy-danych"><i class="fa fa-check"></i><b>3.1</b> Cele eksploracyjnej analizy danych</a></li>
 <li class="chapter" data-level="3.2" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#dane-1"><i class="fa fa-check"></i><b>3.2</b> Dane</a><ul>
 <li class="chapter" data-level="3.2.1" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#dane-2"><i class="fa fa-check"></i><b>3.2.1</b> Dane</a></li>
@@ -432,14 +432,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">225</span>)
 regularny &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;regular&#39;</span>)
 <span class="kw">plot</span>(regularny)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-53-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-54-1.png" width="672" /></p>
 </div>
 <div id="typ-probowania-losowy" class="section level3">
 <h3><span class="header-section-number">4.2.3</span> Typ próbowania | Losowy</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">301</span>)
 losowy &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;random&#39;</span>)
 <span class="kw">plot</span>(losowy)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-54-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
 <ul>
 <li>Każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia</li>
 <li>Każdy punkt jest losowany niezależnie od pozostałych</li>
@@ -450,24 +450,24 @@ losowy &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">125</span>)
 strat &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;stratified&#39;</span>)
 <span class="kw">plot</span>(strat)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-55-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-56-1.png" width="672" /></p>
 </div>
 <div id="typ-probowania-preferencyjny" class="section level3">
 <h3><span class="header-section-number">4.2.5</span> Typ próbowania | Preferencyjny</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">425</span>)
 pref &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;clustered&#39;</span>, <span class="dt">nclusters=</span><span class="dv">30</span>)
 <span class="kw">plot</span>(pref)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-56-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-57-1.png" width="672" /></p>
 </div>
 </div>
 <div id="mapy-punktowe-i-dane-lokalnie-odstajace" class="section level2">
 <h2><span class="header-section-number">4.3</span> Mapy punktowe i dane lokalnie odstające</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(granica) 
 <span class="kw">plot</span>(punkty, <span class="dt">add=</span><span class="ot">TRUE</span>) </code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-57-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(punkty, <span class="st">&#39;temp&#39;</span>, <span class="dt">identify=</span><span class="ot">TRUE</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(punkty, <span class="st">&#39;temp&#39;</span>, <span class="dt">sp.layout =</span> granica)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-58-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-59-1.png" width="672" /></p>
 </div>
 <div id="rozgrupowanie-danych" class="section level2">
 <h2><span class="header-section-number">4.4</span> Rozgrupowanie danych</h2>
@@ -486,7 +486,7 @@ pref &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <sp
 <h3><span class="header-section-number">4.4.2</span> Rozgrupowanie danych</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(punkty_pref)
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;temp&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-59-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-60-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(punkty_pref$temp)</code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   8.233  12.070  14.260  14.280  15.540  25.850</code></pre>
@@ -500,7 +500,7 @@ pref &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <sp
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(punkty_pref)
 punkty_pref$id &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(punkty_pref)
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;id&#39;</span>, <span class="dt">colorkey=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom01-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom01-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(granica)
 siatka_n &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(<span class="kw">gBuffer</span>(granica, <span class="dt">width =</span> <span class="dv">500</span>)))
 <span class="kw">res</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1000</span>, <span class="dv">1000</span>)
@@ -510,16 +510,16 @@ siatka_n &lt;-<span class="st"> </span><span class="kw">as</span>(siatka_n, <spa
 siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(siatka_n@data$layer), ]
 <span class="kw">plot</span>(siatka_n)
 <span class="kw">plot</span>(punkty_pref, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom01-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom01-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty_pref$liczebnosc &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">length</span>(punkty_pref))
 siatka_nr &lt;-<span class="st"> </span><span class="kw">aggregate</span>(punkty_pref[<span class="st">&#39;liczebnosc&#39;</span>], <span class="dt">by =</span> siatka_n, <span class="dt">FUN =</span> length) 
 <span class="kw">spplot</span>(siatka_nr, <span class="st">&#39;liczebnosc&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom01-3.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom01-3.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">liczba &lt;-<span class="st"> </span><span class="kw">over</span>(punkty_pref, siatka_nr)
 punkty_pref$waga &lt;-<span class="st"> </span>((<span class="dv">1</span>/liczba$liczebnosc)/<span class="kw">sum</span>(!<span class="kw">is.na</span>(siatka_nr$liczebnosc))) *<span class="st"> </span><span class="kw">length</span>(punkty_pref)
 
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;waga&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom01-4.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom01-4.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">srednia_arytmetyczna &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp)
 srednia_wazona_c1 &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp *<span class="st"> </span>punkty_pref$waga, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
 </div>
@@ -537,7 +537,7 @@ polygon.
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(punkty_pref)
 punkty_pref$id &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(punkty_pref)
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;id&#39;</span>, <span class="dt">colorkey=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom02-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom02-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(granica)
 siatka_n &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(<span class="kw">gBuffer</span>(granica, <span class="dt">width =</span> <span class="dv">500</span>)))
 <span class="kw">res</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">100</span>, <span class="dv">100</span>)
@@ -548,11 +548,11 @@ siatka_n &lt;-<span class="st"> </span><span class="kw">as</span>(siatka_n, <spa
 siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(siatka_n@data$layer), ]
 <span class="kw">gridded</span>(siatka_n) &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 <span class="kw">plot</span>(siatka_n)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom02-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom02-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st">  </span><span class="kw">krige</span>(id~<span class="dv">1</span>, punkty_pref, siatka_n, <span class="dt">nmax=</span><span class="dv">1</span>)</code></pre></div>
 <pre><code>## [inverse distance weighted interpolation]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(out, <span class="st">&#39;var1.pred&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom02b-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom02b-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">table</span>(out[[<span class="dv">1</span>]]))
 df$waga &lt;-<span class="st"> </span>df$Freq/<span class="kw">sum</span>(df$Freq)
 punkty_pref &lt;-<span class="st"> </span><span class="kw">merge</span>(punkty_pref, df, <span class="dt">by.x=</span><span class="st">&#39;id&#39;</span>, <span class="dt">by.y=</span><span class="st">&#39;Var1&#39;</span>)
@@ -560,9 +560,9 @@ punkty_pref &lt;-<span class="st"> </span><span class="kw">merge</span>(punkty_p
 <pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 ## 0.000336 0.001386 0.002520 0.003802 0.004326 0.043930</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(out, <span class="st">&#39;var1.pred&#39;</span>, <span class="dt">sp.layout=</span><span class="kw">list</span>(<span class="st">&#39;sp.points&#39;</span>, punkty_pref))</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom02b-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom02b-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(punkty_pref[<span class="st">&#39;waga&#39;</span>])</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom02b-3.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom02b-3.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">srednia_arytmetyczna &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp)
 srednia_wazona_c2 &lt;-<span class="st"> </span><span class="kw">sum</span>(punkty_pref$temp *<span class="st"> </span>punkty_pref$waga, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
 </div>
@@ -575,45 +575,45 @@ srednia_wazona_c2 &lt;-<span class="st"> </span><span class="kw">sum</span>(punk
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(punkty_pref)
 punkty_pref$id &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(punkty_pref)
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;id&#39;</span>, <span class="dt">colorkey=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozpoly-1.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/rozpoly-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v &lt;-<span class="st"> </span><span class="kw">voronoi</span>(punkty_pref)
 <span class="kw">plot</span>(punkty_pref, <span class="dt">cex=</span><span class="fl">0.2</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)
 <span class="kw">plot</span>(v, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozpoly-2.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/rozpoly-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v$pow &lt;-<span class="st"> </span><span class="kw">area</span>(v)
 v$waga &lt;-<span class="st"> </span>v$pow/<span class="kw">sum</span>(v$pow) *<span class="st"> </span><span class="kw">length</span>(punkty_pref)
 
 punkty_pref &lt;-<span class="st"> </span><span class="kw">merge</span>(punkty_pref, v[<span class="kw">c</span>(<span class="st">&#39;id&#39;</span>, <span class="st">&#39;waga&#39;</span>)], <span class="dt">by=</span><span class="st">&#39;id&#39;</span>)
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;waga&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozpoly-3.png" alt="" /><!-- --></p>
+<p><img src="Geostatystyka_files/figure-html/rozpoly-3.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">srednia_arytmetyczna &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)
 srednia_wazona_p &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp*punkty_pref$waga, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
-<th align="left"></th>
+<th></th>
 <th align="right">Średnia arytmetyczna</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Populacja</td>
+<td>Populacja</td>
 <td align="right">15.59128</td>
 </tr>
 <tr class="even">
-<td align="left">Próba</td>
+<td>Próba</td>
 <td align="right">14.28147</td>
 </tr>
 <tr class="odd">
-<td align="left">Rozgrupowanie komórkowe I</td>
+<td>Rozgrupowanie komórkowe I</td>
 <td align="right">15.37895</td>
 </tr>
 <tr class="even">
-<td align="left">Rozgrupowanie komórkowe II</td>
+<td>Rozgrupowanie komórkowe II</td>
 <td align="right">16.07342</td>
 </tr>
 <tr class="odd">
-<td align="left">Rozgrupowanie poligonowe</td>
+<td>Rozgrupowanie poligonowe</td>
 <td align="right">16.25110</td>
 </tr>
 </tbody>
@@ -635,7 +635,7 @@ http://gaa.org.au/pdf/DeclusterDebias-CCG.pdf
 <a href="eksploracja-analiza-danych-nieprzestrzennych.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="metody-interpolacji.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
-<script src="libs/gitbook-2.6.7/js/app.js"></script>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -660,8 +660,8 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://gitlab.com/nowosad/geostat_book/edit/master/03-eksp_przestrzenna.Rmd",
-"text": "Edycja"
+"link": null,
+"text": null
 },
 "download": null,
 "toc": {
@@ -674,7 +674,17 @@ gitbook.start({
 });
 </script>
 
-
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
