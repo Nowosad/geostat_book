@@ -236,7 +236,7 @@ proj4string(siatka) <- proj4string(dane_punktowe)
 
 ### Siatki regularne
 
-Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić za pomocą funkcji `plot()`.
+Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić za pomocą funkcji `plot()`. W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add`.
 
 ```{r }
 plot(siatka)
