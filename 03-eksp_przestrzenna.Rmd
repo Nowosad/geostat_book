@@ -1,6 +1,3 @@
----
-knit: bookdown::preview_chapter
----
 
 # Eksploracyjna analiza danych przestrzennych {#eksploracyjna-analiza-danych-przestrzennych}
 
@@ -17,24 +14,33 @@ par(mar=c(rep(0, 4)))
 ```
 
 ### Podstawowe terminy | Kontekst przestrzenny
+
 - Populacja - cały obszar, dla którego chcemy określić wybrane właściwości
 - Próba - zbiór obserwacji, dla których mamy informacje. Inaczej, próba to podzbiór populacji. Zazwyczaj niemożliwe (lub bardzo kosztowne) jest zdobycie informacji o całej populacji. Z tego powodu bardzo cenne jest odpowiednie wykorzystanie informacji z próby.
 
-### Mapy punktowe | Cel
+### Mapy punktowe
+
+Eksploracyjna analiza danych przestrzennych w przypadku danych punktowych ma na celu:
+
+- Wgląd w typ próbkowania danych
 - Sprawdzenie poprawności współrzędnych
-- Wgląd w typ próbkowania
-- Sprawdzenie poprawności danych - dane odstające lokalnie
+- Sprawdzenie poprawności danych, w tym między innymi określenie danych odstających lokalnie
 - Identyfikacja głównych cech struktury przestrzennej zjawiska (np. trend)
 
 ## Próbkowanie
 
-### Typy próbowania (oferowane przez pakiet `sp`)
+### Podstwowe typy próbowania
+
+Istnieje cały szereg typów próbkowania danych przestrzennych. Funkcja `spsample()` z pakietu `sp` pozwala na stworzenie kilku typów próbkowania (argument `type`):
+
 - Regularny (ang.*regular*)
 - Losowy (ang.*random*)
 - Losowy stratyfikowany (ang.*stratified*)
 - Preferencyjny (ang.*clustered*)
 
 ### Typ próbowania | Regularny
+
+W regularnym typie próbkowania, kolejne punkty rozłożone są równomiernie na badanym obszarze.
 
 ```{r }
 set.seed(225)
@@ -44,16 +50,17 @@ plot(regularny)
 
 ### Typ próbowania | Losowy
 
+W losowym typie próbkowania każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia. Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych.
+
 ```{r }
 set.seed(301)
 losowy <- spsample(granica, 150, type = 'random')
 plot(losowy)
 ```
 
-- Każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia
-- Każdy punkt jest losowany niezależnie od pozostałych
-
 ### Typ próbowania | Losowy stratyfikowany
+
+Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu.
 
 ```{r }
 set.seed(125)
@@ -63,6 +70,8 @@ plot(strat)
 
 ### Typ próbowania | Preferencyjny
 
+W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości cechy) są znacznie częściej opróbkowane niż inne.
+
 ```{r }
 set.seed(425)
 pref <- spsample(granica, 150, type = 'clustered', nclusters=30)
@@ -71,28 +80,34 @@ plot(pref)
 
 ## Mapy punktowe i dane lokalnie odstające
 
+Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()`.
+
 ```{r}
 plot(granica) 
 plot(punkty, add=TRUE) 
 ```
 
-```{r klik, eval=FALSE}
-spplot(punkty, 'temp', identify=TRUE)
-```
+Dane lokalnie odstające oznaczają nietypowe przestrzennie wartości danej cechy. Inaczej mówiąc, może to być niska wartość otoczona wysokimi wartościami lub też wysoka wartość otoczona niskimi wartościami. Dane lokalnie ostające mogą oznaczać zarówno błąd w danych albo wpływ innego czynnika na analizowaną cechę. Przyjrzenie się wartościom analizowanej cechy można wykonać z użyciem funkcji `spplot()`. Na poniższym przykładzie wyświetlona jest zmienna `temp` ozaczająca średnią temperaturę dobową.
 
 ```{r }
 spplot(punkty, 'temp', sp.layout = granica)
 ```
 
+Dodatkowo, używając argumentu `identify = TRUE` można interaktywnie określić numer punktu (numer wiersza w tabeli atrybutów). Działanie tej funkcji polega na wybraniu punktów za pomocą lewego przycisk myszy, a po wybraniu serii punktów klawisza Esc.
+
+```{r klik, eval=FALSE}
+spplot(punkty, 'temp', identify = TRUE)
+```
+
 ## Rozgrupowanie danych
 
 ### Rozgrupowanie danych
-- Istnieje szereg metod rozgrupowywania danych, między innymi:
-    - Rozgrupowywanie komórkowe
-    - Rozgrupowywanie poligonowe
-- Celem tych metod jest nadanie wag obserwacjom w celu zapewnienia reprezentatywności przestrzennej danych
+
+Istnieje szereg metod rozgrupowywania danych, między innymi jest to rozgrupowywanie komórkowe oraz rozgrupowywanie poligonowe. Celem tych metod jest nadanie wag obserwacjom w celu zapewnienia reprezentatywności przestrzennej danych. Poniżej znajdują się przykłady użycia dwóch wersji rozgrupowania komórkowego (rozgrupowywanie komórkowe I oraz rozgrupowywanie komórkowe II) i jedna wersja rozgrupowania poligonowego.
 
 ### Rozgrupowanie danych
+
+Na potrzeby przykładów związanych z rozgrupowaniem danych w pakiecie `geostatbook` znajduje się zbiór danych `punkty_pref`. W tym zbiorze gęściej opróbkowane są niskie wartości temperatury, co powoduje, że średnia dla całego obszaru jest znacznie niższa niż w rzeczywistości.
 
 ```{r }
 data(punkty_pref)
@@ -101,6 +116,12 @@ summary(punkty_pref$temp)
 ```
 
 ### Rozgrupowanie komórkowe I | (ang. *cell declustering*)
+
+Pierwszy rodzaj rozgrupowania komórkowego polega na:
+
+1. Stworzeniu siatki dla badanego obszaru
+2. Policzeniu liczby obserwacji w każdym oczku siatki
+3. Nadanie wagi dla każdego punktu, zgodnie ze wzorem:
 
 $$w'_j=\frac{\frac{1}{n_i}}{\text{liczba komórek z danymi}} \cdot n$$
 , gdzie $n_i$ to liczba obserwacji w komórce, a $n$ to łączna liczba obserwacji
@@ -136,6 +157,13 @@ srednia_wazona_c1 <- mean(punkty_pref$temp * punkty_pref$waga, na.rm=TRUE)
 ```
 
 ### Rozgrupowanie komórkowe II | (ang. *cell declustering*)
+
+Drugi rodzaj rozgrupowania komórkowego polega na:
+
+1. Stworzeniu siatki dla badanego obszaru
+2. Wykonaniu interpolacji z użyciem funkcji `krige()` z pakietu `gstat`. W tym wypadku konieczne jest użycie argumentu `nmax = 1`, który przypisuje wartość najbliższej obserwacji do każdego oczka siatki.
+3. Waga dla każdego punktu nadawana jest poprzez zliczenie liczby oczek siatki dla konkretnej wartości, a następnie podzielenie tego przez liczbę oczek siatki.
+
 <!--
 - Przygotowanie danych
 https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html
@@ -160,7 +188,7 @@ proj4string(siatka_n) <- CRS(proj4string(punkty_pref))
 siatka_n <- as(siatka_n, 'SpatialPointsDataFrame')
 siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
 gridded(siatka_n) <- TRUE
-plot(siatka_n)
+plot(siatka_n, border = TRUE)
 ```
 
 ```{r rozkom02b}
@@ -178,6 +206,13 @@ srednia_wazona_c2 <- sum(punkty_pref$temp * punkty_pref$waga, na.rm=TRUE)
 ```
 
 ### Rozgrupowanie poligonowe | (ang. *polygon declustering*)
+
+Rozgrupowanie poligonowe polega na zastosowaniu jednej z metod triangulacji, np. poligonów Voronoia:
+
+1. Dla każdego punktu określany jest poligon.
+2. Wyliczana jest powierzchnia poligonu.
+3. Waga każdego punktu wyliczana jest poprzez podzielenie powierzchni indywidualnych przez powierzchnię całego obszaru, a następnie pomnożenie przez liczbę punktów.
+
 $$w'_j=\frac{area_j}{\sum_{j=1}^{n}area_j} \cdot n$$
 , gdzie $area_j$ powierzchnia dla wybranej obserwacji, a $n$ to łączna liczba obserwacji
 
@@ -226,13 +261,19 @@ srednia_wazona_p <- mean(punkty_pref$temp*punkty_pref$waga, na.rm=TRUE)
 ```
 
 
+### Porównanie metod rozgrupowania
+
+Średnia wartość temperatury dla badanego obszaru wynosiła 15,59 stopni Celsjusza, jednak w preferencyjnej próbie ta wartość wynosiła 14,28 stopni Celsjusza. Porównując trzy zastowowane metody próbkowania warto zauważyć, że najbliższy wynik uzyskano korzystając z pierwszego rodzaju rozgrupowania komórkowego, która nieznacznie zaniżyła rzeczywistą wartość temperatury. Rozgrupowanie komórkowe II oraz rozgrupowanie poligonowe były w tym przypadku mniej dokładne, wyraźnie zawyżając wartości temperatury. 
+
 ```{r tab_dec_1, echo=FALSE}
 library('knitr')
 srednia_arytmetyczna_pop <- 15.5912781
 df <- data.frame(sa=c(srednia_arytmetyczna_pop, srednia_arytmetyczna, srednia_wazona_c1, srednia_wazona_c2, srednia_wazona_p))
 rownames(df) <- c('Populacja', 'Próba', "Rozgrupowanie komórkowe I", "Rozgrupowanie komórkowe II", "Rozgrupowanie poligonowe")
-knitr::kable(df, col.names='Średnia arytmetyczna', row.names=TRUE)
+knitr::kable(df, col.names='Średnia arytmetyczna', row.names=TRUE, digits=4)
 ```
+
+W przypadku metod rozgrupowania należy jednak pamiętać, że ich wynik zależy od szeregu wprowadzonych parametrów, w szczególności granic badanego obszaru oraz zastosowanej wielkości oczka siatki.
 
 <!--
 polygon declustering - http://gis.stackexchange.com/questions/122376/cell-declustering-using-open-source-software
