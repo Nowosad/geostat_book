@@ -1,6 +1,3 @@
----
-knit: bookdown::preview_chapter
----
 
 # Eksploracyjna analiza danych nieprzestrzennych {#eksploracja-analiza-danych-nieprzestrzennych}
 
@@ -97,7 +94,7 @@ max(punkty$temp, na.rm=TRUE)
 
 ### Statystyki opisowe | odchylenie standardowe
 
-Dodatkowo, często używaną statystyką jest odchylenie standardowe. Wartość ta określa w jak mocno wartości zmiennej odstają od średniej. Dla rozkładu normalnego ta wartość ma znane właśności:
+Dodatkowo, często używaną statystyką jest odchylenie standardowe. Wartość ta określa w jak mocno wartości zmiennej odstają od średniej. Dla rozkładu normalnego ta wartość ma znane własności:
 
 - 68% obserwacji mieści się w granicach jednego odchylenia standardowego od średniej
 - 95% obserwacji mieści się w granicach dwóch odchyleń standardowych od średniej
@@ -163,7 +160,7 @@ Wybór odpowiedniej metody porównania zmiennych zależy od szeregu cech, międz
 
 ### Kowariancja
 
-Kowariancja jest nieunormowaną miarą zależności liniowej pomiędzy dwiema zmiennymi. Kowariancja dwóch zmiennych $x$ i $y$ pokazuje jak dwie zmienne są ze sobą liniowo powiązane. Dodatnia kowariancja wzkazuje na pozytywną relację liniową pomiędzy zmiennymi, podczas gdy ujemna kowariancja świadczy o odwrotnej sytuacji. Jeżeli zmienne nie są ze sobą liniowo powiązane, wartość kowariacji jest bliska zeru. Inaczej mówiąc, kowariancja stanowi miarę wspólnej zmienności dwóch zmiennych. Wielkość samej kowariancji uzależniona jest od przyjętej skali zmiennej (jednostki). Inne wyniku uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wieku i dochodu w złotówkach a inne dla wieku i dochodu w dolarach. Do wyliczania kowariancji w R służy funkcja `cov`. 
+Kowariancja jest nieunormowaną miarą zależności liniowej pomiędzy dwiema zmiennymi. Kowariancja dwóch zmiennych $x$ i $y$ pokazuje jak dwie zmienne są ze sobą liniowo powiązane. Dodatnia kowariancja wskazuje na pozytywną relację liniową pomiędzy zmiennymi, podczas gdy ujemna kowariancja świadczy o odwrotnej sytuacji. Jeżeli zmienne nie są ze sobą liniowo powiązane, wartość kowariacji jest bliska zeru. Inaczej mówiąc, kowariancja stanowi miarę wspólnej zmienności dwóch zmiennych. Wielkość samej kowariancji uzależniona jest od przyjętej skali zmiennej (jednostki). Inne wyniku uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wieku i dochodu w złotówkach a inne dla wieku i dochodu w dolarach. Do wyliczania kowariancji w R służy funkcja `cov`. 
 
 ```{r }
 cov(punkty$temp, punkty$ndvi)
@@ -171,7 +168,7 @@ cov(punkty$temp, punkty$ndvi)
 
 ### Współczynnik korelacji
 
-Wspołczynnik korelacji to unormowana miara zależności pomiędzy dwiema zmiennymi, przyjmująca wartości od -1 do 1. Ten współczynnik jest uzyskiwany poprzez podzielenie wartości kowariancji przez odchylenie standardowe wyników. Z racji unormowania nie jest ona uzależniona od jednostki. Korelację można wyliczyć dzięki funkcji `cor`. Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego obiektu zawierającego zmienne numeryczne.
+Współczynnik korelacji to unormowana miara zależności pomiędzy dwiema zmiennymi, przyjmująca wartości od -1 do 1. Ten współczynnik jest uzyskiwany poprzez podzielenie wartości kowariancji przez odchylenie standardowe wyników. Z racji unormowania nie jest ona uzależniona od jednostki. Korelację można wyliczyć dzięki funkcji `cor`. Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego obiektu zawierającego zmienne numeryczne.
 
 ```{r }
 ggplot(punkty@data, aes(temp, ndvi)) + geom_point()
@@ -196,7 +193,7 @@ corrplot(cor(punkty@data[c(1, 3:5)]))
 
 ### Wykres pudełkowy
 
-Wykres pudełkowy obrazuje pięc podstawowych statystyk opisowych oraz wartości odstające. Pudełko to zakres międzykwantylowy (IQR), a linie oznaczają najbardziej ekstremalne wartości, ale nie odstające. Górna z nich to 1,5\*IQR ponad krawędź pudełka, dolna to 1,5\*IQR poniżej wartości dolnej krawędzi pudełka. Linia środkowa to mediana.  
+Wykres pudełkowy obrazuje pięć podstawowych statystyk opisowych oraz wartości odstające. Pudełko to zakres międzykwantylowy (IQR), a linie oznaczają najbardziej ekstremalne wartości, ale nie odstające. Górna z nich to 1,5\*IQR ponad krawędź pudełka, dolna to 1,5\*IQR poniżej wartości dolnej krawędzi pudełka. Linia środkowa to mediana.  
 
 ```{r }
 punkty$clc <- as.factor(punkty$clc)
@@ -217,7 +214,7 @@ summary(aov_test)
 dev.off()
 ```
 
-Do wykonania porównań wielokrotnych służy funkcja `TukeyHSD()`. Dodatkowo wyniki można zwizualizować za pomocą funkcji `plot()`.
+Do wykonania porównań wielokrotnych służy funkcja `TukeyHSD()`. Dodatkowo wyniki można wizualizować za pomocą funkcji `plot()`.
 
 ```{r }
 tukey <- TukeyHSD(aov_test, 'clc')
@@ -236,7 +233,7 @@ Centrowanie i skalowanie (standaryzacja):
 
 - Centrowanie danych - wybierana jest przeciętna wartość predyktora, a następnie od wszystkich wartości predyktorów odejmowana jest wybrana wcześniej wartość
 - Skalowanie danych - dzielenie każdej wartości predyktora przez jego odchylenie standardowe
-- Wadą tego podjeścia jest główne zmniejszenie interpretowalności pojedynczych wartości
+- Wadą tego podejścia jest główne zmniejszenie interpretowalności pojedynczych wartości
 
 ### Transformacja danych | Centrowanie
 
@@ -273,7 +270,7 @@ Redukcja skośności:
 
 ### Transformacja danych | Logarytmizacja
 
-Logarytmizacja w R może odbyć się za pomocą funkcji `log()`. Transformację logarytmiczą można odwrócić używając funkcji `exp()`.
+Logarytmizacja w R może odbyć się za pomocą funkcji `log()`. Transformację logarytmiczną można odwrócić używając funkcji `exp()`.
 
 ```{r }
 ggplot(punkty@data, aes(temp)) + geom_density()

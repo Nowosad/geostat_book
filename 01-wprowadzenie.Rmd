@@ -1,6 +1,3 @@
----
-knit: bookdown::preview_chapter
----
 
 # R a dane przestrzenne {#r-a-dane-przestrzenne}
 
@@ -37,13 +34,13 @@ Więcej szczegółów na ten temat pakietów R służących do analizy przestrze
 
 ### GDAL/OGR
 - http://www.gdal.org/
-- GDAL to biblioteka zawierająca funkcje służące do odczytywania i zapiswania danych w formatach rastrowych
-- OGR to bibioteka służąca to odczytywania i zapiswania danych w formatach wektorowych
+- GDAL to biblioteka zawierająca funkcje służące do odczytywania i zapisywania danych w formatach rastrowych
+- OGR to biblioteka służąca to odczytywania i zapisywania danych w formatach wektorowych
 - Pakiet `rgdal` pozwala na wykorzystanie bibliotek GDAL/OGR w R
 
 ### PROJ.4
-- Dane przestrzenne powinny być zawsze powiązane z układem współrzednych
-- PROJ.4 - to biblioteka pozwalająca na identyfiację oraz konwersję pomiędzy różnymi układami współrzędnych
+- Dane przestrzenne powinny być zawsze powiązane z układem współrzędnych
+- PROJ.4 - to biblioteka pozwalająca na identyfikację oraz konwersję pomiędzy różnymi układami współrzędnych
 - Strona http://www.spatialreference.org/ zawiera bazę danych układów współrzędnych 
 
 ### EPSG
@@ -57,7 +54,7 @@ Więcej szczegółów na ten temat pakietów R służących do analizy przestrze
 `'+init=epsg:2180'`
 
 ### Układ geograficzny
-- Proporcje pomiędzy współrzedną oznaczjącą długość geograficzną (X) a oznaczającą szerokość geograficzną (Y) nie są równe 1:1
+- Proporcje pomiędzy współrzędną oznaczającą długość geograficzną (X) a oznaczającą szerokość geograficzną (Y) nie są równe 1:1
 - Wielkość oczka siatki jest zmienna 
 - Nie pozwala to na proste określanie odległości czy powierzchni
 - Jednostka mapy jest abstrakcyjna
@@ -169,7 +166,7 @@ Funkcja `plot()` idealnie nadaje się do szybiego obejrzenia, np. rodzaju próbk
 plot(dane_punktowe)
 ```
 
-Funkcja `spplot()` w prosty sposób pozwala na obejrzenie rozkładu wartości wybranej zmiennej. Należy w niej podać nazwę obiektu oraz nazwę eyświetlanej zmiennej. Poniżej można zobaczyć przykady dla zmiennych `temp` oraz `srtm`.
+Funkcja `spplot()` w prosty sposób pozwala na obejrzenie rozkładu wartości wybranej zmiennej. Należy w niej podać nazwę obiektu oraz nazwę wyświetlanej zmiennej. Poniżej można zobaczyć przykłady dla zmiennych `temp` oraz `srtm`.
 
 ```{r }
 spplot(dane_punktowe, 'temp')
@@ -198,11 +195,11 @@ levelplot(siatka_raster, margin=FALSE)
 
 ## Tworzenie siatek
 
-W większości przypadków analiz geostatystycznych konieczne jest stworzenie siatki interpolacyjnej. Isnieją dwa podstawowe rodzaje takich siatek - siatki regularne oraz siatki nieregularne.
+W większości przypadków analiz geostatystycznych konieczne jest stworzenie siatki interpolacyjnej. Istnieją dwa podstawowe rodzaje takich siatek - siatki regularne oraz siatki nieregularne.
 
 ### Siatki regularne
 
-Siatki regularne mają kształt prostokątu obejmującego cały analizowany obszar. Określenie granic obszaru można wykonać na podstawie zasięgu danych punktowych za pomocą funkcji `bbox()` z pakietu `sp` lub funkcji `extent()` z pakietu `raster`.
+Siatki regularne mają kształt prostokąta obejmującego cały analizowany obszar. Określenie granic obszaru można wykonać na podstawie zasięgu danych punktowych za pomocą funkcji `bbox()` z pakietu `sp` lub funkcji `extent()` z pakietu `raster`.
 
 ```{r}
 bbox(dane_punktowe)
@@ -245,9 +242,9 @@ plot(dane_punktowe, add=TRUE)
 
 ### Siatki nieregularne - klasa `RasterLayer`
 
-Siatki nieregularne mają zazwyczaj kszałt wieloboku obejmującego analizowany obszar. Mogą one powstać, np. w oparciu o wcześniej istniejące granice. Siatki nieregularne w R mają zazwyczaj klasę `RasterLayer` lub `SpatialPixelsDataFrame`. Pierwsza z klas jest elastyczniejsza i prostsza w użyciu, podczas gdy druga jest lepiej wspierana przez funkcje geostatystyczne, np. z pakietu `gstat`.
+Siatki nieregularne mają zazwyczaj kształt wieloboku obejmującego analizowany obszar. Mogą one powstać, np. w oparciu o wcześniej istniejące granice. Siatki nieregularne w R mają zazwyczaj klasę `RasterLayer` lub `SpatialPixelsDataFrame`. Pierwsza z klas jest elastyczniejsza i prostsza w użyciu, podczas gdy druga jest lepiej wspierana przez funkcje geostatystyczne, np. z pakietu `gstat`.
 
-W poniższym przypadku odczywtywana jest granica badanego obszaru z pliku shapefile. Taki obiekt można np. stworzyć za pomocą oprogramowania gisowego takiego jak [QGIS](http://www.qgis.org/pl/site/). Następnie na podstawie tego obiektu tworzony jest obiekt klasy `RasterLayer`, a za pomocą funkcji `res()` definiowana jest jego rozdzielczość. W kolejnym kroku ustala się wartość wszystkich oczek siatki na zero, oraz poprzez funkcję `proj4string` ujednolica się definicję układu współrzędnych siatki. Ostatnim krokiem jest przycięcie siatki do nieregularnego obszaru.
+W poniższym przypadku odczytywana jest granica badanego obszaru z pliku shapefile. Taki obiekt można np. stworzyć za pomocą oprogramowania gisowego takiego jak [QGIS](http://www.qgis.org/pl/site/). Następnie na podstawie tego obiektu tworzony jest obiekt klasy `RasterLayer`, a za pomocą funkcji `res()` definiowana jest jego rozdzielczość. W kolejnym kroku ustala się wartość wszystkich oczek siatki na zero, oraz poprzez funkcję `proj4string` ujednolica się definicję układu współrzędnych siatki. Ostatnim krokiem jest przycięcie siatki do nieregularnego obszaru.
 
 ```{r siatkaniereg}
 granica <- readOGR(dsn='dane', layer='granica')

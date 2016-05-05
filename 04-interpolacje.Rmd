@@ -8,7 +8,7 @@ data(siatka)
 data(granica)
 ```
 
-Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna droga. Można wyróżnić dwie główne grupy modeli prestrzennych - modele deterministyczne oraz modele statystyczne.
+Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna droga. Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne oraz modele statystyczne.
 
 ## Modele deterministyczne
 
@@ -27,7 +27,7 @@ par(mar=c(rep(0, 4)))
 
 ### Modele deterministyczne | Voronoi
 
-Metoda diagramów Voronoi'a polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego punktu. Na poniższym przykadzie ta metoda stosowana jest z użyciem funkcji `voronoi()` z pakietu `dismo`. Wyniki następnie można przyciąć do badanego obszaru z użyciem funkcji `intersect()` z pakietu `raster`.
+Metoda diagramów Voronoi'a polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego punktu. Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi()` z pakietu `dismo`. Wyniki następnie można przyciąć do badanego obszaru z użyciem funkcji `intersect()` z pakietu `raster`.
 
 ```{r }
 voronoi_interp <- voronoi(punkty)
