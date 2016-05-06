@@ -79,6 +79,7 @@ head(dane_punktowe)
 Po wczytaniu za pomocą funkcji `read.csv()`, nowy obiekt (np. `dane_punktowe`) jest reprezentowany za pomocą klasy nieprzestrzennej `data.frame`. Aby obiekt został przetworzony do klasy przestrzennej, konieczne jest nadanie mu współrzędnych. W tym wypadku współrzędne znajdowały się w kolumnach `x` oraz `y`. Nadanie układu współrzędnych odbywa się poprzez funkcję `coordinates()`.
 
 ```{r}
+library('sp')
 coordinates(dane_punktowe) <- ~x+y
 summary(dane_punktowe)
 ```
@@ -123,6 +124,7 @@ sp_na_omit <- function(x, margin=1) {
 Dane wektorowe (np. shapefile) można odczytać za pomocą funkcji `readOGR()` z pakietu `rgdal`. Dla danych shapefile, przyjmuje ona co najmniej dwa argumenty - `dsn` oraz `layer`. Argument `dsn` określa folder, w którym znajdują się dane. W przypadku, gdy dane znajdują się w folderze roboczym należy ten argument określić za pomocą znaku kropki (`'.'`). Argument `layer` wymaga podania nazwy pliku bez jego rozszerzenia. Przykładowo, gdy pliki nazywają się `granica.dbf`, `granica.prj`, `granica.shp`, oraz `granica.shx` - konieczne jest podanie w argumencie `layer` jedynie nazwy `granica`.
 
 ```{r}
+library('rgdal')
 granica <- readOGR(dsn='dane', layer='granica')
 plot(granica)
 ```
@@ -132,6 +134,7 @@ plot(granica)
 Istnieje kilka sposobów odczytu danych rastrowych w R. Do najpopularniejszych należą funkcje `readGDAL()` z pakietu `rgdal` oraz `raster()` z pakietu `raster`. W tym drugim przypadku należy jedynie podać ścieżkę do pliku rastrowego.
 
 ```{r}
+library('raster')
 siatka_raster <- raster('dane/siatka.tif')
 plot(siatka_raster)
 ```
@@ -190,6 +193,7 @@ spplot(dane_punktowe, 'clc')
 Wyświetlanie danych w formacie rastrowym może odbyć się z użyciem funkcji `levelplot()`. Wymaga ona jedynie zdefiniowania obiektu do wizualizacji. W poniższym przypadku dodatkowo ustawiono argument `margin=FALSE` co wyłącza wyświetlanie tzw. histogramów marginalnych (ang. *marginal historgram*).
 
 ```{r, message=FALSE, warning=FALSE}
+library('rasterVis')
 levelplot(siatka_raster, margin=FALSE)
 ```
 
@@ -244,7 +248,7 @@ plot(dane_punktowe, add=TRUE)
 
 Siatki nieregularne mają zazwyczaj kształt wieloboku obejmującego analizowany obszar. Mogą one powstać, np. w oparciu o wcześniej istniejące granice. Siatki nieregularne w R mają zazwyczaj klasę `RasterLayer` lub `SpatialPixelsDataFrame`. Pierwsza z klas jest elastyczniejsza i prostsza w użyciu, podczas gdy druga jest lepiej wspierana przez funkcje geostatystyczne, np. z pakietu `gstat`.
 
-W poniższym przypadku odczytywana jest granica badanego obszaru z pliku shapefile. Taki obiekt można np. stworzyć za pomocą oprogramowania gisowego takiego jak [QGIS](http://www.qgis.org/pl/site/). Następnie na podstawie tego obiektu tworzony jest obiekt klasy `RasterLayer`, a za pomocą funkcji `res()` definiowana jest jego rozdzielczość. W kolejnym kroku ustala się wartość wszystkich oczek siatki na zero, oraz poprzez funkcję `proj4string` ujednolica się definicję układu współrzędnych siatki. Ostatnim krokiem jest przycięcie siatki do nieregularnego obszaru.
+W poniższym przypadku odczytywana jest granica badanego obszaru z pliku shapefile. Taki obiekt można np. stworzyć za pomocą oprogramowania gisowego takiego jak [QGIS](http://www.qgis.org/pl/site/). Następnie na podstawie tego obiektu tworzony jest obiekt klasy `RasterLayer`, a za pomocą funkcji `res()` definiowana jest jego rozdzielczość. W kolejnym kroku ustala się wartość wszystkich oczek siatki na zero, oraz poprzez funkcję `proj4string()` ujednolica się definicję układu współrzędnych siatki. Ostatnim krokiem jest przycięcie siatki do nieregularnego obszaru z użyciem funkcji `mask()`.
 
 ```{r siatkaniereg}
 granica <- readOGR(dsn='dane', layer='granica')

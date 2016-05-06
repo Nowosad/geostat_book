@@ -4,7 +4,9 @@ knit: bookdown::preview_chapter
 
 # Estymacje wielozmienne {#estymacje-wielozmienne}
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
+library('gstat')
+library('sp')
 library('geostatbook')
 data(punkty)
 data(punkty_ndvi)
@@ -23,18 +25,15 @@ par(mar=c(rep(0, 4)))
 
 ## Kokriging (prosty i zwykły, SCK i OCK)
 ### Kokriging (ang. *co-kriging*)
-- Kokriging pozwala na wykorzystanie dodatkowej zmiennej (ang. *auxiliary variable*), zwanej inaczej kozmienną (ang. *co-variable*), która może być użyta do prognozwania wartości badanej zmiennej w nieopróbowanej lokalizacji
-- Zmienna dodatkowa może być pomierzona w tych samych miejscach, gdzie badana zmienna, jak też w innych niż badana zmienna
-- Możliwa jest też sytuacja, gdy zmienna dodatkowa jest pomierzona w dwóch powyższych przypadkach
-- Kokriging wymaga, aby obie zmienne były istotnie ze sobą skorelowane
-- Najczęściej kokriging jest stosowany w sytuacji, gdy zmienna dodatkowa jest łatwiejsza (tańsza) do pomierzenia niż zmienna główna
-- W efekcie, uzyskany zbiór danych zawiera informacje o badanej zmiennej oraz gęściej opróbowane informacje o zmiennej dodatkowej
-- Jeżeli informacje o zmiennej dodatkowej są znane dla całego obszaru wówczas bardziej odpowiednią techniką będzie kriging z zewnątrznym trendem (KED)
+
+Kokriging pozwala na wykorzystanie dodatkowej zmiennej (ang. *auxiliary variable*), zwanej inaczej kozmienną (ang. *co-variable*), która może być użyta do prognozwania wartości badanej zmiennej w nieopróbowanej lokalizacji. Zmienna dodatkowa może być pomierzona w tych samych miejscach, gdzie badana zmienna, jak też w innych niż badana zmienna. Możliwa jest też sytuacja, gdy zmienna dodatkowa jest pomierzona w dwóch powyższych przypadkach. Kokriging wymaga, aby obie zmienne były istotnie ze sobą skorelowane. Najczęściej kokriging jest stosowany w sytuacji, gdy zmienna dodatkowa jest łatwiejsza (tańsza) do pomierzenia niż zmienna główna. W efekcie, uzyskany zbiór danych zawiera informacje o badanej zmiennej oraz gęściej opróbowane informacje o zmiennej dodatkowej. Jeżeli informacje o zmiennej dodatkowej są znane dla całego obszaru wówczas bardziej odpowiednią techniką będzie kriging z zewnątrznym trendem (KED).
 
 ### Kokriging | Wybór dodatkowej zmiennej
-- Wybór zmiennej dodatkowej może opierać się na dwóch kryteriach:
-    - Teoretycznym
-    - Empirycznym
+
+Wybór zmiennej dodatkowej może opierać się na dwóch kryteriach:
+
+- Teoretycznym
+- Empirycznym
     
 <!--
 Kroskowariogramy
@@ -43,28 +42,46 @@ Kroskorelogramy
 
 ## Krossemiwariogramy
 ### Krossemiwariogramy
-- Krossemiwariogram jest to wariancja różnicy pomiędzy dwiema zmiennymi w dwóch lokalizacjach
-- Wyliczając Krossemiwariogram otrzymujemy empiryczne semiwatiogramy dla dwóch badanych zmiennych oraz kroswariogram dla kombinacji dwóch zmiennych
-- Krossemiwariogram znajduje swoje zastosowanie w technice zwanej kokrigingiem
 
-### Krossemiwariogramy
+Metoda kokrigingu opiera się nie o semiwariogram, lecz o krossemiwariogramy. Krossemiwariogram jest to wariancja różnicy pomiędzy dwiema zmiennymi w dwóch lokalizacjach. Wyliczając krossemiwariogram otrzymujemy empiryczne semiwariogramy dla dwóch badanych zmiennych oraz kroswariogram dla kombinacji dwóch zmiennych.
+
+W poniższym przypadku istnieją dwie zmienne, `savi` ze zbioru `punkty` pomierzona w 250 lokalizacjach oraz `ndvi` ze zbioru `punkty_ndvi` pomierzona w 997 punktach.
+
+```{r}
+spplot(punkty, 'savi')
+```
+
+```{r}
+spplot(punkty_ndvi, 'ndvi')
+```
+
+Tworzenie krossemiwariogramów odbywa się z użyciem funkcji `gstat()`. Na początku definiujemy pierwszy obiekt `g`. Składa się on z obiektu pustego (`NULL`), nazwy pierwszej zmiennej (nazwa może być dowolna), wzoru (w przykładzie `savi~1`), oraz pierwszego zbioru punktowego. Następnie do pierwszego obiektu `g` dodajemy nowe infomacje również poprzez funkcję `gstat()`. Jest to nazwa obiektu (`g`), nazwa drugiej zmiennej, wzór, oraz drugi zbiór punktowy.
 
 ```{r, krosssemi}
 g <- gstat(NULL, id='SAVI', form = savi~1, data = punkty)
 g <- gstat(g, id='NDVI', form = ndvi~1, data = punkty_ndvi)
 g
+```
+
+Z uzyskanego w ten sposób obiektu tworzymy krossemiwariogram (funkcja `variogram()`), a następnie go wizualizujemy używając funkcji `plot()`.
+
+```{r}
 v <- variogram(g)
 plot(v)
 ```
 
 ## Modelowanie krossemiwariogramów
-### Modelowanie krossemiwariogramów | `fit.lmc`
-- Funkcja `fit.lmc` dopasowuje liniowy model koregionalizacji do semiwariogramów wielozmienych 
-
 ### Modelowanie krossemiwariogramów
+
+Modelowanie krossemiwariogramów, podobnie jak ich tworzenie, odbywa się używając funkcji `gstat()`. Podaje się w niej wcześniejszy obiekt `g`, model, oraz argument `fill.all=TRUE`. Ten ostatni parametr powoduje, że model dodawany jest do wszystkich elementów krossemiwariogramu.
 
 ```{r}
 g <- gstat(g, model=vgm(0.006, 'Sph', 2000, 0.001), fill.all=TRUE)
+```
+
+W przypadku semiwariogramów funkcja `fit.variogram()` służyła dopasowaniu parametrów modelu do semiwariogramu empirycznego. Pdoboną rolę w korssemiwariogramach spełnia funkcja `fit.lmc()`. Dopasowuje ona liniowy model koregionalizacji do semiwariogramów wielozmienych. Funkcja `fit.lmc()` oczekuje co najmniej dwóch elementów, krossemiwariogramu oraz modelów krossemiwariancji. W poniższym przykładzie dodatkowo użyto parametru `correct.diagonal = 1.01`, z uwagi na to że analizowane zmienne wykazywały bardzo silną korelację.
+
+```{r}
 # zmienne są bardzo mocno skorelowane - dlatego użyto argumentu correct.diagonal = 1.01
 g_fit <- fit.lmc(v, g, correct.diagonal = 1.01)
 g_fit
@@ -81,8 +98,21 @@ plot(variogram(g, alpha = c(60, 105, 150, 195)))
 ## Kokriging 
 ### Kokriging 
 
+Posiadając dopasowane modele oraz siatkę można uzyskać wynik używając funkcji `predict()`. 
+
 ```{r kokriging_predict, cache=TRUE}
 ck <- predict(g_fit, siatka) 
+```
+
+W efekcie otrzymujemy pięć zmiennych:
+
+1. `SAVI.pred` - estymacja zmiennej `savi`
+2. `SAVI.var` - wariancja zmiennej `savi`
+3. `NDVI.pred` - estymacja zmiennej `ndvi`
+4. `NDVI.var` - wariancje zmiennej `ndvi`
+5. `cov.SAVI.NDVI` - kowariancje zmiennych `savi` oraz `ndvi`
+
+```{r}
 summary(ck)
 ```
 

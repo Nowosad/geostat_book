@@ -4,7 +4,9 @@ knit: bookdown::preview_chapter
 
 # Estymacje jednozmienne {#estymacje-jednozmienne}
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
+library('gstat')
+library('sp')
 library('geostatbook')
 data(punkty)
 data(siatka)
@@ -23,12 +25,13 @@ par(mar=c(rep(0, 4)))
 ## Kriging
 
 ### Kriging | Interpolacja geostatystyczna
-- Zaproponowana w latach 50. przez Daniela Krige
-- Istnieje wiele rodzajów krigingu
-- Główna zasada mówi, że prognoza w danej lokalizacji jest kombinacją obokległych obserwacji
-- Waga nadawana każdej z obserwacji jest zależna od stopnia (przestrzennej) korelacji - stąd też bierze się istotna rola semiwariogramów
 
-### Rodzaje krigingu
+Kriging (interpolacja geostatystyczna) to grupa metod estymacji zaproponowana w latach 50. przez Daniela Krige. Główna zasada mówi, że prognoza w danej lokalizacji jest kombinacją obokległych obserwacji. Waga nadawana każdej z obserwacji jest zależna od stopnia (przestrzennej) korelacji - stąd też bierze się istotna rola semiwariogramów.
+
+### Metod krigingu
+
+Istnieje szereg meteod krigingu, w tym:
+
 - Kriging prosty (ang. *Simple kriging*)
 - Kriging zwykły (ang. *Ordinary kriging*)
 - Kriging z trendem (ang. *Kriging with a trend*)
@@ -42,7 +45,7 @@ par(mar=c(rep(0, 4)))
 ## Kriging prosty
 ### Kriging prosty (ang. *Simple kriging*)
 
-- Zakłada, że średnia jest znana i stała na całym obszarze
+Kriging prosty zakłada, że średnia jest znana i stała na całym obszarze. W poniższym przykładzie po stworzeniu semiwariogramu empritycznego, dopasowano model semiwariogramu składający się z funkcji sferycznej o zasięgu 4000 metrów i wartości nuggetu równej 0,5.
 
 ```{r }
 vario <- variogram(temp~1, punkty)
@@ -52,12 +55,19 @@ fitted <- fit.variogram(vario, model)
 plot(vario, model=fitted)
 ```
 
-- Średnia ta jest ustalana za pomocą argumentu `beta`
+Następnie nastąpiła estymacja wartości z użyciem metody kriginu prostego. W funkcji `krige()` z pakietu `gstat`, użycie tej metody wymaga ustalenia średniej wartości cechy za pomocą argumentu `beta`. 
 
 ```{r }
 sk <- krige(temp~1, punkty, siatka, model=fitted, beta=15.324)
+```
+
+Wynik krigingu prostego, jak i każdy inny uzyskany z użyciem pakietu `gstat` można podejrzeć używając funkcję `summary()`. Szczególnie ważne są uzyskane dwie, nowe zmienne - `var1.pred` oraz `var1.var`. Pierwsza z nich oznacza wartość estymowaną dla każdego oczka siatki, druga zaś mówi o wariancji estymacji. 
+
+```{r}
 summary(sk)
 ```
+
+Obie uzyskane zmienne można wyświetlić z użyciem funkcji `spplot()`.
 
 ```{r plotsy1, eval=FALSE}
 spplot(sk, 'var1.pred')
@@ -74,15 +84,19 @@ grid.arrange(p1, p2, ncol=1)
 ## Kriging zwykły 
 ### Kriging zwykły (ang. *Ordinary kriging*)
 
-- Średnia traktowana jest jako nieznana
-- Uwzględnia lokalne fluktuacje średniej poprzez stosowanie ruchomego okna
-- Parametry ruchomego okna można określić za pomocą jednego z dwóch argumentów:
+W krigingu zwykłym średnia traktowana jest jako wartość nieznana. Metoda ta uwzględnia lokalne fluktuacje średniej poprzez stosowanie ruchomego okna. Parametry ruchomego okna można określić za pomocą jednego z dwóch argumentów:
     - `nmax` - użyta zostanie określona liczba najbliższych obserwacji
     - `maxdist` -  użyte zostaną jedynie obserwacje w zadanej odległości
 
 ```{r }
 # ok <- krige(temp~1, punkty, siatka, model=fitted, nmax=30)
-ok <- krige(temp~1, punkty, siatka, model=fitted, maxdist=1000)
+ok <- krige(temp~1, punkty, siatka, model=fitted, maxdist=1500)
+```
+
+Podobnie jak w przypadku krigingu prostego, możemy przyjrzeć się wynikom estymacji używając funkcji `summary()` oraz możemy je wyświetlić używając funkcji `spplot()`.
+
+```{r}
+summary(ok)
 ```
 
 ```{r plotsy1ok2, eval=FALSE}
@@ -107,16 +121,29 @@ spplot(ok, "var1.var", sp.layout=list(punkty, pch=21, col="white"))
 ## Kriging z trendem
 ### Kriging z trendem (ang. *Kriging with a trend*)
 
+Kriging z trendem, określany również jako kriging z wewnątrznym trendem, do estymacji wykorzystuje (oprócz zmienności wartości wraz z odległością) położenie analizowanych punktów. Na poniższym przykładzie w funkcji `variogram()` pierwszy z argumentów przyjął postać `temp~x+y`, co oznacza, że uwzględniamy liniowy trend zależny od współrzędnej `x` oraz `y`.
+
 ```{r }
 vario_kzt <- variogram(temp~x+y, data=punkty)
 plot(vario_kzt)
+```
+
+Dalszym etapem jest dopasowanie modelu semiwariancji, a następnie wyliczenie estymowanych wartości z użyciem funkcji `krige()`. Należy tutaj pamiętać, aby wzór (w przykładzie `temp~x+y`) był taki sam podczas budowania semiwariogramu, jak i interpolacji.
+
+```{r}
 model_kzt <- vgm(psill = 5, model = 'Sph', range = 2500, nugget = 1)
 fitted_kzt <- fit.variogram(vario_kzt, model_kzt)
 fitted_kzt
 plot(vario_kzt, fitted_kzt)
-
-punkty@data <- cbind(punkty@data, as.data.frame(coordinates(punkty)))
 kzt <- krige(temp~x+y, punkty, siatka, model=fitted_kzt)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+# punkty@data <- cbind(punkty@data, as.data.frame(coordinates(punkty)))
+```
+
+```{r}
+summary(kzt)
 ```
 
 ```{r plotsy1kzt, eval=FALSE}
@@ -132,6 +159,8 @@ grid.arrange(p1, p2, ncol=1)
 ```
 
 ## Porównanie wyników SK, OK i KZT
+
+Poniższe porównanie krigingu prostego (SK), zwykłego (OK) i z trendem (KZT) wykazuje niewielkie różnice w uzyskanych wynikach. W rozdziałach  \@ref(estymacje-wielozmienne) oraz \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych) pokazane będą uzyskane wyniki interpolacji temperatury powietrza korzystając z innych metod krigingu.
 
 ```{r ploty_trzy, echo=FALSE, fig.height=12}
 zmax <- round(max(sk$var1.pred, ok$var1.pred, kzt$var1.pred, na.rm=TRUE), 1) + 0.1    

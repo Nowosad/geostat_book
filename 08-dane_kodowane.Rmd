@@ -4,7 +4,10 @@ knit: bookdown::preview_chapter
 
 # Estymacja lokalnego rozkładu prawdopodobieństwa {#estymacja-lokalnego-rozkadu-prawdopodobienstwa}
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
+library('ggplot2')
+library('gstat')
+library('sp')
 library('geostatbook')
 data(punkty)
 data(siatka)
@@ -23,25 +26,28 @@ par(mar=c(rep(0, 4)))
 ## Kriging danych kodowanych
 
 ### Kriging danych kodowanych (ang. *Indicator kriging*)
-- Jest to metoda krigingu oparta o dane kategoryzowane lub też dane przetworzone z postaci ciągłej do binarnej
-- Zazwyczaj używana jest to oszacowania prawdopodobieństwa przekroczenia zdefiniowanej wartości progowej
-- Może być też używana do szacowania wartości z całego rozkładu
-- Wartości danych wykorzystywane do krigingu danych kodowanych są określone jako 0 lub 1
-- Powyzsze kategorie reprezentują czy wartość danej zmiennej jest powyżej czy poniżej określonego progu
+
+Kriging danych kodowanych to metoda krigingu oparta o dane kategoryzowane lub też dane przetworzone z postaci ciągłej do binarnej. Jest ona zazwyczaj używana jest to oszacowania prawdopodobieństwa przekroczenia zdefiniowanej wartości progowej, może być również używana do szacowania wartości z całego rozkładu. Wartości danych wykorzystywane do krigingu danych kodowanych są określone jako 0 lub 1, co reprezentuje czy wartość danej zmiennej jest powyżej czy poniżej określonego progu.
 
 <!--http://geostat-course.org/system/files/geostat13_ind.pdf-->
 
 ### Wady i zalety krigingu danych kodowanych
-- Zalety:
-    - Możliwość zastosowania, gdy nie interesuje nas konkretna wartość, ale znalezienie obszarów o wartości przekraczającej dany poziom
-    - Nie jest istotny kszałt rozkładu
-- Wady:
-    - Potencjalnie trudne do modelowania semiwariogramy (szczególnie skrajnych przedziałów)
-    - Czasochłonność/pracochłonność
+
+Zalety:
+
+- Możliwość zastosowania, gdy nie interesuje nas konkretna wartość, ale znalezienie obszarów o wartości przekraczającej dany poziom
+- Nie jest istotny kszałt rozkładu
+
+Wady:
+
+- Potencjalnie trudne do modelowania semiwariogramy (szczególnie skrajnych przedziałów)
+- Czasochłonność/pracochłonność
     
 ## Kriging danych kodowanych | Przykłady
 
 ### Binaryzacja danych
+
+Pierwszym krokiem w krigingu danych kodowanych jest stworzenie zmiennej binarnej. Na poniższym przykładzie tworzona jest nowa zmienna `temp_ind`. Przyjmuje ona wartość `TRUE` (czyli `1`) dla pomiarów temperatury wyższych niż 20 stopni Celsjusza, a dla pomiarów równych i niższych niż 20 stopni Celsjusza jej wartość wynosi `FALSE` (czyli `0`).
 
 ```{r }
 summary(punkty$temp) 
@@ -49,23 +55,23 @@ punkty$temp_ind <- punkty$temp > 20
 summary(punkty$temp_ind) 
 ```
 
-### Eksploracja danych
+W używanym przykładzie, próg został wyznaczony arbitralnie. Istnieje oczywiście szereg innych możliwości wyznaczania progu. Można wykorzystać wiedzę zewnętrzną (np. toksyczne stężenie analizowanej substancji) lub też posłużyć się wykresem dystrybuanty do określenia istotnej zmiany wartości.
 
 ```{r }
 ggplot(punkty@data, aes(temp)) + stat_ecdf()
 ```
 
-### Kriging danych kodowanych (ang. *Indicator kriging*) | Semiwariogram
+### Kriging danych kodowanych (ang. *Indicator kriging*) | Modelowanie
+
+Tworzenie i modelowanie semiwariogramu empirycznego w krigingu danych kodowanych wygląda tak samo jak, np. w przypadku krigingu zwykłego. Korzystając z funkcji `variogram()` tworzony jest semiwariogram empiryczny, używając `vgm()` tworzony jest model "ręczny", który następnie jest dopasowywany z użyciem funkcji `fit.variogram()`
 
 ```{r }
 vario_ind <- variogram(temp_ind~1, punkty)         
 plot(vario_ind)
 ```
 
-### Kriging danych kodowanych (ang. *Indicator kriging*) | Modelowanie
-
 ```{r }
-model_ind <- vgm(0.07, model = 'Sph', range = 3000,  nugget = 0.01)  
+model_ind <- vgm(0.09, model = 'Sph', range = 2000,  nugget = 0.01)  
 plot(vario_ind, model=model_ind)
 fitted_ind <- fit.variogram(vario_ind, model_ind)
 fitted_ind
@@ -74,9 +80,13 @@ plot(vario_ind, model=fitted_ind)
 
 ### Kriging danych kodowanych (ang. *Indicator kriging*) | Interpolacja
 
+Ostatnim etapem jest stworzenie interpolacji geostatystycznej z pomocą funkcji `krige`. Wymaga ona czterech argumentów - wzoru (`temp_ind~1`), zbioru punktowego (`punkty`), siatki do interpolacji (`siatka`) oraz modelu (`fitted_ind`).
+
 ```{r }
 ik <- krige(temp_ind~1, punkty, siatka, model=fitted_ind)
 ```
+
+W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopnii Celsjusza).
 
 ```{r plotsy1ok, eval=FALSE}
 spplot(ik, 'var1.pred')
@@ -92,6 +102,8 @@ grid.arrange(p1, p2, ncol=1)
 ```
 
 ### Kriging danych kodowanych (ang. *Indicator kriging*)
+
+Alternatywnie, zamiast tworzenia nowej zmiennej (takiej jak `temp_ind`), można wykorzystać funkcję `I`. Z jej użyciem można definiować przyjęte progi bezpośrednio do funkcji `variogram` i `krige`. Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopnii Celsjusza.
 
 ```{r }
 vario_ind20 <- variogram(I(temp<20)~1, punkty)  

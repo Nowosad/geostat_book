@@ -4,7 +4,11 @@ knit: bookdown::preview_chapter
 
 # Symulacje {#symulacje}
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
+library('gstat')
+library('sp')
+library('ggplot2')
+library('raster')
 library('geostatbook')
 data(punkty)
 data(siatka)
@@ -29,12 +33,12 @@ par(mar=c(rep(0, 4)))
 
 ## Symulacje geostatystyczne
 ### Symulacje geostatystyczne
-- Kriging daje optymalne predykcje, czyli wyznacza najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji
-- Dodatkowo, efektem krigingu jest wygładzony obraz. W konsekwencji wyniki estymacji różnią się od danych pomiarowych
-- Jest to tylko (aż?) predykcja. Prawdziwa wartość jest niepewna ...
-- Korzystając z symulacji geostatystycznych nie tworzymy predykcji, ale generujemy równie prawdopodobne możliwości poprzez symulację z rozkładu prawdopodobieństwa (wykorzystując genereator liczb losowych)
 
-### Symulacje geostatystyczne | Cel
+Kriging daje optymalne predykcje, czyli wyznacza najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji. Dodatkowo, efektem krigingu jest wygładzony obraz. W konsekwencji wyniki estymacji różnią się od danych pomiarowych. Jest to tylko (aż?) predykcja. Prawdziwa wartość jest niepewna ... Korzystając z symulacji geostatystycznych nie tworzymy predykcji, ale generujemy równie prawdopodobne możliwości poprzez symulację z rozkładu prawdopodobieństwa (wykorzystując genereator liczb losowych).
+
+### Symulacje geostatystyczne
+
+Właściwości symulacji geostatystycznych: 
 
 - Efekt symulacji ma bardziej realistyczny przestrzenny wzór (ang. *pattern*) niż kriging, którego efektem jest wygładzona reprezentacja rzeczywistości
 - Każda z symulowanych map jest równie prawdopodobna
@@ -43,23 +47,27 @@ par(mar=c(rep(0, 4)))
 
 ## Typy symulacji
 ### Typy symulacji
-- Symulacje bezwarunkowe (ang. *Unconditional Simulations*) - wykorzystuje semiwariogram, żeby włączyć informację przestrzenną, ale wartości ze zmierzonych punktów nie są wykorzystywane. 
+
+Istnieją dwa typy symulacji geostatystycznych:
+
+- Symulacje bezwarunkowe (ang. *Unconditional Simulations*) - wykorzystuje semiwariogram, żeby włączyć informację przestrzenną, ale wartości ze zmierzonych punktów nie są wykorzystywane
 - Symulacje warunkowe (ang. *Conditional Simulations*) - opiera się ona o średnią wartość, strukturę kowariancji oraz obserwowane wartości
 
 ## Symulacje bezwarunkowe
 
 <!--http://santiago.begueria.es/2010/10/generating-spatially-correlated-random-fields-with-r/-->
+Symulacje bezwarunkowe w pakiecie `gstat` tworzy się z wykorzystaniem funkcji `krige()`. Podobnie jak w przypadku estymacji geostatystycznych, należy tutaj podać wzór, model, siatkę, średnią globalną (`beta`), oraz liczbę sąsiednich punktów używanych do symulacji (w przykadzie poniżej `nmax=30`). Należy wprowadzić również informacje, że nie korzystamy z danych punktowych (`locations=NULL`) oraz że chcemy stworzyć dane sztuczne (`dummy=TRUE`). Ostani argument (`nsim=4`) informuje o liczbie symulacji do przeprowadzenia.
 
 ```{r sym_bezw1, cache=TRUE}
-sym_bezw1 <- krige(formula=z~1, locations=NULL, newdata=siatka, dummy=TRUE,
-                         beta=1, model=vgm(psill=0.025,model='Exp',range=100), nsim=4, nmax=30)
+sym_bezw1 <- krige(formula=z~1, model=vgm(psill=0.025, model='Exp', range=100), newdata=siatka, beta=1,
+                   nmax=30, locations=NULL, dummy=TRUE, nsim=4)
 spplot(sym_bezw1, main='Przestrzennie skorelowana powierzchnia \nśrednia=1, 
        sill=0.025, zasięg=100, model wykładniczy')
 ```
 
 ```{r sym_bezw2, cache=TRUE}
 sym_bezw2 <- krige(formula=z~1, locations=NULL, newdata=siatka, dummy=TRUE, 
-                   beta=1, model=vgm(psill=0.025,model='Exp',range=1500), nsim=4, nmax=30)
+                   beta=1, model=vgm(psill=0.025, model='Exp', range=1500), nsim=4, nmax=30)
 spplot(sym_bezw2, main='Przestrzennie skorelowana powierzchnia \nśrednia=1, 
        sill=0.025, zasięg=1500, model wykładniczy')
 ```
@@ -77,33 +85,44 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 ## Symulacje warunkowe
 
 ### Sekwencyjna symulacja gaussowska (ang. *Sequential Gaussian simulation*)
-1. Wybranie lokalizacji nie posiadającej zmierzonej wartości badanej zmiennej
-2. Kriging wartości tej lokalizacji korzystając z dostepnych danych, co pozwala na uzyskanie rozkładu prawdopodobieństwa badanej zmiennej
-3. Wylosowanie wartości z rozkładu prawdopodobieństwa za pomocą generatora liczba losowych i przypisanie tej wartości do lokalizacji
-4. Dodanie symulowaniej wartości do zbioru danych i przejście do kolejnej lokalizacji
-5. Powtórzenie poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja
+
+Jednym z podstawowych typów symulacji warunkowych jest sekwencyjna symulacja gaussowska. Polega ona na:
+
+1. Wybraniu lokalizacji nie posiadającej zmierzonej wartości badanej zmiennej
+2. Krigingu wartości tej lokalizacji korzystając z dostepnych danych, co pozwala na uzyskanie rozkładu prawdopodobieństwa badanej zmiennej
+3. Wylosowaniu wartości z rozkładu prawdopodobieństwa za pomocą generatora liczba losowych i przypisaniu tej wartości do lokalizacji
+4. Dodaniu symulowaniej wartości do zbioru danych i przejściu do kolejnej lokalizacji
+5. Powtórzeniu poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja
+
+Sekwencyjna symulacja gaussowska wymaga zmiennej posiadającej wartości o rozkładzie zbliżonym do normalnego. Można to sprawdzić poprzez wizualizacje danych (histogram, wykres kwantyl-kwantyl) lub też test statystyczny (test Shapiro-Wilka). Zmienna `temp` nie ma rozkładu zbliżonego do normalnego.
 
 ```{r}
 ggplot(punkty@data, aes(temp)) + geom_histogram()
+ggplot(punkty@data, aes(sample=temp)) + stat_qq()
 shapiro.test(punkty$temp)
-qqnorm(punkty$temp);qqline(punkty$temp)
 ```
+
+Na potrzeby symulacji zmienna `temp` została zlogarytmizowna.
 
 ```{r}
 punkty$temp_log <- log(punkty$temp)
 ggplot(punkty@data, aes(temp_log)) + geom_histogram()
+ggplot(punkty@data, aes(sample=temp_log)) + stat_qq()
 shapiro.test(punkty$temp_log)
-qqnorm(punkty$temp_log);qqline(punkty$temp_log)
 ```
+
+Dalsze etapy przypominają przeprowadzenie estymacji statystycznej, jedynym wyjątkiem jest dodanie argumentu mówiącego o liczbie symulacji do przeprowadzenia (`nsim` w funkcji `krige()`).
 
 ```{r sym_ok, cache=TRUE}
 vario <- variogram(temp_log~1, punkty)
 model <- vgm(0.05, model = 'Sph', range = 4500, nugget=0.005)
 fitted <- fit.variogram(vario, model)
 plot(vario, model=fitted)
-sym_ok <- krige(temp_log~1, punkty, siatka, model=fitted, nsim=4, nmax=30)
+sym_ok <- krige(temp_log~1, punkty, siatka, model=fitted, nmax=30, nsim=4)
 spplot(sym_ok)
 ```
+
+Wyniki symulacji można przetworzyć do pierwotnej jednostki z użyciem funkcji wykładniczej (`exp`).
 
 ```{r}
 summary(sym_ok)
@@ -112,23 +131,34 @@ summary(sym_ok)
 spplot(sym_ok)
 ```
 
+Symulacje geostatystyczne pozwalają również na przedstawianie niepewności interpolacji. W tym wypadku należy wykonać znacznie więcej powtórzeń (np. `nsim=100`). Uzyskane wyniki należy przeliczyć do oryginalnej jednostki, a następnie wyliczyć odchylenie standardowe ich wartości (używając funkcji `stack()` i `calc()` z pakietu `raster`).
+
 ```{r master_symulation, cache=TRUE}
 sym_sk <- krige(temp_log~1, punkty, siatka, model=fitted, beta=2.7, nsim=100, nmax=30)
 sym_sk@data <- as.data.frame(apply(sym_sk@data, 2, exp))
 
 sym_sk <- stack(sym_sk)
 sym_sk_sd <- calc(sym_sk, fun = sd)
+```
+
+W efekcie otrzymujemy mapę odchylenia standardowego symulowanych wartości. Można na niej odczytać obszary o najpewniejszych (najmniej zmiennych) wartościach (niebieski kolor) oraz obszary o największej zmienności cechy (kolor żółty).
+
+```{r}
 spplot(sym_sk_sd)
 ```
 
 ## Sekwencyjna symulacja danych kodowanych
 ### Sekwencyjna symulacja danych kodowanych (ang. *Sequential indicator simulation*)
 
+Symulacje geostatystyczne można również zastosować do danych binarnych. Dla potrzeb przykładu tworzona jest nowa zmienna `temp_ind` przyjmująca wartość `TRUE` dla pomiarów o wartościach temperatury niższych niż 12 stopnii Celsjusza oraz `FALSE` dla pomiarów o wartościach temperatury równych lub wyższych niż 12 stopnii Celsjusza.
+
 ```{r }
 summary(punkty$temp) 
 punkty$temp_ind <- punkty$temp < 12
 summary(punkty$temp_ind) 
 ```
+
+W tej metodzie kolejne etapy przypominają przeprowadzenie krigingu danych kodowanych. Jedynie w funkcji `krige()` należy dodać argument mówiący o liczbie symulacji do przeprowadzenia (`nsim` ).
 
 ```{r sym_ind, cache=TRUE}
 vario_ind <- variogram(temp_ind~1, punkty)         
@@ -139,6 +169,11 @@ fitted_ind <- fit.variogram(vario_ind, model_ind)
 fitted_ind
 plot(vario_ind, model=fitted_ind)
 sym_ind <- krige(temp_ind~1, punkty, siatka, model=fitted_ind, indicators=TRUE, nsim=4, nmax=30)
+```
+
+Znacząco różni się jednak wynik symulacji danych kodowanych od krigingu danych kodowanych. W przeciwieństwie do tej drugiej metody, w rezultacie symulacji nie otrzymujemy prawdopodobieństwa zajścia danej klasy, ale konkretne wartości `1` lub `0`.
+
+```{r}
 spplot(sym_ind, main='Symulacje warunkowe')
 ```
 

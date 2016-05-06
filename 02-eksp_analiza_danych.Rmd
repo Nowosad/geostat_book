@@ -1,7 +1,10 @@
 
 # Eksploracyjna analiza danych nieprzestrzennych {#eksploracja-analiza-danych-nieprzestrzennych}
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
+library('sp')
+library('ggplot2')
+library('corrplot')
 library('geostatbook')
 data(punkty)
 data(granica)
@@ -295,7 +298,7 @@ ggplot(punkty@data, aes(pow_tpz)) + geom_density()
 <!--
 Transformacja danych | Rodzina transformacji Boxa Coxa
 
-```{r }
+```{r , eval=FALSE}
 ggplot(punkty@data, aes(temp)) + geom_density()
 transformacja <- BoxCoxTrans(punkty$temp)
 transformacja

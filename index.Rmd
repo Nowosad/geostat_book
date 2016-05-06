@@ -31,10 +31,10 @@ Do odtworzenia przykładów użytych w poniższym skrypcie wystarczy podstawowa 
 - [R](www.r-project.org) - https://cloud.r-project.org/
 - [RStudio](www.rstudio.com) - https://www.rstudio.com/products/rstudio/download/
 
-Dodatkowo, użyte zostały poniższe pakiety R [@R-caret;@R-corrplot;@R-dismo;@R-fields;@R-geoR;@R-ggplot2;@R-gridExtra;@R-gstat;@R-pgirmess;@R-raster;@R-rasterVis;@R-rgdal;@R-rgeos;@R-sp]:
+Dodatkowo, użyte zostały poniższe pakiety R [@R-caret;@R-corrplot;@R-dismo;@R-fields;@R-ggplot2;@R-gridExtra;@R-gstat;@R-pgirmess;@R-raster;@R-rasterVis;@R-rgdal;@R-rgeos;@R-sp]:
 
 ```{r pakietsy}
-pakiety <- c('caret', 'corrplot', 'dismo', 'fields', 'geoR', 'ggplot2', 'gridExtra',
+pakiety <- c('caret', 'corrplot', 'dismo', 'fields', 'ggplot2', 'gridExtra',
              'gstat', 'pgirmess', 'raster', 'rasterVis', 'rgdal', 'rgeos', 'sp')
 ```
 
@@ -65,6 +65,8 @@ Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum
 # install.packages("devtools")
 devtools::install_github("nowosad/geostatbook")
 ```
+
+Począwszy od części \@ref(eksploracja-analiza-danych-nieprzestrzennych), każdy rozdział rozpoczyna się od wczytania wymaganych pakietów oraz zbiorów danych.
 
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

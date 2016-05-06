@@ -1,7 +1,12 @@
 
 # Eksploracyjna analiza danych przestrzennych {#eksploracyjna-analiza-danych-przestrzennych}
 
-```{r, interpolate_init}
+```{r, interpolate_init, message=FALSE, warning=FALSE}
+library('sp')
+library('raster')
+library('gstat')
+library('dismo')
+library('rgeos')
 library('geostatbook')
 data(punkty)
 data(granica)

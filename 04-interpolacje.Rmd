@@ -1,7 +1,12 @@
 
 # Metody interpolacji {#metody-interpolacji}
 
-```{r, interpolate_inits}
+```{r, interpolate_inits, message=FALSE, warning=FALSE}
+library('dismo')
+library('raster')
+library('sp')
+library('gstat')
+library('fields')
 library('geostatbook')
 data(punkty)
 data(siatka)
@@ -67,7 +72,7 @@ spplot(wielomian_3_pred[1], contour=TRUE,main='Powierzchnia trendu - wielomian t
 
 ### Modele deterministyczne | Funkcje sklejane
 
-Interpolacja z użyciem funkcji sklejanych dopasowuje krzywą powierzchnię do wartości analizowanych punktów.
+Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu `fields`) dopasowuje krzywą powierzchnię do wartości analizowanych punktów.
 
 ```{r }
 tps <- Tps(coordinates(punkty), punkty@data$temp)

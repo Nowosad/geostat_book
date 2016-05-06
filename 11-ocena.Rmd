@@ -6,7 +6,11 @@ knit: bookdown::preview_chapter
 
 <!--[UWAGA POMIESZANY ME Z RESZTĄ!!]-->
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
+library('gstat')
+library('sp')
+library('ggplot2')
+library('caret')
 library('geostatbook')
 data(punkty)
 ```
