@@ -28,8 +28,8 @@ Masz przed sobą skrypt zawierający materiały do ćwiczeń z geostatystyki. Sk
 
 Do odtworzenia przykładów użytych w poniższym skrypcie wystarczy podstawowa znajomość R. Aby zainstalować R oraz RStudio można skorzystać z poniższych odnośników:
 
-- [R](www.r-project.org) - https://cloud.r-project.org/
-- [RStudio](www.rstudio.com) - https://www.rstudio.com/products/rstudio/download/
+- [R](https://www.r-project.org/) - https://cloud.r-project.org/
+- [RStudio](https://www.rstudio.com/) - https://www.rstudio.com/products/rstudio/download/
 
 Dodatkowo, użyte zostały poniższe pakiety R [@R-caret;@R-corrplot;@R-dismo;@R-fields;@R-ggplot2;@R-gridExtra;@R-gstat;@R-pgirmess;@R-raster;@R-rasterVis;@R-rgdal;@R-rgeos;@R-sp]:
 
