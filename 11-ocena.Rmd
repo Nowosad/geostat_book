@@ -13,6 +13,7 @@ library('ggplot2')
 library('caret')
 library('geostatbook')
 data(punkty)
+data(siatka)
 ```
 
 ```{r setup6, echo=FALSE, include=FALSE}
@@ -27,33 +28,44 @@ par(mar=c(rep(0, 4)))
 
 ## Statystyki jakości estymacji
 ### Statystyki jakości estymacji
-- Służą do oceny i porównania jakości estymacji
-- Do podstawowych statystyk ocen jakości estymacji należą:
-    - Średni błąd predykcji (MPE, ang. *mean prediction error*)
-    - Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root square prediction error*)
-    - Współczynnik korelacji
-    - Rozkład błędu (np. 5. percentyl, mediana, 95. percentyl)
+
+W momencie, gdy trzeba określić jakość estymacji lub porównać ją pomiędzy estymacjami należy zastosować tzw. statystyki jakości estymacji. Do podstawowych statystyk ocen jakości estymacji należą:
+
+- Średni błąd predykcji (MPE, ang. *mean prediction error*)
+- Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root square prediction error*)
+- Rozkład błędu (np. 5. percentyl, mediana, 95. percentyl)
     
-### Statystyki jakości estymacji
-- Idealna estymacja dawałaby brak błędu oraz wspołczynnik korelacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1
-- Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystapieniu wartości odstających
+Idealna estymacja dawałaby brak błędu oraz wspołczynnik korelacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystapieniu wartości odstających.
 
 ### Średni błąd estymacji
-- Optymalnie wartość średniego błędu estymacji powinna być jak najbliżej 0
 
-$$ MPE=\frac{\sum_{i=1}^{n}(\hat{v}_i-v_i)}{n} $$    
+Optymalnie wartość średniego błędu estymacji powinna być jak najbliżej 0.
+
+$$ MPE=\frac{\sum_{i=1}^{n}(\hat{v}_i-v_i)}{n} $$  
+
+```{r, eval=FALSE}
+MPE <- mean(estymacja - obserwowane)
+```
 
 ### Pierwiastek średniego błędu kwadratowego
-- Optymalnie wartość pierwiastka średniego błędu kwadratowego powinna być jak najmniejsza
+
+Optymalnie wartość pierwiastka średniego błędu kwadratowego powinna być jak najmniejsza.
 
 $$ RMSE=\sqrt{\frac{\sum_{i=1}^{n}(v_i-\hat{v}_i)^2}{n}} $$     
 
-### Współczynnik korelacji
-- Optymalnie wartość współczynnika korelacji powinna być jak najwyższa
+```{r, eval=FALSE}
+RMSE <- sqrt(mean((obserwowane - estymacja)^2))
+```
 
 ### Statystyki jakości estymacji | Mapa
 
-```{r mapa, echo=FALSE}
+Do oceny przestrzennej jakości predykcji można również zastosować mapę przestawiającą błędy predykcji (błędy estymacji). Wyliczenie błędów estymacji odbywa się poprzez odjęcie od predykcji wartości obserwowanej.
+
+```{r, eval=FALSE}
+blad_predykcji <- estymacja- obserwowane
+```
+
+```{r mapa, echo=FALSE, message=FALSE}
 set.seed(124)
 indeks <- as.vector(createDataPartition(punkty$temp, p=0.75, list=FALSE))
 train <- punkty[indeks, ]
@@ -62,19 +74,23 @@ vario <- variogram(temp~1, data=train)
 model <- vgm(10, model = 'Sph', range = 4000, nugget = 0.5)
 fitted <- fit.variogram(vario, model)
 test_sk <- krige(temp~1, train, test, model=fitted, beta=15.324)
-reszta_sk <-  test_sk$var1.pred - test$temp
-test_sk$reszty <- reszta_sk
+blad_predykcji_sk <-  test_sk$var1.pred - test$temp
+test_sk$blad_predykcji_sk <- blad_predykcji_sk
 test_sk$true <-  test$temp
-spplot(test_sk, 'reszty', main='Reszty z modelu', colorkey=TRUE)
+spplot(test_sk, 'blad_predykcji_sk', main='Błąd predykcji', colorkey=TRUE)
 ```
 
 ### Statystyki jakości estymacji | Histogram
 
+Błąd predykcji można również przedstawić na wykresach, między innymi, na histogramie.
+
 ```{r hist, echo=FALSE}
-ggplot(as.data.frame(test_sk), aes(reszty)) + geom_histogram() + xlab('Reszty z modelu') + ylab('Liczebność')
+ggplot(as.data.frame(test_sk), aes(blad_predykcji_sk)) + geom_histogram() + xlab('Błąd predykcji') + ylab('Liczebność')
 ```
 
 ### Statystyki jakości estymacji | Wykres rozrzutu
+
+Do porównania pomiędzy wartością estymowaną a obserwowaną może również posłużyć wykres rozrzutu.
 
 ```{r point, echo=FALSE}
 ggplot(as.data.frame(test_sk), aes(var1.pred, true)) + geom_point() + xlab('Predykcja') + ylab('Zmierzona wartość')
@@ -83,18 +99,14 @@ ggplot(as.data.frame(test_sk), aes(var1.pred, true)) + geom_point() + xlab('Pred
 ## Walidacja wyników estymacji
 
 ### Walidacja wyników estymacji
-- Dokładne dopasowanie modelu do danych może w efekcie nie dawać najlepszych wyników
-- W efekcie ważne jest stosowanie metod pozwalających na wybranie optymalnego modelu
-- Do takich metod należy, między innymi, walidacja podzbiorem (ang. *jackknifing*) oraz kroswalidacja (ang. *crossvalidation*)
+
+Dokładne dopasowanie modelu do danych może w efekcie nie dawać najlepszych wyników. Szczególnie będzie to widoczne w przypadku modelowania, w którym dane obarczone są znacznym szumem (zawierają wyraźny błąd) lub też posiadają kilka wartości odstających). W efekcie ważne jest stosowanie metod pozwalających na wybranie optymalnego modelu. Do takich metod należy, między innymi, walidacja podzbiorem (ang. *jackknifing*) oraz kroswalidacja (ang. *crossvalidation*).
 
 ### Walidacja podzbiorem 
-- Polega na podziale zbioru danych na dwa podzbiory - treningowy i testowy
-- Zbiór treningowy służy do estymacji wartości
-- Wynik estymacji porównywany jest z rzeczywistymi wartościami ze zbioru testowego
-- Zaletą tego podejścia jest stosowanie danych niezależnych od estymacji
-- Wadą jest konieczność posiadania dużego zbioru danych
 
-### Walidacja podzbiorem 
+Walidacja podzbiorem polega na podziale zbioru danych na dwa podzbiory - treningowy i testowy. Zbiór treningowy służy do stworzenia semiwariogramu empirycznego, zbudowania modelu oraz estymacji wartości. Następnie wynik estymacji porównywany jest z rzeczywistymi wartościami ze zbioru testowego. Zaletą tego podejścia jest stosowanie danych niezależnych od estymacji. Wadą natomiast jest konieczność posiadania (relatywnie) dużego zbioru danych.
+
+Na poniższym przykładzie zbiór danych dzielony jest używając funkcji `createDataPartition()` z pakietu `caret`. Użycie tej funkcji powoduje stworzenie indeksu zawierającego numery wierszy dla zbioru treningowego. Ważną zaletą funkcji `createDataPartition()` jest to, iż w jej wyniku zachowane są podobne rozkłady wartości w zbiorze treningowym i testowym. Dla celu przykładu użyto argumentu `p=0.75`, który oznacza, że 75% danych będzie należało do zbioru treningowego, a 25% do zbioru testowego. Następnie korzystając ze stworzonego indeksu, budowane są dwa zbiory danych - treningowy (`train`) oraz testowy (`test`).
 
 ```{r }
 set.seed(124)
@@ -102,16 +114,29 @@ indeks <- as.vector(createDataPartition(punkty$temp, p=0.75, list=FALSE))
 indeks
 train <- punkty[indeks, ]
 test <- punkty[-indeks, ]
+```
+
+Dalszym krokiem jest stworzenie semiwariogramu empirycznego oraz jego modelowanie w oparciu o zbiór treningowy.
+
+```{r}
 vario <- variogram(temp~1, data=train)
 model <- vgm(10, model = 'Sph', range = 4000, nugget = 0.5)
 fitted <- fit.variogram(vario, model)
 plot(vario, model=fitted)
+```
 
+Do porównania wyników estymacji w stosunku do zbioru testowego posłuży funkcja `krige()`. Wcześniej wymagała ona podania wzoru, zbioru punktowego, siatki oraz modelu. W tym przypadku jednak chcemy porównać wynik estymacji i testowy zbiór punktowy. Dlatego też, zamiast obiektu siatki definiujemy obiekt zawierający zbiór testowy (`test`).
+
+```{r}
 test_sk <- krige(temp~1, train, test, model=fitted, beta=15.324)
 summary(test_sk)
+```
 
-reszta_sk <-  test_sk$var1.pred - test$temp
-summary(reszta_sk)
+Uzyskane w ten sposób wyniki możemy określić używając statystyk jakości estymacji lub też wykresów.
+
+```{r}
+blad_predykcji_sk <-  test_sk$var1.pred - test$temp
+summary(blad_predykcji_sk)
 
 MPE <- mean(test_sk$var1.pred - test$temp)
 MPE
@@ -119,25 +144,29 @@ MPE
 RMSE <- sqrt(mean((test$temp-test_sk$var1.pred)^2))
 RMSE
 
-test_sk$reszty <- reszta_sk
-spplot(test_sk, 'reszty')
+test_sk$blad_predykcji_sk <- blad_predykcji_sk
+spplot(test_sk, 'blad_predykcji_sk')
 ```
 
+W sytuacji, gdy uzyskany model jest wystarczająco dobry, możemy również uzyskać estymację dla całego obszaru z użyciem funkcji `krige()`, tym razem jednak podając obiekt siatki.
+
+```{r}
+test_sk <- krige(temp~1, train, siatka, model=fitted, beta=15.324)
+spplot(test_sk, 'var1.pred')
+```
 
 ### Kroswalidacja
-- W przypadku kroswalidacji te same dane wykorzystywane są do budowy modelu, estymacji, a następnie do oceny prognozy
-- Procedura kroswalidacji LOO (ang. *leave-one-out cross-validation*)
+
+W przypadku kroswalidacji te same dane wykorzystywane są do budowy modelu, estymacji, a następnie do oceny prognozy. Procedura kroswalidacji LOO (ang. *leave-one-out cross-validation*):
 
 1. Zbudowanie matematycznego modelu z dostępnych obserwacji
 2. Dla każdej znanej obserwacji następuje:
     - Usunięcie jej ze zbioru danych
     - Użycie modelu do wykonania predykcji w miejscu tej obserwacji
-    - Wyliczenie reszty (ang. *residual*), czyli różnicy pomiędzy znaną wartością a obserwacją
+    - Wyliczenie reszty (ang. *residual*), czyli różnicy pomiędzy znaną wartością a estymacją
 3. Podsumowanie otrzymanych wyników
     
-- W pakiecie `gstat`, kroswalidacja LOO jest dostępna w funkcjach `krige.cv` oraz `gstat.cv`
-
-### Kroswalidacja 
+W pakiecie `gstat`, kroswalidacja LOO jest dostępna w funkcjach `krige.cv` oraz `gstat.cv`. Działają one bardzo podobnie jak funkcje `krige` oraz `gstat`, jednak w przeciwieństwie do nich nie wymagają podania obiektu siatki.
 
 ```{r loovv, cache=TRUE}
 vario <- variogram(temp~1, data=punkty)
@@ -147,6 +176,13 @@ fitted <- fit.variogram(vario, model)
 cv_sk <- krige.cv(temp~1, punkty, model=fitted, beta=15.324, verbose=FALSE)
 summary(cv_sk)
 spplot(cv_sk, 'residual')
+```
+
+Podobnie jak w walidacji podziorem, gdy uzyskany model jest wystarczająco dobry, estymację dla całego obszaru uzyskuje się z użyciem funkcji `krige()`.
+
+```{r}
+cv_skk <- krige(temp~1, train, siatka, model=fitted, beta=15.324)
+spplot(cv_skk, 'var1.pred')
 ```
 
 <!-- 

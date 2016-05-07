@@ -1,9 +1,3 @@
-# book_to_fix:
-1. Popraw references (np. cytowania pakietów)
-1. Popraw wielkość obrazków
-1. Zamiana ryciny normalności
-
-
 # toAdd:
 1. Kokriging - dodaj mapki, etc./ może mniejsza siatka?
 1. Jak walidować dane Indicator Kriging?
@@ -16,6 +10,7 @@
 9. Anizotropia zonalna? (http://gis.stackexchange.com/questions/157218/how-to-remove-zonal-anisotropy-from-directional-variogram-using-gstat-in-r)
 10. Practical range
 11. Może słownik pojęć?
+12. Normalizacja przy krigingu (quantile transform)
 12. Normalizacja przy symulacjach (GsLIB – metodyka nieparametryczna – strona 141; Wackernagel – metodyka parametryczna (wielomiany Hermite) –   strona 238)
 13. Automatyczne dopasowywanie modeli - http://r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html
 14. geostat i ggplot2 - http://rogiersbart.blogspot.com/2016/03/variography-with-gstat-and-ggplot2.html

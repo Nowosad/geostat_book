@@ -103,12 +103,20 @@ W przypadku, gdy analizowane zjawisko jest złożone, odwzorowanie kształtu sem
 
 ## Modelowanie izotropowe
 
+Do zbudowania modelu semiwariogramu należy wykonać szereg kroków:
+
+1. Stworzyć i wyświetlić semiwariogram empiryczny analizowanej zmiennej z użyciem funkcji `variogram()` oraz `plot()` 
+2. Zdefiniować parametry semiwariogramu, tj. semiwariancja cząstkowa (`psill`), skrócona nazwa używanej funkcji (`model`) oraz jej zasięg (`range`) w funkcji `vgm()`. Uzyskany model można przedstawić w funkcji `plot()` podając nazwę obiektu zawierającego semiwariogram epiryczny oraz obiektu zawierającego model
+3. Dopasować parametry modelu używając funkcji `fit.variogram()`. To dopasowanie można również zwizualizować używając funkcji `plot()`
+
 ### Modelowanie izotropowe | Model nuggetowy
+
+Model nuggetowy (`Nug`) określa sytuację, w której analizowana zmienna nie wykazuje autokorelacji. Inaczej mówiąc, niepodobieństwo jej wartości nie wzrasta wraz z odległością. Ten typ modelu najczęściej używany jest w modelach złożonych. W takich wypadkach służy on do określania, między innymi, błędu pomiarowego czy zmienności na krótkich odstępach.
 
 ```{r}
 vario <- variogram(temp~1, punkty)
 plot(vario)
-model_nug <- vgm(10, model = 'Nug', range=0)
+model_nug <- vgm(psill=10, model='Nug', range=0)
 model_nug
 plot(vario, model=model_nug)
 fitted_nug <- fit.variogram(vario, model_nug)
@@ -117,6 +125,8 @@ plot(vario, model=fitted_nug)
 ```
 
 ### Modelowanie izotropowe | Model sferyczny
+
+Model sferyczny (`Sph`) jest jednym z najczęściej stosowanych modeli geostatystycznych. Reprezentuje on cechę, której zmienność wartości ma charakter naprzemiennych płatów niskich i wysokich wartości. Średnio te płaty mają średnicę określoną przez zasięg (`range`) modelu.
 
 ```{r }
 vario <- variogram(temp~1, punkty)
@@ -129,12 +139,29 @@ fitted_sph
 plot(vario, model=fitted_sph)
 ```
 
-### Modelowanie izotropowe | Model Gaussowski
+### Modelowanie izotropowe | Model wykładniczy
+
+Model wykładniczy (`Exp`) również jest jednym z najczęściej używanych w geostatystyce. Od modelu sferycznego różni go szczególnie to, że nie ma on skończonego zasięgu. W jego przypadku, zamiast zasięgu podaje się tzw. zasięg praktyczny. Oznacza on odległość na jakiej model osiąga 95% wartości wariancji progowej.
 
 ```{r }
 vario <- variogram(temp~1, punkty)
 plot(vario)
-model_gau <- vgm(psill=15, model = 'Gau', range=3000)
+model_exp <- vgm(psill=10, model = 'Exp', range=3000)
+model_exp
+plot(vario, model=model_exp)
+fitted_exp <- fit.variogram(vario, model_exp)
+fitted_exp
+plot(vario, model=fitted_exp)
+```
+
+### Modelowanie izotropowe | Model gaussowski
+
+Model gaussowski (`Gau`) również posiada zasięg praktyczny definiowany jako 95% wartości wariancji progowej. Jego cechą charakterystyczną jest paraboliczny kształt na początkowym odcinku. Jest on najczęściej używany do modelowania cech o regularnej i łagodnej zmienności przestrzennej. Model gaussowski z uwagi na swoje cechy zazwyczaj nie powinien być stosowany samodzielnie, lecz jako element modelu złożonego.
+
+```{r }
+vario <- variogram(temp~1, punkty)
+plot(vario)
+model_gau <- vgm(psill=13, model = 'Gau', range=3000)
 model_gau
 plot(vario, model=model_gau)
 fitted_gau <- fit.variogram(vario, model_gau)
@@ -144,10 +171,12 @@ plot(vario, model=fitted_gau)
 
 ### Modelowanie izotropowe | Model potęgowy
 
+Model potęgowy (`Pow`) to przykład tzw. modelu nieograniczonego. Jego wartość rośnie w nieskończoność, dlatego niemożliwe jest określenie jego zasięgu. W przypadku modelu potęgowego, paramter `range` oznacza wykładnik potęgowy.
+
 ```{r }
 vario <- variogram(temp~1, punkty)
 plot(vario)
-model_pow <- vgm(psill=1, model = 'Pow', range=0.30)
+model_pow <- vgm(psill=0.03, model = 'Pow', range=0.7)
 model_pow
 plot(vario, model=model_pow)
 fitted_pow <- fit.variogram(vario, model_pow)
@@ -155,20 +184,9 @@ fitted_pow
 plot(vario, model=fitted_pow)
 ```
 
-### Modelowanie izotropowe | Model wykładniczy
-
-```{r }
-vario <- variogram(temp~1, punkty)
-plot(vario)
-model_exp <- vgm(psill=10, model = 'Exp', range=900)
-model_exp
-plot(vario, model=model_exp)
-fitted_exp <- fit.variogram(vario, model_exp)
-fitted_exp
-plot(vario, model=fitted_exp)
-```
-
 ### Modelowanie izotropowe | Modele złożone I
+
+Najczęściej pojedynczy model nie jest w stanie odwzorować dokładnie zmienności przestrzennej analizowanej cechy. W takich sytuacjach konieczne jest połączenie dwóch lub więcej modeli podstawowych. Najbardziej powszechny model złożony składa się z funkcji nuggetowej (dla odległości zero) oraz drugiej funkcji (dla dalszej odległości). Zdefiniowanie takiej funkcji odbywa się poprzez dodanie argumentu `nugget` w funkcji `vgm()`.
 
 ```{r }
 vario <- variogram(temp~1, punkty)
@@ -182,9 +200,11 @@ plot(vario, model=fitted_zl1)
 
 ### Modelowanie izotropowe | Modele złożone II
 
+Bardziej złożone modele można tworzyć z pomocą argumentu `add.to`. Przyjmuje on kolejny obiekt funkcji `vgm()` i poprzez połączenie tych dwóch obiektów otrzymuje model złożony. Na poniższym przykładzie stworzony został model złożony składający się z modelu nuggetowego oraz dwóch modeli gaussowskich.
+
 ```{r }
 vario <- variogram(temp~1, punkty)
-model_zl2 <- vgm(2, 'Gau', 3000, add.to = vgm(8, model = 'Gau', range = 2000, nugget = 0.5))
+model_zl2 <- vgm(10, 'Gau', 3000, add.to = vgm(4, model = 'Gau', range = 500, nugget = 0.5))
 model_zl2
 plot(vario, model=model_zl2)
 fitted_zl2 <- fit.variogram(vario, model_zl2)
@@ -194,16 +214,19 @@ plot(vario, model=fitted_zl2)
 ## Modelowanie anizotropowe
 
 ### Anizotropia
+
 Uwzględnienie anizotropii wymaga zamiany parametru zasięgu na trzy inne parametry:
 - Zasięg w dominującym kierunku
 - Kąt określający dominujący kierunek
 - Proporcję anizotropii, czyli relację pomiędzy zasięgiem w dominującym kierunku a zasięgiem w przeciwległym kierunku
+
+W pakiecie `gstat` odbywa się to poprzez dodanie argumentu `alpha` do funkcji `variogram()`. Należy w niej zdefiniować analizowane kierunki, które zostały określone na podstawie mapy semiwariogramu. Następnie w funkcji `vgm()` należy podać nowy argument `anis`. Przyjmuje on dwie wartości. Pierwsza z nich (`45` w przykładzie poniżej) oznacza dominujący kierunek anizotropii, druga zaś (`0.4`) mówi o tzw. proporcji anizotropii. Proporcja anizotropii jest to relacja pomiędzy zmiennością na głównym kierunku a kierunku prostopadłym. Na poniższym przykładzie zasięg ustalony dla głównego kierunku wynosi 4000 metrów. Wartość proporcji anizotropii, `0.4`, w tym wypadku oznacza że dla prostopadłego kierunku zasięg będzie wynosił 1600 metrów (4000 metrów x 0.4).
 
 ```{r }
 vario_map <- variogram(temp~1, punkty, cutoff=4000, width=400, map=TRUE)
 plot(vario_map)
 vario_kier <- variogram(temp~1, punkty, alpha = c(45, 90, 135, 180), cutoff=4000)
 plot(vario_kier, plot.numbers=TRUE)
-vario_kier_fit <- vgm(psill=8, model='Sph', range=4000, nugget=0.5, anis = c(45, .4))
+vario_kier_fit <- vgm(psill=8, model='Sph', range=4000, nugget=0.5, anis = c(45, 0.4))
 plot(vario_kier, vario_kier_fit, as.table=TRUE)
 ```
