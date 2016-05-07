@@ -87,8 +87,8 @@ knitr::include_graphics('figs/diag.png')
 W przypadku estymacji geostatystycznej, zwanej inaczej interpolacją geostatystyczną, pełna ścieżka postępowania składa się z siedmiu elementów:
 
 1. Zaprojektowanie sposobu (typu) próbkowania oraz organizacji zadań
-2. Zebranie danych, analiza labolatoryjna
-3. Wstepna eksploracja danych, ocena ich jakości
+2. Zebranie danych, analiza laboratoryjna
+3. Wstępna eksploracja danych, ocena ich jakości
 4. Modelowanie semiwariogramów na podstawie dostępnych danych
 5. Estymacja badanej cechy
 6. Porównanie i ocena modeli
@@ -182,14 +182,14 @@ gamma
 
 ### Chmura semiwariogramu
 
-Jeżeli w badanej próbie mamy $n$ obserwacji oznacza to, że możemy zaobserwować $\frac{1}{2}n(n-1)$ par obserwacji. Każda z tych par obserwacji daje nam informację o semiwariancji występującej wraz z odległością. Tę emiwariancję można zaprezentować na wykresie zwanym chmurą semiwariogramu. Do jej wyliczenia służy funkcja `variogram()` z argumentem `cloud=TRUE`.
+Jeżeli w badanej próbie mamy $n$ obserwacji oznacza to, że możemy zaobserwować $\frac{1}{2}n(n-1)$ par obserwacji. Każda z tych par obserwacji daje nam informację o semiwariancji występującej wraz z odległością. Tę semiwariancję można zaprezentować na wykresie zwanym chmurą semiwariogramu. Do jej wyliczenia służy funkcja `variogram()` z argumentem `cloud=TRUE`.
 
 ```{r }
 vario_cloud <- variogram(temp~1, punkty, cloud=TRUE)
 plot(vario_cloud) 
 ```
 
-Chmura semiwariogramu pozwala także na zauważenie par punktów, których wartości znaczaco odstają. Aby zlokalizować te pary punktów, można zastosować funkcję `plot()` z argumentem `digitize=TRUE`, a następnie za pomocą kilku kliknięć określić obszar jaki nas interesuje. Po skończonym wyborze należy nacisnąć klawisc Esc.
+Chmura semiwariogramu pozwala także na zauważenie par punktów, których wartości znacząco odstają. Aby zlokalizować te pary punktów, można zastosować funkcję `plot()` z argumentem `digitize=TRUE`, a następnie za pomocą kilku kliknięć określić obszar jaki nas interesuje. Po skończonym wyborze należy nacisnąć klawisz Esc.
 
 ```{r chmurkowanie, eval=FALSE}
 vario_cloud_sel <- plot(variogram(temp~1, punkty, cloud=TRUE), digitize=TRUE)

@@ -457,9 +457,9 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 <p>Jednym z podstawowych typów symulacji warunkowych jest sekwencyjna symulacja gaussowska. Polega ona na:</p>
 <ol style="list-style-type: decimal">
 <li>Wybraniu lokalizacji nie posiadającej zmierzonej wartości badanej zmiennej</li>
-<li>Krigingu wartości tej lokalizacji korzystając z dostepnych danych, co pozwala na uzyskanie rozkładu prawdopodobieństwa badanej zmiennej</li>
+<li>Krigingu wartości tej lokalizacji korzystając z dostępnych danych, co pozwala na uzyskanie rozkładu prawdopodobieństwa badanej zmiennej</li>
 <li>Wylosowaniu wartości z rozkładu prawdopodobieństwa za pomocą generatora liczba losowych i przypisaniu tej wartości do lokalizacji</li>
-<li>Dodaniu symulowaniej wartości do zbioru danych i przejściu do kolejnej lokalizacji</li>
+<li>Dodaniu symulowanej wartości do zbioru danych i przejściu do kolejnej lokalizacji</li>
 <li>Powtórzeniu poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja</li>
 </ol>
 <p>Sekwencyjna symulacja gaussowska wymaga zmiennej posiadającej wartości o rozkładzie zbliżonym do normalnego. Można to sprawdzić poprzez wizualizacje danych (histogram, wykres kwantyl-kwantyl) lub też test statystyczny (test Shapiro-Wilka). Zmienna <code>temp</code> nie ma rozkładu zbliżonego do normalnego.</p>
@@ -564,7 +564,7 @@ sym_sk_sd &lt;-<span class="st"> </span><span class="kw">calc</span>(sym_sk, <sp
 <h2><span class="header-section-number">13.5</span> Sekwencyjna symulacja danych kodowanych</h2>
 <div id="sekwencyjna-symulacja-danych-kodowanych-ang.-sequential-indicator-simulation" class="section level3">
 <h3><span class="header-section-number">13.5.1</span> Sekwencyjna symulacja danych kodowanych (ang. <em>Sequential indicator simulation</em>)</h3>
-<p>Symulacje geostatystyczne można również zastosować do danych binarnych. Dla potrzeb przykładu tworzona jest nowa zmienna <code>temp_ind</code> przyjmująca wartość <code>TRUE</code> dla pomiarów o wartościach temperatury niższych niż 12 stopnii Celsjusza oraz <code>FALSE</code> dla pomiarów o wartościach temperatury równych lub wyższych niż 12 stopnii Celsjusza.</p>
+<p>Symulacje geostatystyczne można również zastosować do danych binarnych. Dla potrzeb przykładu tworzona jest nowa zmienna <code>temp_ind</code> przyjmująca wartość <code>TRUE</code> dla pomiarów o wartościach temperatury niższych niż 12 stopni Celsjusza oraz <code>FALSE</code> dla pomiarów o wartościach temperatury równych lub wyższych niż 12 stopni Celsjusza.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(punkty$temp) </code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   8.706  13.280  15.310  15.950  18.270  26.140</code></pre>

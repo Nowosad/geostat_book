@@ -121,7 +121,7 @@ spplot(ok, "var1.var", sp.layout=list(punkty, pch=21, col="white"))
 ## Kriging z trendem
 ### Kriging z trendem (ang. *Kriging with a trend*)
 
-Kriging z trendem, określany również jako kriging z wewnątrznym trendem, do estymacji wykorzystuje (oprócz zmienności wartości wraz z odległością) położenie analizowanych punktów. Na poniższym przykładzie w funkcji `variogram()` pierwszy z argumentów przyjął postać `temp~x+y`, co oznacza, że uwzględniamy liniowy trend zależny od współrzędnej `x` oraz `y`.
+Kriging z trendem, określany również jako kriging z wewnętrznym trendem, do estymacji wykorzystuje (oprócz zmienności wartości wraz z odległością) położenie analizowanych punktów. Na poniższym przykładzie w funkcji `variogram()` pierwszy z argumentów przyjął postać `temp~x+y`, co oznacza, że uwzględniamy liniowy trend zależny od współrzędnej `x` oraz `y`.
 
 ```{r }
 vario_kzt <- variogram(temp~x+y, data=punkty)

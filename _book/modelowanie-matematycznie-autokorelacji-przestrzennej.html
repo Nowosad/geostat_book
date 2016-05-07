@@ -481,7 +481,7 @@ ve_fit &lt;-<span class="st"> </span><span class="kw">as.vgm.variomodel</span>(v
 <p>Do zbudowania modelu semiwariogramu należy wykonać szereg kroków:</p>
 <ol style="list-style-type: decimal">
 <li>Stworzyć i wyświetlić semiwariogram empiryczny analizowanej zmiennej z użyciem funkcji <code>variogram()</code> oraz <code>plot()</code></li>
-<li>Zdefiniować parametry semiwariogramu, tj. semiwariancja cząstkowa (<code>psill</code>), skrócona nazwa używanej funkcji (<code>model</code>) oraz jej zasięg (<code>range</code>) w funkcji <code>vgm()</code>. Uzyskany model można przedstawić w funkcji <code>plot()</code> podając nazwę obiektu zawierającego semiwariogram epiryczny oraz obiektu zawierającego model</li>
+<li>Zdefiniować parametry semiwariogramu, tj. semiwariancja cząstkowa (<code>psill</code>), skrócona nazwa używanej funkcji (<code>model</code>) oraz jej zasięg (<code>range</code>) w funkcji <code>vgm()</code>. Uzyskany model można przedstawić w funkcji <code>plot()</code> podając nazwę obiektu zawierającego semiwariogram empiryczny oraz obiektu zawierającego model</li>
 <li>Dopasować parametry modelu używając funkcji <code>fit.variogram()</code>. To dopasowanie można również zwizualizować używając funkcji <code>plot()</code></li>
 </ol>
 <div id="modelowanie-izotropowe-model-nuggetowy" class="section level3">
@@ -562,7 +562,7 @@ fitted_gau</code></pre></div>
 </div>
 <div id="modelowanie-izotropowe-model-potegowy" class="section level3">
 <h3><span class="header-section-number">7.4.5</span> Modelowanie izotropowe | Model potęgowy</h3>
-<p>Model potęgowy (<code>Pow</code>) to przykład tzw. modelu nieograniczonego. Jego wartość rośnie w nieskończoność, dlatego niemożliwe jest określenie jego zasięgu. W przypadku modelu potęgowego, paramter <code>range</code> oznacza wykładnik potęgowy.</p>
+<p>Model potęgowy (<code>Pow</code>) to przykład tzw. modelu nieograniczonego. Jego wartość rośnie w nieskończoność, dlatego niemożliwe jest określenie jego zasięgu. W przypadku modelu potęgowego, parametr <code>range</code> oznacza wykładnik potęgowy.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty)
 <span class="kw">plot</span>(vario)</code></pre></div>
 <p><img src="Geostatystyka_files/figure-html/unnamed-chunk-101-1.png" title="" alt="" width="672" /></p>

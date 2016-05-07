@@ -503,7 +503,7 @@ ok &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class=
 <h2><span class="header-section-number">8.4</span> Kriging z trendem</h2>
 <div id="kriging-z-trendem-ang.-kriging-with-a-trend" class="section level3">
 <h3><span class="header-section-number">8.4.1</span> Kriging z trendem (ang. <em>Kriging with a trend</em>)</h3>
-<p>Kriging z trendem, określany również jako kriging z wewnątrznym trendem, do estymacji wykorzystuje (oprócz zmienności wartości wraz z odległością) położenie analizowanych punktów. Na poniższym przykładzie w funkcji <code>variogram()</code> pierwszy z argumentów przyjął postać <code>temp~x+y</code>, co oznacza, że uwzględniamy liniowy trend zależny od współrzędnej <code>x</code> oraz <code>y</code>.</p>
+<p>Kriging z trendem, określany również jako kriging z wewnętrznym trendem, do estymacji wykorzystuje (oprócz zmienności wartości wraz z odległością) położenie analizowanych punktów. Na poniższym przykładzie w funkcji <code>variogram()</code> pierwszy z argumentów przyjął postać <code>temp~x+y</code>, co oznacza, że uwzględniamy liniowy trend zależny od współrzędnej <code>x</code> oraz <code>y</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kzt &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~x+y, <span class="dt">data=</span>punkty)
 <span class="kw">plot</span>(vario_kzt)</code></pre></div>
 <p><img src="Geostatystyka_files/figure-html/unnamed-chunk-113-1.png" title="" alt="" width="672" /></p>

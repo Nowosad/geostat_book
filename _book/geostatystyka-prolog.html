@@ -437,8 +437,8 @@ http://www.inside-r.org/packages/cran/raster/docs/interpolate
 <p>W przypadku estymacji geostatystycznej, zwanej inaczej interpolacją geostatystyczną, pełna ścieżka postępowania składa się z siedmiu elementów:</p>
 <ol style="list-style-type: decimal">
 <li>Zaprojektowanie sposobu (typu) próbkowania oraz organizacji zadań</li>
-<li>Zebranie danych, analiza labolatoryjna</li>
-<li>Wstepna eksploracja danych, ocena ich jakości</li>
+<li>Zebranie danych, analiza laboratoryjna</li>
+<li>Wstępna eksploracja danych, ocena ich jakości</li>
 <li>Modelowanie semiwariogramów na podstawie dostępnych danych</li>
 <li>Estymacja badanej cechy</li>
 <li>Porównanie i ocena modeli</li>
@@ -525,11 +525,11 @@ gamma</code></pre></div>
 </div>
 <div id="chmura-semiwariogramu" class="section level3">
 <h3><span class="header-section-number">6.2.8</span> Chmura semiwariogramu</h3>
-<p>Jeżeli w badanej próbie mamy <span class="math inline">\(n\)</span> obserwacji oznacza to, że możemy zaobserwować <span class="math inline">\(\frac{1}{2}n(n-1)\)</span> par obserwacji. Każda z tych par obserwacji daje nam informację o semiwariancji występującej wraz z odległością. Tę emiwariancję można zaprezentować na wykresie zwanym chmurą semiwariogramu. Do jej wyliczenia służy funkcja <code>variogram()</code> z argumentem <code>cloud=TRUE</code>.</p>
+<p>Jeżeli w badanej próbie mamy <span class="math inline">\(n\)</span> obserwacji oznacza to, że możemy zaobserwować <span class="math inline">\(\frac{1}{2}n(n-1)\)</span> par obserwacji. Każda z tych par obserwacji daje nam informację o semiwariancji występującej wraz z odległością. Tę semiwariancję można zaprezentować na wykresie zwanym chmurą semiwariogramu. Do jej wyliczenia służy funkcja <code>variogram()</code> z argumentem <code>cloud=TRUE</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_cloud &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cloud=</span><span class="ot">TRUE</span>)
 <span class="kw">plot</span>(vario_cloud) </code></pre></div>
 <p><img src="Geostatystyka_files/figure-html/unnamed-chunk-74-1.png" title="" alt="" width="672" /></p>
-<p>Chmura semiwariogramu pozwala także na zauważenie par punktów, których wartości znaczaco odstają. Aby zlokalizować te pary punktów, można zastosować funkcję <code>plot()</code> z argumentem <code>digitize=TRUE</code>, a następnie za pomocą kilku kliknięć określić obszar jaki nas interesuje. Po skończonym wyborze należy nacisnąć klawisc Esc.</p>
+<p>Chmura semiwariogramu pozwala także na zauważenie par punktów, których wartości znacząco odstają. Aby zlokalizować te pary punktów, można zastosować funkcję <code>plot()</code> z argumentem <code>digitize=TRUE</code>, a następnie za pomocą kilku kliknięć określić obszar jaki nas interesuje. Po skończonym wyborze należy nacisnąć klawisz Esc.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_cloud_sel &lt;-<span class="st"> </span><span class="kw">plot</span>(<span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cloud=</span><span class="ot">TRUE</span>), <span class="dt">digitize=</span><span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="figs/cloud_sel.png" title="" alt="" width="672" /></p>
 <p>Następnie można wyświetlić interesujące nas pary punktów z użyciem funkcji <code>plot()</code>.</p>

@@ -401,7 +401,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Pierwiastek średniego błędu kwadratowego (RMSE, ang. <em>root square prediction error</em>)</li>
 <li>Rozkład błędu (np. 5. percentyl, mediana, 95. percentyl)</li>
 </ul>
-<p>Idealna estymacja dawałaby brak błędu oraz wspołczynnik korelacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystapieniu wartości odstających.</p>
+<p>Idealna estymacja dawałaby brak błędu oraz współczynnik korelacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystąpieniu wartości odstających.</p>
 </div>
 <div id="sredni-bad-estymacji" class="section level3">
 <h3><span class="header-section-number">12.1.2</span> Średni błąd estymacji</h3>
@@ -554,7 +554,7 @@ cv_sk &lt;-<span class="st"> </span><span class="kw">krige.cv</span>(temp~<span 
 ##  Max.   : 3.330852   Max.   :250.00</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(cv_sk, <span class="st">&#39;residual&#39;</span>)</code></pre></div>
 <p><img src="Geostatystyka_files/figure-html/loovv-1.png" title="" alt="" width="672" /></p>
-<p>Podobnie jak w walidacji podziorem, gdy uzyskany model jest wystarczająco dobry, estymację dla całego obszaru uzyskuje się z użyciem funkcji <code>krige()</code>.</p>
+<p>Podobnie jak w walidacji podzbiorem, gdy uzyskany model jest wystarczająco dobry, estymację dla całego obszaru uzyskuje się z użyciem funkcji <code>krige()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cv_skk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, train, siatka, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">15.324</span>)</code></pre></div>
 <pre><code>## [using simple kriging]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(cv_skk, <span class="st">&#39;var1.pred&#39;</span>)</code></pre></div>

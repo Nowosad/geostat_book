@@ -35,7 +35,7 @@ W momencie, gdy trzeba określić jakość estymacji lub porównać ją pomiędz
 - Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root square prediction error*)
 - Rozkład błędu (np. 5. percentyl, mediana, 95. percentyl)
     
-Idealna estymacja dawałaby brak błędu oraz wspołczynnik korelacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystapieniu wartości odstających.
+Idealna estymacja dawałaby brak błędu oraz współczynnik korelacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystąpieniu wartości odstających.
 
 ### Średni błąd estymacji
 
@@ -178,7 +178,7 @@ summary(cv_sk)
 spplot(cv_sk, 'residual')
 ```
 
-Podobnie jak w walidacji podziorem, gdy uzyskany model jest wystarczająco dobry, estymację dla całego obszaru uzyskuje się z użyciem funkcji `krige()`.
+Podobnie jak w walidacji podzbiorem, gdy uzyskany model jest wystarczająco dobry, estymację dla całego obszaru uzyskuje się z użyciem funkcji `krige()`.
 
 ```{r}
 cv_skk <- krige(temp~1, train, siatka, model=fitted, beta=15.324)

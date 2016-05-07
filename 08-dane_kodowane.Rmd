@@ -36,7 +36,7 @@ Kriging danych kodowanych to metoda krigingu oparta o dane kategoryzowane lub te
 Zalety:
 
 - Możliwość zastosowania, gdy nie interesuje nas konkretna wartość, ale znalezienie obszarów o wartości przekraczającej dany poziom
-- Nie jest istotny kszałt rozkładu
+- Nie jest istotny kształt rozkładu
 
 Wady:
 
@@ -86,7 +86,7 @@ Ostatnim etapem jest stworzenie interpolacji geostatystycznej z pomocą funkcji 
 ik <- krige(temp_ind~1, punkty, siatka, model=fitted_ind)
 ```
 
-W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopnii Celsjusza).
+W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopni Celsjusza).
 
 ```{r plotsy1ok, eval=FALSE}
 spplot(ik, 'var1.pred')
@@ -103,7 +103,7 @@ grid.arrange(p1, p2, ncol=1)
 
 ### Kriging danych kodowanych (ang. *Indicator kriging*)
 
-Alternatywnie, zamiast tworzenia nowej zmiennej (takiej jak `temp_ind`), można wykorzystać funkcję `I`. Z jej użyciem można definiować przyjęte progi bezpośrednio do funkcji `variogram` i `krige`. Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopnii Celsjusza.
+Alternatywnie, zamiast tworzenia nowej zmiennej (takiej jak `temp_ind`), można wykorzystać funkcję `I`. Z jej użyciem można definiować przyjęte progi bezpośrednio do funkcji `variogram` i `krige`. Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopni Celsjusza.
 
 ```{r }
 vario_ind20 <- variogram(I(temp<20)~1, punkty)  

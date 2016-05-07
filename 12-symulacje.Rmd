@@ -89,9 +89,9 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 Jednym z podstawowych typów symulacji warunkowych jest sekwencyjna symulacja gaussowska. Polega ona na:
 
 1. Wybraniu lokalizacji nie posiadającej zmierzonej wartości badanej zmiennej
-2. Krigingu wartości tej lokalizacji korzystając z dostepnych danych, co pozwala na uzyskanie rozkładu prawdopodobieństwa badanej zmiennej
+2. Krigingu wartości tej lokalizacji korzystając z dostępnych danych, co pozwala na uzyskanie rozkładu prawdopodobieństwa badanej zmiennej
 3. Wylosowaniu wartości z rozkładu prawdopodobieństwa za pomocą generatora liczba losowych i przypisaniu tej wartości do lokalizacji
-4. Dodaniu symulowaniej wartości do zbioru danych i przejściu do kolejnej lokalizacji
+4. Dodaniu symulowanej wartości do zbioru danych i przejściu do kolejnej lokalizacji
 5. Powtórzeniu poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja
 
 Sekwencyjna symulacja gaussowska wymaga zmiennej posiadającej wartości o rozkładzie zbliżonym do normalnego. Można to sprawdzić poprzez wizualizacje danych (histogram, wykres kwantyl-kwantyl) lub też test statystyczny (test Shapiro-Wilka). Zmienna `temp` nie ma rozkładu zbliżonego do normalnego.
@@ -150,7 +150,7 @@ spplot(sym_sk_sd)
 ## Sekwencyjna symulacja danych kodowanych
 ### Sekwencyjna symulacja danych kodowanych (ang. *Sequential indicator simulation*)
 
-Symulacje geostatystyczne można również zastosować do danych binarnych. Dla potrzeb przykładu tworzona jest nowa zmienna `temp_ind` przyjmująca wartość `TRUE` dla pomiarów o wartościach temperatury niższych niż 12 stopnii Celsjusza oraz `FALSE` dla pomiarów o wartościach temperatury równych lub wyższych niż 12 stopnii Celsjusza.
+Symulacje geostatystyczne można również zastosować do danych binarnych. Dla potrzeb przykładu tworzona jest nowa zmienna `temp_ind` przyjmująca wartość `TRUE` dla pomiarów o wartościach temperatury niższych niż 12 stopni Celsjusza oraz `FALSE` dla pomiarów o wartościach temperatury równych lub wyższych niż 12 stopni Celsjusza.
 
 ```{r }
 summary(punkty$temp) 

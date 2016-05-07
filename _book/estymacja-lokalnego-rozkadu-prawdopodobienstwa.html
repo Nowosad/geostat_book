@@ -401,7 +401,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Zalety:</p>
 <ul>
 <li>Możliwość zastosowania, gdy nie interesuje nas konkretna wartość, ale znalezienie obszarów o wartości przekraczającej dany poziom</li>
-<li>Nie jest istotny kszałt rozkładu</li>
+<li>Nie jest istotny kształt rozkładu</li>
 </ul>
 <p>Wady:</p>
 <ul>
@@ -448,14 +448,14 @@ fitted_ind</code></pre></div>
 <p>Ostatnim etapem jest stworzenie interpolacji geostatystycznej z pomocą funkcji <code>krige</code>. Wymaga ona czterech argumentów - wzoru (<code>temp_ind~1</code>), zbioru punktowego (<code>punkty</code>), siatki do interpolacji (<code>siatka</code>) oraz modelu (<code>fitted_ind</code>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ik &lt;-<span class="st"> </span><span class="kw">krige</span>(temp_ind~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted_ind)</code></pre></div>
 <pre><code>## [using ordinary kriging]</code></pre>
-<p>W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopnii Celsjusza).</p>
+<p>W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopni Celsjusza).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(ik, <span class="st">&#39;var1.pred&#39;</span>)
 <span class="kw">spplot</span>(ik, <span class="st">&#39;var1.var&#39;</span>)</code></pre></div>
 <p><img src="Geostatystyka_files/figure-html/plotsy2ok-1.png" title="" alt="" width="672" /></p>
 </div>
 <div id="kriging-danych-kodowanych-ang.-indicator-kriging-1" class="section level3">
 <h3><span class="header-section-number">9.2.4</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>)</h3>
-<p>Alternatywnie, zamiast tworzenia nowej zmiennej (takiej jak <code>temp_ind</code>), można wykorzystać funkcję <code>I</code>. Z jej użyciem można definiować przyjęte progi bezpośrednio do funkcji <code>variogram</code> i <code>krige</code>. Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopnii Celsjusza.</p>
+<p>Alternatywnie, zamiast tworzenia nowej zmiennej (takiej jak <code>temp_ind</code>), można wykorzystać funkcję <code>I</code>. Z jej użyciem można definiować przyjęte progi bezpośrednio do funkcji <code>variogram</code> i <code>krige</code>. Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopni Celsjusza.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_ind20 &lt;-<span class="st"> </span><span class="kw">variogram</span>(<span class="kw">I</span>(temp&lt;<span class="dv">20</span>)~<span class="dv">1</span>, punkty)  
 fitted_ind20 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_ind20, <span class="kw">vgm</span>(<span class="fl">0.08</span>, <span class="st">&#39;Sph&#39;</span>, <span class="dv">3500</span>, <span class="dt">nugget=</span><span class="fl">0.01</span>))
 vario_ind16 &lt;-<span class="st"> </span><span class="kw">variogram</span>(<span class="kw">I</span>(temp&lt;<span class="dv">16</span>)~<span class="dv">1</span>, punkty)  

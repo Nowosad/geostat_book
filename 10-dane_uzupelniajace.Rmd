@@ -59,7 +59,7 @@ fitted_kws4 <- fit.variogram(vario_kws4, vgm(0.5, model = 'Nug', range = 0))
 plot(vario_kws4, fitted_kws4)
 ```
 
-Następnie dla każdego obszaru przeprowadzona jest niezależna estymacja wartości analizowanej cechy. Należy jednynie wcześniej zadbać, by w siatce nie było elementów `NA` dotyczących zmiennych jakościowych. W przykładzie tworzona jest nowa siatka (`siatka2`) nie zawierająca braków wartości dla zmiennej `clc`.
+Następnie dla każdego obszaru przeprowadzona jest niezależna estymacja wartości analizowanej cechy. Należy jedynie wcześniej zadbać, by w siatce nie było elementów `NA` dotyczących zmiennych jakościowych. W przykładzie tworzona jest nowa siatka (`siatka2`) nie zawierająca braków wartości dla zmiennej `clc`.
 
 ```{r}
 siatka2 <- siatka[!is.na(siatka$clc), ]
