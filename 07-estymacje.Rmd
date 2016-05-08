@@ -58,10 +58,10 @@ plot(vario, model=fitted)
 Następnie nastąpiła estymacja wartości z użyciem metody kriginu prostego. W funkcji `krige()` z pakietu `gstat`, użycie tej metody wymaga ustalenia średniej wartości cechy za pomocą argumentu `beta`. 
 
 ```{r }
-sk <- krige(temp~1, punkty, siatka, model=fitted, beta=15.324)
+sk <- krige(temp~1, punkty, siatka, model=fitted, beta=15.32)
 ```
 
-Wynik krigingu prostego, jak i każdy inny uzyskany z użyciem pakietu `gstat` można podejrzeć używając funkcję `summary()`. Szczególnie ważne są uzyskane dwie, nowe zmienne - `var1.pred` oraz `var1.var`. Pierwsza z nich oznacza wartość estymowaną dla każdego oczka siatki, druga zaś mówi o wariancji estymacji. 
+Wynik krigingu prostego, jak i każdy inny uzyskany z użyciem pakietu `gstat`, można podejrzeć używając funkcji `summary()`. Szczególnie ważne są dwie, nowe zmienne - `var1.pred` oraz `var1.var`. Pierwsza z nich oznacza wartość estymowaną dla każdego oczka siatki, druga zaś mówi o wariancji estymacji. 
 
 ```{r}
 summary(sk)
@@ -85,15 +85,16 @@ grid.arrange(p1, p2, ncol=1)
 ### Kriging zwykły (ang. *Ordinary kriging*)
 
 W krigingu zwykłym średnia traktowana jest jako wartość nieznana. Metoda ta uwzględnia lokalne fluktuacje średniej poprzez stosowanie ruchomego okna. Parametry ruchomego okna można określić za pomocą jednego z dwóch argumentów:
-    - `nmax` - użyta zostanie określona liczba najbliższych obserwacji
-    - `maxdist` -  użyte zostaną jedynie obserwacje w zadanej odległości
+
+- `nmax` - użyta zostanie określona liczba najbliższych obserwacji
+- `maxdist` -  użyte zostaną jedynie obserwacje w zadanej odległości
 
 ```{r }
 # ok <- krige(temp~1, punkty, siatka, model=fitted, nmax=30)
 ok <- krige(temp~1, punkty, siatka, model=fitted, maxdist=1500)
 ```
 
-Podobnie jak w przypadku krigingu prostego, możemy przyjrzeć się wynikom estymacji używając funkcji `summary()` oraz możemy je wyświetlić używając funkcji `spplot()`.
+Podobnie jak w przypadku krigingu prostego, można przyjrzeć się wynikom estymacji używając funkcji `summary()` oraz wyświetlić je używając funkcji `spplot()`.
 
 ```{r}
 summary(ok)

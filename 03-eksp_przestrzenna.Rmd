@@ -36,7 +36,7 @@ Eksploracyjna analiza danych przestrzennych w przypadku danych punktowych ma na 
 
 ### Podstawowe typy próbowania
 
-Istnieje cały szereg typów próbkowania danych przestrzennych. Funkcja `spsample()` z pakietu `sp` pozwala na stworzenie kilku typów próbkowania (argument `type`):
+Istnieje cały szereg typów próbkowania danych przestrzennych. Funkcja `spsample()` z pakietu `sp` pozwala na stworzenie kilku typów próbkowania (argument `type`), między innymi:
 
 - Regularny (ang.*regular*)
 - Losowy (ang.*random*)
@@ -75,7 +75,7 @@ plot(strat)
 
 ### Typ próbowania | Preferencyjny
 
-W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości cechy) są znacznie częściej opróbkowane niż inne.
+W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbkowane niż inne.
 
 ```{r }
 set.seed(425)
@@ -83,7 +83,7 @@ pref <- spsample(granica, 150, type = 'clustered', nclusters=30)
 plot(pref)
 ```
 
-## Mapy punktowe i dane lokalnie odstające
+## Dane lokalnie odstające
 
 Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()`.
 
@@ -189,7 +189,6 @@ siatka_n <- raster(extent(gBuffer(granica, width = 500)))
 res(siatka_n) <- c(100, 100)
 siatka_n[] <- 0
 proj4string(siatka_n) <- CRS(proj4string(punkty_pref))
-# siatka_n <- mask(siatka_n, granica)
 siatka_n <- as(siatka_n, 'SpatialPointsDataFrame')
 siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
 gridded(siatka_n) <- TRUE

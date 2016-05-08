@@ -55,7 +55,7 @@ punkty$temp_ind <- punkty$temp > 20
 summary(punkty$temp_ind) 
 ```
 
-W używanym przykładzie, próg został wyznaczony arbitralnie. Istnieje oczywiście szereg innych możliwości wyznaczania progu. Można wykorzystać wiedzę zewnętrzną (np. toksyczne stężenie analizowanej substancji) lub też posłużyć się wykresem dystrybuanty do określenia istotnej zmiany wartości.
+W przykładzie, próg został wyznaczony arbitralnie. Istnieje oczywiście szereg innych możliwości wyznaczania progu. Można wykorzystać wiedzę zewnętrzną (np. toksyczne stężenie analizowanej substancji) lub też posłużyć się wykresem dystrybuanty do określenia istotnej zmiany wartości.
 
 ```{r }
 ggplot(punkty@data, aes(temp)) + stat_ecdf()
@@ -63,7 +63,7 @@ ggplot(punkty@data, aes(temp)) + stat_ecdf()
 
 ### Kriging danych kodowanych (ang. *Indicator kriging*) | Modelowanie
 
-Tworzenie i modelowanie semiwariogramu empirycznego w krigingu danych kodowanych wygląda tak samo jak, np. w przypadku krigingu zwykłego. Korzystając z funkcji `variogram()` tworzony jest semiwariogram empiryczny, używając `vgm()` tworzony jest model "ręczny", który następnie jest dopasowywany z użyciem funkcji `fit.variogram()`
+Tworzenie i modelowanie semiwariogramu empirycznego w krigingu danych kodowanych wygląda tak samo jak, np. w przypadku krigingu zwykłego. Korzystając z funkcji `variogram()` tworzony jest semiwariogram empiryczny, używając `vgm()` tworzony jest model "ręczny", który następnie jest dopasowywany z użyciem funkcji `fit.variogram()`.
 
 ```{r }
 vario_ind <- variogram(temp_ind~1, punkty)         
@@ -86,7 +86,7 @@ Ostatnim etapem jest stworzenie interpolacji geostatystycznej z pomocą funkcji 
 ik <- krige(temp_ind~1, punkty, siatka, model=fitted_ind)
 ```
 
-W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopni Celsjusza).
+W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopni Celsjusza) oraz uzyskaną wariancję predykcji.
 
 ```{r plotsy1ok, eval=FALSE}
 spplot(ik, 'var1.pred')

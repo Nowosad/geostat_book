@@ -34,7 +34,7 @@ par(mar=c(rep(0, 4)))
 ## Symulacje geostatystyczne
 ### Symulacje geostatystyczne
 
-Kriging daje optymalne predykcje, czyli wyznacza najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji. Dodatkowo, efektem krigingu jest wygładzony obraz. W konsekwencji wyniki estymacji różnią się od danych pomiarowych. Jest to tylko (aż?) predykcja. Prawdziwa wartość jest niepewna ... Korzystając z symulacji geostatystycznych nie tworzymy predykcji, ale generujemy równie prawdopodobne możliwości poprzez symulację z rozkładu prawdopodobieństwa (wykorzystując genereator liczb losowych).
+Kriging daje optymalne predykcje, czyli wyznacza najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji. Dodatkowo, efektem krigingu jest wygładzony obraz. W konsekwencji wyniki estymacji różnią się od danych pomiarowych. Uzyskiwana jest tylko (aż?) predykcja, a prawdziwa wartość jest niepewna... Korzystając z symulacji geostatystycznych nie tworzymy predykcji, ale generujemy równie prawdopodobne możliwości poprzez symulację z rozkładu prawdopodobieństwa (wykorzystując genereator liczb losowych).
 
 ### Symulacje geostatystyczne
 
@@ -50,7 +50,7 @@ Właściwości symulacji geostatystycznych:
 
 Istnieją dwa typy symulacji geostatystycznych:
 
-- Symulacje bezwarunkowe (ang. *Unconditional Simulations*) - wykorzystuje semiwariogram, żeby włączyć informację przestrzenną, ale wartości ze zmierzonych punktów nie są wykorzystywane
+- Symulacje bezwarunkowe (ang. *Unconditional Simulations*) - wykorzystujące semiwariogram, żeby włączyć informację przestrzenną, ale wartości ze zmierzonych punktów nie są w niej wykorzystywane
 - Symulacje warunkowe (ang. *Conditional Simulations*) - opiera się ona o średnią wartość, strukturę kowariancji oraz obserwowane wartości
 
 ## Symulacje bezwarunkowe
@@ -66,8 +66,8 @@ spplot(sym_bezw1, main='Przestrzennie skorelowana powierzchnia \nśrednia=1,
 ```
 
 ```{r sym_bezw2, cache=TRUE}
-sym_bezw2 <- krige(formula=z~1, locations=NULL, newdata=siatka, dummy=TRUE, 
-                   beta=1, model=vgm(psill=0.025, model='Exp', range=1500), nsim=4, nmax=30)
+sym_bezw2 <- krige(formula=z~1, , model=vgm(psill=0.025, model='Exp', range=1500), newdata=siatka, beta=1,
+                   nmax=30, locations=NULL, dummy=TRUE, nsim=4)
 spplot(sym_bezw2, main='Przestrzennie skorelowana powierzchnia \nśrednia=1, 
        sill=0.025, zasięg=1500, model wykładniczy')
 ```
@@ -171,7 +171,7 @@ plot(vario_ind, model=fitted_ind)
 sym_ind <- krige(temp_ind~1, punkty, siatka, model=fitted_ind, indicators=TRUE, nsim=4, nmax=30)
 ```
 
-Znacząco różni się jednak wynik symulacji danych kodowanych od krigingu danych kodowanych. W przeciwieństwie do tej drugiej metody, w rezultacie symulacji nie otrzymujemy prawdopodobieństwa zajścia danej klasy, ale konkretne wartości `1` lub `0`.
+Wynik symulacji danych kodowanych znacząco różni się od wyniku krigingu danych kodowanych. W przeciwieństwie do tej drugiej metody, w rezultacie symulacji nie otrzymujemy prawdopodobieństwa zajścia danej klasy, ale konkretne wartości `1` lub `0`.
 
 ```{r}
 spplot(sym_ind, main='Symulacje warunkowe')

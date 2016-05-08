@@ -47,8 +47,7 @@ Istnieją cztery główne funkcje geostatystyki:
 3. Symulacja - generowanie alternatywnych obrazów, które honorują wyniki pomiarów i strukturę przestrzenną/czasową zjawiska
 4. Optymalizacja próbkowania/sieci pomiarowej 
 
-Inaczej mówiąc, celem geostatystyki nie musi być tylko interpolacja (estymacja) przestrzenna, ale również zrozumienie zmienności przestrzennej lub czasowej zjawiska, symulowanie wartości, oraz optymalizacja pomiarów.
-
+Inaczej mówiąc, celem geostatystyki nie musi być tylko interpolacja (estymacja) przestrzenna, ale również zrozumienie zmienności przestrzennej lub czasowej zjawiska, symulowanie wartości, oraz optymalizacja sieci pomiarowej.
 
 ### Geostatystyczna analiza danych
 
@@ -127,12 +126,12 @@ Podstawowe symbole w określaniu przestrzennej zmienności to:
 Przestrzenna kowariancja, korelacja i semiwariancja to miary określające przestrzenną zmienność analizowanej cechy.
 
 - Kowariancja i korelacja to miary podobieństwa pomiędzy dwoma zmiennymi
-- Przenosząc to na aspekt przestrzenny, badamy jedną zmienną ale pomiędzy dwoma punktami odległymi od siebie o pewien dystans (okreslany jako lag)
+- Przenosząc to na aspekt przestrzenny, badamy jedną zmienną, ale pomiędzy dwoma punktami odległymi od siebie o pewien dystans (okreslany jako lag)
 - W efekcie otrzymujemy miarę podobieństwa pomiędzy wartością głowy i ogona
 - Trzecią miarę charakteryzującą relację między obserwacjami odległymi o kolejne odstępy jest semiwariancja
 - Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji
 - Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo
-- Jednocześnie, dla potrzeb interpretacji relacji kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
+- Jednocześnie, dla potrzeb interpretacji relacji, kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
 
 ```{r z_przs0, echo=FALSE}
 hscat(temp~1, punkty, breaks=c(0, 200))
@@ -172,7 +171,7 @@ Zmienność przestrzenna analizowanej cechy może być określona za pomocą sem
 
 $$ \gamma(h) = \frac{1}{2}E[(z(s) - z(s+h))^2] $$
 
-Przykładowo, aby wyliczyć wartość semiwariancji (`gamma`) pomiędzy dwoma punktami musimy znać wartość pierwszego z nich (w przykładzie jest to ok. 22,46 stopni Celsjusza) oraz drugiego z nich (ok. 16,04 stopni Celsjusza). Korzystając z wzoru na semiwariację otrzymujemy wartość równą ok. 20,60. Znamy również odległość między punktami (ok. 4576,59 metra), więc możemy w uproszczeniu stwierdzić, że dla tej pary punktów odległych o 4577 metry wartość semiwariancji wynosi 20,6.
+Przykładowo, aby wyliczyć wartość semiwariancji (`gamma`) pomiędzy dwoma punktami musimy znać wartość pierwszego z nich (w przykładzie jest to ok. 22,46 stopni Celsjusza) oraz drugiego z nich (ok. 16,04 stopni Celsjusza). Korzystając z wzoru na semiwariację otrzymujemy wartość równą ok. 20,60. Znamy również odległość między punktami (ok. 4576,59 metra), więc możemy w uproszczeniu stwierdzić, że dla tej pary punktów odległych o 4577 metry wartość semiwariancji wynosi około 20,6.
 
 ```{r }
 odl <- dist(coordinates(punkty)[c(1, 2), ])
@@ -189,7 +188,7 @@ vario_cloud <- variogram(temp~1, punkty, cloud=TRUE)
 plot(vario_cloud) 
 ```
 
-Chmura semiwariogramu pozwala także na zauważenie par punktów, których wartości znacząco odstają. Aby zlokalizować te pary punktów, można zastosować funkcję `plot()` z argumentem `digitize=TRUE`, a następnie za pomocą kilku kliknięć określić obszar jaki nas interesuje. Po skończonym wyborze należy nacisnąć klawisz Esc.
+Chmura semiwariogramu pozwala także na zauważenie par punktów, których wartości znacząco odstają. Aby zlokalizować te pary punktów, można zastosować funkcję `plot()` z argumentem `digitize=TRUE`, a następnie za pomocą kilku kliknięć określić obszar zawierający nietypowe wartości. Po skończonym wyborze należy nacisnąć klawisz Esc.
 
 ```{r chmurkowanie, eval=FALSE}
 vario_cloud_sel <- plot(variogram(temp~1, punkty, cloud=TRUE), digitize=TRUE)
@@ -200,7 +199,7 @@ library('knitr')
 knitr::include_graphics('figs/cloud_sel.png')
 ```
 
-Następnie można wyświetlić interesujące nas pary punktów z użyciem funkcji `plot()`.
+Następnie można wyświetlić wybrane pary punktów z użyciem funkcji `plot()`.
 
 ```{r chmurkowanie2, eval=FALSE}
 plot(vario_cloud_sel, punkty) 
@@ -299,14 +298,14 @@ Do wyświetlenia semiwariogramu służy funkcja `plot()`. Można również doda�
 plot(vario_par, plot.numbers=TRUE)
 ```
 
-Maksymalny zasięg semiwariogramu (ang. *Cutoff distance*) jest domyślnie wyliczany w pakiecie `gstat` jako 1/3 z najdłuższej przekątnej badanego obszaru. Można jednak tę wartość zmodyfikować używając argumentu `cutoff`.
+Maksymalny zasięg semiwariogramu (ang. *cutoff distance*) jest domyślnie wyliczany w pakiecie `gstat` jako 1/3 z najdłuższej przekątnej badanego obszaru. Można jednak tę wartość zmodyfikować używając argumentu `cutoff`.
 
 ```{r}
 vario_par <- variogram(temp~1, punkty, cutoff = 4000)
 plot(vario_par)
 ```
 
-Dodatkowo, domyślnie w pakiecie `gstat` odległość między przedziałami (ang. *Interval width*) jest wyliczana jako maksymalny zasięg semiwariogramu podzielony przez 15. Można to oczywiście zmienić używając zarówno argumentu `cutoff` jak i argumentu `width` mówiącego o szerokości odstępów.
+Dodatkowo, domyślnie w pakiecie `gstat` odległość między przedziałami (ang. *interval width*) jest wyliczana jako maksymalny zasięg semiwariogramu podzielony przez 15. Można to oczywiście zmienić używając zarówno argumentu `cutoff`, jak i argumentu `width` mówiącego o szerokości odstępów.
 
 ```{r }
 vario_par <- variogram(temp~1, punkty, cutoff = 1000, width = 250)
@@ -346,13 +345,13 @@ Używanie innych statystyk h-scattergramu, które są mniej czułe na występowa
 
 ### Anizotropia struktury przestrzennej
 
-W wielu rzeczywistych sytuacjach, wartość cechy zależy nie tylko od odległości, ale także od kierunku. O takim zjawisku mówimy, że wykazuje ono anizotropię struktury przestrzennej.
+W wielu sytuacjach, wartość cechy zależy nie tylko od odległości, ale także od kierunku. O takim zjawisku mówimy, że wykazuje ono anizotropię struktury przestrzennej.
 
 ### Mapa semiwariogramu
 
 Mapa semiwariogramu (zwana inaczej powierzchnią semiwariogramu) służy do określenia czy struktura przestrzenna zjawiska posiada anizotropię, a jeżeli tak to w jakim kierunku. Na podstawie mapy semiwariogramu identyfikuje się także parametry potrzebne do zbudowania semiwariogramów kierunkowych.
 
-Stworzenie mapy semiwariogramu odbywa się poprzez dodanie kilku argumentów do funkcji `variogram()`: oprócz argumentu zmiennej i zbioru punktowego, jest to `cutoff`, `width`, oraz `map=TRUE`. Następnie można ją wyświetlić używając funkcji `plot()`. Warto w tym wypadku użyć dodatkowego argumentu `threshold`, który powoduje, że niepewna wartość semiwariancji (wyliczona na małej liczbie punktów) nie jest pokazywana.
+Stworzenie mapy semiwariogramu odbywa się poprzez dodanie kilku argumentów do funkcji `variogram()`: oprócz argumentu zmiennej i zbioru punktowego, jest to `cutoff`, `width`, oraz `map=TRUE`. Następnie można ją wyświetlić używając funkcji `plot()`. Warto w tym wypadku użyć dodatkowego argumentu `threshold`, który powoduje, że niepewna wartość semiwariancji (wyliczona na małej liczbie punktów) nie jest wyświetlana.
 
 ```{r }
 vario_map <- variogram(temp~1, punkty, cutoff=4000, width=400, map=TRUE)

@@ -31,7 +31,7 @@ W wielu przypadkach, oprócz konkretnych pomiarów, istnieje również informacj
 ## Kriging stratyfikowany
 ### Kriging stratyfikowany (ang. *Kriging within strata*)
 
-Kriging stratyfikowany zakłada, że zmienność badanego zjawiska zależy od zmiennej jakościowej (kategoryzowanej). Przykładowo, wartość badanej zmiennej jest różna w zależności od pokrycia terenu. Kriging stratyfikowany wymaga posiadania danych zmiennej jakościowej (kategoryzowanej) na całym badanym obszarze.
+Kriging stratyfikowany zakłada, że zmienność badanego zjawiska zależy od cechy jakościowej (kategoryzowanej). Przykładowo, wartość badanej zmiennej jest różna w zależności od pokrycia terenu. Kriging stratyfikowany wymaga posiadania danych zmiennej jakościowej (kategoryzowanej) na całym badanym obszarze.
 
 W poniższym przykładzie zmienną jakościową jest uproszczone pokrycie terenu ze zmiennej `clc`. Przyjmuje ono jedno z trzech wartości. `1` oznacza obszary rolnicze, `2` oznacza obszary leśne, a `4` oznacza wody powierzchniowe.
 
@@ -95,7 +95,7 @@ grid.arrange(p1, p2, ncol=1)
 
 
 ## Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)
-### Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)
+### Prosty kriging ze zmiennymi średnimi lokalnymi (LVM) (ang. *Simple kriging with varying local means*)
 
 Prosty kriging ze zmiennymi średnimi lokalnymi zamiast znanej (stałej) stacjonarnej średniej wykorzystuje zmienne średnie lokalne uzyskane na podstawie innej informacji. Lokalna średnia może być uzyskana za pomocą wyliczenia regresji liniowej pomiędzy zmienną badaną a zmienną dodatkową. W takiej sytuacji konieczne jest użycie funkcji `lm()`. W poniższym przykładzie budowany jest model liniowy relacji pomiędzy temperaturą powietrza (`temp`), a wysokością nad poziomem morza (`srtm`).
 
@@ -115,7 +115,7 @@ fitted_sim
 plot(vario, model=fitted_sim)
 ```
 
-Ostatnim krokiem jest estymacja geostatystyczna, w której oprócz czterech podstawowych argumentów, definiujemy także parametr `beta`. Jest to w tym wypadku obiekt uzyskany na podstawie regresji liniowej.
+Ostatnim krokiem jest estymacja geostatystyczna, w której oprócz czterech podstawowych argumentów, definiujemy także parametr `beta`. W tym wypadku jest to wypadku obiekt uzyskany na podstawie regresji liniowej.
 
 ```{r}
 sk_lvm <- krige(temp~srtm, punkty, siatka, model=fitted_sim, beta = coef)
@@ -134,10 +134,10 @@ p2 <- spplot(sk_lvm, "var1.var", main='Wariancja predykcji SK LVM')
 grid.arrange(p1, p2, ncol=1)
 ```
 
-## Kriging uniwersalny (ang. *Universal kriging*)
+## Kriging uniwersalny 
 ### Kriging uniwersalny (ang. *Universal kriging*)
 
-Kriging uniwersalny, określany również jako kriging z trendem (ang. *Kriging with a trend model*) zakłada , że nieznana średnia lokalna zmienia się stopniowo na badanym obszarze. W krigingu uniwersalnym możemy stosować zarówno zmienne jakościowe jak i ilościowe. 
+Kriging uniwersalny, określany również jako kriging z trendem (ang. *Kriging with a trend model*) zakłada , że nieznana średnia lokalna zmienia się stopniowo na badanym obszarze. W krigingu uniwersalnym możemy stosować zarówno zmienne jakościowe, jak i ilościowe. 
 
 W pierwszym przykładzie, kriging uniwersalny służy stworzeniu semiwariogramu, modelowaniu oraz estymacji temperatury powietrza z użyciem zmiennej pokrycia terenu.
 

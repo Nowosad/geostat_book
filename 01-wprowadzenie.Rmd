@@ -78,7 +78,7 @@ head(dane_punktowe)
 
 Po wczytaniu za pomocą funkcji `read.csv()`, nowy obiekt (np. `dane_punktowe`) jest reprezentowany za pomocą klasy nieprzestrzennej `data.frame`. Aby obiekt został przetworzony do klasy przestrzennej, konieczne jest nadanie mu współrzędnych. W tym wypadku współrzędne znajdowały się w kolumnach `x` oraz `y`. Nadanie układu współrzędnych odbywa się poprzez funkcję `coordinates()`.
 
-```{r}
+```{r, message=FALSE}
 library('sp')
 coordinates(dane_punktowe) <- ~x+y
 summary(dane_punktowe)
@@ -121,7 +121,7 @@ sp_na_omit <- function(x, margin=1) {
 
 ### Dane poligonowe (formaty gisowe)
 
-Dane wektorowe (np. shapefile) można odczytać za pomocą funkcji `readOGR()` z pakietu `rgdal`. Dla danych shapefile, przyjmuje ona co najmniej dwa argumenty - `dsn` oraz `layer`. Argument `dsn` określa folder, w którym znajdują się dane. W przypadku, gdy dane znajdują się w folderze roboczym należy ten argument określić za pomocą znaku kropki (`'.'`). Argument `layer` wymaga podania nazwy pliku bez jego rozszerzenia. Przykładowo, gdy pliki nazywają się `granica.dbf`, `granica.prj`, `granica.shp`, oraz `granica.shx` - konieczne jest podanie w argumencie `layer` jedynie nazwy `granica`.
+Dane wektorowe (np. shapefile) można odczytać za pomocą funkcji `readOGR()` z pakietu `rgdal`. Dla danych w formacie shapefile, przyjmuje ona co najmniej dwa argumenty - `dsn` oraz `layer`. Argument `dsn` określa folder, w którym znajdują się dane. W przypadku, gdy dane znajdują się w folderze roboczym należy ten argument określić za pomocą znaku kropki (`'.'`). Argument `layer` wymaga podania nazwy pliku bez jego rozszerzenia. Przykładowo, gdy pliki nazywają się `granica.dbf`, `granica.prj`, `granica.shp`, oraz `granica.shx` - konieczne jest podanie w argumencie `layer` jedynie nazwy `granica`.
 
 ```{r}
 library('rgdal')
@@ -163,7 +163,7 @@ Do wizualizacji danych przestrzennych w R służy co najmniej kilkanaście róż
 
 ### Dane punktowe
 
-Funkcja `plot()` idealnie nadaje się do szybiego obejrzenia, np. rodzaju próbkowania danych.
+Funkcja `plot()` idealnie nadaje się do szybkiego przyjrzenia się, np. rodzajowi próbkowania danych.
 
 ```{r}
 plot(dane_punktowe)
@@ -181,7 +181,7 @@ spplot(dane_punktowe, 'srtm')
 
 ### Dane punktowe - kategorie
 
-Nie zawsze dane mają postać ciągłych wartości. Bywają one również określeniami różnych klas. W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci kategorycznej (`as.factor()`). Następnie można je wyświetlić za pomocą funkcji `spplot()`.
+Nie zawsze dane mają postać ciągłych wartości - bywają one również określeniami różnych klas. W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci kategorycznej (`as.factor()`). Następnie można je wyświetlić za pomocą funkcji `spplot()`.
 
 ```{r }
 dane_punktowe@data$clc <- as.factor(dane_punktowe@data$clc)
@@ -250,7 +250,7 @@ Siatki nieregularne mają zazwyczaj kształt wieloboku obejmującego analizowany
 
 W poniższym przypadku odczytywana jest granica badanego obszaru z pliku shapefile. Taki obiekt można np. stworzyć za pomocą oprogramowania gisowego takiego jak [QGIS](http://www.qgis.org/pl/site/). Następnie na podstawie tego obiektu tworzony jest obiekt klasy `RasterLayer`, a za pomocą funkcji `res()` definiowana jest jego rozdzielczość. W kolejnym kroku ustala się wartość wszystkich oczek siatki na zero, oraz poprzez funkcję `proj4string()` ujednolica się definicję układu współrzędnych siatki. Ostatnim krokiem jest przycięcie siatki do nieregularnego obszaru z użyciem funkcji `mask()`.
 
-```{r siatkaniereg}
+```{r siatkaniereg, warning=FALSE}
 granica <- readOGR(dsn='dane', layer='granica')
 siatka_n <- raster(extent(granica))
 res(siatka_n) <- c(250, 250)
@@ -276,7 +276,7 @@ gridded(siatka_n) <- TRUE
 plot(siatka_n)
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 zip('dane.zip', 'dane')
 ```
 

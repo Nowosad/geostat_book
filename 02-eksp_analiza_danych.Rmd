@@ -28,7 +28,7 @@ Zazwyczaj przed przystąpieniem do analiz geostatystycznych koniecznie jest wyko
 ## Dane
 ### Dane 
 
-Nie istnieje jedyna, optymalna ścieżka eksploracji danych. Proces ten różni się w zależności od posiadanego zbioru danych, jak i od postawionego pytania. Warto jednak, aby jednym z pierwszych kroków było przyjrzenie się danym wejściowym. Pozwala na to, między innymi, funkcja `str()`. Przykładowo, dla obiektu klasy `SpatialPointsDataFrame` wyświetla ona szereg ważnych informacji. Oprócz klasy można również odczytać, że obiekt `punkty` zawiera pięć elementów (ang. *slots*) rozpoczynających się od symbolu @. Pierwszy z nich, `@data` jest obiektem klasy `data.frame` zawierającym informacje o kolejnych punktach w tym zbiorze. Element `@coords.nrs` określa numer kolumn zawierających współrzędne w oryginalnym zbiorze danych. W poniższym przypadku żadna kolumna nie ma takich informacji. Kolejny element, `@coords` definiuje współrzędne kolejnych punktów w obiekcie `punkty`. Ostatnie dwa elementy, `@bbox` i `@proj4string` określają kolejno zasięg przestrzenny danych oraz definicję układu współrzędnych.
+Nie istnieje jedyna, optymalna ścieżka eksploracji danych. Proces ten różni się w zależności od posiadanego zbioru danych, jak i od postawionego pytania. Warto jednak, aby jednym z pierwszych kroków było przyjrzenie się danym wejściowym. Pozwala na to, między innymi, funkcja `str()`. Przykładowo, dla obiektu klasy `SpatialPointsDataFrame` wyświetla ona szereg ważnych informacji. Oprócz klasy można również odczytać, że obiekt `punkty` zawiera pięć elementów (ang. *slots*) rozpoczynających się od symbolu @. Pierwszy z nich, `@data` jest obiektem klasy `data.frame` zawierającym informacje o kolejnych punktach w tym zbiorze. Element `@coords.nrs` określa numer kolumn zawierających współrzędne w oryginalnym zbiorze danych. W poniższym przypadku żadna kolumna nie ma takich informacji. Kolejny element, `@coords` definiuje współrzędne kolejnych punktów w obiekcie `punkty`. Ostatnie dwa elementy, `@bbox` i `@proj4string` określają kolejno zasięg przestrzenny danych oraz definicję ich układu współrzędnych.
 
 ```{r}
 str(punkty)
@@ -47,7 +47,7 @@ punkty@data$temp #1
 punkty$temp      #2
 ```
 
-Z uwagi na to, że zajmujemy się danymi przestrzennymi - warto też się upewnić czy dane zostały poprawnie wczytane i obejmują analizowany obszar. Najszybciej można to wykonać z pomocą funkcji `plot`.
+Z uwagi na to, że zajmujemy się danymi przestrzennymi - warto też się upewnić czy dane zostały poprawnie wczytane i obejmują analizowany obszar. Najszybciej można to wykonać z pomocą funkcji `plot()`.
 
 ```{r, echo=FALSE}
 par(mar=c(rep(0, 4)))
@@ -125,7 +125,7 @@ ggplot(punkty@data, aes(temp)) + geom_histogram()
 - Jest graficzną reprezentacją rozkładu danych
 - Wartości danych są łączone w przedziały (na osi poziomej) a na osi pionowej jest ukazana liczba punktów (obserwacji) w każdym przedziale
 - Różny dobór przedziałów może dawać inną informację
-- W pakiecie `ggplot2`, domyślnie przedział to zakres/30
+- W pakiecie `ggplot2`, domyślnie przedział jest ustalany poprzez podzielenie zakresu wartości przez 30
 
 ### Estymator jądrowy gęstości (ang. *kernel density estimation*)
 
@@ -143,7 +143,7 @@ Wykres kwantyl-kwantyl ułatwia interpretację rozkładu danych.
 ggplot(punkty@data, aes(sample=temp)) + stat_qq()
 ```
 
-Na poniższej rycinie można zobaczyć przykłady najczęściej spotykanych cech w wykresach kwantyl-kwantyl.
+Na poniższej rycinie można zobaczyć przykłady najczęściej spotykanych cech rozkładu danych w wykresach kwantyl-kwantyl.
 
 ```{r, echo=FALSE}
 knitr::include_graphics('figs/qq_plot_explained.png')
@@ -163,7 +163,7 @@ Wybór odpowiedniej metody porównania zmiennych zależy od szeregu cech, międz
 
 ### Kowariancja
 
-Kowariancja jest nieunormowaną miarą zależności liniowej pomiędzy dwiema zmiennymi. Kowariancja dwóch zmiennych $x$ i $y$ pokazuje jak dwie zmienne są ze sobą liniowo powiązane. Dodatnia kowariancja wskazuje na pozytywną relację liniową pomiędzy zmiennymi, podczas gdy ujemna kowariancja świadczy o odwrotnej sytuacji. Jeżeli zmienne nie są ze sobą liniowo powiązane, wartość kowariacji jest bliska zeru. Inaczej mówiąc, kowariancja stanowi miarę wspólnej zmienności dwóch zmiennych. Wielkość samej kowariancji uzależniona jest od przyjętej skali zmiennej (jednostki). Inne wyniku uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wieku i dochodu w złotówkach a inne dla wieku i dochodu w dolarach. Do wyliczania kowariancji w R służy funkcja `cov`. 
+Kowariancja jest nieunormowaną miarą zależności liniowej pomiędzy dwiema zmiennymi. Kowariancja dwóch zmiennych $x$ i $y$ pokazuje jak dwie zmienne są ze sobą liniowo powiązane. Dodatnia kowariancja wskazuje na pozytywną relację liniową pomiędzy zmiennymi, podczas gdy ujemna kowariancja świadczy o odwrotnej sytuacji. Jeżeli zmienne nie są ze sobą liniowo powiązane, wartość kowariacji jest bliska zeru. Inaczej mówiąc, kowariancja stanowi miarę wspólnej zmienności dwóch zmiennych. Wielkość samej kowariancji uzależniona jest od przyjętej skali zmiennej (jednostki). Inne wyniku uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wysokości terenu w metrach i temperatury w stopniach Celsjusza a inne dla wysokości terenu w metrach i temperatury w stopniach Fahrenheita. Do wyliczania kowariancji w R służy funkcja `cov()`. 
 
 ```{r }
 cov(punkty$temp, punkty$ndvi)
@@ -171,7 +171,7 @@ cov(punkty$temp, punkty$ndvi)
 
 ### Współczynnik korelacji
 
-Współczynnik korelacji to unormowana miara zależności pomiędzy dwiema zmiennymi, przyjmująca wartości od -1 do 1. Ten współczynnik jest uzyskiwany poprzez podzielenie wartości kowariancji przez odchylenie standardowe wyników. Z racji unormowania nie jest ona uzależniona od jednostki. Korelację można wyliczyć dzięki funkcji `cor`. Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego obiektu zawierającego zmienne numeryczne.
+Współczynnik korelacji to unormowana miara zależności pomiędzy dwiema zmiennymi, przyjmująca wartości od -1 do 1. Ten współczynnik jest uzyskiwany poprzez podzielenie wartości kowariancji przez odchylenie standardowe wyników. Z racji unormowania nie jest ona uzależniona od jednostki. Korelację można wyliczyć dzięki funkcji `cor()`. Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego obiektu zawierającego zmienne numeryczne.
 
 ```{r }
 ggplot(punkty@data, aes(temp, ndvi)) + geom_point()
@@ -182,13 +182,13 @@ cor(punkty$temp, punkty$ndvi)
 cor(punkty@data[c(1, 3:5)])
 ```
 
-Dodatkowo funkcja `cor.test` służy do testowania istotności korelacji. Za pomocą argumentu `method` można również wybrać jedną z trzech dostępnych miar korelacji.
+Dodatkowo funkcja `cor.test()` służy do testowania istotności korelacji. Za pomocą argumentu `method` można również wybrać jedną z trzech dostępnych miar korelacji.
 
 ```{r }
 cor.test(punkty$temp, punkty$ndvi)
 ```
 
-W przypadku posiadania co najmniej kilku par zmiennych, można skorzystać z funkcji `corrplot()` z pakietu `corrplot`. Wyświetla ona wykres pokazujący wartości korelacji pomiędzy zmiennymi.
+W przypadku posiadania co najmniej kilku par zmiennych, można również skorzystać z funkcji `corrplot()` z pakietu `corrplot`. Wyświetla ona wykres pokazujący wartości korelacji pomiędzy kolejnymi zmiennymi.
 
 ```{r }
 corrplot(cor(punkty@data[c(1, 3:5)]))
@@ -267,6 +267,7 @@ ggplot(punkty@data, aes(temp_standard)) + geom_density()
 ### Transformacja danych | Redukcja skośności
 
 Redukcja skośności:
+
 - Logarytmizacja
 - Pierwiastkowanie
 - Inne    

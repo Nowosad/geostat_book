@@ -9,7 +9,7 @@ knit: bookdown::preview_chapter
 - [An Introduction to R](http://cran.r-project.org/doc/manuals/R-intro.pdf) - oficjalne wprowadzenie do R
 - [Przewodnik po pakiecie R](http://www.biecek.pl/R/)
 - [Programowanie w języku R](http://rksiazka.rexamine.com/)
-- [Statystyczna analiza danych z wykorzystaniem programu R](http://ksiegarnia.pwn.pl/7371_pozycja.html?npt=233) 
+- [Statystyczna analiza danych z wykorzystaniem programu R](http://ksiegarnia.pwn.pl/Statystyczna-analiza-danych-z-wykorzystaniem-programu-R,68603890,p.html) 
 
 ## Analizy przestrzenne w R
 

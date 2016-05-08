@@ -24,12 +24,12 @@ par(mar=c(rep(0, 4)))
 
 ### Modelowanie matematycznie autokorelacji przestrzennej
 
-Semiwariogram empiryczny jest:
+Semiwariogram empiryczny (wyliczony z danych punktowych) jest:
 
 - Nieciągły - wartości semiwariancji są średnimi przedziałowymi
 - Chaotyczny - badana próba jest jedynie przybliżeniem rzeczywistości, dodatkowo obciążonym błędami
 
-Estymacje i symulacje przestrzenne wymagają modelu struktury przestrzennej analizowanej cechy, a nie tylko wartości empirycznych (wyliczonych z danych). Dodatkowo, matematycznie modelowanie wygładza chaotyczne fluktuacje danych empirycznych.
+Estymacje i symulacje przestrzenne wymagają modelu struktury przestrzennej analizowanej cechy, a nie tylko wartości empirycznych. Dodatkowo, matematycznie modelowanie wygładza chaotyczne fluktuacje danych empirycznych.
 
 ## Modele podstawowe 
 
@@ -62,7 +62,7 @@ Istnieje możliwość wyświetlenia tylko wybranych modeli podstawowych poprzez 
 show.vgms(models=c('Nug', 'Sph', 'Gau', 'Pow', 'Exp'), range=1.4, max=2.5)
 ```
 
-Dodatkowo, można jest porównać na jedym wykresie poprzez argument `as.groups = TRUE`.
+Dodatkowo, można je porównać na jednym wykresie poprzez argument `as.groups = TRUE`.
 
 ```{r }
 show.vgms(models=c('Nug', 'Sph', 'Gau', 'Pow', 'Exp'), range=1.4, max=2.5, as.groups = TRUE)
@@ -217,6 +217,7 @@ plot(vario, model=fitted_zl2)
 ### Anizotropia
 
 Uwzględnienie anizotropii wymaga zamiany parametru zasięgu na trzy inne parametry:
+
 - Zasięg w dominującym kierunku
 - Kąt określający dominujący kierunek
 - Proporcję anizotropii, czyli relację pomiędzy zasięgiem w dominującym kierunku a zasięgiem w przeciwległym kierunku
