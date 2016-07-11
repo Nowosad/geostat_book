@@ -8,7 +8,7 @@
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Introduction to geostatistics with R (in Polish).">
-  <meta name="generator" content="bookdown 0.0.71 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.79 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-05-08">
+<meta name="date" content="2016-07-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -464,9 +464,9 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 </ol>
 <p>Sekwencyjna symulacja gaussowska wymaga zmiennej posiadającej wartości o rozkładzie zbliżonym do normalnego. Można to sprawdzić poprzez wizualizacje danych (histogram, wykres kwantyl-kwantyl) lub też test statystyczny (test Shapiro-Wilka). Zmienna <code>temp</code> nie ma rozkładu zbliżonego do normalnego.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_histogram</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-164-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-164-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(<span class="dt">sample=</span>temp)) +<span class="st"> </span><span class="kw">stat_qq</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-164-2.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-164-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shapiro.test</span>(punkty$temp)</code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
@@ -476,9 +476,9 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 <p>Na potrzeby symulacji zmienna <code>temp</code> została zlogarytmizowna.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$temp_log &lt;-<span class="st"> </span><span class="kw">log</span>(punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp_log)) +<span class="st"> </span><span class="kw">geom_histogram</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-165-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-165-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(<span class="dt">sample=</span>temp_log)) +<span class="st"> </span><span class="kw">stat_qq</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-165-2.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-165-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shapiro.test</span>(punkty$temp_log)</code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
@@ -547,7 +547,7 @@ fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario
 ##  3rd Qu.:18.443   3rd Qu.:18.520   3rd Qu.:18.07   3rd Qu.:18.392  
 ##  Max.   :30.714   Max.   :33.311   Max.   :28.82   Max.   :33.940</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_ok)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-166-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-166-1.png" width="672" /></p>
 <p>Symulacje geostatystyczne pozwalają również na przedstawianie niepewności interpolacji. W tym wypadku należy wykonać znacznie więcej powtórzeń (np. <code>nsim=100</code>). Uzyskane wyniki należy przeliczyć do oryginalnej jednostki, a następnie wyliczyć odchylenie standardowe ich wartości (używając funkcji <code>stack()</code> i <code>calc()</code> z pakietu <code>raster</code>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_sk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp_log~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">2.7</span>, <span class="dt">nsim=</span><span class="dv">100</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre></div>
 <pre><code>## [using conditional Gaussian simulation]</code></pre>
@@ -557,7 +557,7 @@ sym_sk &lt;-<span class="st"> </span><span class="kw">stack</span>(sym_sk)
 sym_sk_sd &lt;-<span class="st"> </span><span class="kw">calc</span>(sym_sk, <span class="dt">fun =</span> sd)</code></pre></div>
 <p>W efekcie otrzymujemy mapę odchylenia standardowego symulowanych wartości. Można na niej odczytać obszary o najpewniejszych (najmniej zmiennych) wartościach (niebieski kolor) oraz obszary o największej zmienności cechy (kolor żółty).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_sk_sd)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-167-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-167-1.png" width="672" /></p>
 </div>
 </div>
 <div id="sekwencyjna-symulacja-danych-kodowanych" class="section level2">
@@ -591,7 +591,7 @@ fitted_ind</code></pre></div>
 ## [using conditional indicator simulation]</code></pre>
 <p>Wynik symulacji danych kodowanych znacząco różni się od wyniku krigingu danych kodowanych. W przeciwieństwie do tej drugiej metody, w rezultacie symulacji nie otrzymujemy prawdopodobieństwa zajścia danej klasy, ale konkretne wartości <code>1</code> lub <code>0</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_ind, <span class="dt">main=</span><span class="st">&#39;Symulacje warunkowe&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-169-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-169-1.png" width="672" /></p>
 <!--
 łączenie sis - wiele symulacji
 -->

@@ -8,7 +8,7 @@
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Introduction to geostatistics with R (in Polish).">
-  <meta name="generator" content="bookdown 0.0.71 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.79 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-05-08">
+<meta name="date" content="2016-07-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -507,8 +507,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ##  Max.   :0.4404  
 ##  NA&#39;s   :1</code></pre>
 <p>Ważne, ale nie wymagane, jest także dodanie informacji o układzie przestrzennym danych za pomocą funkcji <code>proj4string()</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">proj4string</span>(dane_punktowe) &lt;-<span class="st"> &#39;+init=epsg:2180&#39;</span>
-<span class="kw">summary</span>(dane_punktowe)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">proj4string</span>(dane_punktowe) &lt;-<span class="st"> &#39;+init=epsg:2180&#39;</span></code></pre></div>
+<pre><code>## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(dane_punktowe)</code></pre></div>
 <pre><code>## Object of class SpatialPointsDataFrame
 ## Coordinates:
 ##        min      max
@@ -539,7 +540,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ##  NA&#39;s   :1</code></pre>
 <p>Proste wyświetlenie uzyskanych danych klasy przestrzennej, np. <code>SpatialPointsDataFrame</code>, można uzyskać za pomocą funkcji <code>plot()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(dane_punktowe)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-6-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <!--
 ### Usuwanie punktów zawierających braki wartości
 
@@ -566,29 +567,27 @@ sp_na_omit <- function(x, margin=1) {
 <div id="dane-poligonowe-formaty-gisowe" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Dane poligonowe (formaty gisowe)</h3>
 <p>Dane wektorowe (np. shapefile) można odczytać za pomocą funkcji <code>readOGR()</code> z pakietu <code>rgdal</code>. Dla danych w formacie shapefile, przyjmuje ona co najmniej dwa argumenty - <code>dsn</code> oraz <code>layer</code>. Argument <code>dsn</code> określa folder, w którym znajdują się dane. W przypadku, gdy dane znajdują się w folderze roboczym należy ten argument określić za pomocą znaku kropki (<code>'.'</code>). Argument <code>layer</code> wymaga podania nazwy pliku bez jego rozszerzenia. Przykładowo, gdy pliki nazywają się <code>granica.dbf</code>, <code>granica.prj</code>, <code>granica.shp</code>, oraz <code>granica.shx</code> - konieczne jest podanie w argumencie <code>layer</code> jedynie nazwy <code>granica</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;rgdal&#39;</span>)</code></pre></div>
-<pre><code>## rgdal: version: 1.1-8, (SVN revision 616)
-##  Geospatial Data Abstraction Library extensions to R successfully loaded
-##  Loaded GDAL runtime: GDAL 1.11.3, released 2015/09/16
-##  Path to GDAL shared files: /usr/share/gdal/1.11
-##  Loaded PROJ.4 runtime: Rel. 4.9.2, 08 September 2015, [PJ_VERSION: 492]
-##  Path to PROJ.4 shared files: (autodetected)
-##  Linking to sp version: 1.2-3</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;dane&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;granica&#39;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;rgdal&#39;</span>)
+granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;dane&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;granica&#39;</span>)</code></pre></div>
 <pre><code>## OGR data source with driver: ESRI Shapefile 
 ## Source: &quot;dane&quot;, layer: &quot;granica&quot;
 ## with 1 features
 ## It has 3 fields</code></pre>
+<pre><code>## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(granica)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-8-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 <div id="rastry" class="section level3">
 <h3><span class="header-section-number">2.2.3</span> Rastry</h3>
 <p>Istnieje kilka sposobów odczytu danych rastrowych w R. Do najpopularniejszych należą funkcje <code>readGDAL()</code> z pakietu <code>rgdal</code> oraz <code>raster()</code> z pakietu <code>raster</code>. W tym drugim przypadku należy jedynie podać ścieżkę do pliku rastrowego.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;raster&#39;</span>)
-siatka_raster &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="st">&#39;dane/siatka.tif&#39;</span>)
-<span class="kw">plot</span>(siatka_raster)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-9-1.png" title="" alt="" width="672" /></p>
+siatka_raster &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="st">&#39;dane/siatka.tif&#39;</span>)</code></pre></div>
+<pre><code>## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(siatka_raster)</code></pre></div>
+<pre><code>## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files
+## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files
+## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 </div>
 <div id="eksport-danych" class="section level2">
@@ -611,26 +610,26 @@ siatka_raster &lt;-<span class="st"> </span><span class="kw">raster</span>(<span
 <h3><span class="header-section-number">2.4.1</span> Dane punktowe</h3>
 <p>Funkcja <code>plot()</code> idealnie nadaje się do szybkiego przyjrzenia się, np. rodzajowi próbkowania danych.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(dane_punktowe)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-10-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>Funkcja <code>spplot()</code> w prosty sposób pozwala na obejrzenie rozkładu wartości wybranej zmiennej. Należy w niej podać nazwę obiektu oraz nazwę wyświetlanej zmiennej. Poniżej można zobaczyć przykłady dla zmiennych <code>temp</code> oraz <code>srtm</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(dane_punktowe, <span class="st">&#39;temp&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-11-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(dane_punktowe, <span class="st">&#39;srtm&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-12-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 <div id="dane-punktowe---kategorie" class="section level3">
 <h3><span class="header-section-number">2.4.2</span> Dane punktowe - kategorie</h3>
 <p>Nie zawsze dane mają postać ciągłych wartości - bywają one również określeniami różnych klas. W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci kategorycznej (<code>as.factor()</code>). Następnie można je wyświetlić za pomocą funkcji <code>spplot()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dane_punktowe@data$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(dane_punktowe@data$clc)
 <span class="kw">spplot</span>(dane_punktowe, <span class="st">&#39;clc&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-13-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
 <div id="rastry-1" class="section level3">
 <h3><span class="header-section-number">2.4.3</span> Rastry</h3>
 <p>Wyświetlanie danych w formacie rastrowym może odbyć się z użyciem funkcji <code>levelplot()</code>. Wymaga ona jedynie zdefiniowania obiektu do wizualizacji. W poniższym przypadku dodatkowo ustawiono argument <code>margin=FALSE</code> co wyłącza wyświetlanie tzw. histogramów marginalnych (ang. <em>marginal historgram</em>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;rasterVis&#39;</span>)
 <span class="kw">levelplot</span>(siatka_raster, <span class="dt">margin=</span><span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-14-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 </div>
 </div>
 <div id="tworzenie-siatek" class="section level2">
@@ -656,19 +655,21 @@ siatka_raster &lt;-<span class="st"> </span><span class="kw">raster</span>(<span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coordinates</span>(siatka) &lt;-<span class="st"> </span><span class="er">~</span>x +<span class="st"> </span>y
 <span class="kw">gridded</span>(siatka) &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 <span class="kw">proj4string</span>(siatka) &lt;-<span class="st"> </span><span class="kw">proj4string</span>(dane_punktowe)</code></pre></div>
+<pre><code>## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files</code></pre>
 <p>Alternatywnie, do stworzenia siatki można wykorzystać funkcję <code>makegrid()</code>. Tworzy ona nowy obiekt na podstawie istniejącego obiektu punktowego oraz zadanej rozdzielczości.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka &lt;-<span class="st"> </span><span class="kw">makegrid</span>(dane_punktowe, <span class="dt">cellsize=</span><span class="dv">500</span>)
 <span class="kw">names</span>(siatka) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;x&#39;</span>, <span class="st">&#39;y&#39;</span>)
 <span class="kw">coordinates</span>(siatka) &lt;-<span class="st"> </span><span class="er">~</span>x +<span class="st"> </span>y
 <span class="kw">gridded</span>(siatka) &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 <span class="kw">proj4string</span>(siatka) &lt;-<span class="st"> </span><span class="kw">proj4string</span>(dane_punktowe)</code></pre></div>
+<pre><code>## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files</code></pre>
 </div>
 <div id="siatki-regularne-1" class="section level3">
 <h3><span class="header-section-number">2.5.2</span> Siatki regularne</h3>
 <p>Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić za pomocą funkcji <code>plot()</code>. W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu <code>add</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(siatka)
 <span class="kw">plot</span>(dane_punktowe, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-19-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 </div>
 <div id="siatki-nieregularne---klasa-rasterlayer" class="section level3">
 <h3><span class="header-section-number">2.5.3</span> Siatki nieregularne - klasa <code>RasterLayer</code></h3>
@@ -679,14 +680,20 @@ siatka_raster &lt;-<span class="st"> </span><span class="kw">raster</span>(<span
 ## Source: &quot;dane&quot;, layer: &quot;granica&quot;
 ## with 1 features
 ## It has 3 fields</code></pre>
+<pre><code>## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka_n &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(granica))
 <span class="kw">res</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">250</span>, <span class="dv">250</span>)
 siatka_n[] &lt;-<span class="st"> </span><span class="dv">0</span>
-<span class="kw">proj4string</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">proj4string</span>(granica)
-siatka_n &lt;-<span class="st"> </span><span class="kw">mask</span>(siatka_n, granica)</code></pre></div>
+<span class="kw">proj4string</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">proj4string</span>(granica)</code></pre></div>
+<pre><code>## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka_n &lt;-<span class="st"> </span><span class="kw">mask</span>(siatka_n, granica)</code></pre></div>
+<pre><code>## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files
+## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files
+## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files</code></pre>
 <p>Wynik przetworzenia można zobaczyć z użyciem funkcji <code>levelplot</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">levelplot</span>(siatka_n, <span class="dt">margin=</span><span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-20-1.png" title="" alt="" width="672" /></p>
+<pre><code>## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 </div>
 <div id="siatki-nieregularne---klasa-spatialpixelsdataframe" class="section level3">
 <h3><span class="header-section-number">2.5.4</span> Siatki nieregularne - klasa <code>SpatialPixelsDataFrame</code></h3>
@@ -695,7 +702,8 @@ siatka_n &lt;-<span class="st"> </span><span class="kw">mask</span>(siatka_n, gr
 siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(siatka_n@data$layer), ]
 <span class="kw">gridded</span>(siatka_n) &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 <span class="kw">plot</span>(siatka_n)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-21-1.png" title="" alt="" width="672" /></p>
+<pre><code>## NOTE: rgdal::checkCRSArgs: no proj_defs.dat in PROJ.4 shared files</code></pre>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 
 </div>
 </div>

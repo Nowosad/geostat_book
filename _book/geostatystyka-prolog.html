@@ -8,7 +8,7 @@
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Introduction to geostatistics with R (in Polish).">
-  <meta name="generator" content="bookdown 0.0.71 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.79 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-05-08">
+<meta name="date" content="2016-07-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -421,7 +421,7 @@ http://www.inside-r.org/packages/cran/raster/docs/interpolate
 <div id="geostatystyczna-analiza-danych" class="section level3">
 <h3><span class="header-section-number">6.1.3</span> Geostatystyczna analiza danych</h3>
 <p>Geostatystyczna analiza danych może przyjmować różną postać w zależności od postawionego celu analizy. Poniższa rycina przestawia uproszczoną ścieżkę postępowania geostatystycznego.</p>
-<p><img src="figs/diag.png" title="" alt="" width="768" /></p>
+<p><img src="figs/diag.png" width="232" /></p>
 <!--
 ### Geostatystyka | Cele
 - Charakterystyka struktury przestrzennej badanego zjawiska
@@ -489,20 +489,20 @@ http://www.inside-r.org/packages/cran/raster/docs/interpolate
 <li>Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo</li>
 <li>Jednocześnie, dla potrzeb interpretacji relacji, kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja</li>
 </ul>
-<p><img src="Geostatystyka_files/figure-html/z_przs0-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/z_przs0-1.png" width="672" /></p>
 </div>
 <div id="wykres-rozrzutu-z-przesunieciem" class="section level3">
 <h3><span class="header-section-number">6.2.4</span> Wykres rozrzutu z przesunięciem</h3>
 <p>Wykres rozrzutu z przesunięciem pokazuje korelację pomiędzy wartościami analizowanej cechy w pewnych grupach odległości. Taki wykres można stworzyć używając funkcji <code>hscat()</code> z pakietu <code>gstat</code>. Przykładowo, na poniższym wykresie widać wartość cechy <code>temp</code> z kolejnymi przesunięciami - od 0 do 500 metrów, od 500 metrów do 1000 metrów, itd. W pierwszym przedziale wartość cechy <code>temp</code> z przesunięciem wykazuje korelację na poziomie 0,876, a następnie z każdym kolejnym przedziałem (odległością) ta wartość maleje. W przedziale 3500 do 4000 metrów osiąga jedynie 0,128. Pozwala to na stwierdzenie, że cecha <code>temp</code> wykazuje zmienność przestrzenną - podobieństwo jej wartości zmniejsza się wraz z odległością.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hscat</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">breaks=</span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">4000</span>, <span class="dt">by=</span><span class="dv">500</span>))</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/z_przs-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/z_przs-1.png" width="672" /></p>
 </div>
 <div id="autokowariancja" class="section level3">
 <h3><span class="header-section-number">6.2.5</span> Autokowariancja</h3>
 <p>Podobną informację jak wykres rozrzutu z przesunięciem daje autokowariancja. Pokazuje ona jak mocno przestrzennie powiązane są wartości par obserwacji odległych od siebie o kolejne przedziały. Jej wyliczenie jest możliwe z użyciem funkcji <code>variogram()</code> z pakietu <code>gstat</code>, gdzie definiuje się analizowaną zmienną, zbiór punktowy, oraz ustala się argument <code>covariogram</code> na <code>TRUE</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kowario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">covariogram =</span> <span class="ot">TRUE</span>)
 <span class="kw">plot</span>(kowario)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-71-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-71-1.png" width="672" /></p>
 </div>
 <div id="autokorelacja" class="section level3">
 <h3><span class="header-section-number">6.2.6</span> Autokorelacja</h3>
@@ -511,7 +511,7 @@ http://www.inside-r.org/packages/cran/raster/docs/interpolate
 kor &lt;-<span class="st"> </span><span class="kw">correlog</span>(wsp, punkty$temp, <span class="dt">method=</span><span class="st">&#39;Moran&#39;</span>)
 kor &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(kor)
 <span class="kw">ggplot</span>(kor, <span class="kw">aes</span>(dist.class, coef)) +<span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">linetype=</span><span class="dv">0</span>) +<span class="st"> </span><span class="kw">geom_line</span>() +<span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="dv">5</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-72-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-72-1.png" width="672" /></p>
 </div>
 <div id="semiwariancja" class="section level3">
 <h3><span class="header-section-number">6.2.7</span> Semiwariancja</h3>
@@ -528,13 +528,13 @@ gamma</code></pre></div>
 <p>Jeżeli w badanej próbie mamy <span class="math inline">\(n\)</span> obserwacji oznacza to, że możemy zaobserwować <span class="math inline">\(\frac{1}{2}n(n-1)\)</span> par obserwacji. Każda z tych par obserwacji daje nam informację o semiwariancji występującej wraz z odległością. Tę semiwariancję można zaprezentować na wykresie zwanym chmurą semiwariogramu. Do jej wyliczenia służy funkcja <code>variogram()</code> z argumentem <code>cloud=TRUE</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_cloud &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cloud=</span><span class="ot">TRUE</span>)
 <span class="kw">plot</span>(vario_cloud) </code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-74-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-74-1.png" width="672" /></p>
 <p>Chmura semiwariogramu pozwala także na zauważenie par punktów, których wartości znacząco odstają. Aby zlokalizować te pary punktów, można zastosować funkcję <code>plot()</code> z argumentem <code>digitize=TRUE</code>, a następnie za pomocą kilku kliknięć określić obszar zawierający nietypowe wartości. Po skończonym wyborze należy nacisnąć klawisz Esc.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_cloud_sel &lt;-<span class="st"> </span><span class="kw">plot</span>(<span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cloud=</span><span class="ot">TRUE</span>), <span class="dt">digitize=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="figs/cloud_sel.png" title="" alt="" width="672" /></p>
+<p><img src="figs/cloud_sel.png" width="606" /></p>
 <p>Następnie można wyświetlić wybrane pary punktów z użyciem funkcji <code>plot()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_cloud_sel, punkty) </code></pre></div>
-<p><img src="figs/points_sel.png" title="" alt="" width="672" /></p>
+<p><img src="figs/points_sel.png" width="487" /></p>
 </div>
 <div id="semiwariogram-charakterystyka-struktury-przestrzennej" class="section level3">
 <h3><span class="header-section-number">6.2.9</span> Semiwariogram | Charakterystyka struktury przestrzennej</h3>
@@ -576,14 +576,12 @@ z_kwadrat <- kraw_x^2 + kraw_y^2
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pow_pr &lt;-<span class="st"> </span><span class="kw">area</span>(granica) /<span class="st"> </span><span class="kw">length</span>(punkty)
 pow_pr</code></pre></div>
-<pre><code>##      117 
-## 253506.6</code></pre>
+<pre><code>## [1] 253506.6</code></pre>
 <ul>
 <li>Średnia odległość między punktami :</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sqrt</span>(pow_pr)</code></pre></div>
-<pre><code>##      117 
-## 503.4944</code></pre>
+<pre><code>## [1] 503.4944</code></pre>
 </div>
 <div id="semiwariogram" class="section level3">
 <h3><span class="header-section-number">6.2.11</span> Semiwariogram</h3>
@@ -630,15 +628,15 @@ vario_par</code></pre></div>
 ## 15 1482 4598.4144 15.353206       0       0 var1</code></pre>
 <p>Do wyświetlenia semiwariogramu służy funkcja <code>plot()</code>. Można również dodać informację o liczbie par punktów, jaka posłużyła do wyliczenia semiwariancji dla kolejnych odstępów poprzez argument <code>plot.numbers=TRUE</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_par, <span class="dt">plot.numbers=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-83-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-83-1.png" width="672" /></p>
 <p>Maksymalny zasięg semiwariogramu (ang. <em>cutoff distance</em>) jest domyślnie wyliczany w pakiecie <code>gstat</code> jako 1/3 z najdłuższej przekątnej badanego obszaru. Można jednak tę wartość zmodyfikować używając argumentu <code>cutoff</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_par &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cutoff =</span> <span class="dv">4000</span>)
 <span class="kw">plot</span>(vario_par)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-84-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-84-1.png" width="672" /></p>
 <p>Dodatkowo, domyślnie w pakiecie <code>gstat</code> odległość między przedziałami (ang. <em>interval width</em>) jest wyliczana jako maksymalny zasięg semiwariogramu podzielony przez 15. Można to oczywiście zmienić używając zarówno argumentu <code>cutoff</code>, jak i argumentu <code>width</code> mówiącego o szerokości odstępów.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_par &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cutoff =</span> <span class="dv">1000</span>, <span class="dt">width =</span> <span class="dv">250</span>)
 <span class="kw">plot</span>(vario_par)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-85-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-85-1.png" width="672" /></p>
 <!--
 ## Wpływa danych odstających
 
@@ -682,17 +680,17 @@ Używanie innych statystyk h-scattergramu, które są mniej czułe na występowa
 <p>Stworzenie mapy semiwariogramu odbywa się poprzez dodanie kilku argumentów do funkcji <code>variogram()</code>: oprócz argumentu zmiennej i zbioru punktowego, jest to <code>cutoff</code>, <code>width</code>, oraz <code>map=TRUE</code>. Następnie można ją wyświetlić używając funkcji <code>plot()</code>. Warto w tym wypadku użyć dodatkowego argumentu <code>threshold</code>, który powoduje, że niepewna wartość semiwariancji (wyliczona na małej liczbie punktów) nie jest wyświetlana.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_map &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">cutoff=</span><span class="dv">4000</span>, <span class="dt">width=</span><span class="dv">400</span>, <span class="dt">map=</span><span class="ot">TRUE</span>)
 <span class="kw">plot</span>(vario_map, <span class="dt">threshold=</span><span class="dv">30</span>) <span class="co"># co najmniej 30 par punktów</span></code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-87-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-87-1.png" width="672" /></p>
 <p>Mapie semiwariogramu można również się przyjrzeć interaktywnie używając funkcję <code>plot3D()</code> z pakietu <code>rasterVis</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot3D</span>(<span class="kw">raster</span>(vario_map$map), <span class="dt">col=</span>rainbow)</code></pre></div>
-<p><img src="figs/plot3D.png" title="" alt="" width="672" /></p>
+<p><img src="figs/plot3D.png" width="271" /></p>
 </div>
 <div id="semiwariogramy-kierunkowe-kierunki" class="section level3">
 <h3><span class="header-section-number">6.3.3</span> Semiwariogramy kierunkowe | Kierunki</h3>
 <p>W przypadku, gdy zjawisko wykazuje anizotropię przestrzenną, możliwe jest stworzenie semiwariogramów dla różnych wybranych kierunków. Dla argumentu <code>alpha = c(0, 45, 90, 135)</code> wybrane cztery główne kierunki to 0, 45, 90 i 135 stopni. Oznacza to, że przykładowo dla kierunku 45 stopni brane pod uwagę będą wszystkie pary punktów pomiędzy 22,5 a 67,5 stopnia.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kier &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty, <span class="dt">alpha =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">45</span>, <span class="dv">90</span>, <span class="dv">135</span>))
 <span class="kw">plot</span>(vario_kier)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-89-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-89-1.png" width="672" /></p>
 
 </div>
 </div>

@@ -8,7 +8,7 @@
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Introduction to geostatistics with R (in Polish).">
-  <meta name="generator" content="bookdown 0.0.71 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.79 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-05-08">
+<meta name="date" content="2016-07-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -429,7 +429,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">225</span>)
 regularny &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;regular&#39;</span>)
 <span class="kw">plot</span>(regularny)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-55-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
 </div>
 <div id="typ-probowania-losowy" class="section level3">
 <h3><span class="header-section-number">4.2.3</span> Typ próbowania | Losowy</h3>
@@ -437,7 +437,7 @@ regularny &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">301</span>)
 losowy &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;random&#39;</span>)
 <span class="kw">plot</span>(losowy)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-56-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-56-1.png" width="672" /></p>
 </div>
 <div id="typ-probowania-losowy-stratyfikowany" class="section level3">
 <h3><span class="header-section-number">4.2.4</span> Typ próbowania | Losowy stratyfikowany</h3>
@@ -445,7 +445,7 @@ losowy &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">125</span>)
 strat &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;stratified&#39;</span>)
 <span class="kw">plot</span>(strat)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-57-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-57-1.png" width="672" /></p>
 </div>
 <div id="typ-probowania-preferencyjny" class="section level3">
 <h3><span class="header-section-number">4.2.5</span> Typ próbowania | Preferencyjny</h3>
@@ -453,7 +453,7 @@ strat &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <s
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">425</span>)
 pref &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <span class="dv">150</span>, <span class="dt">type =</span> <span class="st">&#39;clustered&#39;</span>, <span class="dt">nclusters=</span><span class="dv">30</span>)
 <span class="kw">plot</span>(pref)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-58-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
 </div>
 </div>
 <div id="dane-lokalnie-odstajace" class="section level2">
@@ -461,10 +461,10 @@ pref &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <sp
 <p>Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji <code>plot()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(granica) 
 <span class="kw">plot</span>(punkty, <span class="dt">add=</span><span class="ot">TRUE</span>) </code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-59-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-59-1.png" width="672" /></p>
 <p>Dane lokalnie odstające oznaczają nietypowe przestrzennie wartości danej cechy. Inaczej mówiąc, może to być niska wartość otoczona wysokimi wartościami lub też wysoka wartość otoczona niskimi wartościami. Dane lokalnie ostające mogą oznaczać zarówno błąd w danych albo wpływ innego czynnika na analizowaną cechę. Przyjrzenie się wartościom analizowanej cechy można wykonać z użyciem funkcji <code>spplot()</code>. Na poniższym przykładzie wyświetlona jest zmienna <code>temp</code> oznaczająca średnią temperaturę dobową.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(punkty, <span class="st">&#39;temp&#39;</span>, <span class="dt">sp.layout =</span> granica)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-60-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-60-1.png" width="672" /></p>
 <p>Dodatkowo, używając argumentu <code>identify = TRUE</code> można interaktywnie określić numer punktu (numer wiersza w tabeli atrybutów). Działanie tej funkcji polega na wybraniu punktów za pomocą lewego przycisk myszy, a po wybraniu serii punktów klawisza Esc.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(punkty, <span class="st">&#39;temp&#39;</span>, <span class="dt">identify =</span> <span class="ot">TRUE</span>)</code></pre></div>
 </div>
@@ -479,7 +479,7 @@ pref &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <sp
 <p>Na potrzeby przykładów związanych z rozgrupowaniem danych w pakiecie <code>geostatbook</code> znajduje się zbiór danych <code>punkty_pref</code>. W tym zbiorze gęściej opróbkowane są niskie wartości temperatury, co powoduje, że średnia dla całego obszaru jest znacznie niższa niż w rzeczywistości.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(punkty_pref)
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;temp&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-61-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-61-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(punkty_pref$temp)</code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   8.233  12.070  14.260  14.280  15.540  25.850</code></pre>
@@ -499,7 +499,7 @@ pref &lt;-<span class="st"> </span><span class="kw">spsample</span>(granica, <sp
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(punkty_pref)
 punkty_pref$id &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(punkty_pref)
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;id&#39;</span>, <span class="dt">colorkey=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom01-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom01-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(granica)
 siatka_n &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(<span class="kw">gBuffer</span>(granica, <span class="dt">width =</span> <span class="dv">500</span>)))
 <span class="kw">res</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1000</span>, <span class="dv">1000</span>)
@@ -509,16 +509,16 @@ siatka_n &lt;-<span class="st"> </span><span class="kw">as</span>(siatka_n, <spa
 siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(siatka_n@data$layer), ]
 <span class="kw">plot</span>(siatka_n)
 <span class="kw">plot</span>(punkty_pref, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom01-2.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom01-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty_pref$liczebnosc &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">length</span>(punkty_pref))
 siatka_nr &lt;-<span class="st"> </span><span class="kw">aggregate</span>(punkty_pref[<span class="st">&#39;liczebnosc&#39;</span>], <span class="dt">by =</span> siatka_n, <span class="dt">FUN =</span> length) 
 <span class="kw">spplot</span>(siatka_nr, <span class="st">&#39;liczebnosc&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom01-3.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom01-3.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">liczba &lt;-<span class="st"> </span><span class="kw">over</span>(punkty_pref, siatka_nr)
 punkty_pref$waga &lt;-<span class="st"> </span>((<span class="dv">1</span>/liczba$liczebnosc)/<span class="kw">sum</span>(!<span class="kw">is.na</span>(siatka_nr$liczebnosc))) *<span class="st"> </span><span class="kw">length</span>(punkty_pref)
 
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;waga&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom01-4.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom01-4.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">srednia_arytmetyczna &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp)
 srednia_wazona_c1 &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp *<span class="st"> </span>punkty_pref$waga, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
 </div>
@@ -542,7 +542,7 @@ polygon.
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(punkty_pref)
 punkty_pref$id &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(punkty_pref)
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;id&#39;</span>, <span class="dt">colorkey=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom02-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom02-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(granica)
 siatka_n &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(<span class="kw">gBuffer</span>(granica, <span class="dt">width =</span> <span class="dv">500</span>)))
 <span class="kw">res</span>(siatka_n) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">100</span>, <span class="dv">100</span>)
@@ -552,11 +552,11 @@ siatka_n &lt;-<span class="st"> </span><span class="kw">as</span>(siatka_n, <spa
 siatka_n &lt;-<span class="st"> </span>siatka_n[!<span class="kw">is.na</span>(siatka_n@data$layer), ]
 <span class="kw">gridded</span>(siatka_n) &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 <span class="kw">plot</span>(siatka_n, <span class="dt">border =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom02-2.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom02-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st">  </span><span class="kw">krige</span>(id~<span class="dv">1</span>, punkty_pref, siatka_n, <span class="dt">nmax=</span><span class="dv">1</span>)</code></pre></div>
 <pre><code>## [inverse distance weighted interpolation]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(out, <span class="st">&#39;var1.pred&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom02b-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom02b-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">table</span>(out[[<span class="dv">1</span>]]))
 df$waga &lt;-<span class="st"> </span>df$Freq/<span class="kw">sum</span>(df$Freq)
 punkty_pref &lt;-<span class="st"> </span><span class="kw">merge</span>(punkty_pref, df, <span class="dt">by.x=</span><span class="st">&#39;id&#39;</span>, <span class="dt">by.y=</span><span class="st">&#39;Var1&#39;</span>)
@@ -564,9 +564,9 @@ punkty_pref &lt;-<span class="st"> </span><span class="kw">merge</span>(punkty_p
 <pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 ## 0.000336 0.001386 0.002520 0.003802 0.004326 0.043930</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(out, <span class="st">&#39;var1.pred&#39;</span>, <span class="dt">sp.layout=</span><span class="kw">list</span>(<span class="st">&#39;sp.points&#39;</span>, punkty_pref))</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom02b-2.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom02b-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(punkty_pref[<span class="st">&#39;waga&#39;</span>])</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozkom02b-3.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/rozkom02b-3.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">srednia_arytmetyczna &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp)
 srednia_wazona_c2 &lt;-<span class="st"> </span><span class="kw">sum</span>(punkty_pref$temp *<span class="st"> </span>punkty_pref$waga, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
 </div>
@@ -585,17 +585,17 @@ srednia_wazona_c2 &lt;-<span class="st"> </span><span class="kw">sum</span>(punk
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(punkty_pref)
 punkty_pref$id &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(punkty_pref)
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;id&#39;</span>, <span class="dt">colorkey=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozpoly-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/rozpoly-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v &lt;-<span class="st"> </span><span class="kw">voronoi</span>(punkty_pref)
 <span class="kw">plot</span>(punkty_pref, <span class="dt">cex=</span><span class="fl">0.2</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)
 <span class="kw">plot</span>(v, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozpoly-2.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/rozpoly-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v$pow &lt;-<span class="st"> </span><span class="kw">area</span>(v)
 v$waga &lt;-<span class="st"> </span>v$pow/<span class="kw">sum</span>(v$pow) *<span class="st"> </span><span class="kw">length</span>(punkty_pref)
 
 punkty_pref &lt;-<span class="st"> </span><span class="kw">merge</span>(punkty_pref, v[<span class="kw">c</span>(<span class="st">&#39;id&#39;</span>, <span class="st">&#39;waga&#39;</span>)], <span class="dt">by=</span><span class="st">&#39;id&#39;</span>)
 <span class="kw">spplot</span>(punkty_pref, <span class="st">&#39;waga&#39;</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/rozpoly-3.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/rozpoly-3.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">srednia_arytmetyczna &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)
 srednia_wazona_p &lt;-<span class="st"> </span><span class="kw">mean</span>(punkty_pref$temp*punkty_pref$waga, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
 </div>

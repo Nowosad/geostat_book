@@ -8,7 +8,7 @@
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Introduction to geostatistics with R (in Polish).">
-  <meta name="generator" content="bookdown 0.0.71 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.79 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-05-08">
+<meta name="date" content="2016-07-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -436,7 +436,7 @@ punkty$temp      <span class="co">#2</span></code></pre></div>
 <p>Z uwagi na to, że zajmujemy się danymi przestrzennymi - warto też się upewnić czy dane zostały poprawnie wczytane i obejmują analizowany obszar. Najszybciej można to wykonać z pomocą funkcji <code>plot()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(punkty)
 <span class="kw">plot</span>(granica, <span class="dt">add=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-28-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 </div>
 </div>
 <div id="statystyki-opisowe" class="section level2">
@@ -495,7 +495,7 @@ punkty$temp      <span class="co">#2</span></code></pre></div>
 <li>95% obserwacji mieści się w granicach dwóch odchyleń standardowych od średniej</li>
 <li>99,7% obserwacji mieści się w granicach trzech odchyleń standardowych od średniej</li>
 </ul>
-<p><img src="figs/normal_distribution.png" title="" alt="" width="672" /></p>
+<p><img src="figs/normal_distribution.png" width="1123" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sd</span>(punkty$temp, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
 <pre><code>## [1] 3.839596</code></pre>
 </div>
@@ -506,7 +506,7 @@ punkty$temp      <span class="co">#2</span></code></pre></div>
 <h3><span class="header-section-number">3.4.1</span> Histogram</h3>
 <p>Histogram należy do typów wykresów najczęściej używanych w eksploracyjnej analizie danych.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_histogram</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-34-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
 <ul>
 <li>Stworzony przez Karla Pearsona</li>
 <li>Jest graficzną reprezentacją rozkładu danych</li>
@@ -519,21 +519,21 @@ punkty$temp      <span class="co">#2</span></code></pre></div>
 <h3><span class="header-section-number">3.4.2</span> Estymator jądrowy gęstości (ang. <em>kernel density estimation</em>)</h3>
 <p>Podobną funkcję do histogramu spełnia estymator jądrowy gęstości. Przypomina on wygładzony wykres histogramu i również służy graficznej reprezentacji rozkładu danych.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-35-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
 </div>
 <div id="wykres-kwantyl-kwantyl-ang.quantile-quantile" class="section level3">
 <h3><span class="header-section-number">3.4.3</span> Wykres kwantyl-kwantyl (ang.<em>quantile-quantile</em>)</h3>
 <p>Wykres kwantyl-kwantyl ułatwia interpretację rozkładu danych.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(<span class="dt">sample=</span>temp)) +<span class="st"> </span><span class="kw">stat_qq</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-36-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
 <p>Na poniższej rycinie można zobaczyć przykłady najczęściej spotykanych cech rozkładu danych w wykresach kwantyl-kwantyl.</p>
-<p><img src="figs/qq_plot_explained.png" title="" alt="" width="672" /></p>
+<p><img src="figs/qq_plot_explained.png" width="1014" /></p>
 </div>
 <div id="dystrybuanta-cdf" class="section level3">
 <h3><span class="header-section-number">3.4.4</span> Dystrybuanta (CDF)</h3>
 <p>Dystrybuanta (ang. <em>conditional density function</em> - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">stat_ecdf</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-38-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
 </div>
 </div>
 <div id="porownanie-zmiennych" class="section level2">
@@ -549,7 +549,7 @@ punkty$temp      <span class="co">#2</span></code></pre></div>
 <h3><span class="header-section-number">3.5.2</span> Współczynnik korelacji</h3>
 <p>Współczynnik korelacji to unormowana miara zależności pomiędzy dwiema zmiennymi, przyjmująca wartości od -1 do 1. Ten współczynnik jest uzyskiwany poprzez podzielenie wartości kowariancji przez odchylenie standardowe wyników. Z racji unormowania nie jest ona uzależniona od jednostki. Korelację można wyliczyć dzięki funkcji <code>cor()</code>. Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego obiektu zawierającego zmienne numeryczne.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp, ndvi)) +<span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-40-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-40-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(punkty$temp, punkty$ndvi)</code></pre></div>
 <pre><code>## [1] 0.07049136</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(punkty@data[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>:<span class="dv">5</span>)])</code></pre></div>
@@ -573,14 +573,14 @@ punkty$temp      <span class="co">#2</span></code></pre></div>
 ## 0.07049136</code></pre>
 <p>W przypadku posiadania co najmniej kilku par zmiennych, można również skorzystać z funkcji <code>corrplot()</code> z pakietu <code>corrplot</code>. Wyświetla ona wykres pokazujący wartości korelacji pomiędzy kolejnymi zmiennymi.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">corrplot</span>(<span class="kw">cor</span>(punkty@data[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>:<span class="dv">5</span>)]))</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-43-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
 </div>
 <div id="wykres-pudekowy" class="section level3">
 <h3><span class="header-section-number">3.5.3</span> Wykres pudełkowy</h3>
 <p>Wykres pudełkowy obrazuje pięć podstawowych statystyk opisowych oraz wartości odstające. Pudełko to zakres międzykwantylowy (IQR), a linie oznaczają najbardziej ekstremalne wartości, ale nie odstające. Górna z nich to 1,5*IQR ponad krawędź pudełka, dolna to 1,5*IQR poniżej wartości dolnej krawędzi pudełka. Linia środkowa to mediana.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(punkty$clc)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(clc, temp)) +<span class="st"> </span><span class="kw">geom_boxplot</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-44-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
 </div>
 <div id="testowanie-istotnosci-roznic-sredniej-pomiedzy-grupami" class="section level3">
 <h3><span class="header-section-number">3.5.4</span> Testowanie istotności różnić średniej pomiędzy grupami</h3>
@@ -588,9 +588,9 @@ punkty$temp      <span class="co">#2</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(punkty$clc)
 aov_test &lt;-<span class="st"> </span><span class="kw">aov</span>(temp~clc, <span class="dt">data=</span>punkty)
 <span class="kw">summary</span>(aov_test)</code></pre></div>
-<pre><code>##              Df Sum Sq Mean Sq F value Pr(&gt;F)    
-## clc           2   1056   528.0   49.87 &lt;2e-16 ***
-## Residuals   247   2615    10.6                   
+<pre><code>##              Df Sum Sq Mean Sq F value              Pr(&gt;F)    
+## clc           2   1056   528.0   49.87 &lt;0.0000000000000002 ***
+## Residuals   247   2615    10.6                                
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre><code>## null device 
@@ -598,7 +598,7 @@ aov_test &lt;-<span class="st"> </span><span class="kw">aov</span>(temp~clc, <sp
 <p>Do wykonania porównań wielokrotnych służy funkcja <code>TukeyHSD()</code>. Dodatkowo wyniki można wizualizować za pomocą funkcji <code>plot()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tukey &lt;-<span class="st"> </span><span class="kw">TukeyHSD</span>(aov_test, <span class="st">&#39;clc&#39;</span>)
 <span class="kw">plot</span>(tukey, <span class="dt">las=</span><span class="dv">1</span>)</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-47-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
 </div>
 </div>
 <div id="transformacje-danych" class="section level2">
@@ -619,27 +619,27 @@ aov_test &lt;-<span class="st"> </span><span class="kw">aov</span>(temp~clc, <sp
 <div id="transformacja-danych-centrowanie" class="section level3">
 <h3><span class="header-section-number">3.6.3</span> Transformacja danych | Centrowanie</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-48-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$temp_center &lt;-<span class="st"> </span>punkty$temp -<span class="st"> </span><span class="kw">mean</span>(punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp_center)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-48-2.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-48-2.png" width="672" /></p>
 </div>
 <div id="transformacja-danych-skalowanie" class="section level3">
 <h3><span class="header-section-number">3.6.4</span> Transformacja danych | Skalowanie</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-49-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-49-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$temp_scale &lt;-<span class="st"> </span>punkty$temp /<span class="st"> </span><span class="kw">sd</span>(punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp_scale)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-49-2.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-49-2.png" width="672" /></p>
 </div>
 <div id="transformacja-danych-standaryzacja-1" class="section level3">
 <h3><span class="header-section-number">3.6.5</span> Transformacja danych | Standaryzacja</h3>
 <p>Do standaryzacji (centrowanie i skalowanie) służy funkcja <code>scale()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-50-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-50-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$temp_standard &lt;-<span class="st"> </span><span class="kw">scale</span>(punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp_standard)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-50-2.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-50-2.png" width="672" /></p>
 </div>
 <div id="transformacja-danych-redukcja-skosnosci" class="section level3">
 <h3><span class="header-section-number">3.6.6</span> Transformacja danych | Redukcja skośności</h3>
@@ -654,25 +654,25 @@ aov_test &lt;-<span class="st"> </span><span class="kw">aov</span>(temp~clc, <sp
 <h3><span class="header-section-number">3.6.7</span> Transformacja danych | Logarytmizacja</h3>
 <p>Logarytmizacja w R może odbyć się za pomocą funkcji <code>log()</code>. Transformację logarytmiczną można odwrócić używając funkcji <code>exp()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-51-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-51-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$log_tpz &lt;-<span class="st"> </span><span class="kw">log</span>(punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(log_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-51-2.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-51-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$exp_tpz &lt;-<span class="st"> </span><span class="kw">exp</span>(punkty$log_tpz)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(exp_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-51-3.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-51-3.png" width="672" /></p>
 </div>
 <div id="transformacja-danych-pierwiastkowanie" class="section level3">
 <h3><span class="header-section-number">3.6.8</span> Transformacja danych | Pierwiastkowanie</h3>
 <p>Pierwiastkowanie w R może odbyć się za pomocą funkcji <code>sqrt()</code>. Odwrócenie tej transformacji odbywa się poprzez podniesienie wartości do potęgi (<code>^2</code>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-52-1.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-52-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$sqrt_tpz &lt;-<span class="st"> </span><span class="kw">sqrt</span>(punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(sqrt_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-52-2.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-52-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$pow_tpz &lt;-<span class="st"> </span>punkty$sqrt_tpz^<span class="dv">2</span>
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(pow_tpz)) +<span class="st"> </span><span class="kw">geom_density</span>()</code></pre></div>
-<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-52-3.png" title="" alt="" width="672" /></p>
+<p><img src="Geostatystyka_files/figure-html/unnamed-chunk-52-3.png" width="672" /></p>
 <!--
 Transformacja danych | Rodzina transformacji Boxa Coxa
 
