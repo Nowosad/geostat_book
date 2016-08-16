@@ -1,5 +1,0 @@
-book_filename: "Geostatystyka.Rmd"
-chapter_name: "Rodział "
-# before_chapter_script: "lista_pakietow.R"
-# new_session: yes
-clean: [packages.bib, bookdown.bbl]

@@ -13,7 +13,7 @@ beepr::beep()
 #pdf
 Sys.setenv(RSTUDIO_PANDOC="/usr/lib/rstudio/bin/pandoc")
 
-bookdown::render_book("index.Rmd", "bookdown::pdf_book")
+bookdown::render_book("index.Rmd", "bookdown::pdf_book", output_dir='pdf_ania')
 beepr::beep()
 
 #ebook
