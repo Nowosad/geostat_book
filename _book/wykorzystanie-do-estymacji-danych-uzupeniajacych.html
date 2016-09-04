@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Geostatystyka w R</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <meta name="description" content="Introduction to geostatistics with R (in Polish).">
+  <meta name="generator" content="bookdown 0.1 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Geostatystyka w R" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://bookdown.org/nowosad/Geostatystyka/" />
+  <meta property="og:image" content="https://bookdown.org/nowosad/Geostatystyka/Rfigs/book_cover.png" />
+  <meta property="og:description" content="Introduction to geostatistics with R (in Polish)." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Geostatystyka w R" />
+  
+  <meta name="twitter:description" content="Introduction to geostatistics with R (in Polish)." />
+  <meta name="twitter:image" content="https://bookdown.org/nowosad/Geostatystyka/Rfigs/book_cover.png" />
+
+<meta name="author" content="Jakub Nowosad">
+
+<meta name="date" content="2016-09-03">
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="estymacje-wielozmienne.html">
+<link rel="next" href="ocena-jakosci-estymacji.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Geostatystyka w R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Wprowadzenie</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#wymagania-wstepne"><i class="fa fa-check"></i><b>1.1</b> Wymagania wstępne</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="index.html"><a href="index.html#oprogramowanie"><i class="fa fa-check"></i><b>1.1.1</b> Oprogramowanie</a></li>
+<li class="chapter" data-level="1.1.2" data-path="index.html"><a href="index.html#dane"><i class="fa fa-check"></i><b>1.1.2</b> Dane</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html"><i class="fa fa-check"></i><b>2</b> R a dane przestrzenne</a><ul>
+<li class="chapter" data-level="2.1" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#r-a-dane-przestrzenne"><i class="fa fa-check"></i><b>2.1</b> R a dane przestrzenne</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#pakiety"><i class="fa fa-check"></i><b>2.1.1</b> Pakiety</a></li>
+<li class="chapter" data-level="2.1.2" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#reprezentacja-danych-nieprzestrzennych"><i class="fa fa-check"></i><b>2.1.2</b> Reprezentacja danych nieprzestrzennych</a></li>
+<li class="chapter" data-level="2.1.3" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#reprezentacja-danych-przestrzennych"><i class="fa fa-check"></i><b>2.1.3</b> Reprezentacja danych przestrzennych</a></li>
+<li class="chapter" data-level="2.1.4" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#gdalogr"><i class="fa fa-check"></i><b>2.1.4</b> GDAL/OGR</a></li>
+<li class="chapter" data-level="2.1.5" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#proj.4"><i class="fa fa-check"></i><b>2.1.5</b> PROJ.4</a></li>
+<li class="chapter" data-level="2.1.6" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#epsg"><i class="fa fa-check"></i><b>2.1.6</b> EPSG</a></li>
+<li class="chapter" data-level="2.1.7" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#ukad-geograficzny"><i class="fa fa-check"></i><b>2.1.7</b> Układ geograficzny</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#import-danych"><i class="fa fa-check"></i><b>2.2</b> Import danych</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#format-.csv-dane-punktowe"><i class="fa fa-check"></i><b>2.2.1</b> Format .csv (dane punktowe)</a></li>
+<li class="chapter" data-level="2.2.2" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#dane-poligonowe-formaty-gisowe"><i class="fa fa-check"></i><b>2.2.2</b> Dane poligonowe (formaty gisowe)</a></li>
+<li class="chapter" data-level="2.2.3" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#rastry"><i class="fa fa-check"></i><b>2.2.3</b> Rastry</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#eksport-danych"><i class="fa fa-check"></i><b>2.3</b> Eksport danych</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#zapisywanie-danych-wektorowych"><i class="fa fa-check"></i><b>2.3.1</b> Zapisywanie danych wektorowych</a></li>
+<li class="chapter" data-level="2.3.2" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#zapisywanie-danych-rastrowych"><i class="fa fa-check"></i><b>2.3.2</b> Zapisywanie danych rastrowych</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#wizualizacja-danych-2d"><i class="fa fa-check"></i><b>2.4</b> Wizualizacja danych 2D</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#dane-punktowe"><i class="fa fa-check"></i><b>2.4.1</b> Dane punktowe</a></li>
+<li class="chapter" data-level="2.4.2" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#dane-punktowe---kategorie"><i class="fa fa-check"></i><b>2.4.2</b> Dane punktowe - kategorie</a></li>
+<li class="chapter" data-level="2.4.3" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#rastry-1"><i class="fa fa-check"></i><b>2.4.3</b> Rastry</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#tworzenie-siatek"><i class="fa fa-check"></i><b>2.5</b> Tworzenie siatek</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#siatki-regularne"><i class="fa fa-check"></i><b>2.5.1</b> Siatki regularne</a></li>
+<li class="chapter" data-level="2.5.2" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#siatki-regularne-1"><i class="fa fa-check"></i><b>2.5.2</b> Siatki regularne</a></li>
+<li class="chapter" data-level="2.5.3" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#siatki-nieregularne---klasa-rasterlayer"><i class="fa fa-check"></i><b>2.5.3</b> Siatki nieregularne - klasa <code>RasterLayer</code></a></li>
+<li class="chapter" data-level="2.5.4" data-path="r-a-dane-przestrzenne.html"><a href="r-a-dane-przestrzenne.html#siatki-nieregularne---klasa-spatialpixelsdataframe"><i class="fa fa-check"></i><b>2.5.4</b> Siatki nieregularne - klasa <code>SpatialPixelsDataFrame</code></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html"><i class="fa fa-check"></i><b>3</b> Eksploracyjna analiza danych nieprzestrzennych</a><ul>
+<li class="chapter" data-level="3.1" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#cele-eksploracyjnej-analizy-danych"><i class="fa fa-check"></i><b>3.1</b> Cele eksploracyjnej analizy danych</a></li>
+<li class="chapter" data-level="3.2" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#dane-1"><i class="fa fa-check"></i><b>3.2</b> Dane</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#dane-2"><i class="fa fa-check"></i><b>3.2.1</b> Dane</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#statystyki-opisowe"><i class="fa fa-check"></i><b>3.3</b> Statystyki opisowe</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#statystyki-opisowe-1"><i class="fa fa-check"></i><b>3.3.1</b> Statystyki opisowe</a></li>
+<li class="chapter" data-level="3.3.2" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#statystyki-opisowe-srednia-i-mediana"><i class="fa fa-check"></i><b>3.3.2</b> Statystyki opisowe | średnia i mediana</a></li>
+<li class="chapter" data-level="3.3.3" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#statystyki-opisowe-minimum-i-maksimum"><i class="fa fa-check"></i><b>3.3.3</b> Statystyki opisowe | minimum i maksimum</a></li>
+<li class="chapter" data-level="3.3.4" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#statystyki-opisowe-odchylenie-standardowe"><i class="fa fa-check"></i><b>3.3.4</b> Statystyki opisowe | odchylenie standardowe</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#wykresy"><i class="fa fa-check"></i><b>3.4</b> Wykresy</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#histogram"><i class="fa fa-check"></i><b>3.4.1</b> Histogram</a></li>
+<li class="chapter" data-level="3.4.2" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#estymator-jadrowy-gestosci-ang.-kernel-density-estimation"><i class="fa fa-check"></i><b>3.4.2</b> Estymator jądrowy gęstości (ang. <em>kernel density estimation</em>)</a></li>
+<li class="chapter" data-level="3.4.3" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#wykres-kwantyl-kwantyl-ang.quantile-quantile"><i class="fa fa-check"></i><b>3.4.3</b> Wykres kwantyl-kwantyl (ang.<em>quantile-quantile</em>)</a></li>
+<li class="chapter" data-level="3.4.4" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#dystrybuanta-cdf"><i class="fa fa-check"></i><b>3.4.4</b> Dystrybuanta (CDF)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#porownanie-zmiennych"><i class="fa fa-check"></i><b>3.5</b> Porównanie zmiennych</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#kowariancja"><i class="fa fa-check"></i><b>3.5.1</b> Kowariancja</a></li>
+<li class="chapter" data-level="3.5.2" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#wspoczynnik-korelacji"><i class="fa fa-check"></i><b>3.5.2</b> Współczynnik korelacji</a></li>
+<li class="chapter" data-level="3.5.3" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#wykres-pudekowy"><i class="fa fa-check"></i><b>3.5.3</b> Wykres pudełkowy</a></li>
+<li class="chapter" data-level="3.5.4" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#testowanie-istotnosci-roznic-sredniej-pomiedzy-grupami"><i class="fa fa-check"></i><b>3.5.4</b> Testowanie istotności różnić średniej pomiędzy grupami</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#transformacje-danych"><i class="fa fa-check"></i><b>3.6</b> Transformacje danych</a><ul>
+<li class="chapter" data-level="3.6.1" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#transformacje-danych-1"><i class="fa fa-check"></i><b>3.6.1</b> Transformacje danych</a></li>
+<li class="chapter" data-level="3.6.2" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#transformacja-danych-standaryzacja"><i class="fa fa-check"></i><b>3.6.2</b> Transformacja danych | Standaryzacja</a></li>
+<li class="chapter" data-level="3.6.3" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#transformacja-danych-centrowanie"><i class="fa fa-check"></i><b>3.6.3</b> Transformacja danych | Centrowanie</a></li>
+<li class="chapter" data-level="3.6.4" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#transformacja-danych-skalowanie"><i class="fa fa-check"></i><b>3.6.4</b> Transformacja danych | Skalowanie</a></li>
+<li class="chapter" data-level="3.6.5" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#transformacja-danych-standaryzacja-1"><i class="fa fa-check"></i><b>3.6.5</b> Transformacja danych | Standaryzacja</a></li>
+<li class="chapter" data-level="3.6.6" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#transformacja-danych-redukcja-skosnosci"><i class="fa fa-check"></i><b>3.6.6</b> Transformacja danych | Redukcja skośności</a></li>
+<li class="chapter" data-level="3.6.7" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#transformacja-danych-logarytmizacja"><i class="fa fa-check"></i><b>3.6.7</b> Transformacja danych | Logarytmizacja</a></li>
+<li class="chapter" data-level="3.6.8" data-path="eksploracja-analiza-danych-nieprzestrzennych.html"><a href="eksploracja-analiza-danych-nieprzestrzennych.html#transformacja-danych-pierwiastkowanie"><i class="fa fa-check"></i><b>3.6.8</b> Transformacja danych | Pierwiastkowanie</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html"><i class="fa fa-check"></i><b>4</b> Eksploracyjna analiza danych przestrzennych</a><ul>
+<li class="chapter" data-level="4.1" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#mapy"><i class="fa fa-check"></i><b>4.1</b> Mapy</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#podstawowe-terminy-kontekst-przestrzenny"><i class="fa fa-check"></i><b>4.1.1</b> Podstawowe terminy | Kontekst przestrzenny</a></li>
+<li class="chapter" data-level="4.1.2" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#mapy-punktowe"><i class="fa fa-check"></i><b>4.1.2</b> Mapy punktowe</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#probkowanie"><i class="fa fa-check"></i><b>4.2</b> Próbkowanie</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#podstawowe-typy-probowania"><i class="fa fa-check"></i><b>4.2.1</b> Podstawowe typy próbowania</a></li>
+<li class="chapter" data-level="4.2.2" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#typ-probowania-regularny"><i class="fa fa-check"></i><b>4.2.2</b> Typ próbowania | Regularny</a></li>
+<li class="chapter" data-level="4.2.3" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#typ-probowania-losowy"><i class="fa fa-check"></i><b>4.2.3</b> Typ próbowania | Losowy</a></li>
+<li class="chapter" data-level="4.2.4" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#typ-probowania-losowy-stratyfikowany"><i class="fa fa-check"></i><b>4.2.4</b> Typ próbowania | Losowy stratyfikowany</a></li>
+<li class="chapter" data-level="4.2.5" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#typ-probowania-preferencyjny"><i class="fa fa-check"></i><b>4.2.5</b> Typ próbowania | Preferencyjny</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#dane-lokalnie-odstajace"><i class="fa fa-check"></i><b>4.3</b> Dane lokalnie odstające</a></li>
+<li class="chapter" data-level="4.4" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#rozgrupowanie-danych"><i class="fa fa-check"></i><b>4.4</b> Rozgrupowanie danych</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#rozgrupowanie-danych-1"><i class="fa fa-check"></i><b>4.4.1</b> Rozgrupowanie danych</a></li>
+<li class="chapter" data-level="4.4.2" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#rozgrupowanie-danych-2"><i class="fa fa-check"></i><b>4.4.2</b> Rozgrupowanie danych</a></li>
+<li class="chapter" data-level="4.4.3" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#rozgrupowanie-komorkowe-i-ang.-cell-declustering"><i class="fa fa-check"></i><b>4.4.3</b> Rozgrupowanie komórkowe I | (ang. <em>cell declustering</em>)</a></li>
+<li class="chapter" data-level="4.4.4" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#rozgrupowanie-komorkowe-i-ang.-cell-declustering-1"><i class="fa fa-check"></i><b>4.4.4</b> Rozgrupowanie komórkowe I | (ang. <em>cell declustering</em>)</a></li>
+<li class="chapter" data-level="4.4.5" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#rozgrupowanie-komorkowe-ii-ang.-cell-declustering"><i class="fa fa-check"></i><b>4.4.5</b> Rozgrupowanie komórkowe II | (ang. <em>cell declustering</em>)</a></li>
+<li class="chapter" data-level="4.4.6" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#rozgrupowanie-poligonowe-ang.-polygon-declustering"><i class="fa fa-check"></i><b>4.4.6</b> Rozgrupowanie poligonowe | (ang. <em>polygon declustering</em>)</a></li>
+<li class="chapter" data-level="4.4.7" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#rozgrupowanie-poligonowe-ang.-polygon-declustering-1"><i class="fa fa-check"></i><b>4.4.7</b> Rozgrupowanie poligonowe | (ang. <em>polygon declustering</em>)</a></li>
+<li class="chapter" data-level="4.4.8" data-path="eksploracyjna-analiza-danych-przestrzennych.html"><a href="eksploracyjna-analiza-danych-przestrzennych.html#porownanie-metod-rozgrupowania"><i class="fa fa-check"></i><b>4.4.8</b> Porównanie metod rozgrupowania</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="metody-interpolacji.html"><a href="metody-interpolacji.html"><i class="fa fa-check"></i><b>5</b> Metody interpolacji</a><ul>
+<li class="chapter" data-level="5.1" data-path="metody-interpolacji.html"><a href="metody-interpolacji.html#modele-deterministyczne"><i class="fa fa-check"></i><b>5.1</b> Modele deterministyczne</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="metody-interpolacji.html"><a href="metody-interpolacji.html#modele-deterministyczne-voronoi"><i class="fa fa-check"></i><b>5.1.1</b> Modele deterministyczne | Voronoi</a></li>
+<li class="chapter" data-level="5.1.2" data-path="metody-interpolacji.html"><a href="metody-interpolacji.html#modele-deterministyczne-idw"><i class="fa fa-check"></i><b>5.1.2</b> Modele deterministyczne | IDW</a></li>
+<li class="chapter" data-level="5.1.3" data-path="metody-interpolacji.html"><a href="metody-interpolacji.html#modele-deterministyczne-funkcje-wielomianowe"><i class="fa fa-check"></i><b>5.1.3</b> Modele deterministyczne | Funkcje wielomianowe</a></li>
+<li class="chapter" data-level="5.1.4" data-path="metody-interpolacji.html"><a href="metody-interpolacji.html#modele-deterministyczne-funkcje-sklejane"><i class="fa fa-check"></i><b>5.1.4</b> Modele deterministyczne | Funkcje sklejane</a></li>
+<li class="chapter" data-level="5.1.5" data-path="metody-interpolacji.html"><a href="metody-interpolacji.html#modele-deterministyczne-porownanie"><i class="fa fa-check"></i><b>5.1.5</b> Modele deterministyczne | Porównanie</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="metody-interpolacji.html"><a href="metody-interpolacji.html#modele-statystyczne"><i class="fa fa-check"></i><b>5.2</b> Modele statystyczne</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html"><i class="fa fa-check"></i><b>6</b> Geostatystyka - prolog</a><ul>
+<li class="chapter" data-level="6.1" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#geostatystyka"><i class="fa fa-check"></i><b>6.1</b> Geostatystyka</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#geostatystyka-1"><i class="fa fa-check"></i><b>6.1.1</b> Geostatystyka</a></li>
+<li class="chapter" data-level="6.1.2" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#geostatystyka-funkcje"><i class="fa fa-check"></i><b>6.1.2</b> Geostatystyka | Funkcje</a></li>
+<li class="chapter" data-level="6.1.3" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#geostatystyczna-analiza-danych"><i class="fa fa-check"></i><b>6.1.3</b> Geostatystyczna analiza danych</a></li>
+<li class="chapter" data-level="6.1.4" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#geostatystyka-podstawowe-etapy"><i class="fa fa-check"></i><b>6.1.4</b> Geostatystyka | Podstawowe etapy</a></li>
+<li class="chapter" data-level="6.1.5" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#geostatystyka-dane-wejsciowe"><i class="fa fa-check"></i><b>6.1.5</b> Geostatystyka | Dane wejściowe</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#przestrzenna-kowariancja-i-korelacja-i-semiwariancja"><i class="fa fa-check"></i><b>6.2</b> Przestrzenna kowariancja i korelacja i semiwariancja</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#przestrzenna-kowariancja-korelacja-i-semiwariancja-zaozenia"><i class="fa fa-check"></i><b>6.2.1</b> Przestrzenna kowariancja, korelacja i semiwariancja | Założenia</a></li>
+<li class="chapter" data-level="6.2.2" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#przestrzenna-kowariancja-korelacja-i-semiwariancja-symbole"><i class="fa fa-check"></i><b>6.2.2</b> Przestrzenna kowariancja, korelacja i semiwariancja | Symbole</a></li>
+<li class="chapter" data-level="6.2.3" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#przestrzenna-kowariancja-korelacja-i-semiwariancja"><i class="fa fa-check"></i><b>6.2.3</b> Przestrzenna kowariancja, korelacja i semiwariancja</a></li>
+<li class="chapter" data-level="6.2.4" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#wykres-rozrzutu-z-przesunieciem"><i class="fa fa-check"></i><b>6.2.4</b> Wykres rozrzutu z przesunięciem</a></li>
+<li class="chapter" data-level="6.2.5" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#autokowariancja"><i class="fa fa-check"></i><b>6.2.5</b> Autokowariancja</a></li>
+<li class="chapter" data-level="6.2.6" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#autokorelacja"><i class="fa fa-check"></i><b>6.2.6</b> Autokorelacja</a></li>
+<li class="chapter" data-level="6.2.7" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#semiwariancja"><i class="fa fa-check"></i><b>6.2.7</b> Semiwariancja</a></li>
+<li class="chapter" data-level="6.2.8" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#chmura-semiwariogramu"><i class="fa fa-check"></i><b>6.2.8</b> Chmura semiwariogramu</a></li>
+<li class="chapter" data-level="6.2.9" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#semiwariogram-charakterystyka-struktury-przestrzennej"><i class="fa fa-check"></i><b>6.2.9</b> Semiwariogram | Charakterystyka struktury przestrzennej</a></li>
+<li class="chapter" data-level="6.2.10" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#semiwariogram-obliczenia-pomocnicze"><i class="fa fa-check"></i><b>6.2.10</b> Semiwariogram | Obliczenia pomocnicze</a></li>
+<li class="chapter" data-level="6.2.11" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#semiwariogram"><i class="fa fa-check"></i><b>6.2.11</b> Semiwariogram</a></li>
+<li class="chapter" data-level="6.2.12" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#semiwariogram-rules-of-thumb"><i class="fa fa-check"></i><b>6.2.12</b> Semiwariogram | Rules of thumb</a></li>
+<li class="chapter" data-level="6.2.13" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#semiwariogram-1"><i class="fa fa-check"></i><b>6.2.13</b> Semiwariogram</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#anizotropia"><i class="fa fa-check"></i><b>6.3</b> Anizotropia</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#anizotropia-struktury-przestrzennej"><i class="fa fa-check"></i><b>6.3.1</b> Anizotropia struktury przestrzennej</a></li>
+<li class="chapter" data-level="6.3.2" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#mapa-semiwariogramu"><i class="fa fa-check"></i><b>6.3.2</b> Mapa semiwariogramu</a></li>
+<li class="chapter" data-level="6.3.3" data-path="geostatystyka-prolog.html"><a href="geostatystyka-prolog.html#semiwariogramy-kierunkowe-kierunki"><i class="fa fa-check"></i><b>6.3.3</b> Semiwariogramy kierunkowe | Kierunki</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><i class="fa fa-check"></i><b>7</b> Modelowanie matematycznie autokorelacji przestrzennej</a><ul>
+<li class="chapter" data-level="7.1" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-matematycznie-autokorelacji-przestrzennej"><i class="fa fa-check"></i><b>7.1</b> Modelowanie matematycznie autokorelacji przestrzennej</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-matematycznie-autokorelacji-przestrzennej-1"><i class="fa fa-check"></i><b>7.1.1</b> Modelowanie matematycznie autokorelacji przestrzennej</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modele-podstawowe"><i class="fa fa-check"></i><b>7.2</b> Modele podstawowe</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modele-podstawowe-1"><i class="fa fa-check"></i><b>7.2.1</b> Modele podstawowe</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#metody-modelowania"><i class="fa fa-check"></i><b>7.3</b> Metody modelowania</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#metody-modelowania-1"><i class="fa fa-check"></i><b>7.3.1</b> Metody modelowania</a></li>
+<li class="chapter" data-level="7.3.2" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#metody-modelowania-funkcja-eyefit"><i class="fa fa-check"></i><b>7.3.2</b> Metody modelowania | funkcja <code>eyefit()</code></a></li>
+<li class="chapter" data-level="7.3.3" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#metody-modelowania-funkcja-fit.variogram"><i class="fa fa-check"></i><b>7.3.3</b> Metody modelowania | funkcja <code>fit.variogram()</code></a></li>
+<li class="chapter" data-level="7.3.4" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#metody-modelowania-liniowy-model-regionalizacji"><i class="fa fa-check"></i><b>7.3.4</b> Metody modelowania | Liniowy model regionalizacji</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-izotropowe"><i class="fa fa-check"></i><b>7.4</b> Modelowanie izotropowe</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-izotropowe-model-nuggetowy"><i class="fa fa-check"></i><b>7.4.1</b> Modelowanie izotropowe | Model nuggetowy</a></li>
+<li class="chapter" data-level="7.4.2" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-izotropowe-model-sferyczny"><i class="fa fa-check"></i><b>7.4.2</b> Modelowanie izotropowe | Model sferyczny</a></li>
+<li class="chapter" data-level="7.4.3" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-izotropowe-model-wykadniczy"><i class="fa fa-check"></i><b>7.4.3</b> Modelowanie izotropowe | Model wykładniczy</a></li>
+<li class="chapter" data-level="7.4.4" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-izotropowe-model-gaussowski"><i class="fa fa-check"></i><b>7.4.4</b> Modelowanie izotropowe | Model gaussowski</a></li>
+<li class="chapter" data-level="7.4.5" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-izotropowe-model-potegowy"><i class="fa fa-check"></i><b>7.4.5</b> Modelowanie izotropowe | Model potęgowy</a></li>
+<li class="chapter" data-level="7.4.6" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-izotropowe-modele-zozone-i"><i class="fa fa-check"></i><b>7.4.6</b> Modelowanie izotropowe | Modele złożone I</a></li>
+<li class="chapter" data-level="7.4.7" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-izotropowe-modele-zozone-ii"><i class="fa fa-check"></i><b>7.4.7</b> Modelowanie izotropowe | Modele złożone II</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-anizotropowe"><i class="fa fa-check"></i><b>7.5</b> Modelowanie anizotropowe</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#anizotropia-1"><i class="fa fa-check"></i><b>7.5.1</b> Anizotropia</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="estymacje-jednozmienne.html"><a href="estymacje-jednozmienne.html"><i class="fa fa-check"></i><b>8</b> Estymacje jednozmienne</a><ul>
+<li class="chapter" data-level="8.1" data-path="estymacje-jednozmienne.html"><a href="estymacje-jednozmienne.html#kriging"><i class="fa fa-check"></i><b>8.1</b> Kriging</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="estymacje-jednozmienne.html"><a href="estymacje-jednozmienne.html#kriging-interpolacja-geostatystyczna"><i class="fa fa-check"></i><b>8.1.1</b> Kriging | Interpolacja geostatystyczna</a></li>
+<li class="chapter" data-level="8.1.2" data-path="estymacje-jednozmienne.html"><a href="estymacje-jednozmienne.html#metod-krigingu"><i class="fa fa-check"></i><b>8.1.2</b> Metod krigingu</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="estymacje-jednozmienne.html"><a href="estymacje-jednozmienne.html#kriging-prosty"><i class="fa fa-check"></i><b>8.2</b> Kriging prosty</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="estymacje-jednozmienne.html"><a href="estymacje-jednozmienne.html#kriging-prosty-ang.-simple-kriging"><i class="fa fa-check"></i><b>8.2.1</b> Kriging prosty (ang. <em>Simple kriging</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="estymacje-jednozmienne.html"><a href="estymacje-jednozmienne.html#kriging-zwyky"><i class="fa fa-check"></i><b>8.3</b> Kriging zwykły</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="estymacje-jednozmienne.html"><a href="estymacje-jednozmienne.html#kriging-zwyky-ang.-ordinary-kriging"><i class="fa fa-check"></i><b>8.3.1</b> Kriging zwykły (ang. <em>Ordinary kriging</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="estymacje-jednozmienne.html"><a href="estymacje-jednozmienne.html#kriging-z-trendem"><i class="fa fa-check"></i><b>8.4</b> Kriging z trendem</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="estymacje-jednozmienne.html"><a href="estymacje-jednozmienne.html#kriging-z-trendem-ang.-kriging-with-a-trend"><i class="fa fa-check"></i><b>8.4.1</b> Kriging z trendem (ang. <em>Kriging with a trend</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="estymacje-jednozmienne.html"><a href="estymacje-jednozmienne.html#porownanie-wynikow-sk-ok-i-kzt"><i class="fa fa-check"></i><b>8.5</b> Porównanie wyników SK, OK i KZT</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><i class="fa fa-check"></i><b>9</b> Estymacja lokalnego rozkładu prawdopodobieństwa</a><ul>
+<li class="chapter" data-level="9.1" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych"><i class="fa fa-check"></i><b>9.1</b> Kriging danych kodowanych</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging"><i class="fa fa-check"></i><b>9.1.1</b> Kriging danych kodowanych (ang. <em>Indicator kriging</em>)</a></li>
+<li class="chapter" data-level="9.1.2" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#wady-i-zalety-krigingu-danych-kodowanych"><i class="fa fa-check"></i><b>9.1.2</b> Wady i zalety krigingu danych kodowanych</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-przykady"><i class="fa fa-check"></i><b>9.2</b> Kriging danych kodowanych | Przykłady</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#binaryzacja-danych"><i class="fa fa-check"></i><b>9.2.1</b> Binaryzacja danych</a></li>
+<li class="chapter" data-level="9.2.2" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-modelowanie"><i class="fa fa-check"></i><b>9.2.2</b> Kriging danych kodowanych (ang. <em>Indicator kriging</em>) | Modelowanie</a></li>
+<li class="chapter" data-level="9.2.3" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-interpolacja"><i class="fa fa-check"></i><b>9.2.3</b> Kriging danych kodowanych (ang. <em>Indicator kriging</em>) | Interpolacja</a></li>
+<li class="chapter" data-level="9.2.4" data-path="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#kriging-danych-kodowanych-ang.-indicator-kriging-1"><i class="fa fa-check"></i><b>9.2.4</b> Kriging danych kodowanych (ang. <em>Indicator kriging</em>)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html"><i class="fa fa-check"></i><b>10</b> Estymacje wielozmienne</a><ul>
+<li class="chapter" data-level="10.1" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#kokriging"><i class="fa fa-check"></i><b>10.1</b> Kokriging</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#kokriging-ang.-co-kriging"><i class="fa fa-check"></i><b>10.1.1</b> Kokriging (ang. <em>co-kriging</em>)</a></li>
+<li class="chapter" data-level="10.1.2" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#kokriging-wybor-dodatkowej-zmiennej"><i class="fa fa-check"></i><b>10.1.2</b> Kokriging | Wybór dodatkowej zmiennej</a></li>
+</ul></li>
+<li class="chapter" data-level="10.2" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#krossemiwariogramy"><i class="fa fa-check"></i><b>10.2</b> Krossemiwariogramy</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#krossemiwariogramy-1"><i class="fa fa-check"></i><b>10.2.1</b> Krossemiwariogramy</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#modelowanie-krossemiwariogramow"><i class="fa fa-check"></i><b>10.3</b> Modelowanie krossemiwariogramów</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#modelowanie-krossemiwariogramow-1"><i class="fa fa-check"></i><b>10.3.1</b> Modelowanie krossemiwariogramów</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#kokriging-1"><i class="fa fa-check"></i><b>10.4</b> Kokriging</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="estymacje-wielozmienne.html"><a href="estymacje-wielozmienne.html#kokriging-2"><i class="fa fa-check"></i><b>10.4.1</b> Kokriging</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><i class="fa fa-check"></i><b>11</b> Wykorzystanie do estymacji danych uzupełniających</a><ul>
+<li class="chapter" data-level="11.1" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-stratyfikowany"><i class="fa fa-check"></i><b>11.1</b> Kriging stratyfikowany</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-stratyfikowany-ang.-kriging-within-strata"><i class="fa fa-check"></i><b>11.1.1</b> Kriging stratyfikowany (ang. <em>Kriging within strata</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#prosty-kriging-ze-zmiennymi-srednimi-lokalnymi-lvm"><i class="fa fa-check"></i><b>11.2</b> Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#prosty-kriging-ze-zmiennymi-srednimi-lokalnymi-lvm-ang.-simple-kriging-with-varying-local-means"><i class="fa fa-check"></i><b>11.2.1</b> Prosty kriging ze zmiennymi średnimi lokalnymi (LVM) (ang. <em>Simple kriging with varying local means</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-uniwersalny"><i class="fa fa-check"></i><b>11.3</b> Kriging uniwersalny</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#kriging-uniwersalny-ang.-universal-kriging"><i class="fa fa-check"></i><b>11.3.1</b> Kriging uniwersalny (ang. <em>Universal kriging</em>)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ocena-jakosci-estymacji.html"><a href="ocena-jakosci-estymacji.html"><i class="fa fa-check"></i><b>12</b> Ocena jakości estymacji</a><ul>
+<li class="chapter" data-level="12.1" data-path="ocena-jakosci-estymacji.html"><a href="ocena-jakosci-estymacji.html#statystyki-jakosci-estymacji"><i class="fa fa-check"></i><b>12.1</b> Statystyki jakości estymacji</a><ul>
+<li class="chapter" data-level="12.1.1" data-path="ocena-jakosci-estymacji.html"><a href="ocena-jakosci-estymacji.html#statystyki-jakosci-estymacji-1"><i class="fa fa-check"></i><b>12.1.1</b> Statystyki jakości estymacji</a></li>
+<li class="chapter" data-level="12.1.2" data-path="ocena-jakosci-estymacji.html"><a href="ocena-jakosci-estymacji.html#sredni-bad-estymacji"><i class="fa fa-check"></i><b>12.1.2</b> Średni błąd estymacji</a></li>
+<li class="chapter" data-level="12.1.3" data-path="ocena-jakosci-estymacji.html"><a href="ocena-jakosci-estymacji.html#pierwiastek-sredniego-bedu-kwadratowego"><i class="fa fa-check"></i><b>12.1.3</b> Pierwiastek średniego błędu kwadratowego</a></li>
+<li class="chapter" data-level="12.1.4" data-path="ocena-jakosci-estymacji.html"><a href="ocena-jakosci-estymacji.html#statystyki-jakosci-estymacji-mapa"><i class="fa fa-check"></i><b>12.1.4</b> Statystyki jakości estymacji | Mapa</a></li>
+<li class="chapter" data-level="12.1.5" data-path="ocena-jakosci-estymacji.html"><a href="ocena-jakosci-estymacji.html#statystyki-jakosci-estymacji-histogram"><i class="fa fa-check"></i><b>12.1.5</b> Statystyki jakości estymacji | Histogram</a></li>
+<li class="chapter" data-level="12.1.6" data-path="ocena-jakosci-estymacji.html"><a href="ocena-jakosci-estymacji.html#statystyki-jakosci-estymacji-wykres-rozrzutu"><i class="fa fa-check"></i><b>12.1.6</b> Statystyki jakości estymacji | Wykres rozrzutu</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="ocena-jakosci-estymacji.html"><a href="ocena-jakosci-estymacji.html#walidacja-wynikow-estymacji"><i class="fa fa-check"></i><b>12.2</b> Walidacja wyników estymacji</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="ocena-jakosci-estymacji.html"><a href="ocena-jakosci-estymacji.html#walidacja-wynikow-estymacji-1"><i class="fa fa-check"></i><b>12.2.1</b> Walidacja wyników estymacji</a></li>
+<li class="chapter" data-level="12.2.2" data-path="ocena-jakosci-estymacji.html"><a href="ocena-jakosci-estymacji.html#walidacja-podzbiorem"><i class="fa fa-check"></i><b>12.2.2</b> Walidacja podzbiorem</a></li>
+<li class="chapter" data-level="12.2.3" data-path="ocena-jakosci-estymacji.html"><a href="ocena-jakosci-estymacji.html#kroswalidacja"><i class="fa fa-check"></i><b>12.2.3</b> Kroswalidacja</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="symulacje.html"><a href="symulacje.html"><i class="fa fa-check"></i><b>13</b> Symulacje</a><ul>
+<li class="chapter" data-level="13.1" data-path="symulacje.html"><a href="symulacje.html#symulacje-geostatystyczne"><i class="fa fa-check"></i><b>13.1</b> Symulacje geostatystyczne</a><ul>
+<li class="chapter" data-level="13.1.1" data-path="symulacje.html"><a href="symulacje.html#symulacje-geostatystyczne-1"><i class="fa fa-check"></i><b>13.1.1</b> Symulacje geostatystyczne</a></li>
+<li class="chapter" data-level="13.1.2" data-path="symulacje.html"><a href="symulacje.html#symulacje-geostatystyczne-2"><i class="fa fa-check"></i><b>13.1.2</b> Symulacje geostatystyczne</a></li>
+</ul></li>
+<li class="chapter" data-level="13.2" data-path="symulacje.html"><a href="symulacje.html#typy-symulacji"><i class="fa fa-check"></i><b>13.2</b> Typy symulacji</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="symulacje.html"><a href="symulacje.html#typy-symulacji-1"><i class="fa fa-check"></i><b>13.2.1</b> Typy symulacji</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="symulacje.html"><a href="symulacje.html#symulacje-bezwarunkowe"><i class="fa fa-check"></i><b>13.3</b> Symulacje bezwarunkowe</a></li>
+<li class="chapter" data-level="13.4" data-path="symulacje.html"><a href="symulacje.html#symulacje-warunkowe"><i class="fa fa-check"></i><b>13.4</b> Symulacje warunkowe</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="symulacje.html"><a href="symulacje.html#sekwencyjna-symulacja-gaussowska-ang.-sequential-gaussian-simulation"><i class="fa fa-check"></i><b>13.4.1</b> Sekwencyjna symulacja gaussowska (ang. <em>Sequential Gaussian simulation</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="symulacje.html"><a href="symulacje.html#sekwencyjna-symulacja-danych-kodowanych"><i class="fa fa-check"></i><b>13.5</b> Sekwencyjna symulacja danych kodowanych</a><ul>
+<li class="chapter" data-level="13.5.1" data-path="symulacje.html"><a href="symulacje.html#sekwencyjna-symulacja-danych-kodowanych-ang.-sequential-indicator-simulation"><i class="fa fa-check"></i><b>13.5.1</b> Sekwencyjna symulacja danych kodowanych (ang. <em>Sequential indicator simulation</em>)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="zrodla-wiedzy.html"><a href="zrodla-wiedzy.html"><i class="fa fa-check"></i><b>14</b> Źródła wiedzy</a><ul>
+<li class="chapter" data-level="14.1" data-path="zrodla-wiedzy.html"><a href="zrodla-wiedzy.html#podstawy-r"><i class="fa fa-check"></i><b>14.1</b> Podstawy R</a></li>
+<li class="chapter" data-level="14.2" data-path="zrodla-wiedzy.html"><a href="zrodla-wiedzy.html#analizy-przestrzenne-w-r"><i class="fa fa-check"></i><b>14.2</b> Analizy przestrzenne w R</a></li>
+<li class="chapter" data-level="14.3" data-path="zrodla-wiedzy.html"><a href="zrodla-wiedzy.html#geostatystyka-2"><i class="fa fa-check"></i><b>14.3</b> Geostatystyka</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="bibliografia.html"><a href="bibliografia.html"><i class="fa fa-check"></i><b>15</b> Bibliografia</a></li>
+<li class="divider"></li>
+<li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencja Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a></li>
+<li><a href="https://nowosad.github.io" target="blank">Jakub Nowosad 2016</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Geostatystyka w R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="wykorzystanie-do-estymacji-danych-uzupeniajacych" class="section level1">
+<h1><span class="header-section-number">11</span> Wykorzystanie do estymacji danych uzupełniających</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;gstat&#39;</span>)
+<span class="kw">library</span>(<span class="st">&#39;sp&#39;</span>)
+<span class="kw">library</span>(<span class="st">&#39;geostatbook&#39;</span>)
+<span class="kw">data</span>(punkty)
+<span class="kw">data</span>(siatka)</code></pre></div>
+<p>W wielu przypadkach, oprócz konkretnych pomiarów, istnieje również informacja na temat zmienności innych cech na analizowanym obszarze. W sytuacji, gdy dodatkowe zmienne są skorelowane ze zmienną analizowaną można wykorzystać jedną z metod krigingu wykorzystującą dane uzupełniające, tj. kriging stratyfikowany, prosty kriging ze zmiennymi średnimi lokalnymi, czy kriging uniwersalny.</p>
+<div id="kriging-stratyfikowany" class="section level2">
+<h2><span class="header-section-number">11.1</span> Kriging stratyfikowany</h2>
+<div id="kriging-stratyfikowany-ang.-kriging-within-strata" class="section level3">
+<h3><span class="header-section-number">11.1.1</span> Kriging stratyfikowany (ang. <em>Kriging within strata</em>)</h3>
+<p>Kriging stratyfikowany zakłada, że zmienność badanego zjawiska zależy od cechy jakościowej (kategoryzowanej). Przykładowo, wartość badanej zmiennej jest różna w zależności od pokrycia terenu. Kriging stratyfikowany wymaga posiadania danych zmiennej jakościowej (kategoryzowanej) na całym badanym obszarze.</p>
+<p>W poniższym przykładzie zmienną jakościową jest uproszczone pokrycie terenu ze zmiennej <code>clc</code>. Przyjmuje ono jedno z trzech wartości. <code>1</code> oznacza obszary rolnicze, <code>2</code> oznacza obszary leśne, a <code>4</code> oznacza wody powierzchniowe.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(siatka$clc)
+<span class="kw">spplot</span>(siatka, <span class="st">&#39;clc&#39;</span>)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-137-1.png" width="672" /></p>
+<p>Kriging stratyfikowany polega na niezależnym tworzeniu i modelowaniu semiwariogramów dla każdej z kategorii.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kws1 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">1</span>, ])
+<span class="kw">plot</span>(vario_kws1)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-138-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_kws1 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_kws1, <span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4500</span>, <span class="dt">nugget =</span> <span class="fl">0.5</span>))
+<span class="kw">plot</span>(vario_kws1, fitted_kws1)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-138-2.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kws2 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">2</span>, ])
+<span class="kw">plot</span>(vario_kws2)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-138-3.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_kws2 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_kws2, <span class="kw">vgm</span>(<span class="dv">5</span>, <span class="dt">model =</span> <span class="st">&#39;Gau&#39;</span>, <span class="dt">range =</span> <span class="dv">4500</span>, <span class="dt">nugget =</span> <span class="fl">0.1</span>))
+<span class="kw">plot</span>(vario_kws2, fitted_kws2)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-138-4.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kws4 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">4</span>, ])
+<span class="kw">plot</span>(vario_kws4)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-138-5.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_kws4 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_kws4, <span class="kw">vgm</span>(<span class="fl">0.5</span>, <span class="dt">model =</span> <span class="st">&#39;Nug&#39;</span>, <span class="dt">range =</span> <span class="dv">0</span>))
+<span class="kw">plot</span>(vario_kws4, fitted_kws4)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-138-6.png" width="672" /></p>
+<p>Następnie dla każdego obszaru przeprowadzona jest niezależna estymacja wartości analizowanej cechy. Należy jedynie wcześniej zadbać, by w siatce nie było elementów <code>NA</code> dotyczących zmiennych jakościowych. W przykładzie tworzona jest nowa siatka (<code>siatka2</code>) nie zawierająca braków wartości dla zmiennej <code>clc</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka2 &lt;-<span class="st"> </span>siatka[!<span class="kw">is.na</span>(siatka$clc), ]
+kws1 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">1</span>, ], siatka2[<span class="kw">na.omit</span>(siatka2$clc==<span class="dv">1</span>), ], <span class="dt">model =</span> fitted_kws1)</code></pre></div>
+<pre><code>## [using ordinary kriging]</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(kws1, <span class="st">&#39;var1.pred&#39;</span>)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-139-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kws2 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">2</span>, ], siatka2[<span class="kw">na.omit</span>(siatka2$clc==<span class="dv">2</span>), ], <span class="dt">model =</span> fitted_kws2)</code></pre></div>
+<pre><code>## [using ordinary kriging]</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(kws2, <span class="st">&#39;var1.pred&#39;</span>)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-139-2.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kws4 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty[punkty$clc==<span class="dv">4</span>, ], siatka2[<span class="kw">na.omit</span>(siatka2$clc==<span class="dv">4</span>), ], <span class="dt">model =</span> fitted_kws4)</code></pre></div>
+<pre><code>## [using ordinary kriging]</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(kws4, <span class="st">&#39;var1.pred&#39;</span>)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-139-3.png" width="672" /></p>
+<p>Ostatnim etapem jest połączenie cząstkowych wyników w jeden obiekt klasy <code>SpatialPixelsDataFrame</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kws &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">as.data.frame</span>(kws1), <span class="kw">as.data.frame</span>(kws2), <span class="kw">as.data.frame</span>(kws4))
+<span class="kw">coordinates</span>(kws) &lt;-<span class="st"> </span><span class="er">~</span>x+y
+kws &lt;-<span class="st"> </span><span class="kw">as</span>(kws, <span class="st">&#39;SpatialPixelsDataFrame&#39;</span>)</code></pre></div>
+<p>Uzyskane w ten sposób wyniki znacząco różnią się od estymacji krigingem prostym czy zwykłym, wykazując odrębność zmienności w poszczególnych kategoriach pokrycia/użytkowania terenu.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(kws, <span class="st">&#39;var1.pred&#39;</span>, <span class="dt">sp.layout=</span>punkty)
+<span class="kw">spplot</span>(kws, <span class="st">&#39;var1.var&#39;</span>, <span class="dt">sp.layout=</span>punkty)</code></pre></div>
+<p><img src="_main_files/figure-html/plotsykws2-1.png" width="672" /></p>
+</div>
+</div>
+<div id="prosty-kriging-ze-zmiennymi-srednimi-lokalnymi-lvm" class="section level2">
+<h2><span class="header-section-number">11.2</span> Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)</h2>
+<div id="prosty-kriging-ze-zmiennymi-srednimi-lokalnymi-lvm-ang.-simple-kriging-with-varying-local-means" class="section level3">
+<h3><span class="header-section-number">11.2.1</span> Prosty kriging ze zmiennymi średnimi lokalnymi (LVM) (ang. <em>Simple kriging with varying local means</em>)</h3>
+<p>Prosty kriging ze zmiennymi średnimi lokalnymi zamiast znanej (stałej) stacjonarnej średniej wykorzystuje zmienne średnie lokalne uzyskane na podstawie innej informacji. Lokalna średnia może być uzyskana za pomocą wyliczenia regresji liniowej pomiędzy zmienną badaną a zmienną dodatkową. W takiej sytuacji konieczne jest użycie funkcji <code>lm()</code>. W poniższym przykładzie budowany jest model liniowy relacji pomiędzy temperaturą powietrza (<code>temp</code>), a wysokością nad poziomem morza (<code>srtm</code>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">coef &lt;-<span class="st"> </span><span class="kw">lm</span>(temp~srtm, punkty)$coef
+coef</code></pre></div>
+<pre><code>##  (Intercept)         srtm 
+## 17.506469957 -0.007291269</code></pre>
+<p>Wykorzystując relację pomiędzy tymi dwoma zmiennymi tworzony jest semiwariogram empiryczny, który następnie jest modelowany.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~srtm, punkty)
+model_sim &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4000</span>, <span class="dt">nugget =</span> <span class="dv">1</span>)
+model_sim</code></pre></div>
+<pre><code>##   model psill range
+## 1   Nug     1     0
+## 2   Sph    10  4000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_sim &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model_sim)
+fitted_sim</code></pre></div>
+<pre><code>##   model      psill    range
+## 1   Nug  0.7705839    0.000
+## 2   Sph 13.1155524 5474.628</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted_sim)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-142-1.png" width="672" /></p>
+<p>Ostatnim krokiem jest estymacja geostatystyczna, w której oprócz czterech podstawowych argumentów, definiujemy także parametr <code>beta</code>. W tym wypadku jest to wypadku obiekt uzyskany na podstawie regresji liniowej.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sk_lvm &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~srtm, punkty, siatka, <span class="dt">model=</span>fitted_sim, <span class="dt">beta =</span> coef)</code></pre></div>
+<pre><code>## [using simple kriging]</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(sk_lvm)</code></pre></div>
+<pre><code>## Object of class SpatialPixelsDataFrame
+## Coordinates:
+##        min      max
+## x 745586.7 756926.7
+## y 712661.2 721211.2
+## Is projected: TRUE 
+## proj4string :
+## [+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000
+## +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs]
+## Number of points: 10993
+## Grid attributes:
+##    cellcentre.offset cellsize cells.dim
+## s1          745586.7       90       127
+## s2          712661.2       90        96
+## Data attributes:
+##    var1.pred         var1.var    
+##  Min.   : 9.098   Min.   :1.108  
+##  1st Qu.:13.215   1st Qu.:1.931  
+##  Median :15.237   Median :2.241  
+##  Mean   :15.864   Mean   :2.312  
+##  3rd Qu.:18.049   3rd Qu.:2.637  
+##  Max.   :25.240   Max.   :4.705  
+##  NA&#39;s   :43       NA&#39;s   :43</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sk_lvm, <span class="st">&#39;var1.pred&#39;</span>)
+<span class="kw">spplot</span>(sk_lvm, <span class="st">&#39;var1.var&#39;</span>)</code></pre></div>
+<p><img src="_main_files/figure-html/plotsylvm2-1.png" width="672" /></p>
+</div>
+</div>
+<div id="kriging-uniwersalny" class="section level2">
+<h2><span class="header-section-number">11.3</span> Kriging uniwersalny</h2>
+<div id="kriging-uniwersalny-ang.-universal-kriging" class="section level3">
+<h3><span class="header-section-number">11.3.1</span> Kriging uniwersalny (ang. <em>Universal kriging</em>)</h3>
+<p>Kriging uniwersalny, określany również jako kriging z trendem (ang. <em>Kriging with a trend model</em>) zakłada , że nieznana średnia lokalna zmienia się stopniowo na badanym obszarze. W krigingu uniwersalnym możemy stosować zarówno zmienne jakościowe, jak i ilościowe.</p>
+<p>W pierwszym przykładzie, kriging uniwersalny służy stworzeniu semiwariogramu, modelowaniu oraz estymacji temperatury powietrza z użyciem zmiennej pokrycia terenu.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(punkty$clc)
+vario_uk1 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~clc, punkty)
+vario_uk1</code></pre></div>
+<pre><code>##      np      dist     gamma dir.hor dir.ver   id
+## 1   127  204.2244  1.513128       0       0 var1
+## 2   271  494.5572  3.120279       0       0 var1
+## 3   522  798.7911  3.706435       0       0 var1
+## 4   587 1112.7783  4.494623       0       0 var1
+## 5   856 1428.7866  5.451369       0       0 var1
+## 6   920 1743.7864  6.054877       0       0 var1
+## 7  1068 2062.3041  6.140934       0       0 var1
+## 8  1106 2378.9333  6.241295       0       0 var1
+## 9  1184 2691.5206  7.665422       0       0 var1
+## 10 1215 3011.7729  7.647765       0       0 var1
+## 11 1362 3324.6705  7.973022       0       0 var1
+## 12 1379 3642.5616  8.374149       0       0 var1
+## 13 1405 3963.6776  8.681657       0       0 var1
+## 14 1468 4276.0078  9.723868       0       0 var1
+## 15 1482 4598.4144 11.789961       0       0 var1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_uk1)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-144-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_uk1 &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">8</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">3000</span>, <span class="dt">nugget =</span> <span class="dv">1</span>)
+vario_fit_uk1 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_uk1, <span class="dt">model=</span>model_uk1)
+vario_fit_uk1</code></pre></div>
+<pre><code>##   model    psill    range
+## 1   Nug 1.261541    0.000
+## 2   Sph 8.472224 4742.211</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_uk1, vario_fit_uk1)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-144-2.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siatka$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(siatka$clc)
+<span class="kw">spplot</span>(siatka, <span class="st">&#39;clc&#39;</span>)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-145-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">uk1 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~clc, <span class="dt">locations =</span> punkty, <span class="dt">newdata=</span>siatka, <span class="dt">model=</span>vario_fit_uk1)</code></pre></div>
+<pre><code>## [using universal kriging]</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(uk1, <span class="st">&#39;var1.pred&#39;</span>)
+<span class="kw">spplot</span>(uk1, <span class="st">&#39;var1.var&#39;</span>)</code></pre></div>
+<p><img src="_main_files/figure-html/plotsy4uk1-1.png" width="672" /></p>
+<p>W kolejnym przykładzie zastosowane są już dwie zmienne uzupełniające - wartość wskaźnika wegetacji (<code>ndvi</code>) oraz wysokość nad poziomem morza (<code>srtm</code>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_uk2 &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~ndvi+srtm, punkty)
+vario_uk2</code></pre></div>
+<pre><code>##      np      dist     gamma dir.hor dir.ver   id
+## 1   127  204.2244  1.324959       0       0 var1
+## 2   271  494.5572  2.906522       0       0 var1
+## 3   522  798.7911  3.964307       0       0 var1
+## 4   587 1112.7783  5.058684       0       0 var1
+## 5   856 1428.7866  6.088010       0       0 var1
+## 6   920 1743.7864  7.331287       0       0 var1
+## 7  1068 2062.3041  7.409558       0       0 var1
+## 8  1106 2378.9333  8.222238       0       0 var1
+## 9  1184 2691.5206  9.404511       0       0 var1
+## 10 1215 3011.7729  9.495409       0       0 var1
+## 11 1362 3324.6705  9.403714       0       0 var1
+## 12 1379 3642.5616 11.182666       0       0 var1
+## 13 1405 3963.6776 11.241615       0       0 var1
+## 14 1468 4276.0078 13.783975       0       0 var1
+## 15 1482 4598.4144 15.536012       0       0 var1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_uk2)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-146-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">8</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">3000</span>, <span class="dt">nugget =</span> <span class="dv">1</span>)
+vario_fit_uk2 &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_uk2, <span class="dt">model=</span>model)
+vario_fit_uk2</code></pre></div>
+<pre><code>##   model      psill    range
+## 1   Nug  0.8757491    0.000
+## 2   Sph 13.3016445 5789.379</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_uk2, vario_fit_uk2)</code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-146-2.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">uk2 &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~ndvi+srtm, <span class="dt">locations =</span> punkty, <span class="dt">newdata=</span>siatka, <span class="dt">model=</span>vario_fit_uk2)</code></pre></div>
+<pre><code>## [using universal kriging]</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(uk2, <span class="st">&#39;var1.pred&#39;</span>)
+<span class="kw">spplot</span>(uk2, <span class="st">&#39;var1.var&#39;</span>)</code></pre></div>
+<p><img src="_main_files/figure-html/plotsy4ked-1.png" width="672" /></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="estymacje-wielozmienne.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ocena-jakosci-estymacji.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+},
+"toolbar": {
+"position": "fixed"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -194,7 +194,7 @@ Chmura semiwariogramu pozwala także na zauważenie par punktów, których warto
 vario_cloud_sel <- plot(variogram(temp~1, punkty, cloud=TRUE), digitize=TRUE)
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.width=6}
 library('knitr')
 knitr::include_graphics('figs/cloud_sel.png')
 ```
@@ -205,7 +205,7 @@ Następnie można wyświetlić wybrane pary punktów z użyciem funkcji `plot()`
 plot(vario_cloud_sel, punkty) 
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.width=6}
 library('knitr')
 knitr::include_graphics('figs/points_sel.png')
 ```
@@ -360,7 +360,7 @@ plot(vario_map, threshold=30) # co najmniej 30 par punktów
 
 Mapie semiwariogramu można również się przyjrzeć interaktywnie używając funkcję `plot3D()` z pakietu `rasterVis`.
 
-```{r mapa_semi, eval=FALSE}
+```{r mapa_semi, eval=FALSE, fig.width=6}
 plot3D(raster(vario_map$map), col=rainbow)
 ```
 

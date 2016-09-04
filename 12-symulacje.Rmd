@@ -17,8 +17,8 @@ data(siatka)
 ```{r setup10, echo=FALSE, include=FALSE}
 library('knitr')
 library('Cairo')
-knitr::opts_chunk$set(warning=FALSE, message=FALSE)
-options(device = "cairo_pdf")
+library('grDevices')
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, dev = "cairo_pdf")
 ```
 
 ```{r, echo=FALSE}

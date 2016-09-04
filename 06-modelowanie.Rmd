@@ -12,8 +12,9 @@ data(punkty)
 
 ```{r setup4, echo=FALSE, include=FALSE}
 library('knitr')
-knitr::opts_chunk$set(warning=FALSE, message=FALSE)
-options(device = "cairo_pdf")
+library('Cairo')
+library('grDevices')
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, dev = "cairo_pdf", out.width = '\\textwidth')
 ```
 
 ```{r, echo=FALSE}
@@ -88,7 +89,7 @@ ve_fit <- as.vgm.variomodel(v_eye[[1]])
 ```
 
 ```{r, echo=FALSE}
-knitr::include_graphics('figs/eyefit.png')
+knitr::include_graphics('figs/eyefit.png', dpi=90, auto_pdf = FALSE)
 ```
 
 ### Metody modelowania  | funkcja `fit.variogram()`
