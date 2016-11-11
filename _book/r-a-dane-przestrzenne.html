@@ -8,7 +8,7 @@
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Introduction to geostatistics with R (in Polish).">
-  <meta name="generator" content="bookdown 0.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,8 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-09-03">
+  
+<meta name="date" content="2016-11-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -566,15 +567,8 @@ sp_na_omit <- function(x, margin=1) {
 <div id="dane-poligonowe-formaty-gisowe" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Dane poligonowe (formaty gisowe)</h3>
 <p>Dane wektorowe (np. shapefile) można odczytać za pomocą funkcji <code>readOGR()</code> z pakietu <code>rgdal</code>. Dla danych w formacie shapefile, przyjmuje ona co najmniej dwa argumenty - <code>dsn</code> oraz <code>layer</code>. Argument <code>dsn</code> określa folder, w którym znajdują się dane. W przypadku, gdy dane znajdują się w folderze roboczym należy ten argument określić za pomocą znaku kropki (<code>'.'</code>). Argument <code>layer</code> wymaga podania nazwy pliku bez jego rozszerzenia. Przykładowo, gdy pliki nazywają się <code>granica.dbf</code>, <code>granica.prj</code>, <code>granica.shp</code>, oraz <code>granica.shx</code> - konieczne jest podanie w argumencie <code>layer</code> jedynie nazwy <code>granica</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;rgdal&#39;</span>)</code></pre></div>
-<pre><code>## rgdal: version: 1.1-10, (SVN revision 622)
-##  Geospatial Data Abstraction Library extensions to R successfully loaded
-##  Loaded GDAL runtime: GDAL 2.0.2, released 2016/01/26
-##  Path to GDAL shared files: /usr/share/gdal
-##  Loaded PROJ.4 runtime: Rel. 4.9.2, 08 September 2015, [PJ_VERSION: 492]
-##  Path to PROJ.4 shared files: (autodetected)
-##  Linking to sp version: 1.2-3</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;dane&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;granica&#39;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;rgdal&#39;</span>)
+granica &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span><span class="st">&#39;dane&#39;</span>, <span class="dt">layer=</span><span class="st">&#39;granica&#39;</span>)</code></pre></div>
 <pre><code>## OGR data source with driver: ESRI Shapefile 
 ## Source: &quot;dane&quot;, layer: &quot;granica&quot;
 ## with 1 features

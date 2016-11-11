@@ -34,7 +34,7 @@ par(mar=c(rep(0, 4)))
 W momencie, gdy trzeba określić jakość estymacji lub porównać wyniki pomiędzy estymacjami należy zastosować tzw. statystyki jakości estymacji. Do podstawowych statystyk ocen jakości estymacji należą:
 
 - Średni błąd predykcji (MPE, ang. *mean prediction error*)
-- Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root square prediction error*)
+- Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root mean square error*)
 - Rozkład błędu (np. 5. percentyl, mediana, 95. percentyl)
     
 Idealna estymacja dawałaby brak błędu oraz współczynnik korelacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystąpieniu wartości odstających.

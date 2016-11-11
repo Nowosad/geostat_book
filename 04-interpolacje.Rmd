@@ -102,7 +102,7 @@ grid.arrange(p3, p4, p1, p2)
 
 ## Modele statystyczne
 
-Modele deterministyczne charakteryzują się tym, że ich parametry określane są w oparciu o teorię prawdopodobieństwa. Dodatkowo wynik estymacji zawiera także oszacowanie błędu. Te metody zazwyczaj wymagają większych zasobów sprzętowych. Do modeli deterministycznych należą, między innymi:
+Modele statystyczne charakteryzują się tym, że ich parametry określane są w oparciu o teorię prawdopodobieństwa. Dodatkowo wynik estymacji zawiera także oszacowanie błędu. Te metody zazwyczaj wymagają większych zasobów sprzętowych. Do modeli statystycznych należą, między innymi:
 
 - Kriging
 - Modele regresyjne

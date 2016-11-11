@@ -8,7 +8,7 @@
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Introduction to geostatistics with R (in Polish).">
-  <meta name="generator" content="bookdown 0.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,8 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-09-03">
+  
+<meta name="date" content="2016-11-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -433,13 +434,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <pre><code>## [using unconditional Gaussian simulation]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_bezw1, <span class="dt">main=</span><span class="st">&#39;Przestrzennie skorelowana powierzchnia </span><span class="ch">\n</span><span class="st">średnia=1, </span>
 <span class="st">       sill=0.025, zasięg=100, model wykładniczy&#39;</span>)</code></pre></div>
-<p><img src="_main_files/figure-html/sym_bezw1-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/sym_bezw1-1.pdf" width="\textwidth" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_bezw2 &lt;-<span class="st"> </span><span class="kw">krige</span>(<span class="dt">formula=</span>z~<span class="dv">1</span>, , <span class="dt">model=</span><span class="kw">vgm</span>(<span class="dt">psill=</span><span class="fl">0.025</span>, <span class="dt">model=</span><span class="st">&#39;Exp&#39;</span>, <span class="dt">range=</span><span class="dv">1500</span>), <span class="dt">newdata=</span>siatka, <span class="dt">beta=</span><span class="dv">1</span>,
                    <span class="dt">nmax=</span><span class="dv">30</span>, <span class="dt">locations=</span><span class="ot">NULL</span>, <span class="dt">dummy=</span><span class="ot">TRUE</span>, <span class="dt">nsim=</span><span class="dv">4</span>)</code></pre></div>
 <pre><code>## [using unconditional Gaussian simulation]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_bezw2, <span class="dt">main=</span><span class="st">&#39;Przestrzennie skorelowana powierzchnia </span><span class="ch">\n</span><span class="st">średnia=1, </span>
 <span class="st">       sill=0.025, zasięg=1500, model wykładniczy&#39;</span>)</code></pre></div>
-<p><img src="_main_files/figure-html/sym_bezw2-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/sym_bezw2-1.pdf" width="\textwidth" /></p>
 <!--
 sym_bezw_model3 <- gstat(formula=~1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
 sym_bezw3 <- predict(sym_bezw_model3, newdata=siatka, nsim=4)
@@ -464,9 +465,9 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 </ol>
 <p>Sekwencyjna symulacja gaussowska wymaga zmiennej posiadającej wartości o rozkładzie zbliżonym do normalnego. Można to sprawdzić poprzez wizualizacje danych (histogram, wykres kwantyl-kwantyl) lub też test statystyczny (test Shapiro-Wilka). Zmienna <code>temp</code> nie ma rozkładu zbliżonego do normalnego.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp)) +<span class="st"> </span><span class="kw">geom_histogram</span>()</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-164-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-164-1.pdf" width="\textwidth" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(<span class="dt">sample=</span>temp)) +<span class="st"> </span><span class="kw">stat_qq</span>()</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-164-2.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-164-2.pdf" width="\textwidth" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shapiro.test</span>(punkty$temp)</code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
@@ -476,9 +477,9 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 <p>Na potrzeby symulacji zmienna <code>temp</code> została zlogarytmizowna.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$temp_log &lt;-<span class="st"> </span><span class="kw">log</span>(punkty$temp)
 <span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(temp_log)) +<span class="st"> </span><span class="kw">geom_histogram</span>()</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-165-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-165-1.pdf" width="\textwidth" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(punkty@data, <span class="kw">aes</span>(<span class="dt">sample=</span>temp_log)) +<span class="st"> </span><span class="kw">stat_qq</span>()</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-165-2.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-165-2.pdf" width="\textwidth" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shapiro.test</span>(punkty$temp_log)</code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
@@ -490,12 +491,12 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 model &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="fl">0.05</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4500</span>, <span class="dt">nugget=</span><span class="fl">0.005</span>)
 fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model)
 <span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted)</code></pre></div>
-<p><img src="_main_files/figure-html/sym_ok-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/sym_ok-1.pdf" width="\textwidth" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_ok &lt;-<span class="st"> </span><span class="kw">krige</span>(temp_log~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted, <span class="dt">nmax=</span><span class="dv">30</span>, <span class="dt">nsim=</span><span class="dv">4</span>)</code></pre></div>
 <pre><code>## drawing 4 GLS realisations of beta...
 ## [using conditional Gaussian simulation]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_ok)</code></pre></div>
-<p><img src="_main_files/figure-html/sym_ok-2.png" width="672" /></p>
+<p><img src="_main_files/figure-html/sym_ok-2.pdf" width="\textwidth" /></p>
 <p>Wyniki symulacji można przetworzyć do pierwotnej jednostki z użyciem funkcji wykładniczej (<code>exp</code>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(sym_ok)</code></pre></div>
 <pre><code>## Object of class SpatialPixelsDataFrame
@@ -505,8 +506,9 @@ fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario
 ## y 712661.2 721211.2
 ## Is projected: TRUE 
 ## proj4string :
-## [+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000
-## +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs]
+## [+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993
+## +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0
+## +units=m +no_defs]
 ## Number of points: 10993
 ## Grid attributes:
 ##    cellcentre.offset cellsize cells.dim
@@ -529,8 +531,9 @@ fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario
 ## y 712661.2 721211.2
 ## Is projected: TRUE 
 ## proj4string :
-## [+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000
-## +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs]
+## [+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993
+## +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0
+## +units=m +no_defs]
 ## Number of points: 10993
 ## Grid attributes:
 ##    cellcentre.offset cellsize cells.dim
@@ -545,7 +548,7 @@ fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario
 ##  3rd Qu.:18.443   3rd Qu.:18.520   3rd Qu.:18.07   3rd Qu.:18.392  
 ##  Max.   :30.714   Max.   :33.311   Max.   :28.82   Max.   :33.940</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_ok)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-166-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-166-1.pdf" width="\textwidth" /></p>
 <p>Symulacje geostatystyczne pozwalają również na przedstawianie niepewności interpolacji. W tym wypadku należy wykonać znacznie więcej powtórzeń (np. <code>nsim=100</code>). Uzyskane wyniki należy przeliczyć do oryginalnej jednostki, a następnie wyliczyć odchylenie standardowe ich wartości (używając funkcji <code>stack()</code> i <code>calc()</code> z pakietu <code>raster</code>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_sk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp_log~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">2.7</span>, <span class="dt">nsim=</span><span class="dv">100</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre></div>
 <pre><code>## [using conditional Gaussian simulation]</code></pre>
@@ -555,7 +558,7 @@ sym_sk &lt;-<span class="st"> </span><span class="kw">stack</span>(sym_sk)
 sym_sk_sd &lt;-<span class="st"> </span><span class="kw">calc</span>(sym_sk, <span class="dt">fun =</span> sd)</code></pre></div>
 <p>W efekcie otrzymujemy mapę odchylenia standardowego symulowanych wartości. Można na niej odczytać obszary o najpewniejszych (najmniej zmiennych) wartościach (niebieski kolor) oraz obszary o największej zmienności cechy (kolor żółty).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_sk_sd)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-167-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-167-1.pdf" width="\textwidth" /></p>
 </div>
 </div>
 <div id="sekwencyjna-symulacja-danych-kodowanych" class="section level2">
@@ -573,23 +576,23 @@ sym_sk_sd &lt;-<span class="st"> </span><span class="kw">calc</span>(sym_sk, <sp
 <p>W tej metodzie kolejne etapy przypominają przeprowadzenie krigingu danych kodowanych. Jedynie w funkcji <code>krige()</code> należy dodać argument mówiący o liczbie symulacji do przeprowadzenia (<code>nsim</code> ).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_ind &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp_ind~<span class="dv">1</span>, punkty)         
 <span class="kw">plot</span>(vario_ind)</code></pre></div>
-<p><img src="_main_files/figure-html/sym_ind-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/sym_ind-1.pdf" width="\textwidth" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_ind &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="fl">0.14</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">2000</span>, <span class="dt">nugget =</span> <span class="fl">0.02</span>)
 <span class="kw">plot</span>(vario_ind, <span class="dt">model=</span>model_ind)</code></pre></div>
-<p><img src="_main_files/figure-html/sym_ind-2.png" width="672" /></p>
+<p><img src="_main_files/figure-html/sym_ind-2.pdf" width="\textwidth" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted_ind &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_ind, model_ind)
 fitted_ind</code></pre></div>
 <pre><code>##   model      psill    range
 ## 1   Nug 0.03299461    0.000
 ## 2   Sph 0.09866551 3006.403</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_ind, <span class="dt">model=</span>fitted_ind)</code></pre></div>
-<p><img src="_main_files/figure-html/sym_ind-3.png" width="672" /></p>
+<p><img src="_main_files/figure-html/sym_ind-3.pdf" width="\textwidth" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sym_ind &lt;-<span class="st"> </span><span class="kw">krige</span>(temp_ind~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted_ind, <span class="dt">indicators=</span><span class="ot">TRUE</span>, <span class="dt">nsim=</span><span class="dv">4</span>, <span class="dt">nmax=</span><span class="dv">30</span>)</code></pre></div>
 <pre><code>## drawing 4 GLS realisations of beta...
 ## [using conditional indicator simulation]</code></pre>
 <p>Wynik symulacji danych kodowanych znacząco różni się od wyniku krigingu danych kodowanych. W przeciwieństwie do tej drugiej metody, w rezultacie symulacji nie otrzymujemy prawdopodobieństwa zajścia danej klasy, ale konkretne wartości <code>1</code> lub <code>0</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sym_ind, <span class="dt">main=</span><span class="st">&#39;Symulacje warunkowe&#39;</span>)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-169-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-169-1.pdf" width="\textwidth" /></p>
 <!--
 łączenie sis - wiele symulacji
 -->

@@ -154,8 +154,8 @@ spplot(kzt, 'var1.var')
 
 ```{r plotsy2kzt, echo=FALSE, eval=TRUE, fig.height=8}
 library('gridExtra')
-p1 <- spplot(kzt, "var1.pred", main='Predykcja OK')
-p2 <- spplot(kzt, "var1.var", main='Wariancja predykcji OK')
+p1 <- spplot(kzt, "var1.pred", main='Predykcja KZT')
+p2 <- spplot(kzt, "var1.var", main='Wariancja predykcji KZT')
 grid.arrange(p1, p2, ncol=1)
 ```
 

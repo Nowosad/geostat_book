@@ -8,7 +8,7 @@
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Introduction to geostatistics with R (in Polish).">
-  <meta name="generator" content="bookdown 0.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,8 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-09-03">
+  
+<meta name="date" content="2016-11-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -415,9 +416,9 @@ Kroskorelogramy
 <p>Metoda kokrigingu opiera się nie o semiwariogram, lecz o krossemiwariogramy. Krossemiwariogram jest to wariancja różnicy pomiędzy dwiema zmiennymi w dwóch lokalizacjach. Wyliczając krossemiwariogram otrzymujemy empiryczne semiwariogramy dla dwóch badanych zmiennych oraz kroswariogram dla kombinacji dwóch zmiennych.</p>
 <p>W poniższym przykładzie istnieją dwie zmienne, <code>savi</code> ze zbioru <code>punkty</code> pomierzona w 250 lokalizacjach oraz <code>ndvi</code> ze zbioru <code>punkty_ndvi</code> pomierzona w 997 punktach.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(punkty, <span class="st">&#39;savi&#39;</span>)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-127-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-127-1.pdf" width="\textwidth" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(punkty_ndvi, <span class="st">&#39;ndvi&#39;</span>)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-128-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-128-1.pdf" width="\textwidth" /></p>
 <p>Tworzenie krossemiwariogramów odbywa się z użyciem funkcji <code>gstat()</code>. Na początku definiujemy pierwszy obiekt <code>g</code>. Składa się on z obiektu pustego (<code>NULL</code>), nazwy pierwszej zmiennej (nazwa może być dowolna), wzoru (w przykładzie <code>savi~1</code>), oraz pierwszego zbioru punktowego. Następnie do pierwszego obiektu <code>g</code> dodajemy nowe informacje również poprzez funkcję <code>gstat()</code>. Jest to nazwa obiektu (<code>g</code>), nazwa drugiej zmiennej, wzór, oraz drugi zbiór punktowy.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g &lt;-<span class="st"> </span><span class="kw">gstat</span>(<span class="ot">NULL</span>, <span class="dt">id=</span><span class="st">&#39;SAVI&#39;</span>, <span class="dt">form =</span> savi~<span class="dv">1</span>, <span class="dt">data =</span> punkty)
 g &lt;-<span class="st"> </span><span class="kw">gstat</span>(g, <span class="dt">id=</span><span class="st">&#39;NDVI&#39;</span>, <span class="dt">form =</span> ndvi~<span class="dv">1</span>, <span class="dt">data =</span> punkty_ndvi)
@@ -428,7 +429,7 @@ g</code></pre></div>
 <p>Z uzyskanego w ten sposób obiektu tworzymy krossemiwariogram (funkcja <code>variogram()</code>), a następnie go wizualizujemy używając funkcji <code>plot()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v &lt;-<span class="st"> </span><span class="kw">variogram</span>(g)
 <span class="kw">plot</span>(v)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-129-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-129-1.pdf" width="\textwidth" /></p>
 </div>
 </div>
 <div id="modelowanie-krossemiwariogramow" class="section level2">
@@ -453,7 +454,7 @@ g_fit</code></pre></div>
 ## SAVI.NDVI[1]   Nug 0.002257298     0
 ## SAVI.NDVI[2]   Sph 0.004352821  2000</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(v, g_fit)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-131-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-131-1.pdf" width="\textwidth" /></p>
 <!--
 
 ```r
@@ -487,8 +488,9 @@ plot(variogram(g, alpha = c(60, 105, 150, 195)))
 ## y 712661.2 721211.2
 ## Is projected: TRUE 
 ## proj4string :
-## [+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000
-## +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs]
+## [+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993
+## +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0
+## +units=m +no_defs]
 ## Number of points: 10993
 ## Grid attributes:
 ##    cellcentre.offset cellsize cells.dim
@@ -511,7 +513,7 @@ plot(variogram(g, alpha = c(60, 105, 150, 195)))
 ##  Max.   :0.004232</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(ck, <span class="st">&#39;SAVI.pred&#39;</span>)
 <span class="kw">spplot</span>(ck, <span class="st">&#39;SAVI.var&#39;</span>)</code></pre></div>
-<p><img src="_main_files/figure-html/kokriging_predicted-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/kokriging_predicted-1.pdf" width="\textwidth" /></p>
 <!--   
 ## Kokriging pełny i medianowy, kokriging kolokacyjny, 
 ## Kokriging na podstawie uproszczonych modeli Markowa I i II

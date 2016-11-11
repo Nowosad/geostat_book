@@ -8,7 +8,7 @@
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Introduction to geostatistics with R (in Polish).">
-  <meta name="generator" content="bookdown 0.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,8 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-09-03">
+  
+<meta name="date" content="2016-11-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -384,13 +385,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="header">
 <h1 class="title">Geostatystyka w R</h1>
 <h4 class="author"><em>Jakub Nowosad</em></h4>
-<h4 class="date"><em>2016-09-03</em></h4>
+<h4 class="date"><em>2016-11-11</em></h4>
 </div>
 <div id="wprowadzenie" class="section level1">
 <h1><span class="header-section-number">1</span> Wprowadzenie</h1>
 <p><img src="Rfigs/book_cover.png" width="283" style="display: block; margin: auto;" /></p>
 <p>Masz przed sobą skrypt zawierający materiały do ćwiczeń z geostatystyki. Składa się ona z kilkunastu rozdziałów pokazujących jak: dodawać i wizualizować dane przestrzenne w R (rozdział <a href="r-a-dane-przestrzenne.html#r-a-dane-przestrzenne">2</a>), wykonywać wstępną eksplorację danych nieprzestrzennych (rozdział <a href="eksploracja-analiza-danych-nieprzestrzennych.html#eksploracja-analiza-danych-nieprzestrzennych">3</a>), wstępnie analizować dane przestrzenne (rozdział <a href="eksploracyjna-analiza-danych-przestrzennych.html#eksploracyjna-analiza-danych-przestrzennych">4</a>), wykorzystywać deterministyczne metody interpolacji (rozdział <a href="metody-interpolacji.html#metody-interpolacji">5</a>), rozumieć i tworzyć przestrzenne miary podobieństwa i niepodobieństwa (rozdział <a href="geostatystyka-prolog.html#geostatystyka-prolog">6</a>), modelować semiwariogramy bezkierunkowe i kierunkowe (rozdział <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-matematycznie-autokorelacji-przestrzennej">7</a>), tworzyć estymacje jednozmienne (rozdział <a href="estymacje-jednozmienne.html#estymacje-jednozmienne">8</a>), estymacje danych kodowanych (rozdział <a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#estymacja-lokalnego-rozkadu-prawdopodobienstwa">9</a>), estymacje wielozmienne (rozdział <a href="estymacje-wielozmienne.html#estymacje-wielozmienne">10</a>), estymacje wykorzystujące dane uzupełniające (rozdział <a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#wykorzystanie-do-estymacji-danych-uzupeniajacych">11</a>), oceniać jakość wykonanych estymacji (rozdział <a href="ocena-jakosci-estymacji.html#ocena-jakosci-estymacji">12</a>) oraz budować symulacje przestrzenne (rozdział <a href="symulacje.html#symulacje">13</a>). Dodatkowo w rozdziale <a href="zrodla-wiedzy.html#zrodla-wiedzy">14</a> można znaleźć odnośniki do innych materiałów związanych z geostatystyką i R. Wszystkie zaprezentowane przykłady zawierają również kod w języku R. Skrypt został stworzony w R <span class="citation">(R Core Team <a href="bibliografia.html#ref-R-base">2016</a>)</span> z wykorzystaniem pakietów <code>bookdown</code> <span class="citation">(Xie <a href="bibliografia.html#ref-R-bookdown">2016</a><a href="bibliografia.html#ref-R-bookdown">a</a>)</span>, <code>rmarkdown</code> <span class="citation">(Allaire et al. <a href="bibliografia.html#ref-R-rmarkdown">2016</a>)</span>, <code>knitr</code> <span class="citation">(Xie <a href="bibliografia.html#ref-R-knitr">2016</a><a href="bibliografia.html#ref-R-knitr">b</a>)</span> oraz programu <a href="http://pandoc.org/">Pandoc</a>. Aktualna wersja skryptu znajduje się pod adresem <a href="https://bookdown.org/nowosad/Geostatystyka/" class="uri">https://bookdown.org/nowosad/Geostatystyka/</a>.</p>
-<p>Zachęcam do zgłaszania wszelkich uwag, błędów, pomysłów oraz komentarzy na adres mailowy <a href="mailto:nowosad@amu.edu.pl">nowosad@amu.edu.pl</a>.</p>
+<p>Zachęcam do zgłaszania wszelkich uwag, błędów, pomysłów oraz komentarzy na adres mailowy <a href="mailto:nowosad.jakub@gmail.com">nowosad.jakub@gmail.com</a>.</p>
 <div id="wymagania-wstepne" class="section level2">
 <h2><span class="header-section-number">1.1</span> Wymagania wstępne</h2>
 <div id="oprogramowanie" class="section level3">

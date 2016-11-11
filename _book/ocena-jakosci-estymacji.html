@@ -8,7 +8,7 @@
   <title>Geostatystyka w R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Introduction to geostatistics with R (in Polish).">
-  <meta name="generator" content="bookdown 0.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
 
   <meta property="og:title" content="Geostatystyka w R" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,8 @@
 
 <meta name="author" content="Jakub Nowosad">
 
-<meta name="date" content="2016-09-03">
+  
+<meta name="date" content="2016-11-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -398,7 +399,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>W momencie, gdy trzeba określić jakość estymacji lub porównać wyniki pomiędzy estymacjami należy zastosować tzw. statystyki jakości estymacji. Do podstawowych statystyk ocen jakości estymacji należą:</p>
 <ul>
 <li>Średni błąd predykcji (MPE, ang. <em>mean prediction error</em>)</li>
-<li>Pierwiastek średniego błędu kwadratowego (RMSE, ang. <em>root square prediction error</em>)</li>
+<li>Pierwiastek średniego błędu kwadratowego (RMSE, ang. <em>root mean square error</em>)</li>
 <li>Rozkład błędu (np. 5. percentyl, mediana, 95. percentyl)</li>
 </ul>
 <p>Idealna estymacja dawałaby brak błędu oraz współczynnik korelacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystąpieniu wartości odstających.</p>
@@ -424,17 +425,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Do oceny przestrzennej jakości predykcji można również zastosować mapę przestawiającą błędy predykcji (błędy estymacji). Wyliczenie błędów estymacji odbywa się poprzez odjęcie od predykcji wartości obserwowanej.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">blad_predykcji &lt;-<span class="st"> </span>estymacja -<span class="st"> </span>obserwowane</code></pre></div>
 <pre><code>## [using simple kriging]</code></pre>
-<p><img src="_main_files/figure-html/mapa-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/mapa-1.pdf" width="\textwidth" /></p>
 </div>
 <div id="statystyki-jakosci-estymacji-histogram" class="section level3">
 <h3><span class="header-section-number">12.1.5</span> Statystyki jakości estymacji | Histogram</h3>
 <p>Błąd predykcji można również przedstawić na wykresach, między innymi, na histogramie.</p>
-<p><img src="_main_files/figure-html/hist-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/hist-1.pdf" width="\textwidth" /></p>
 </div>
 <div id="statystyki-jakosci-estymacji-wykres-rozrzutu" class="section level3">
 <h3><span class="header-section-number">12.1.6</span> Statystyki jakości estymacji | Wykres rozrzutu</h3>
 <p>Do porównania pomiędzy wartością estymowaną a obserwowaną może również posłużyć wykres rozrzutu.</p>
-<p><img src="_main_files/figure-html/point-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/point-1.pdf" width="\textwidth" /></p>
 </div>
 </div>
 <div id="walidacja-wynikow-estymacji" class="section level2">
@@ -450,16 +451,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">124</span>)
 indeks &lt;-<span class="st"> </span><span class="kw">as.vector</span>(<span class="kw">createDataPartition</span>(punkty$temp, <span class="dt">p=</span><span class="fl">0.75</span>, <span class="dt">list=</span><span class="ot">FALSE</span>))
 indeks</code></pre></div>
-<pre><code>##   [1]   1   2   4   7   8   9  12  13  14  15  16  17  18  19  22  23  25  26  27  29
-##  [21]  30  32  34  35  36  37  38  40  41  42  43  45  49  51  52  53  54  55  56  58
-##  [41]  59  60  61  62  64  66  67  69  70  73  75  76  78  79  81  82  83  84  85  86
-##  [61]  87  88  89  90  91  94  96  97  98 100 101 102 103 106 107 108 109 110 111 112
-##  [81] 113 114 115 117 118 120 122 124 125 127 128 129 130 132 133 134 135 137 138 139
-## [101] 140 141 142 143 144 146 148 149 150 153 154 155 156 157 158 159 160 161 162 163
-## [121] 167 168 169 171 173 174 175 176 177 180 181 183 184 185 186 187 188 189 190 191
-## [141] 193 194 195 196 199 200 201 202 204 205 208 209 210 212 213 214 215 216 217 218
-## [161] 219 220 221 223 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239 240
-## [181] 241 242 243 244 245 246 247 248 249 250</code></pre>
+<pre><code>##   [1]   1   2   4   7   8   9  12  13  14  15  16  17  18  19  22  23  25
+##  [18]  26  27  29  30  32  34  35  36  37  38  40  41  42  43  45  49  51
+##  [35]  52  53  54  55  56  58  59  60  61  62  64  66  67  69  70  73  75
+##  [52]  76  78  79  81  82  83  84  85  86  87  88  89  90  91  94  96  97
+##  [69]  98 100 101 102 103 106 107 108 109 110 111 112 113 114 115 117 118
+##  [86] 120 122 124 125 127 128 129 130 132 133 134 135 137 138 139 140 141
+## [103] 142 143 144 146 148 149 150 153 154 155 156 157 158 159 160 161 162
+## [120] 163 167 168 169 171 173 174 175 176 177 180 181 183 184 185 186 187
+## [137] 188 189 190 191 193 194 195 196 199 200 201 202 204 205 208 209 210
+## [154] 212 213 214 215 216 217 218 219 220 221 223 225 226 227 228 229 230
+## [171] 231 232 233 234 235 236 237 238 239 240 241 242 243 244 245 246 247
+## [188] 248 249 250</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">train &lt;-<span class="st"> </span>punkty[indeks, ]
 test &lt;-<span class="st"> </span>punkty[-indeks, ]</code></pre></div>
 <p>Dalszym krokiem jest stworzenie semiwariogramu empirycznego oraz jego modelowanie w oparciu o zbiór treningowy.</p>
@@ -467,7 +470,7 @@ test &lt;-<span class="st"> </span>punkty[-indeks, ]</code></pre></div>
 model &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dv">10</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">4000</span>, <span class="dt">nugget =</span> <span class="fl">0.5</span>)
 fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model)
 <span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-153-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-153-1.pdf" width="\textwidth" /></p>
 <p>Do porównania wyników estymacji w stosunku do zbioru testowego posłuży funkcja <code>krige()</code>. Wcześniej wymagała ona podania wzoru, zbioru punktowego, siatki oraz modelu. W tym przypadku jednak chcemy porównać wynik estymacji i testowy zbiór punktowy. Dlatego też, zamiast obiektu siatki definiujemy obiekt zawierający zbiór testowy (<code>test</code>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test_sk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, train, test, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">15.324</span>)</code></pre></div>
 <pre><code>## [using simple kriging]</code></pre>
@@ -479,8 +482,9 @@ fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario
 ## y 712629 721118.7
 ## Is projected: TRUE 
 ## proj4string :
-## [+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000
-## +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs]
+## [+init=epsg:2180 +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993
+## +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0
+## +units=m +no_defs]
 ## Number of points: 60
 ## Data attributes:
 ##    var1.pred        var1.var    
@@ -503,12 +507,12 @@ RMSE</code></pre></div>
 <pre><code>## [1] 1.692512</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test_sk$blad_predykcji_sk &lt;-<span class="st"> </span>blad_predykcji_sk
 <span class="kw">spplot</span>(test_sk, <span class="st">&#39;blad_predykcji_sk&#39;</span>)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-155-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-155-1.pdf" width="\textwidth" /></p>
 <p>W sytuacji, gdy uzyskany model jest wystarczająco dobry, możemy również uzyskać estymację dla całego obszaru z użyciem funkcji <code>krige()</code>, tym razem jednak podając obiekt siatki.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test_sk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, train, siatka, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">15.324</span>)</code></pre></div>
 <pre><code>## [using simple kriging]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(test_sk, <span class="st">&#39;var1.pred&#39;</span>)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-156-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-156-1.pdf" width="\textwidth" /></p>
 </div>
 <div id="kroswalidacja" class="section level3">
 <h3><span class="header-section-number">12.2.3</span> Kroswalidacja</h3>
@@ -554,12 +558,12 @@ cv_sk &lt;-<span class="st"> </span><span class="kw">krige.cv</span>(temp~<span 
 ##  3rd Qu.: 0.598859   3rd Qu.:187.75  
 ##  Max.   : 3.330852   Max.   :250.00</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(cv_sk, <span class="st">&#39;residual&#39;</span>)</code></pre></div>
-<p><img src="_main_files/figure-html/loovv-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/loovv-1.pdf" width="\textwidth" /></p>
 <p>Podobnie jak w walidacji podzbiorem, gdy uzyskany model jest wystarczająco dobry, estymację dla całego obszaru uzyskuje się z użyciem funkcji <code>krige()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cv_skk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, train, siatka, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">15.324</span>)</code></pre></div>
 <pre><code>## [using simple kriging]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(cv_skk, <span class="st">&#39;var1.pred&#39;</span>)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-157-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-157-1.pdf" width="\textwidth" /></p>
 <!-- 
 
 

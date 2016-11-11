@@ -14,6 +14,7 @@ library('dismo')
 library('pgirmess')
 library('geoR')
 library('gridExtra')
+library('RandomFields')
 pdf.options(encoding='CP1250')
 
 
