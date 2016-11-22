@@ -14,7 +14,8 @@ data(punkty)
 library('knitr')
 library('Cairo')
 library('grDevices')
-knitr::opts_chunk$set(warning=FALSE, message=FALSE, dev = "cairo_pdf", out.width = '\\textwidth')
+# knitr::opts_chunk$set(warning=FALSE, message=FALSE, dev = "cairo_pdf", out.width = '\\textwidth')
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, out.width = '\\textwidth')
 ```
 
 ```{r, echo=FALSE}

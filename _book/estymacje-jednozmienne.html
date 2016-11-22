@@ -26,7 +26,7 @@
 <meta name="author" content="Jakub Nowosad">
 
   
-<meta name="date" content="2016-11-11">
+<meta name="date" content="2016-11-22">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -424,7 +424,7 @@ model</code></pre></div>
 ## 2   Sph  10.0  4000</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitted &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario, model)
 <span class="kw">plot</span>(vario, <span class="dt">model=</span>fitted)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-107-1.pdf" width="\textwidth" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-107-1.png" width="\textwidth" /></p>
 <p>Następnie nastąpiła estymacja wartości z użyciem metody kriginu prostego. W funkcji <code>krige()</code> z pakietu <code>gstat</code>, użycie tej metody wymaga ustalenia średniej wartości cechy za pomocą argumentu <code>beta</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sk &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class="dv">1</span>, punkty, siatka, <span class="dt">model=</span>fitted, <span class="dt">beta=</span><span class="fl">15.32</span>)</code></pre></div>
 <pre><code>## [using simple kriging]</code></pre>
@@ -456,7 +456,7 @@ model</code></pre></div>
 <p>Obie uzyskane zmienne można wyświetlić z użyciem funkcji <code>spplot()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(sk, <span class="st">&#39;var1.pred&#39;</span>)
 <span class="kw">spplot</span>(sk, <span class="st">&#39;var1.var&#39;</span>)</code></pre></div>
-<p><img src="_main_files/figure-html/plotsy2-1.pdf" width="\textwidth" /></p>
+<p><img src="_main_files/figure-html/plotsy2-1.png" width="\textwidth" /></p>
 </div>
 </div>
 <div id="kriging-zwyky" class="section level2">
@@ -498,7 +498,7 @@ ok &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class=
 ##  Max.   :25.210   Max.   :4.847</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(ok, <span class="st">&#39;var1.pred&#39;</span>)
 <span class="kw">spplot</span>(ok, <span class="st">&#39;var1.var&#39;</span>)</code></pre></div>
-<p><img src="_main_files/figure-html/plotsy2ok2-1.pdf" width="\textwidth" /></p>
+<p><img src="_main_files/figure-html/plotsy2ok2-1.png" width="\textwidth" /></p>
 <!--
 
 -->
@@ -511,7 +511,7 @@ ok &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~<span class=
 <p>Kriging z trendem, określany również jako kriging z wewnętrznym trendem, do estymacji wykorzystuje (oprócz zmienności wartości wraz z odległością) położenie analizowanych punktów. Na poniższym przykładzie w funkcji <code>variogram()</code> pierwszy z argumentów przyjął postać <code>temp~x+y</code>, co oznacza, że uwzględniamy liniowy trend zależny od współrzędnej <code>x</code> oraz <code>y</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vario_kzt &lt;-<span class="st"> </span><span class="kw">variogram</span>(temp~x+y, <span class="dt">data=</span>punkty)
 <span class="kw">plot</span>(vario_kzt)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-113-1.pdf" width="\textwidth" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-113-1.png" width="\textwidth" /></p>
 <p>Dalszym etapem jest dopasowanie modelu semiwariancji, a następnie wyliczenie estymowanych wartości z użyciem funkcji <code>krige()</code>. Należy tutaj pamiętać, aby wzór (w przykładzie <code>temp~x+y</code>) był taki sam podczas budowania semiwariogramu, jak i interpolacji.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_kzt &lt;-<span class="st"> </span><span class="kw">vgm</span>(<span class="dt">psill =</span> <span class="dv">5</span>, <span class="dt">model =</span> <span class="st">&#39;Sph&#39;</span>, <span class="dt">range =</span> <span class="dv">2500</span>, <span class="dt">nugget =</span> <span class="dv">1</span>)
 fitted_kzt &lt;-<span class="st"> </span><span class="kw">fit.variogram</span>(vario_kzt, model_kzt)
@@ -520,7 +520,7 @@ fitted_kzt</code></pre></div>
 ## 1   Nug 0.5308819    0.000
 ## 2   Sph 6.6620981 2705.967</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(vario_kzt, fitted_kzt)</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-114-1.pdf" width="\textwidth" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-114-1.png" width="\textwidth" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kzt &lt;-<span class="st"> </span><span class="kw">krige</span>(temp~x+y, punkty, siatka, <span class="dt">model=</span>fitted_kzt)</code></pre></div>
 <pre><code>## [using universal kriging]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(kzt)</code></pre></div>
@@ -549,13 +549,13 @@ fitted_kzt</code></pre></div>
 ##  Max.   :25.35   Max.   :4.5134</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spplot</span>(kzt, <span class="st">&#39;var1.pred&#39;</span>)
 <span class="kw">spplot</span>(kzt, <span class="st">&#39;var1.var&#39;</span>)</code></pre></div>
-<p><img src="_main_files/figure-html/plotsy2kzt-1.pdf" width="\textwidth" /></p>
+<p><img src="_main_files/figure-html/plotsy2kzt-1.png" width="\textwidth" /></p>
 </div>
 </div>
 <div id="porownanie-wynikow-sk-ok-i-kzt" class="section level2">
 <h2><span class="header-section-number">8.5</span> Porównanie wyników SK, OK i KZT</h2>
 <p>Poniższe porównanie krigingu prostego (SK), zwykłego (OK) i z trendem (KZT) wykazuje niewielkie różnice w uzyskanych wynikach. W rozdziałach <a href="estymacje-wielozmienne.html#estymacje-wielozmienne">10</a> oraz <a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#wykorzystanie-do-estymacji-danych-uzupeniajacych">11</a> pokazane będą uzyskane wyniki interpolacji temperatury powietrza korzystając z innych metod krigingu.</p>
-<p><img src="_main_files/figure-html/ploty_trzy-1.pdf" width="\textwidth" /></p>
+<p><img src="_main_files/figure-html/ploty_trzy-1.png" width="\textwidth" /></p>
 
 </div>
 </div>

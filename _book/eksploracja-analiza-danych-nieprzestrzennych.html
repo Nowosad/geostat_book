@@ -26,7 +26,7 @@
 <meta name="author" content="Jakub Nowosad">
 
   
-<meta name="date" content="2016-11-11">
+<meta name="date" content="2016-11-22">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -589,9 +589,9 @@ punkty$temp      <span class="co">#2</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">punkty$clc &lt;-<span class="st"> </span><span class="kw">as.factor</span>(punkty$clc)
 aov_test &lt;-<span class="st"> </span><span class="kw">aov</span>(temp~clc, <span class="dt">data=</span>punkty)
 <span class="kw">summary</span>(aov_test)</code></pre></div>
-<pre><code>##              Df Sum Sq Mean Sq F value              Pr(&gt;F)    
-## clc           2   1056   528.0   49.87 &lt;0.0000000000000002 ***
-## Residuals   247   2615    10.6                                
+<pre><code>##              Df Sum Sq Mean Sq F value Pr(&gt;F)    
+## clc           2   1056   528.0   49.87 &lt;2e-16 ***
+## Residuals   247   2615    10.6                   
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre><code>## null device 
