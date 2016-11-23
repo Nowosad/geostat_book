@@ -17,7 +17,7 @@ bookdown::render_book("index.Rmd", "bookdown::pdf_book", output_dir='pdf_ania')
 beepr::beep(0)
 
 bookdown::render_book(input="index.Rmd")
-bookdown::publish_book(name='Geostatystyka', account='nowosad')
+bookdown::publish_book()
 beepr::beep(0)
 
 #ebook
