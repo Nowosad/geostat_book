@@ -42,7 +42,7 @@ pakiety <- c(
 ```
 
 ```{r pakiertbib, echo=FALSE}
-knitr::write_bib(c(pakiety, "bookdown", "knitr", "rmarkdown"), "packages.bib", width = 60)
+knitr::write_bib(c(pakiety, "bookdown", "knitr", "rmarkdown", "geostatbook", "base"), "packages.bib", width = 60)
 ```
 
 Pakiety R używane w tym skrypcie można również zainstalować poprzez funkcję `install.packages()`:
