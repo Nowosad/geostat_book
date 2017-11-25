@@ -87,7 +87,7 @@ summary(dane_punktowe)
 Ważne, ale nie wymagane, jest także dodanie informacji o układzie przestrzennym danych za pomocą funkcji `proj4string()`. 
 
 ```{r}
-proj4string(dane_punktowe) <- "+init = epsg:2180"
+proj4string(dane_punktowe) <- "+init=epsg:2180"
 summary(dane_punktowe)
 ```
 

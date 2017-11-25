@@ -132,7 +132,7 @@ ggplot(punkty@data, aes(temp)) + geom_density()
 Wykres kwantyl-kwantyl ułatwia interpretację rozkładu danych. 
 
 ```{r }
-ggplot(punkty@data, aes(sample=temp)) + stat_qq()
+ggplot(punkty@data, aes(sample = temp)) + stat_qq()
 ```
 
 Na poniższej rycinie można zobaczyć przykłady najczęściej spotykanych cech rozkładu danych w wykresach kwantyl-kwantyl.
@@ -251,7 +251,7 @@ Do standaryzacji (centrowanie i skalowanie) służy funkcja `scale()`.
 
 ```{r }
 ggplot(punkty@data, aes(temp)) + geom_density()
-punkty$temp_standard <- scale(punkty$temp)
+punkty$temp_standard <- as.numeric(scale(punkty$temp))
 ggplot(punkty@data, aes(temp_standard)) + geom_density()
 ```
 

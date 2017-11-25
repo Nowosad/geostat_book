@@ -68,7 +68,7 @@ install.packages(pakiety)
 
 Lub też za pomocą pakietu `geostatbook` [@R-geostatbook], który automatycznie zainstaluje wszystkie wymagane pakiety:
 
-```{r instgeobook}
+```{r instgeobook, eval=FALSE}
 install.packages("devtools")
 devtools::install_github("nowosad/geostatbook")
 ```
