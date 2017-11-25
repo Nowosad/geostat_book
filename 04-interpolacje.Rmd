@@ -15,11 +15,14 @@ data(siatka)
 data(granica)
 ```
 
-Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania. Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne oraz modele statystyczne.
+Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania. 
+Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne oraz modele statystyczne.
 
 ## Modele deterministyczne
 
-Modele deterministyczne charakteryzują się tym, że ich parametry są zazwyczaj ustalane w oparciu o funkcję odległości lub powierzchni. W tych modelach brakuje szacunków na temat oceny błędu modelu. Do zalet tych modeli należy szczególnie krótki czas obliczeń. Do modeli deterministycznych należą, między innymi:
+Modele deterministyczne charakteryzują się tym, że ich parametry są zazwyczaj ustalane w oparciu o funkcję odległości lub powierzchni. 
+W tych modelach brakuje szacunków na temat oceny błędu modelu.
+Do zalet tych modeli należy szczególnie krótki czas obliczeń. Do modeli deterministycznych należą, między innymi:
 
 - Metoda diagramów Voronoi'a (ang.  *Voronoi diagram*)
 - Metoda średniej ważonej odległością (ang. *Inverse Distance Weighted - IDW*)
@@ -34,7 +37,9 @@ par(mar = c(rep(0, 4)))
 
 ### Modele deterministyczne | Voronoi
 
-Metoda diagramów Voronoi'a polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego punktu. Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi()` z pakietu `dismo`. Wyniki następnie można przyciąć do badanego obszaru z użyciem funkcji `intersect()` z pakietu `raster`.
+Metoda diagramów Voronoi'a polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego punktu. 
+Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi()` z pakietu **dismo**.
+Wyniki następnie można przyciąć do badanego obszaru z użyciem funkcji `intersect()` z pakietu **raster**.
 
 ```{r }
 voronoi_interp <- voronoi(punkty)
@@ -44,7 +49,10 @@ spplot(voronoi_interp, "temp", contour = TRUE, main = "Poligony Voronoia")
 
 ### Modele deterministyczne | IDW
 
-Metoda średniej ważonej odległością (IDW) wylicza wartość dla każdej komórki na podstawie wartości punktów obokległych ważonych odwrotnością ich odległości. W efekcie, czym punkt jest bardziej oddalony, tym mniejszy jest jego wpływ na interpolowaną wartość. Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (ang. *power*). W pakiecie `gstat` istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`).
+Metoda średniej ważonej odległością (IDW) wylicza wartość dla każdej komórki na podstawie wartości punktów obokległych ważonych odwrotnością ich odległości. 
+W efekcie, czym punkt jest bardziej oddalony, tym mniejszy jest jego wpływ na interpolowaną wartość. 
+Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (ang. *power*).
+W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`).
 
 ```{r }
 idw_wolin <- idw(temp~1, punkty, siatka, idp = 2)
@@ -58,7 +66,9 @@ https://rpubs.com/DonalOLeary/80504
 
 ### Modele deterministyczne | Funkcje wielomianowe
 
-Stosowanie funkcji wielomianowych w R może odbyć się z wykorzystaniem funkcji `gstat()` z pakietu `gstat`. Wymaga ona podania trzech argumentów: `formula` określającego naszą analizowaną cechę (`temp~1` mówi, że chcemy interpolować wartość temperatury zależnej od samej siebie), `data` określający analizowany zbiór danych, oraz `degree` określającą stopień wielomianu. Następnie funkcja `predict()` przenosi nowe wartości na wcześniej stworzoną siatkę.
+Stosowanie funkcji wielomianowych w R może odbyć się z wykorzystaniem funkcji `gstat()` z pakietu **gstat**.
+Wymaga ona podania trzech argumentów: `formula` określającego naszą analizowaną cechę (`temp~1` mówi, że chcemy interpolować wartość temperatury zależnej od samej siebie), `data` określający analizowany zbiór danych, oraz `degree` określającą stopień wielomianu.
+Następnie funkcja `predict()` przenosi nowe wartości na wcześniej stworzoną siatkę.
 
 ```{r }
 wielomian_1 <- gstat(formula = temp~1, data = punkty, degree = 1)
@@ -74,7 +84,7 @@ spplot(wielomian_3_pred[1], contour = TRUE, main = "Powierzchnia trendu - wielom
 
 ### Modele deterministyczne | Funkcje sklejane
 
-Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu `fields`) dopasowuje krzywą powierzchnię do wartości analizowanych punktów.
+Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**) dopasowuje krzywą powierzchnię do wartości analizowanych punktów.
 
 ```{r }
 tps <- Tps(coordinates(punkty), punkty@data$temp)
@@ -97,7 +107,10 @@ grid.arrange(p3, p4, p1, p2)
 
 ## Modele statystyczne
 
-Modele statystyczne charakteryzują się tym, że ich parametry określane są w oparciu o teorię prawdopodobieństwa. Dodatkowo wynik estymacji zawiera także oszacowanie błędu. Te metody zazwyczaj wymagają większych zasobów sprzętowych. Do modeli statystycznych należą, między innymi:
+Modele statystyczne charakteryzują się tym, że ich parametry określane są w oparciu o teorię prawdopodobieństwa.
+Dodatkowo wynik estymacji zawiera także oszacowanie błędu.
+Te metody zazwyczaj wymagają większych zasobów sprzętowych.
+Do modeli statystycznych należą, między innymi:
 
 - Kriging
 - Modele regresyjne
