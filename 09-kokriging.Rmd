@@ -1,6 +1,3 @@
----
-knit: bookdown::preview_chapter
----
 
 # Estymacje wielozmienne {#estymacje-wielozmienne}
 
@@ -11,12 +8,6 @@ library("geostatbook")
 data(punkty)
 data(punkty_ndvi)
 data(siatka)
-```
-
-```{r setup9, echo=FALSE, include=FALSE}
-library("knitr")
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-# options(device = "cairo_pdf")
 ```
 
 ```{r, echo=FALSE}

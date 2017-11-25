@@ -1,6 +1,3 @@
----
-knit: bookdown::preview_chapter
----
 
 # Ocena jakości estymacji {#ocena-jakosci-estymacji}
 
@@ -14,15 +11,6 @@ library("caret")
 library("geostatbook")
 data(punkty)
 data(siatka)
-```
-
-```{r setup6, echo=FALSE, include=FALSE}
-library("knitr")
-library("Cairo")
-library("grDevices")
-# knitr::opts_chunk$set(warning=FALSE, message=FALSE, dev = "cairo_pdf")
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = "\\textwidth")
-# options(device = "cairo_pdf")
 ```
 
 ```{r, echo=FALSE}

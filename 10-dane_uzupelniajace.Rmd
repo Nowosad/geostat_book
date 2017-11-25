@@ -1,6 +1,3 @@
----
-knit: bookdown::preview_chapter
----
 
 # Wykorzystanie do estymacji danych uzupełniających {#wykorzystanie-do-estymacji-danych-uzupeniajacych}
 
@@ -10,16 +7,6 @@ library("sp")
 library("geostatbook")
 data(punkty)
 data(siatka)
-```
-
-```{r, include=FALSE}
-library("methods")
-```
-
-```{r setup7, echo=FALSE, include=FALSE}
-library("knitr")
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-# options(device = "cairo_pdf")
 ```
 
 ```{r, echo=FALSE}

@@ -1,6 +1,3 @@
----
-knit: bookdown::preview_chapter
----
 
 # Estymacja lokalnego rozkładu prawdopodobieństwa {#estymacja-lokalnego-rozkadu-prawdopodobienstwa}
 
@@ -11,14 +8,6 @@ library("sp")
 library("geostatbook")
 data(punkty)
 data(siatka)
-```
-
-```{r setup8, echo=FALSE, include=FALSE}
-library("knitr")
-library("Cairo")
-library("grDevices")
-# knitr::opts_chunk$set(warning=FALSE, message=FALSE, dev = "cairo_pdf", out.width = '\\textwidth')
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = "\\textwidth")
 ```
 
 ```{r, echo=FALSE}

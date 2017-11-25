@@ -1,6 +1,3 @@
----
-knit: bookdown::preview_chapter
----
 
 # Estymacje jednozmienne {#estymacje-jednozmienne}
 
@@ -10,12 +7,6 @@ library("sp")
 library("geostatbook")
 data(punkty)
 data(siatka)
-```
-
-```{r setup5, echo=FALSE, include=FALSE}
-library("knitr")
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-# options(device = "cairo_pdf")
 ```
 
 ```{r, echo=FALSE}

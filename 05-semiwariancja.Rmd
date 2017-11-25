@@ -16,7 +16,6 @@ data(granica)
 
 ```{r, echo=FALSE}
 par(mar = c(rep(0, 4)))
-options(scipen = 99 * 99)
 ```
 
 <!--

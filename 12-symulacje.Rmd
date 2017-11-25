@@ -11,14 +11,6 @@ data(punkty)
 data(siatka)
 ```
 
-```{r setup10, echo=FALSE, include=FALSE}
-library("knitr")
-library("Cairo")
-library("grDevices")
-# knitr::opts_chunk$set(warning=FALSE, message=FALSE, dev = "cairo_pdf")
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = "\\textwidth")
-```
-
 ```{r, echo=FALSE}
 par(mar = c(rep(0, 4)))
 ```

@@ -13,14 +13,6 @@ data(siatka)
 data(granica)
 ```
 
-```{r setup44, echo=FALSE, include=FALSE}
-library("knitr")
-library("Cairo")
-library("grDevices")
-# knitr::opts_chunk$set(warning=FALSE, message=FALSE, dev = "cairo_pdf", out.width = '\\textwidth')
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = "\\textwidth")
-```
-
 Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania. Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne oraz modele statystyczne.
 
 ## Modele deterministyczne
