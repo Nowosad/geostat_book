@@ -1,8 +1,10 @@
 name: Geostatystyka
 title:
+username: nowosad
 account: nowosad
 server: bookdown.org
+hostUrl: https://bookdown.org/__api__
 appId: 19
-bundleId: 1430
+bundleId: 4024
 url: https://bookdown.org/nowosad/Geostatystyka/
-when: 1479863696.62287
+when: 1511649655.14054
