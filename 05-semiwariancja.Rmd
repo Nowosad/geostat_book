@@ -1,25 +1,22 @@
----
-knit: bookdown::preview_chapter
----
 
 # Geostatystyka - prolog {#geostatystyka-prolog}
 
 ```{r, message=FALSE, warning=FALSE}
-library('gstat')
-library('sp')
-library('pgirmess')
-library('ggplot2')
-library('raster')
-library('rasterVis')
-library('geostatbook')
+library("gstat")
+library("sp")
+library("pgirmess")
+library("ggplot2")
+library("raster")
+library("rasterVis")
+library("geostatbook")
 data(punkty)
 data(siatka)
 data(granica)
 ```
 
 ```{r, echo=FALSE}
-par(mar=c(rep(0, 4)))
-options(scipen = 99*99)
+par(mar = c(rep(0, 4)))
+options(scipen = 99 * 99)
 ```
 
 <!--
@@ -54,7 +51,7 @@ Inaczej mówiąc, celem geostatystyki nie musi być tylko interpolacja (estymacj
 Geostatystyczna analiza danych może przyjmować różną postać w zależności od postawionego celu analizy. Poniższa rycina przestawia uproszczoną ścieżkę postępowania geostatystycznego. 
 
 ```{r diagram, echo=FALSE}
-library('DiagrammeR')
+library("DiagrammeR")
 # library('trelliscope')
 p <- DiagrammeR::mermaid("
                 graph TB;
@@ -67,8 +64,8 @@ p <- DiagrammeR::mermaid("
 ```
 
 ```{r, echo=FALSE, fig.width=8}
-library('knitr')
-knitr::include_graphics('figs/diag.png')
+library("knitr")
+knitr::include_graphics("figs/diag.png")
 ```
 
 <!--
@@ -134,7 +131,7 @@ Przestrzenna kowariancja, korelacja i semiwariancja to miary określające przes
 - Jednocześnie, dla potrzeb interpretacji relacji, kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
 
 ```{r z_przs0, echo=FALSE}
-hscat(temp~1, punkty, breaks=c(0, 200))
+hscat(temp~1, punkty, breaks = c(0, 200))
 ```
 
 ### Wykres rozrzutu z przesunięciem
@@ -142,7 +139,7 @@ hscat(temp~1, punkty, breaks=c(0, 200))
 Wykres rozrzutu z przesunięciem pokazuje korelację pomiędzy wartościami analizowanej cechy w pewnych grupach odległości. Taki wykres można stworzyć używając funkcji `hscat()` z pakietu `gstat`. Przykładowo, na poniższym wykresie widać wartość cechy `temp` z kolejnymi przesunięciami - od 0 do 500 metrów, od 500 metrów do 1000 metrów, itd. W pierwszym przedziale wartość cechy `temp` z przesunięciem wykazuje korelację na poziomie 0,876, a następnie z każdym kolejnym przedziałem (odległością) ta wartość maleje. W przedziale 3500 do 4000 metrów osiąga jedynie 0,128. Pozwala to na stwierdzenie, że cecha `temp` wykazuje zmienność przestrzenną - podobieństwo jej wartości zmniejsza się wraz z odległością.
 
 ```{r z_przs, fig.height=7}
-hscat(temp~1, punkty, breaks=seq(0, 4000, by=500))
+hscat(temp~1, punkty, breaks = seq(0, 4000, by = 500))
 ```
 
 ### Autokowariancja
@@ -160,9 +157,9 @@ Kolejną miarą przestrzennego podobieństwa jest autokorelacja. Jej wykres (aut
  
 ```{r }
 wsp <- coordinates(punkty)
-kor <- correlog(wsp, punkty$temp, method='Moran')
+kor <- correlog(wsp, punkty$temp, method = "Moran")
 kor <- as.data.frame(kor)
-ggplot(kor, aes(dist.class, coef)) + geom_smooth(linetype=0) + geom_line() + geom_point(size=5)
+ggplot(kor, aes(dist.class, coef)) + geom_smooth(linetype = 0) + geom_line() + geom_point(size = 5)
 ```
 
 ### Semiwariancja
@@ -175,7 +172,7 @@ Przykładowo, aby wyliczyć wartość semiwariancji (`gamma`) pomiędzy dwoma pu
 
 ```{r }
 odl <- dist(coordinates(punkty)[c(1, 2), ])
-gamma <- 0.5 * (punkty$temp[1] - punkty$temp[2])^2
+gamma <- 0.5 * (punkty$temp[1] - punkty$temp[2]) ^ 2
 gamma
 ```
 
@@ -184,30 +181,30 @@ gamma
 Jeżeli w badanej próbie mamy $n$ obserwacji oznacza to, że możemy zaobserwować $\frac{1}{2}n(n-1)$ par obserwacji. Każda z tych par obserwacji daje nam informację o semiwariancji występującej wraz z odległością. Tę semiwariancję można zaprezentować na wykresie zwanym chmurą semiwariogramu. Do jej wyliczenia służy funkcja `variogram()` z argumentem `cloud=TRUE`.
 
 ```{r }
-vario_cloud <- variogram(temp~1, punkty, cloud=TRUE)
-plot(vario_cloud) 
+vario_cloud <- variogram(temp~1, punkty, cloud = TRUE)
+plot(vario_cloud)
 ```
 
 Chmura semiwariogramu pozwala także na zauważenie par punktów, których wartości znacząco odstają. Aby zlokalizować te pary punktów, można zastosować funkcję `plot()` z argumentem `digitize=TRUE`, a następnie za pomocą kilku kliknięć określić obszar zawierający nietypowe wartości. Po skończonym wyborze należy nacisnąć klawisz Esc.
 
 ```{r chmurkowanie, eval=FALSE}
-vario_cloud_sel <- plot(variogram(temp~1, punkty, cloud=TRUE), digitize=TRUE)
+vario_cloud_sel <- plot(variogram(temp~1, punkty, cloud = TRUE), digitize = TRUE)
 ```
 
 ```{r, echo=FALSE, fig.width=6}
-library('knitr')
-knitr::include_graphics('figs/cloud_sel.png')
+library("knitr")
+knitr::include_graphics("figs/cloud_sel.png")
 ```
 
 Następnie można wyświetlić wybrane pary punktów z użyciem funkcji `plot()`.
 
 ```{r chmurkowanie2, eval=FALSE}
-plot(vario_cloud_sel, punkty) 
+plot(vario_cloud_sel, punkty)
 ```
 
 ```{r, echo=FALSE, fig.width=6}
-library('knitr')
-knitr::include_graphics('figs/points_sel.png')
+library("knitr")
+knitr::include_graphics("figs/points_sel.png")
 ```
 
 ### Semiwariogram | Charakterystyka struktury przestrzennej
@@ -245,8 +242,8 @@ $$x^2 + y^2 = z^2$$
 wierz <- as.vector(extent(poligon))
 kraw_x <- wierz[2] - wierz[1]
 kraw_y <- wierz[4] - wierz[3]
-z_kwadrat <- kraw_x^2 + kraw_y^2
-0.5*sqrt(z_kwadrat)
+z_kwadrat <- kraw_x ^ 2 + kraw_y ^ 2
+0.5 * sqrt(z_kwadrat)
 ```
 -->
 
@@ -295,7 +292,7 @@ vario_par
 Do wyświetlenia semiwariogramu służy funkcja `plot()`. Można również dodać informację o liczbie par punktów, jaka posłużyła do wyliczenia semiwariancji dla kolejnych odstępów poprzez argument `plot.numbers=TRUE`.
 
 ```{r}
-plot(vario_par, plot.numbers=TRUE)
+plot(vario_par, plot.numbers = TRUE)
 ```
 
 Maksymalny zasięg semiwariogramu (ang. *cutoff distance*) jest domyślnie wyliczany w pakiecie `gstat` jako 1/3 z najdłuższej przekątnej badanego obszaru. Można jednak tę wartość zmodyfikować używając argumentu `cutoff`.
@@ -326,11 +323,11 @@ Używanie innych statystyk h-scattergramu, które są mniej czułe na występowa
 # n.site <- 15
 # locations <- matrix(runif(2*n.site, 0, 10), ncol = 2)
 # colnames(locations) <- c("lon", "lat")
-# 
+#
 # ##Simulate a max-stable process - with unit Frechet margins
 # data <- rmaxstab(40, locations, cov.mod = "whitmat", nugget = 0, range = 1,
 #                  smooth = 2)
-# 
+#
 # ##Compute the madogram
 # madogram(data, locations)
 # data2 <- matrix(c(punkty$temp, punkty$X2002.08.20_NDVI), nrow=2)
@@ -354,18 +351,18 @@ Mapa semiwariogramu (zwana inaczej powierzchnią semiwariogramu) służy do okre
 Stworzenie mapy semiwariogramu odbywa się poprzez dodanie kilku argumentów do funkcji `variogram()`: oprócz argumentu zmiennej i zbioru punktowego, jest to `cutoff`, `width`, oraz `map=TRUE`. Następnie można ją wyświetlić używając funkcji `plot()`. Warto w tym wypadku użyć dodatkowego argumentu `threshold`, który powoduje, że niepewna wartość semiwariancji (wyliczona na małej liczbie punktów) nie jest wyświetlana.
 
 ```{r }
-vario_map <- variogram(temp~1, punkty, cutoff=4000, width=400, map=TRUE)
-plot(vario_map, threshold=30) # co najmniej 30 par punktów
+vario_map <- variogram(temp~1, punkty, cutoff = 4000, width = 400, map = TRUE)
+plot(vario_map, threshold = 30) # co najmniej 30 par punktów
 ```
 
 Mapie semiwariogramu można również się przyjrzeć interaktywnie używając funkcję `plot3D()` z pakietu `rasterVis`.
 
 ```{r mapa_semi, eval=FALSE, fig.width=6}
-plot3D(raster(vario_map$map), col=rainbow)
+plot3D(raster(vario_map$map), col = rainbow)
 ```
 
 ```{r, echo=FALSE}
-knitr::include_graphics('figs/plot3D.png')
+knitr::include_graphics("figs/plot3D.png")
 ```
 
 ### Semiwariogramy kierunkowe | Kierunki
