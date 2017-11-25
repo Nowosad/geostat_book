@@ -2,19 +2,12 @@
 # Eksploracyjna analiza danych nieprzestrzennych {#eksploracja-analiza-danych-nieprzestrzennych}
 
 ```{r, message=FALSE, warning=FALSE}
-library('sp')
-library('ggplot2')
-library('corrplot')
-library('geostatbook')
+library(sp)
+library(ggplot2)
+library(corrplot)
+library(geostatbook)
 data(punkty)
 data(granica)
-```
-
-```{r setup2, echo=FALSE, include=FALSE}
-library('knitr')
-library('methods')
-knitr::opts_chunk$set(warning=FALSE, message=FALSE, out.width = '\\textwidth')
-options(device = "cairo_pdf")
 ```
 
 ## Cele eksploracyjnej analizy danych
@@ -50,12 +43,12 @@ punkty$temp      #2
 Z uwagi na to, że zajmujemy się danymi przestrzennymi - warto też się upewnić czy dane zostały poprawnie wczytane i obejmują analizowany obszar. Najszybciej można to wykonać z pomocą funkcji `plot()`.
 
 ```{r, echo=FALSE}
-par(mar=c(rep(0, 4)))
+par(mar = c(rep(0, 4)))
 ```
 
 ```{r, message=FALSE, warning=FALSE}
 plot(punkty)
-plot(granica, add=TRUE)
+plot(granica, add = TRUE)
 ```
 
 ## Statystyki opisowe
@@ -72,8 +65,8 @@ summary(punkty@data)
 Do określenia wartości przeciętnej zmiennych najczęściej stosuje się medianę i średnią.
 
 ```{r }
-median(punkty$temp, na.rm=TRUE)
-mean(punkty$temp, na.rm=TRUE)
+median(punkty$temp, na.rm = TRUE)
+mean(punkty$temp, na.rm = TRUE)
 ```
 
 - W wypadku symetrycznego rozkładu te dwie cechy są równe
@@ -91,8 +84,8 @@ Po co używać średniej?
 Minimalna i maksymalna wartość zmiennej służy do określenia ekstremów w zbiorze danych, jak i sprawdzenia zakresu wartości.
 
 ```{r }
-min(punkty$temp, na.rm=TRUE)
-max(punkty$temp, na.rm=TRUE)
+min(punkty$temp, na.rm = TRUE)
+max(punkty$temp, na.rm = TRUE)
 ```
 
 ### Statystyki opisowe | odchylenie standardowe
@@ -104,12 +97,11 @@ Dodatkowo, często używaną statystyką jest odchylenie standardowe. Wartość 
 - 99,7% obserwacji mieści się w granicach trzech odchyleń standardowych od średniej
 
 ```{r, echo=FALSE}
-library('knitr')
 knitr::include_graphics('figs/normal_distribution.png')
 ```
 
 ```{r }
-sd(punkty$temp, na.rm=TRUE)
+sd(punkty$temp, na.rm = TRUE)
 ```
 
 ## Wykresy
@@ -209,7 +201,7 @@ Analiza wariancji (ang. *Analysis of Variance* - ANOVA) służy do testowania is
 
 ```{r }
 punkty$clc <- as.factor(punkty$clc)
-aov_test <- aov(temp~clc, data=punkty)
+aov_test <- aov(temp~clc, data = punkty)
 summary(aov_test)
 ```
 
@@ -221,14 +213,13 @@ Do wykonania porównań wielokrotnych służy funkcja `TukeyHSD()`. Dodatkowo wy
 
 ```{r }
 tukey <- TukeyHSD(aov_test, 'clc')
-plot(tukey, las=1)
+plot(tukey, las = 1)
 ```
 
 ## Transformacje danych
 ### Transformacje danych
 
 Transformacja danych może mieć na celu ułatwienie porównywania różnych zmiennych, zniwelowanie skośności rozkładu lub też zmniejszenie wpływu danych odstających.
-
 
 ### Transformacja danych | Standaryzacja
 
