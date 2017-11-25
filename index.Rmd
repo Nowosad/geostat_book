@@ -19,7 +19,12 @@ url: 'https\://bookdown.org/nowosad/Geostatystyka/'
 knitr::include_graphics("Rfigs/book_cover.png")
 ```
 
-Masz przed sobą skrypt zawierający materiały do ćwiczeń z geostatystyki. Składa się ona z kilkunastu rozdziałów pokazujących jak: dodawać i wizualizować dane przestrzenne w R (rozdział \@ref(r-a-dane-przestrzenne)), wykonywać wstępną eksplorację danych nieprzestrzennych (rozdział \@ref(eksploracja-analiza-danych-nieprzestrzennych)), wstępnie analizować dane przestrzenne (rozdział \@ref(eksploracyjna-analiza-danych-przestrzennych)), wykorzystywać deterministyczne metody interpolacji (rozdział \@ref(metody-interpolacji)), rozumieć i tworzyć przestrzenne miary podobieństwa i niepodobieństwa (rozdział \@ref(geostatystyka-prolog)), modelować semiwariogramy bezkierunkowe i kierunkowe (rozdział \@ref(modelowanie-matematycznie-autokorelacji-przestrzennej)), tworzyć estymacje jednozmienne (rozdział \@ref(estymacje-jednozmienne)), estymacje danych kodowanych (rozdział \@ref(estymacja-lokalnego-rozkadu-prawdopodobienstwa)), estymacje wielozmienne (rozdział \@ref(estymacje-wielozmienne)), estymacje wykorzystujące dane uzupełniające (rozdział \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych)), oceniać jakość wykonanych estymacji (rozdział \@ref(ocena-jakosci-estymacji)) oraz budować symulacje przestrzenne (rozdział \@ref(symulacje)). Dodatkowo w rozdziale \@ref(zrodla-wiedzy) można znaleźć odnośniki do innych materiałów związanych z geostatystyką i R. Wszystkie zaprezentowane przykłady zawierają również kod w języku R. Skrypt został stworzony w R [@R-base] z wykorzystaniem pakietów `bookdown` [@R-bookdown], `rmarkdown` [@R-rmarkdown], `knitr` [@R-knitr] oraz programu [Pandoc](http://pandoc.org/). Aktualna wersja skryptu znajduje się pod adresem https://bookdown.org/nowosad/Geostatystyka/. 
+Masz przed sobą skrypt zawierający materiały do ćwiczeń z geostatystyki.
+Składa się ona z kilkunastu rozdziałów pokazujących jak: dodawać i wizualizować dane przestrzenne w R (rozdział \@ref(r-a-dane-przestrzenne)), wykonywać wstępną eksplorację danych nieprzestrzennych (rozdział \@ref(eksploracja-analiza-danych-nieprzestrzennych)), wstępnie analizować dane przestrzenne (rozdział \@ref(eksploracyjna-analiza-danych-przestrzennych)), wykorzystywać deterministyczne metody interpolacji (rozdział \@ref(metody-interpolacji)), rozumieć i tworzyć przestrzenne miary podobieństwa i niepodobieństwa (rozdział \@ref(geostatystyka-prolog)), modelować semiwariogramy bezkierunkowe i kierunkowe (rozdział \@ref(modelowanie-matematycznie-autokorelacji-przestrzennej)), tworzyć estymacje jednozmienne (rozdział \@ref(estymacje-jednozmienne)), estymacje danych kodowanych (rozdział \@ref(estymacja-lokalnego-rozkadu-prawdopodobienstwa)), estymacje wielozmienne (rozdział \@ref(estymacje-wielozmienne)), estymacje wykorzystujące dane uzupełniające (rozdział \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych)), oceniać jakość wykonanych estymacji (rozdział \@ref(ocena-jakosci-estymacji)) oraz budować symulacje przestrzenne (rozdział \@ref(symulacje)).
+Dodatkowo w rozdziale \@ref(zrodla-wiedzy) można znaleźć odnośniki do innych materiałów związanych z geostatystyką i R.
+Wszystkie zaprezentowane przykłady zawierają również kod w języku R.
+Skrypt został stworzony w R [@R-base] z wykorzystaniem pakietów `bookdown` [@R-bookdown], `rmarkdown` [@R-rmarkdown], `knitr` [@R-knitr] oraz programu [Pandoc](http://pandoc.org/). 
+Aktualna wersja skryptu znajduje się pod adresem https://bookdown.org/nowosad/Geostatystyka/. 
 
 Zachęcam do zgłaszania wszelkich uwag, błędów, pomysłów oraz komentarzy na adres mailowy nowosad.jakub@gmail.com.
 
@@ -27,7 +32,8 @@ Zachęcam do zgłaszania wszelkich uwag, błędów, pomysłów oraz komentarzy n
 
 ### Oprogramowanie
 
-Do odtworzenia przykładów użytych w poniższym skrypcie wystarczy podstawowa znajomość R. Aby zainstalować R oraz RStudio można skorzystać z poniższych odnośników:
+Do odtworzenia przykładów użytych w poniższym skrypcie wystarczy podstawowa znajomość R. 
+Aby zainstalować R oraz RStudio można skorzystać z poniższych odnośników:
 
 - [R](https://www.r-project.org/) - https://cloud.r-project.org/
 - [RStudio](https://www.rstudio.com/) - https://www.rstudio.com/products/rstudio/download/
@@ -64,7 +70,8 @@ devtools::session_info(pakiety)
 
 ### Dane
 
-Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu `geostatbook` (dla kolejnych rozdziałów). Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w skrypcie.
+Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu `geostatbook` (dla kolejnych rozdziałów). 
+Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w skrypcie.
 
 - [Archiwum zawierające dane do rozdziału drugiego](https://github.com/Nowosad/geostat_book/blob/master/dane.zip?raw=true)
 - [Dane do kolejnych rozdziałów są zawarte w pakiecie geostatbook:](https://github.com/Nowosad/geostatbook)
