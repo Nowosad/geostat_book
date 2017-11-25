@@ -22,7 +22,10 @@ par(mar = c(rep(0, 4)))
 ### Podstawowe terminy | Kontekst przestrzenny
 
 - Populacja - cały obszar, dla którego chcemy określić wybrane właściwości
-- Próba - zbiór obserwacji, dla których mamy informacje. Inaczej, próba to podzbiór populacji. Zazwyczaj niemożliwe (lub bardzo kosztowne) jest zdobycie informacji o całej populacji. Z tego powodu bardzo cenne jest odpowiednie wykorzystanie informacji z próby.
+- Próba - zbiór obserwacji, dla których mamy informacje.
+Inaczej, próba to podzbiór populacji. 
+Zazwyczaj niemożliwe (lub bardzo kosztowne) jest zdobycie informacji o całej populacji. 
+Z tego powodu bardzo cenne jest odpowiednie wykorzystanie informacji z próby.
 
 ### Mapy punktowe
 
@@ -37,7 +40,8 @@ Eksploracyjna analiza danych przestrzennych w przypadku danych punktowych ma na 
 
 ### Podstawowe typy próbowania
 
-Istnieje cały szereg typów próbkowania danych przestrzennych. Funkcja `spsample()` z pakietu `sp` pozwala na stworzenie kilku typów próbkowania (argument `type`), między innymi:
+Istnieje cały szereg typów próbkowania danych przestrzennych.
+Funkcja `spsample()` z pakietu **sp** pozwala na stworzenie kilku typów próbkowania (argument `type`), między innymi:
 
 - Regularny (ang.*regular*)
 - Losowy (ang.*random*)
@@ -56,7 +60,8 @@ plot(regularny)
 
 ### Typ próbowania | Losowy
 
-W losowym typie próbkowania każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia. Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych.
+W losowym typie próbkowania każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia. 
+Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych.
 
 ```{r }
 set.seed(301)
@@ -93,13 +98,18 @@ plot(granica)
 plot(punkty, add = TRUE)
 ```
 
-Dane lokalnie odstające oznaczają nietypowe przestrzennie wartości danej cechy. Inaczej mówiąc, może to być niska wartość otoczona wysokimi wartościami lub też wysoka wartość otoczona niskimi wartościami. Dane lokalnie ostające mogą oznaczać zarówno błąd w danych albo wpływ innego czynnika na analizowaną cechę. Przyjrzenie się wartościom analizowanej cechy można wykonać z użyciem funkcji `spplot()`. Na poniższym przykładzie wyświetlona jest zmienna `temp` oznaczająca średnią temperaturę dobową.
+Dane lokalnie odstające oznaczają nietypowe przestrzennie wartości danej cechy.
+Inaczej mówiąc, może to być niska wartość otoczona wysokimi wartościami lub też wysoka wartość otoczona niskimi wartościami.
+Dane lokalnie ostające mogą oznaczać zarówno błąd w danych albo wpływ innego czynnika na analizowaną cechę. 
+Przyjrzenie się wartościom analizowanej cechy można wykonać z użyciem funkcji `spplot()`. 
+Na poniższym przykładzie wyświetlona jest zmienna `temp` oznaczająca średnią temperaturę dobową.
 
 ```{r }
 spplot(punkty, "temp", sp.layout = granica)
 ```
 
-Dodatkowo, używając argumentu `identify = TRUE` można interaktywnie określić numer punktu (numer wiersza w tabeli atrybutów). Działanie tej funkcji polega na wybraniu punktów za pomocą lewego przycisk myszy, a po wybraniu serii punktów klawisza Esc.
+Dodatkowo, używając argumentu `identify = TRUE` można interaktywnie określić numer punktu (numer wiersza w tabeli atrybutów).
+Działanie tej funkcji polega na wybraniu punktów za pomocą lewego przycisk myszy, a po wybraniu serii punktów klawisza Esc.
 
 ```{r klik, eval=FALSE}
 spplot(punkty, "temp", identify = TRUE)
@@ -109,11 +119,14 @@ spplot(punkty, "temp", identify = TRUE)
 
 ### Rozgrupowanie danych
 
-Istnieje szereg metod rozgrupowywania danych, między innymi jest to rozgrupowywanie komórkowe oraz rozgrupowywanie poligonowe. Celem tych metod jest nadanie wag obserwacjom w celu zapewnienia reprezentatywności przestrzennej danych. Poniżej znajdują się przykłady użycia dwóch wersji rozgrupowania komórkowego (rozgrupowywanie komórkowe I oraz rozgrupowywanie komórkowe II) i jedna wersja rozgrupowania poligonowego.
+Istnieje szereg metod rozgrupowywania danych, między innymi jest to rozgrupowywanie komórkowe oraz rozgrupowywanie poligonowe. 
+Celem tych metod jest nadanie wag obserwacjom w celu zapewnienia reprezentatywności przestrzennej danych. 
+Poniżej znajdują się przykłady użycia dwóch wersji rozgrupowania komórkowego (rozgrupowywanie komórkowe I oraz rozgrupowywanie komórkowe II) i jedna wersja rozgrupowania poligonowego.
 
 ### Rozgrupowanie danych
 
-Na potrzeby przykładów związanych z rozgrupowaniem danych w pakiecie `geostatbook` znajduje się zbiór danych `punkty_pref`. W tym zbiorze gęściej opróbkowane są niskie wartości temperatury, co powoduje, że średnia dla całego obszaru jest znacznie niższa niż w rzeczywistości.
+Na potrzeby przykładów związanych z rozgrupowaniem danych w pakiecie `geostatbook` znajduje się zbiór danych `punkty_pref`. 
+W tym zbiorze gęściej opróbkowane są niskie wartości temperatury, co powoduje, że średnia dla całego obszaru jest znacznie niższa niż w rzeczywistości.
 
 ```{r }
 data(punkty_pref)
@@ -129,7 +142,7 @@ Pierwszy rodzaj rozgrupowania komórkowego polega na:
 2. Policzeniu liczby obserwacji w każdym oczku siatki
 3. Nadanie wagi dla każdego punktu, zgodnie ze wzorem:
 
-$$w'_j=\frac{\frac{1}{n_i}}{\text{liczba komórek z danymi}} \cdot n$$
+$$w'_j=\frac{\frac{1}{n_i}}{\text{liczba komorek z danymi}} \cdot n$$
 , gdzie $n_i$ to liczba obserwacji w komórce, a $n$ to łączna liczba obserwacji
 
 ### Rozgrupowanie komórkowe I | (ang. *cell declustering*)
@@ -167,7 +180,7 @@ srednia_wazona_c1 <- mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE)
 Drugi rodzaj rozgrupowania komórkowego polega na:
 
 1. Stworzeniu siatki dla badanego obszaru
-2. Wykonaniu interpolacji z użyciem funkcji `krige()` z pakietu `gstat`. W tym wypadku konieczne jest użycie argumentu `nmax = 1`, który przypisuje wartość najbliższej obserwacji do każdego oczka siatki.
+2. Wykonaniu interpolacji z użyciem funkcji `krige()` z pakietu **gstat**. W tym wypadku konieczne jest użycie argumentu `nmax = 1`, który przypisuje wartość najbliższej obserwacji do każdego oczka siatki.
 3. Waga dla każdego punktu nadawana jest poprzez zliczenie liczby oczek siatki dla konkretnej wartości, a następnie podzielenie tego przez liczbę oczek siatki.
 
 <!--
@@ -268,7 +281,9 @@ srednia_wazona_p <- mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE)
 
 ### Porównanie metod rozgrupowania
 
-Średnia wartość temperatury dla badanego obszaru wynosiła 15,59 stopni Celsjusza, jednak w preferencyjnej próbie ta wartość wynosiła 14,28 stopni Celsjusza. Porównując trzy zastosowane metody próbkowania warto zauważyć, że najbliższy wynik uzyskano korzystając z pierwszego rodzaju rozgrupowania komórkowego, która nieznacznie zaniżyła rzeczywistą wartość temperatury. Rozgrupowanie komórkowe II oraz rozgrupowanie poligonowe były w tym przypadku mniej dokładne, wyraźnie zawyżając wartości temperatury. 
+Średnia wartość temperatury dla badanego obszaru wynosiła 15,59 stopni Celsjusza, jednak w preferencyjnej próbie ta wartość wynosiła 14,28 stopni Celsjusza. 
+Porównując trzy zastosowane metody próbkowania warto zauważyć, że najbliższy wynik uzyskano korzystając z pierwszego rodzaju rozgrupowania komórkowego, która nieznacznie zaniżyła rzeczywistą wartość temperatury.
+Rozgrupowanie komórkowe II oraz rozgrupowanie poligonowe były w tym przypadku mniej dokładne, wyraźnie zawyżając wartości temperatury. 
 
 ```{r tab_dec_1, echo=FALSE}
 srednia_arytmetyczna_pop <- 15.5912781
