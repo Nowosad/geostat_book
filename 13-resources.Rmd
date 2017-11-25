@@ -15,6 +15,7 @@ knit: bookdown::preview_chapter
 
 - [Applied Spatial Dala Analysis with R](http://www.asdar-book.org/)
 - [CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html)
+- [Geocomputation with R](http://robinlovelace.net/geocompr/)
 
 ## Geostatystyka
 
