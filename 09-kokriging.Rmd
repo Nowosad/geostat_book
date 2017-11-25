@@ -5,22 +5,22 @@ knit: bookdown::preview_chapter
 # Estymacje wielozmienne {#estymacje-wielozmienne}
 
 ```{r, message=FALSE, warning=FALSE}
-library('gstat')
-library('sp')
-library('geostatbook')
+library("gstat")
+library("sp")
+library("geostatbook")
 data(punkty)
 data(punkty_ndvi)
 data(siatka)
 ```
 
 ```{r setup9, echo=FALSE, include=FALSE}
-library('knitr')
-knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+library("knitr")
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 # options(device = "cairo_pdf")
 ```
 
 ```{r, echo=FALSE}
-par(mar=c(rep(0, 4)))
+par(mar = c(rep(0, 4)))
 ```
 
 ## Kokriging 
@@ -48,18 +48,18 @@ Metoda kokrigingu opiera się nie o semiwariogram, lecz o krossemiwariogramy. Kr
 W poniższym przykładzie istnieją dwie zmienne, `savi` ze zbioru `punkty` pomierzona w 250 lokalizacjach oraz `ndvi` ze zbioru `punkty_ndvi` pomierzona w 997 punktach.
 
 ```{r}
-spplot(punkty, 'savi')
+spplot(punkty, "savi")
 ```
 
 ```{r}
-spplot(punkty_ndvi, 'ndvi')
+spplot(punkty_ndvi, "ndvi")
 ```
 
 Tworzenie krossemiwariogramów odbywa się z użyciem funkcji `gstat()`. Na początku definiujemy pierwszy obiekt `g`. Składa się on z obiektu pustego (`NULL`), nazwy pierwszej zmiennej (nazwa może być dowolna), wzoru (w przykładzie `savi~1`), oraz pierwszego zbioru punktowego. Następnie do pierwszego obiektu `g` dodajemy nowe informacje również poprzez funkcję `gstat()`. Jest to nazwa obiektu (`g`), nazwa drugiej zmiennej, wzór, oraz drugi zbiór punktowy.
 
 ```{r, krosssemi}
-g <- gstat(NULL, id='SAVI', form = savi~1, data = punkty)
-g <- gstat(g, id='NDVI', form = ndvi~1, data = punkty_ndvi)
+g <- gstat(NULL, id = "SAVI", form = savi~1, data = punkty)
+g <- gstat(g, id = "NDVI", form = ndvi~1, data = punkty_ndvi)
 g
 ```
 
@@ -76,7 +76,7 @@ plot(v)
 Modelowanie krossemiwariogramów, podobnie jak ich tworzenie, odbywa się używając funkcji `gstat()`. Podaje się w niej wcześniejszy obiekt `g`, model, oraz argument `fill.all=TRUE`. Ten ostatni parametr powoduje, że model dodawany jest do wszystkich elementów krossemiwariogramu.
 
 ```{r}
-g <- gstat(g, model=vgm(0.006, 'Sph', 2000, 0.001), fill.all=TRUE)
+g <- gstat(g, model = vgm(0.006, "Sph", 2000, 0.001), fill.all = TRUE)
 ```
 
 W przypadku semiwariogramów funkcja `fit.variogram()` służyła dopasowaniu parametrów modelu do semiwariogramu empirycznego. Podobną rolę w krossemiwariogramach spełnia funkcja `fit.lmc()`. Dopasowuje ona liniowy model koregionalizacji do semiwariogramów wielozmienych. Funkcja `fit.lmc()` oczekuje co najmniej dwóch elementów, krossemiwariogramu oraz modelów krossemiwariancji. W poniższym przykładzie dodatkowo użyto parametru `correct.diagonal = 1.01`, z uwagi na to że analizowane zmienne wykazywały bardzo silną korelację.
@@ -101,7 +101,7 @@ plot(variogram(g, alpha = c(60, 105, 150, 195)))
 Posiadając dopasowane modele oraz siatkę można uzyskać wynik używając funkcji `predict()`. 
 
 ```{r kokriging_predict, cache=TRUE}
-ck <- predict(g_fit, siatka) 
+ck <- predict(g_fit, siatka)
 ```
 
 W efekcie otrzymujemy pięć zmiennych:
@@ -117,31 +117,31 @@ summary(ck)
 ```
 
 ```{r plotsyck1, eval=FALSE}
-spplot(ck, 'SAVI.pred')
-spplot(ck, 'SAVI.var')
+spplot(ck, "SAVI.pred")
+spplot(ck, "SAVI.var")
 ```
 
 ```{r kokriging_predicted, echo=FALSE, cache=TRUE, fig.height=8}
-library('gridExtra')
-p1 <- spplot(ck, "SAVI.pred", main='Predykcja CK')
-p2 <- spplot(ck, "SAVI.var", main='Wariancja CK')
-grid.arrange(p1, p2, ncol=1)
+library("gridExtra")
+p1 <- spplot(ck, "SAVI.pred", main = "Predykcja CK")
+p2 <- spplot(ck, "SAVI.var", main = "Wariancja CK")
+grid.arrange(p1, p2, ncol = 1)
 ```
 
 ```{r kokriging_predict_anizotropia, echo=FALSE, cache=TRUE, eval=FALSE}
 ### Kokriging (anitotropia)
-g <- gstat(NULL, id="TPZ1999", form = X1999.09.13_TPZ~1, data = punkty_255)
-g <- gstat(g, id="TPZ2002", form = X2002.08.20_TPZ~1, data = punkty_750)
+g <- gstat(NULL, id = "TPZ1999", form = X1999.09.13_TPZ~1, data = punkty_255)
+g <- gstat(g, id = "TPZ2002", form = X2002.08.20_TPZ~1, data = punkty_750)
 g
 
-vario_g <- variogram(g, map=TRUE, cutoff=12000, width=800)
+vario_g <- variogram(g, map = TRUE, cutoff = 12000, width = 800)
 plot(vario_g)
 
 vario_g_kier <- variogram(g, alpha = c(60, 105, 150, 195))
 plot(vario_g_kier)
 
-g <- gstat(g, model=vgm(17, "Sph", 12000, 5, anis = c(60, .25)), fill.all=TRUE)
-g_fit_a <- fit.lmc(vario_g_kier, g, fit.ranges = FALSE, fit.method=1)
+g <- gstat(g, model = vgm(17, "Sph", 12000, 5, anis = c(60, .25)), fill.all = TRUE)
+g_fit_a <- fit.lmc(vario_g_kier, g, fit.ranges = FALSE, fit.method = 1)
 g_fit_a
 plot(vario_g_kier, g_fit_a)
 
@@ -156,10 +156,10 @@ spplot(ck_a, "TPZ1999.var")
 ```
 
 ```{r plotsyck2a, eval=FALSE, echo=FALSE, fig.height=8}
-library('gridExtra')
-p1 <- spplot(ck_a, "TPZ1999.pred", main='Predykcja CK - anizotropia')
-p2 <- spplot(ck_a, "TPZ1999.var", main='Wariancja CK - anizotropia')
-grid.arrange(p1, p2, ncol=2)
+library("gridExtra")
+p1 <- spplot(ck_a, "TPZ1999.pred", main = "Predykcja CK - anizotropia")
+p2 <- spplot(ck_a, "TPZ1999.var", main = "Wariancja CK - anizotropia")
+grid.arrange(p1, p2, ncol = 2)
 ```
 
 <!--   

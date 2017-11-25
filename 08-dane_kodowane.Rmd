@@ -5,24 +5,24 @@ knit: bookdown::preview_chapter
 # Estymacja lokalnego rozkładu prawdopodobieństwa {#estymacja-lokalnego-rozkadu-prawdopodobienstwa}
 
 ```{r, message=FALSE, warning=FALSE}
-library('ggplot2')
-library('gstat')
-library('sp')
-library('geostatbook')
+library("ggplot2")
+library("gstat")
+library("sp")
+library("geostatbook")
 data(punkty)
 data(siatka)
 ```
 
 ```{r setup8, echo=FALSE, include=FALSE}
-library('knitr')
-library('Cairo')
-library('grDevices')
+library("knitr")
+library("Cairo")
+library("grDevices")
 # knitr::opts_chunk$set(warning=FALSE, message=FALSE, dev = "cairo_pdf", out.width = '\\textwidth')
-knitr::opts_chunk$set(warning=FALSE, message=FALSE, out.width = '\\textwidth')
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = "\\textwidth")
 ```
 
 ```{r, echo=FALSE}
-par(mar=c(rep(0, 4)))
+par(mar = c(rep(0, 4)))
 ```
 
 ## Kriging danych kodowanych
@@ -52,9 +52,9 @@ Wady:
 Pierwszym krokiem w krigingu danych kodowanych jest stworzenie zmiennej binarnej. Na poniższym przykładzie tworzona jest nowa zmienna `temp_ind`. Przyjmuje ona wartość `TRUE` (czyli `1`) dla pomiarów temperatury wyższych niż 20 stopni Celsjusza, a dla pomiarów równych i niższych niż 20 stopni Celsjusza jej wartość wynosi `FALSE` (czyli `0`).
 
 ```{r }
-summary(punkty$temp) 
+summary(punkty$temp)
 punkty$temp_ind <- punkty$temp > 20
-summary(punkty$temp_ind) 
+summary(punkty$temp_ind)
 ```
 
 W przykładzie, próg został wyznaczony arbitralnie. Istnieje oczywiście szereg innych możliwości wyznaczania progu. Można wykorzystać wiedzę zewnętrzną (np. toksyczne stężenie analizowanej substancji) lub też posłużyć się wykresem dystrybuanty do określenia istotnej zmiany wartości.
@@ -68,16 +68,16 @@ ggplot(punkty@data, aes(temp)) + stat_ecdf()
 Tworzenie i modelowanie semiwariogramu empirycznego w krigingu danych kodowanych wygląda tak samo jak, np. w przypadku krigingu zwykłego. Korzystając z funkcji `variogram()` tworzony jest semiwariogram empiryczny, używając `vgm()` tworzony jest model "ręczny", który następnie jest dopasowywany z użyciem funkcji `fit.variogram()`.
 
 ```{r }
-vario_ind <- variogram(temp_ind~1, punkty)         
+vario_ind <- variogram(temp_ind~1, punkty)
 plot(vario_ind)
 ```
 
 ```{r }
-model_ind <- vgm(0.09, model = 'Sph', range = 2000,  nugget = 0.01)  
-plot(vario_ind, model=model_ind)
+model_ind <- vgm(0.09, model = "Sph", range = 2000, nugget = 0.01)
+plot(vario_ind, model = model_ind)
 fitted_ind <- fit.variogram(vario_ind, model_ind)
 fitted_ind
-plot(vario_ind, model=fitted_ind)
+plot(vario_ind, model = fitted_ind)
 ```
 
 ### Kriging danych kodowanych (ang. *Indicator kriging*) | Interpolacja
@@ -85,22 +85,22 @@ plot(vario_ind, model=fitted_ind)
 Ostatnim etapem jest stworzenie interpolacji geostatystycznej z pomocą funkcji `krige`. Wymaga ona czterech argumentów - wzoru (`temp_ind~1`), zbioru punktowego (`punkty`), siatki do interpolacji (`siatka`) oraz modelu (`fitted_ind`).
 
 ```{r }
-ik <- krige(temp_ind~1, punkty, siatka, model=fitted_ind)
+ik <- krige(temp_ind~1, punkty, siatka, model = fitted_ind)
 ```
 
 W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopni Celsjusza) oraz uzyskaną wariancję predykcji.
 
 ```{r plotsy1ok, eval=FALSE}
-spplot(ik, 'var1.pred')
-spplot(ik, 'var1.var')
+spplot(ik, "var1.pred")
+spplot(ik, "var1.var")
 ```
 
 ```{r plotsy2ok, echo=FALSE, fig.height=8}
-library('gridExtra')
-ps.options(encoding='CP1250')
-p1 <- spplot(ik, "var1.pred", main='Prawdopodobieństwo Temp > 20')
-p2 <- spplot(ik, "var1.var", main='Wariancja predykcji IK')
-grid.arrange(p1, p2, ncol=1)
+library("gridExtra")
+ps.options(encoding = "CP1250")
+p1 <- spplot(ik, "var1.pred", main = "Prawdopodobieństwo Temp > 20")
+p2 <- spplot(ik, "var1.var", main = "Wariancja predykcji IK")
+grid.arrange(p1, p2, ncol = 1)
 ```
 
 ### Kriging danych kodowanych (ang. *Indicator kriging*)
@@ -108,23 +108,23 @@ grid.arrange(p1, p2, ncol=1)
 Alternatywnie, zamiast tworzenia nowej zmiennej (takiej jak `temp_ind`), można wykorzystać funkcję `I`. Z jej użyciem można definiować przyjęte progi bezpośrednio do funkcji `variogram` i `krige`. Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopni Celsjusza.
 
 ```{r }
-vario_ind20 <- variogram(I(temp<20)~1, punkty)  
-fitted_ind20 <- fit.variogram(vario_ind20, vgm(0.08, 'Sph', 3500, nugget=0.01))
-vario_ind16 <- variogram(I(temp<16)~1, punkty)  
-fitted_ind16 <- fit.variogram(vario_ind16, vgm(0.18, 'Sph', 3500, nugget=0.03))
-vario_ind12 <- variogram(I(temp<12)~1, punkty)  
-fitted_ind12 <- fit.variogram(vario_ind12, vgm(0.13, 'Sph', 2000, nugget=0.03))
+vario_ind20 <- variogram(I(temp < 20)~1, punkty)
+fitted_ind20 <- fit.variogram(vario_ind20, vgm(0.08, "Sph", 3500, nugget = 0.01))
+vario_ind16 <- variogram(I(temp < 16)~1, punkty)
+fitted_ind16 <- fit.variogram(vario_ind16, vgm(0.18, "Sph", 3500, nugget = 0.03))
+vario_ind12 <- variogram(I(temp < 12)~1, punkty)
+fitted_ind12 <- fit.variogram(vario_ind12, vgm(0.13, "Sph", 2000, nugget = 0.03))
 
-ik20 <- krige(I(temp<20)~1, punkty, siatka, model=fitted_ind20, nmax=30)
-ik16 <- krige(I(temp<16)~1, punkty, siatka, model=fitted_ind16, nmax=30)
-ik12 <- krige(I(temp<12)~1, punkty, siatka, model=fitted_ind12, nmax=30)
+ik20 <- krige(I(temp < 20)~1, punkty, siatka, model = fitted_ind20, nmax = 30)
+ik16 <- krige(I(temp < 16)~1, punkty, siatka, model = fitted_ind16, nmax = 30)
+ik12 <- krige(I(temp < 12)~1, punkty, siatka, model = fitted_ind12, nmax = 30)
 ```
 
 ```{r ploty_trzyik, echo=FALSE, fig.height=12}
-library('gridExtra')
-ps.options(encoding='CP1250')
-p1 <- spplot(ik20, "var1.pred", main="Prawdopodobieństwo Temp < 20")
-p2 <- spplot(ik16, "var1.pred", main="Prawdopodobieństwo Temp < 16")
-p3 <- spplot(ik12, "var1.pred", main="Prawdopodobieństwo Temp < 12")
-grid.arrange(p1, p2, p3, ncol=1)
+library("gridExtra")
+ps.options(encoding = "CP1250")
+p1 <- spplot(ik20, "var1.pred", main = "Prawdopodobieństwo Temp < 20")
+p2 <- spplot(ik16, "var1.pred", main = "Prawdopodobieństwo Temp < 16")
+p3 <- spplot(ik12, "var1.pred", main = "Prawdopodobieństwo Temp < 12")
+grid.arrange(p1, p2, p3, ncol = 1)
 ```

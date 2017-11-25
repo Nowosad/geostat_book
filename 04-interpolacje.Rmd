@@ -2,23 +2,23 @@
 # Metody interpolacji {#metody-interpolacji}
 
 ```{r, interpolate_inits, message=FALSE, warning=FALSE}
-library('dismo')
-library('raster')
-library('sp')
-library('gstat')
-library('fields')
-library('geostatbook')
+library("dismo")
+library("raster")
+library("sp")
+library("gstat")
+library("fields")
+library("geostatbook")
 data(punkty)
 data(siatka)
 data(granica)
 ```
 
 ```{r setup44, echo=FALSE, include=FALSE}
-library('knitr')
-library('Cairo')
-library('grDevices')
+library("knitr")
+library("Cairo")
+library("grDevices")
 # knitr::opts_chunk$set(warning=FALSE, message=FALSE, dev = "cairo_pdf", out.width = '\\textwidth')
-knitr::opts_chunk$set(warning=FALSE, message=FALSE, out.width = '\\textwidth')
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = "\\textwidth")
 ```
 
 Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania. Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne oraz modele statystyczne.
@@ -35,7 +35,7 @@ Modele deterministyczne charakteryzują się tym, że ich parametry są zazwycza
 <!--http://neondataskills.org/Data-Workshops/ESA15-Going-On-The-Grid-Spatial-Interpolation-Basics/-->
 
 ```{r, echo=FALSE}
-par(mar=c(rep(0, 4)))
+par(mar = c(rep(0, 4)))
 ```
 
 ### Modele deterministyczne | Voronoi
@@ -45,7 +45,7 @@ Metoda diagramów Voronoi'a polega na stworzeniu nieregularnych poligonów na po
 ```{r }
 voronoi_interp <- voronoi(punkty)
 voronoi_interp <- intersect(granica, voronoi_interp)
-spplot(voronoi_interp, 'temp', contour=TRUE, main='Poligony Voronoia')
+spplot(voronoi_interp, "temp", contour = TRUE, main = "Poligony Voronoia")
 ```
 
 ### Modele deterministyczne | IDW
@@ -53,8 +53,8 @@ spplot(voronoi_interp, 'temp', contour=TRUE, main='Poligony Voronoia')
 Metoda średniej ważonej odległością (IDW) wylicza wartość dla każdej komórki na podstawie wartości punktów obokległych ważonych odwrotnością ich odległości. W efekcie, czym punkt jest bardziej oddalony, tym mniejszy jest jego wpływ na interpolowaną wartość. Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (ang. *power*). W pakiecie `gstat` istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`).
 
 ```{r }
-idw_wolin <- idw(temp~1, punkty, siatka, idp=2)
-spplot(idw_wolin, 'var1.pred', contour=TRUE, main='IDW')
+idw_wolin <- idw(temp~1, punkty, siatka, idp = 2)
+spplot(idw_wolin, "var1.pred", contour = TRUE, main = "IDW")
 ```
 
 <!--
@@ -67,15 +67,15 @@ https://rpubs.com/DonalOLeary/80504
 Stosowanie funkcji wielomianowych w R może odbyć się z wykorzystaniem funkcji `gstat()` z pakietu `gstat`. Wymaga ona podania trzech argumentów: `formula` określającego naszą analizowaną cechę (`temp~1` mówi, że chcemy interpolować wartość temperatury zależnej od samej siebie), `data` określający analizowany zbiór danych, oraz `degree` określającą stopień wielomianu. Następnie funkcja `predict()` przenosi nowe wartości na wcześniej stworzoną siatkę.
 
 ```{r }
-wielomian_1 <- gstat(formula=temp~1, data=punkty, degree=1)
-wielomian_1_pred <- predict(wielomian_1, newdata=siatka)
-spplot(wielomian_1_pred[1], contour=TRUE,main='Powierzchnia trendu - wielomian pierwszego stopnia')
-wielomian_2 <- gstat(formula=temp~1, data=punkty, degree=2)
-wielomian_2_pred <- predict(wielomian_2, newdata=siatka)
-spplot(wielomian_2_pred[1], contour=TRUE,main='Powierzchnia trendu - wielomian drugiego stopnia')
-wielomian_3 <- gstat(formula=temp~1, data=punkty, degree=3)
-wielomian_3_pred <- predict(wielomian_3, newdata=siatka)
-spplot(wielomian_3_pred[1], contour=TRUE,main='Powierzchnia trendu - wielomian trzeciego stopnia')
+wielomian_1 <- gstat(formula = temp~1, data = punkty, degree = 1)
+wielomian_1_pred <- predict(wielomian_1, newdata = siatka)
+spplot(wielomian_1_pred[1], contour = TRUE, main = "Powierzchnia trendu - wielomian pierwszego stopnia")
+wielomian_2 <- gstat(formula = temp~1, data = punkty, degree = 2)
+wielomian_2_pred <- predict(wielomian_2, newdata = siatka)
+spplot(wielomian_2_pred[1], contour = TRUE, main = "Powierzchnia trendu - wielomian drugiego stopnia")
+wielomian_3 <- gstat(formula = temp~1, data = punkty, degree = 3)
+wielomian_3_pred <- predict(wielomian_3, newdata = siatka)
+spplot(wielomian_3_pred[1], contour = TRUE, main = "Powierzchnia trendu - wielomian trzeciego stopnia")
 ```
 
 ### Modele deterministyczne | Funkcje sklejane
@@ -87,17 +87,17 @@ tps <- Tps(coordinates(punkty), punkty@data$temp)
 ras <- raster(siatka)
 spline <- interpolate(ras, tps)
 spline <- mask(spline, ras)
-spplot(spline, contour=TRUE , main='Funkcje sklejane')
+spplot(spline, contour = TRUE, main = "Funkcje sklejane")
 ```
 
 ### Modele deterministyczne | Porównanie
 
 ```{r echo=FALSE}
-library('gridExtra')
-p1 <- spplot(wielomian_3_pred[1] , main='Wielomiany')
-p2 <- spplot(spline, main='Funkcje sklejane')
-p3 <- spplot(voronoi_interp, 'temp', main='Poligony Voronoia')
-p4 <- spplot(idw_wolin, 'var1.pred', main='IDW')
+library("gridExtra")
+p1 <- spplot(wielomian_3_pred[1], main = "Wielomiany")
+p2 <- spplot(spline, main = "Funkcje sklejane")
+p3 <- spplot(voronoi_interp, "temp", main = "Poligony Voronoia")
+p4 <- spplot(idw_wolin, "var1.pred", main = "IDW")
 grid.arrange(p3, p4, p1, p2)
 ```
 

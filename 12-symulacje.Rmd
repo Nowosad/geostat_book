@@ -1,29 +1,26 @@
----
-knit: bookdown::preview_chapter
----
 
 # Symulacje {#symulacje}
 
 ```{r, message=FALSE, warning=FALSE}
-library('gstat')
-library('sp')
-library('ggplot2')
-library('raster')
-library('geostatbook')
+library("gstat")
+library("sp")
+library("ggplot2")
+library("raster")
+library("geostatbook")
 data(punkty)
 data(siatka)
 ```
 
 ```{r setup10, echo=FALSE, include=FALSE}
-library('knitr')
-library('Cairo')
-library('grDevices')
+library("knitr")
+library("Cairo")
+library("grDevices")
 # knitr::opts_chunk$set(warning=FALSE, message=FALSE, dev = "cairo_pdf")
-knitr::opts_chunk$set(warning=FALSE, message=FALSE, out.width = '\\textwidth')
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = "\\textwidth")
 ```
 
 ```{r, echo=FALSE}
-par(mar=c(rep(0, 4)))
+par(mar = c(rep(0, 4)))
 ```
 
 <!--
@@ -61,17 +58,19 @@ Istnieją dwa typy symulacji geostatystycznych:
 Symulacje bezwarunkowe w pakiecie `gstat` tworzy się z wykorzystaniem funkcji `krige()`. Podobnie jak w przypadku estymacji geostatystycznych, należy tutaj podać wzór, model, siatkę, średnią globalną (`beta`), oraz liczbę sąsiednich punktów używanych do symulacji (w przykadzie poniżej `nmax=30`). Należy wprowadzić również informacje, że nie korzystamy z danych punktowych (`locations=NULL`) oraz że chcemy stworzyć dane sztuczne (`dummy=TRUE`). Ostani argument (`nsim=4`) informuje o liczbie symulacji do przeprowadzenia.
 
 ```{r sym_bezw1, cache=TRUE}
-sym_bezw1 <- krige(formula=z~1, model=vgm(psill=0.025, model='Exp', range=100), newdata=siatka, beta=1,
-                   nmax=30, locations=NULL, dummy=TRUE, nsim=4)
-spplot(sym_bezw1, main='Przestrzennie skorelowana powierzchnia \nśrednia=1, 
-       sill=0.025, zasięg=100, model wykładniczy')
+sym_bezw1 <- krige(
+  formula = z~1, model = vgm(psill = 0.025, model = "Exp", range = 100), newdata = siatka, beta = 1,
+  nmax = 30, locations = NULL, dummy = TRUE, nsim = 4
+)
+spplot(sym_bezw1, main = "Przestrzennie skorelowana powierzchnia \nśrednia=1, \n       sill=0.025, zasięg=100, model wykładniczy")
 ```
 
 ```{r sym_bezw2, cache=TRUE}
-sym_bezw2 <- krige(formula=z~1, , model=vgm(psill=0.025, model='Exp', range=1500), newdata=siatka, beta=1,
-                   nmax=30, locations=NULL, dummy=TRUE, nsim=4)
-spplot(sym_bezw2, main='Przestrzennie skorelowana powierzchnia \nśrednia=1, 
-       sill=0.025, zasięg=1500, model wykładniczy')
+sym_bezw2 <- krige(
+  formula = z~1, , model = vgm(psill = 0.025, model = "Exp", range = 1500), newdata = siatka, beta = 1,
+  nmax = 30, locations = NULL, dummy = TRUE, nsim = 4
+)
+spplot(sym_bezw2, main = "Przestrzennie skorelowana powierzchnia \nśrednia=1, \n       sill=0.025, zasięg=1500, model wykładniczy")
 ```
 
 <!--
@@ -100,7 +99,7 @@ Sekwencyjna symulacja gaussowska wymaga zmiennej posiadającej wartości o rozk�
 
 ```{r}
 ggplot(punkty@data, aes(temp)) + geom_histogram()
-ggplot(punkty@data, aes(sample=temp)) + stat_qq()
+ggplot(punkty@data, aes(sample = temp)) + stat_qq()
 shapiro.test(punkty$temp)
 ```
 
@@ -109,7 +108,7 @@ Na potrzeby symulacji zmienna `temp` została zlogarytmizowna.
 ```{r}
 punkty$temp_log <- log(punkty$temp)
 ggplot(punkty@data, aes(temp_log)) + geom_histogram()
-ggplot(punkty@data, aes(sample=temp_log)) + stat_qq()
+ggplot(punkty@data, aes(sample = temp_log)) + stat_qq()
 shapiro.test(punkty$temp_log)
 ```
 
@@ -117,10 +116,10 @@ Dalsze etapy przypominają przeprowadzenie estymacji statystycznej, jedynym wyj�
 
 ```{r sym_ok, cache=TRUE}
 vario <- variogram(temp_log~1, punkty)
-model <- vgm(0.05, model = 'Sph', range = 4500, nugget=0.005)
+model <- vgm(0.05, model = "Sph", range = 4500, nugget = 0.005)
 fitted <- fit.variogram(vario, model)
-plot(vario, model=fitted)
-sym_ok <- krige(temp_log~1, punkty, siatka, model=fitted, nmax=30, nsim=4)
+plot(vario, model = fitted)
+sym_ok <- krige(temp_log~1, punkty, siatka, model = fitted, nmax = 30, nsim = 4)
 spplot(sym_ok)
 ```
 
@@ -136,7 +135,7 @@ spplot(sym_ok)
 Symulacje geostatystyczne pozwalają również na przedstawianie niepewności interpolacji. W tym wypadku należy wykonać znacznie więcej powtórzeń (np. `nsim=100`). Uzyskane wyniki należy przeliczyć do oryginalnej jednostki, a następnie wyliczyć odchylenie standardowe ich wartości (używając funkcji `stack()` i `calc()` z pakietu `raster`).
 
 ```{r master_symulation, cache=TRUE}
-sym_sk <- krige(temp_log~1, punkty, siatka, model=fitted, beta=2.7, nsim=100, nmax=30)
+sym_sk <- krige(temp_log~1, punkty, siatka, model = fitted, beta = 2.7, nsim = 100, nmax = 30)
 sym_sk@data <- as.data.frame(apply(sym_sk@data, 2, exp))
 
 sym_sk <- stack(sym_sk)
@@ -155,28 +154,28 @@ spplot(sym_sk_sd)
 Symulacje geostatystyczne można również zastosować do danych binarnych. Dla potrzeb przykładu tworzona jest nowa zmienna `temp_ind` przyjmująca wartość `TRUE` dla pomiarów o wartościach temperatury niższych niż 12 stopni Celsjusza oraz `FALSE` dla pomiarów o wartościach temperatury równych lub wyższych niż 12 stopni Celsjusza.
 
 ```{r }
-summary(punkty$temp) 
+summary(punkty$temp)
 punkty$temp_ind <- punkty$temp < 12
-summary(punkty$temp_ind) 
+summary(punkty$temp_ind)
 ```
 
 W tej metodzie kolejne etapy przypominają przeprowadzenie krigingu danych kodowanych. Jedynie w funkcji `krige()` należy dodać argument mówiący o liczbie symulacji do przeprowadzenia (`nsim` ).
 
 ```{r sym_ind, cache=TRUE}
-vario_ind <- variogram(temp_ind~1, punkty)         
+vario_ind <- variogram(temp_ind~1, punkty)
 plot(vario_ind)
-model_ind <- vgm(0.14, model = 'Sph', range = 2000, nugget = 0.02)
-plot(vario_ind, model=model_ind)
+model_ind <- vgm(0.14, model = "Sph", range = 2000, nugget = 0.02)
+plot(vario_ind, model = model_ind)
 fitted_ind <- fit.variogram(vario_ind, model_ind)
 fitted_ind
-plot(vario_ind, model=fitted_ind)
-sym_ind <- krige(temp_ind~1, punkty, siatka, model=fitted_ind, indicators=TRUE, nsim=4, nmax=30)
+plot(vario_ind, model = fitted_ind)
+sym_ind <- krige(temp_ind~1, punkty, siatka, model = fitted_ind, indicators = TRUE, nsim = 4, nmax = 30)
 ```
 
 Wynik symulacji danych kodowanych znacząco różni się od wyniku krigingu danych kodowanych. W przeciwieństwie do tej drugiej metody, w rezultacie symulacji nie otrzymujemy prawdopodobieństwa zajścia danej klasy, ale konkretne wartości `1` lub `0`.
 
 ```{r}
-spplot(sym_ind, main='Symulacje warunkowe')
+spplot(sym_ind, main = "Symulacje warunkowe")
 ```
 
 <!--

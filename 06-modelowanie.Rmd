@@ -5,21 +5,21 @@ knit: bookdown::preview_chapter
 # Modelowanie matematycznie autokorelacji przestrzennej {#modelowanie-matematycznie-autokorelacji-przestrzennej}
 
 ```{r, message=FALSE, warning=FALSE}
-library('gstat')
-library('geostatbook')
+library("gstat")
+library("geostatbook")
 data(punkty)
 ```
 
 ```{r setup4, echo=FALSE, include=FALSE}
-library('knitr')
-library('Cairo')
-library('grDevices')
+library("knitr")
+library("Cairo")
+library("grDevices")
 # knitr::opts_chunk$set(warning=FALSE, message=FALSE, dev = "cairo_pdf", out.width = '\\textwidth')
-knitr::opts_chunk$set(warning=FALSE, message=FALSE, out.width = '\\textwidth')
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = "\\textwidth")
 ```
 
 ```{r, echo=FALSE}
-par(mar=c(rep(0, 4)))
+par(mar = c(rep(0, 4)))
 ```
 
 ## Modelowanie matematycznie autokorelacji przestrzennej
@@ -61,13 +61,13 @@ show.vgms()
 Istnieje możliwość wyświetlenia tylko wybranych modeli podstawowych poprzez argument `models`. 
 
 ```{r }
-show.vgms(models=c('Nug', 'Sph', 'Gau', 'Pow', 'Exp'), range=1.4, max=2.5)
+show.vgms(models = c("Nug", "Sph", "Gau", "Pow", "Exp"), range = 1.4, max = 2.5)
 ```
 
 Dodatkowo, można je porównać na jednym wykresie poprzez argument `as.groups = TRUE`.
 
 ```{r }
-show.vgms(models=c('Nug', 'Sph', 'Gau', 'Pow', 'Exp'), range=1.4, max=2.5, as.groups = TRUE)
+show.vgms(models = c("Nug", "Sph", "Gau", "Pow", "Exp"), range = 1.4, max = 2.5, as.groups = TRUE)
 ```
 
 ## Metody modelowania
@@ -85,12 +85,12 @@ Odpowiednie określenie modelu matematycznego często nie jest proste. W efekcie
 ### Metody modelowania  | funkcja `eyefit()`
 
 ```{r oko, eval=FALSE}
-v_eye <- eyefit(variog(as.geodata(punkty, 'temp')))
+v_eye <- eyefit(variog(as.geodata(punkty, "temp")))
 ve_fit <- as.vgm.variomodel(v_eye[[1]])
 ```
 
 ```{r, echo=FALSE}
-knitr::include_graphics('figs/eyefit.png', dpi=90, auto_pdf = FALSE)
+knitr::include_graphics("figs/eyefit.png", dpi = 90, auto_pdf = FALSE)
 ```
 
 ### Metody modelowania  | funkcja `fit.variogram()`
@@ -119,12 +119,12 @@ Model nuggetowy (`Nug`) określa sytuację, w której analizowana zmienna nie wy
 ```{r}
 vario <- variogram(temp~1, punkty)
 plot(vario)
-model_nug <- vgm(psill=10, model='Nug', range=0)
+model_nug <- vgm(psill = 10, model = "Nug", range = 0)
 model_nug
-plot(vario, model=model_nug)
+plot(vario, model = model_nug)
 fitted_nug <- fit.variogram(vario, model_nug)
 fitted_nug
-plot(vario, model=fitted_nug)
+plot(vario, model = fitted_nug)
 ```
 
 ### Modelowanie izotropowe | Model sferyczny
@@ -134,12 +134,12 @@ Model sferyczny (`Sph`) jest jednym z najczęściej stosowanych modeli geostatys
 ```{r }
 vario <- variogram(temp~1, punkty)
 plot(vario)
-model_sph <- vgm(psill=10, model = 'Sph', range=3000)
+model_sph <- vgm(psill = 10, model = "Sph", range = 3000)
 model_sph
-plot(vario, model=model_sph)
+plot(vario, model = model_sph)
 fitted_sph <- fit.variogram(vario, model_sph)
 fitted_sph
-plot(vario, model=fitted_sph)
+plot(vario, model = fitted_sph)
 ```
 
 ### Modelowanie izotropowe | Model wykładniczy
@@ -149,12 +149,12 @@ Model wykładniczy (`Exp`) również jest jednym z najczęściej używanych w ge
 ```{r }
 vario <- variogram(temp~1, punkty)
 plot(vario)
-model_exp <- vgm(psill=10, model = 'Exp', range=3000)
+model_exp <- vgm(psill = 10, model = "Exp", range = 3000)
 model_exp
-plot(vario, model=model_exp)
+plot(vario, model = model_exp)
 fitted_exp <- fit.variogram(vario, model_exp)
 fitted_exp
-plot(vario, model=fitted_exp)
+plot(vario, model = fitted_exp)
 ```
 
 ### Modelowanie izotropowe | Model gaussowski
@@ -164,12 +164,12 @@ Model gaussowski (`Gau`) również posiada zasięg praktyczny definiowany jako 9
 ```{r }
 vario <- variogram(temp~1, punkty)
 plot(vario)
-model_gau <- vgm(psill=13, model = 'Gau', range=3000)
+model_gau <- vgm(psill = 13, model = "Gau", range = 3000)
 model_gau
-plot(vario, model=model_gau)
+plot(vario, model = model_gau)
 fitted_gau <- fit.variogram(vario, model_gau)
 fitted_gau
-plot(vario, model=fitted_gau)
+plot(vario, model = fitted_gau)
 ```
 
 ### Modelowanie izotropowe | Model potęgowy
@@ -179,12 +179,12 @@ Model potęgowy (`Pow`) to przykład tzw. modelu nieograniczonego. Jego wartoś�
 ```{r }
 vario <- variogram(temp~1, punkty)
 plot(vario)
-model_pow <- vgm(psill=0.03, model = 'Pow', range=0.7)
+model_pow <- vgm(psill = 0.03, model = "Pow", range = 0.7)
 model_pow
-plot(vario, model=model_pow)
+plot(vario, model = model_pow)
 fitted_pow <- fit.variogram(vario, model_pow)
 fitted_pow
-plot(vario, model=fitted_pow)
+plot(vario, model = fitted_pow)
 ```
 
 ### Modelowanie izotropowe | Modele złożone I
@@ -193,12 +193,12 @@ Najczęściej pojedynczy model nie jest w stanie odwzorować dokładnie zmienno�
 
 ```{r }
 vario <- variogram(temp~1, punkty)
-model_zl1 <- vgm(psill=10, model = 'Sph', range = 3000, nugget = 0.5)
+model_zl1 <- vgm(psill = 10, model = "Sph", range = 3000, nugget = 0.5)
 model_zl1
-plot(vario, model=model_zl1)
+plot(vario, model = model_zl1)
 fitted_zl1 <- fit.variogram(vario, model_zl1)
 fitted_zl1
-plot(vario, model=fitted_zl1)
+plot(vario, model = fitted_zl1)
 ```
 
 ### Modelowanie izotropowe | Modele złożone II
@@ -207,11 +207,11 @@ Bardziej złożone modele można tworzyć z pomocą argumentu `add.to`. Przyjmuj
 
 ```{r }
 vario <- variogram(temp~1, punkty)
-model_zl2 <- vgm(10, 'Gau', 3000, add.to = vgm(4, model = 'Gau', range = 500, nugget = 0.5))
+model_zl2 <- vgm(10, "Gau", 3000, add.to = vgm(4, model = "Gau", range = 500, nugget = 0.5))
 model_zl2
-plot(vario, model=model_zl2)
+plot(vario, model = model_zl2)
 fitted_zl2 <- fit.variogram(vario, model_zl2)
-plot(vario, model=fitted_zl2)
+plot(vario, model = fitted_zl2)
 ```
 
 ## Modelowanie anizotropowe
@@ -227,10 +227,10 @@ Uwzględnienie anizotropii wymaga zamiany parametru zasięgu na trzy inne parame
 W pakiecie `gstat` odbywa się to poprzez dodanie argumentu `alpha` do funkcji `variogram()`. Należy w niej zdefiniować analizowane kierunki, które zostały określone na podstawie mapy semiwariogramu. Następnie w funkcji `vgm()` należy podać nowy argument `anis`. Przyjmuje on dwie wartości. Pierwsza z nich (`45` w przykładzie poniżej) oznacza dominujący kierunek anizotropii, druga zaś (`0.4`) mówi o tzw. proporcji anizotropii. Proporcja anizotropii jest to relacja pomiędzy zmiennością na głównym kierunku a kierunku prostopadłym. Na poniższym przykładzie zasięg ustalony dla głównego kierunku wynosi 4000 metrów. Wartość proporcji anizotropii, `0.4`, w tym wypadku oznacza że dla prostopadłego kierunku zasięg będzie wynosił 1600 metrów (4000 metrów x 0.4).
 
 ```{r }
-vario_map <- variogram(temp~1, punkty, cutoff=4000, width=400, map=TRUE)
+vario_map <- variogram(temp~1, punkty, cutoff = 4000, width = 400, map = TRUE)
 plot(vario_map)
-vario_kier <- variogram(temp~1, punkty, alpha = c(45, 90, 135, 180), cutoff=4000)
-plot(vario_kier, plot.numbers=TRUE)
-vario_kier_fit <- vgm(psill=8, model='Sph', range=4000, nugget=0.5, anis = c(45, 0.4))
-plot(vario_kier, vario_kier_fit, as.table=TRUE)
+vario_kier <- variogram(temp~1, punkty, alpha = c(45, 90, 135, 180), cutoff = 4000)
+plot(vario_kier, plot.numbers = TRUE)
+vario_kier_fit <- vgm(psill = 8, model = "Sph", range = 4000, nugget = 0.5, anis = c(45, 0.4))
+plot(vario_kier, vario_kier_fit, as.table = TRUE)
 ```

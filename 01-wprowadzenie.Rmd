@@ -102,19 +102,20 @@ plot(dane_punktowe)
 
 ```{r }
 sp_na_omit <- function(x, margin=1) {
-    if (!inherits(x, "SpatialPointsDataFrame") & !inherits(x, "SpatialPolygonsDataFrame")) 
-        stop("MUST BE sp SpatialPointsDataFrame OR SpatialPolygonsDataFrame CLASS OBJECT") 
-    na.index <- unique(as.data.frame(which(is.na(x@data),arr.ind=TRUE))[,margin])
-    if(margin == 1) {  
-        cat("DELETING ROWS: ", na.index, "\n") 
-        return( x[-na.index,]  ) 
-    }
-    if(margin == 2) {  
-        cat("DELETING COLUMNS: ", na.index, "\n") 
-        return( x[,-na.index]  ) 
-    }
+  if (!inherits(x, "SpatialPointsDataFrame") & !inherits(x, "SpatialPolygonsDataFrame")) {
+    stop("MUST BE sp SpatialPointsDataFrame OR SpatialPolygonsDataFrame CLASS OBJECT")
+  }
+  na.index <- unique(as.data.frame(which(is.na(x@data), arr.ind = TRUE))[, margin])
+  if (margin == 1) {
+    cat("DELETING ROWS: ", na.index, "\n")
+    return(x[-na.index, ])
+  }
+  if (margin == 2) {
+    cat("DELETING COLUMNS: ", na.index, "\n")
+    return(x[, -na.index])
+  }
 }
-# wolin_lato_los2 <- sp_na_omit(wolin_lato_los) 
+# wolin_lato_los2 <- sp_na_omit(wolin_lato_los)
 # summary(wolin_lato_los2)
 ```
 -->
@@ -213,8 +214,10 @@ extent(dane_punktowe)
 Do stworzenia siatki można użyć funkcji `expand.grid()`. Wymaga ona określenia dwóch argumentów - `x` oraz `y` (taka ich nazwa nie jest obowiązkowa). Oba argumenty przyjmują trzy wartości: (i) `from` oznaczający wartość początkową współrzędnej, (ii) `to` określający wartość końcową współrzędnej, oraz (iii) `by` określający rozdzielczość. Przy ustalaniu wartości początkowej i końcowej konieczne jest ich rozszerzenie względem wartości z funkcji `bbox()` lub `extent()`, aby wszystkie analizowane punkty znalazły się na badanym obszarze. 
 
 ```{r }
-siatka <- expand.grid(x = seq(from = 745050, to = 757050, by = 500),
-                      y = seq(from = 712650, to = 721650, by = 500))
+siatka <- expand.grid(
+  x = seq(from = 745050, to = 757050, by = 500),
+  y = seq(from = 712650, to = 721650, by = 500)
+)
 ```
 
 Utworzony w ten sposób obiekt wymaga określenia współrzędnych (funkcja `coordinates()`), potwierdzenia że dane mają być siatką (funkcja `gridded()`), oraz przypisania układu współrzędnych z obiektu punktowego (funkcja `proj4string()`).

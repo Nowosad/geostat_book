@@ -50,7 +50,7 @@ Inaczej mówiąc, celem geostatystyki nie musi być tylko interpolacja (estymacj
 
 Geostatystyczna analiza danych może przyjmować różną postać w zależności od postawionego celu analizy. Poniższa rycina przestawia uproszczoną ścieżkę postępowania geostatystycznego. 
 
-```{r diagram, echo=FALSE}
+```{r diagram, echo=FALSE, eval=FALSE}
 library("DiagrammeR")
 # library('trelliscope')
 p <- DiagrammeR::mermaid("

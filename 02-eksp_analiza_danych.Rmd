@@ -36,8 +36,8 @@ str(punkty@data)
 Istnieją dwa sposoby uzyskania wartości wybranej zmiennej z tabeli atrybutów.
 
 ```{r, eval=FALSE}
-punkty@data$temp #1
-punkty$temp      #2
+punkty@data$temp # 1
+punkty$temp # 2
 ```
 
 Z uwagi na to, że zajmujemy się danymi przestrzennymi - warto też się upewnić czy dane zostały poprawnie wczytane i obejmują analizowany obszar. Najszybciej można to wykonać z pomocą funkcji `plot()`.
@@ -97,7 +97,7 @@ Dodatkowo, często używaną statystyką jest odchylenie standardowe. Wartość 
 - 99,7% obserwacji mieści się w granicach trzech odchyleń standardowych od średniej
 
 ```{r, echo=FALSE}
-knitr::include_graphics('figs/normal_distribution.png')
+knitr::include_graphics("figs/normal_distribution.png")
 ```
 
 ```{r }
@@ -138,7 +138,7 @@ ggplot(punkty@data, aes(sample = temp)) + stat_qq()
 Na poniższej rycinie można zobaczyć przykłady najczęściej spotykanych cech rozkładu danych w wykresach kwantyl-kwantyl.
 
 ```{r, echo=FALSE}
-knitr::include_graphics('figs/qq_plot_explained.png')
+knitr::include_graphics("figs/qq_plot_explained.png")
 ```
 
 ### Dystrybuanta (CDF)
@@ -212,7 +212,7 @@ dev.off()
 Do wykonania porównań wielokrotnych służy funkcja `TukeyHSD()`. Dodatkowo wyniki można wizualizować za pomocą funkcji `plot()`.
 
 ```{r }
-tukey <- TukeyHSD(aov_test, 'clc')
+tukey <- TukeyHSD(aov_test, "clc")
 plot(tukey, las = 1)
 ```
 
@@ -283,7 +283,7 @@ Pierwiastkowanie w R może odbyć się za pomocą funkcji `sqrt()`. Odwrócenie 
 ggplot(punkty@data, aes(temp)) + geom_density()
 punkty$sqrt_tpz <- sqrt(punkty$temp)
 ggplot(punkty@data, aes(sqrt_tpz)) + geom_density()
-punkty$pow_tpz <- punkty$sqrt_tpz^2
+punkty$pow_tpz <- punkty$sqrt_tpz ^ 2
 ggplot(punkty@data, aes(pow_tpz)) + geom_density()
 ```
 
@@ -296,8 +296,8 @@ transformacja <- BoxCoxTrans(punkty$temp)
 transformacja
 punkty$bc_tpz <- predict(transformacja, punkty$temp)
 ggplot(punkty@data, aes(bc_tpz)) + geom_density()
-invBoxCox <- function(x, lambda) if (lambda == 0) exp(x) else (lambda*x + 1)^(1/lambda) 
-punkty$bc_tpz_inv <- invBoxCox(punkty$bc_tpz, lambda=0.2)
+invBoxCox <- function(x, lambda) if (lambda == 0) exp(x) else (lambda * x + 1) ^ (1 / lambda)
+punkty$bc_tpz_inv <- invBoxCox(punkty$bc_tpz, lambda = 0.2)
 ggplot(punkty@data, aes(bc_tpz_inv)) + geom_density()
 ```
 

@@ -5,21 +5,21 @@ knit: bookdown::preview_chapter
 # Estymacje jednozmienne {#estymacje-jednozmienne}
 
 ```{r, message=FALSE, warning=FALSE}
-library('gstat')
-library('sp')
-library('geostatbook')
+library("gstat")
+library("sp")
+library("geostatbook")
 data(punkty)
 data(siatka)
 ```
 
 ```{r setup5, echo=FALSE, include=FALSE}
-library('knitr')
-knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+library("knitr")
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 # options(device = "cairo_pdf")
 ```
 
 ```{r, echo=FALSE}
-par(mar=c(rep(0, 4)))
+par(mar = c(rep(0, 4)))
 ```
 
 ## Kriging
@@ -49,16 +49,16 @@ Kriging prosty zakłada, że średnia jest znana i stała na całym obszarze. W 
 
 ```{r }
 vario <- variogram(temp~1, punkty)
-model <- vgm(10, model = 'Sph', range = 4000, nugget = 0.5)
+model <- vgm(10, model = "Sph", range = 4000, nugget = 0.5)
 model
 fitted <- fit.variogram(vario, model)
-plot(vario, model=fitted)
+plot(vario, model = fitted)
 ```
 
 Następnie nastąpiła estymacja wartości z użyciem metody kriginu prostego. W funkcji `krige()` z pakietu `gstat`, użycie tej metody wymaga ustalenia średniej wartości cechy za pomocą argumentu `beta`. 
 
 ```{r }
-sk <- krige(temp~1, punkty, siatka, model=fitted, beta=15.32)
+sk <- krige(temp~1, punkty, siatka, model = fitted, beta = 15.32)
 ```
 
 Wynik krigingu prostego, jak i każdy inny uzyskany z użyciem pakietu `gstat`, można podejrzeć używając funkcji `summary()`. Szczególnie ważne są dwie, nowe zmienne - `var1.pred` oraz `var1.var`. Pierwsza z nich oznacza wartość estymowaną dla każdego oczka siatki, druga zaś mówi o wariancji estymacji. 
@@ -70,15 +70,15 @@ summary(sk)
 Obie uzyskane zmienne można wyświetlić z użyciem funkcji `spplot()`.
 
 ```{r plotsy1, eval=FALSE}
-spplot(sk, 'var1.pred')
-spplot(sk, 'var1.var')
+spplot(sk, "var1.pred")
+spplot(sk, "var1.var")
 ```
 
 ```{r plotsy2, echo=FALSE, eval=TRUE, fig.height=8}
-library('gridExtra')
-p1 <- spplot(sk, "var1.pred", main='Predykcja SK')
-p2 <- spplot(sk, "var1.var", main='Wariancja predykcji SK')
-grid.arrange(p1, p2, ncol=1)
+library("gridExtra")
+p1 <- spplot(sk, "var1.pred", main = "Predykcja SK")
+p2 <- spplot(sk, "var1.var", main = "Wariancja predykcji SK")
+grid.arrange(p1, p2, ncol = 1)
 ```
 
 ## Kriging zwykły 
@@ -91,7 +91,7 @@ W krigingu zwykłym średnia traktowana jest jako wartość nieznana. Metoda ta 
 
 ```{r }
 # ok <- krige(temp~1, punkty, siatka, model=fitted, nmax=30)
-ok <- krige(temp~1, punkty, siatka, model=fitted, maxdist=1500)
+ok <- krige(temp~1, punkty, siatka, model = fitted, maxdist = 1500)
 ```
 
 Podobnie jak w przypadku krigingu prostego, można przyjrzeć się wynikom estymacji używając funkcji `summary()` oraz wyświetlić je używając funkcji `spplot()`.
@@ -101,21 +101,21 @@ summary(ok)
 ```
 
 ```{r plotsy1ok2, eval=FALSE}
-spplot(ok, 'var1.pred')
-spplot(ok, 'var1.var')
+spplot(ok, "var1.pred")
+spplot(ok, "var1.var")
 ```
 
 ```{r plotsy2ok2, echo=FALSE, eval=TRUE, fig.height=8}
-library('gridExtra')
-p1 <- spplot(ok, "var1.pred", main='Predykcja OK')
-p2 <- spplot(ok, "var1.var", main='Wariancja predykcji OK')
-grid.arrange(p1, p2, ncol=1)
+library("gridExtra")
+p1 <- spplot(ok, "var1.pred", main = "Predykcja OK")
+p2 <- spplot(ok, "var1.var", main = "Wariancja predykcji OK")
+grid.arrange(p1, p2, ncol = 1)
 ```
 
 <!--
 ```{r , include=FALSE, eval=FALSE}
-spplot(ok, "var1.pred", sp.layout=list(punkty, pch=21, col="white"))
-spplot(ok, "var1.var", sp.layout=list(punkty, pch=21, col="white"))
+spplot(ok, "var1.pred", sp.layout = list(punkty, pch = 21, col = "white"))
+spplot(ok, "var1.var", sp.layout = list(punkty, pch = 21, col = "white"))
 ```
 -->
 
@@ -125,18 +125,18 @@ spplot(ok, "var1.var", sp.layout=list(punkty, pch=21, col="white"))
 Kriging z trendem, określany również jako kriging z wewnętrznym trendem, do estymacji wykorzystuje (oprócz zmienności wartości wraz z odległością) położenie analizowanych punktów. Na poniższym przykładzie w funkcji `variogram()` pierwszy z argumentów przyjął postać `temp~x+y`, co oznacza, że uwzględniamy liniowy trend zależny od współrzędnej `x` oraz `y`.
 
 ```{r }
-vario_kzt <- variogram(temp~x+y, data=punkty)
+vario_kzt <- variogram(temp~x + y, data = punkty)
 plot(vario_kzt)
 ```
 
 Dalszym etapem jest dopasowanie modelu semiwariancji, a następnie wyliczenie estymowanych wartości z użyciem funkcji `krige()`. Należy tutaj pamiętać, aby wzór (w przykładzie `temp~x+y`) był taki sam podczas budowania semiwariogramu, jak i interpolacji.
 
 ```{r}
-model_kzt <- vgm(psill = 5, model = 'Sph', range = 2500, nugget = 1)
+model_kzt <- vgm(psill = 5, model = "Sph", range = 2500, nugget = 1)
 fitted_kzt <- fit.variogram(vario_kzt, model_kzt)
 fitted_kzt
 plot(vario_kzt, fitted_kzt)
-kzt <- krige(temp~x+y, punkty, siatka, model=fitted_kzt)
+kzt <- krige(temp~x + y, punkty, siatka, model = fitted_kzt)
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
@@ -148,15 +148,15 @@ summary(kzt)
 ```
 
 ```{r plotsy1kzt, eval=FALSE}
-spplot(kzt, 'var1.pred')
-spplot(kzt, 'var1.var')
+spplot(kzt, "var1.pred")
+spplot(kzt, "var1.var")
 ```
 
 ```{r plotsy2kzt, echo=FALSE, eval=TRUE, fig.height=8}
-library('gridExtra')
-p1 <- spplot(kzt, "var1.pred", main='Predykcja KZT')
-p2 <- spplot(kzt, "var1.var", main='Wariancja predykcji KZT')
-grid.arrange(p1, p2, ncol=1)
+library("gridExtra")
+p1 <- spplot(kzt, "var1.pred", main = "Predykcja KZT")
+p2 <- spplot(kzt, "var1.var", main = "Wariancja predykcji KZT")
+grid.arrange(p1, p2, ncol = 1)
 ```
 
 ## Porównanie wyników SK, OK i KZT
@@ -164,11 +164,11 @@ grid.arrange(p1, p2, ncol=1)
 Poniższe porównanie krigingu prostego (SK), zwykłego (OK) i z trendem (KZT) wykazuje niewielkie różnice w uzyskanych wynikach. W rozdziałach  \@ref(estymacje-wielozmienne) oraz \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych) pokazane będą uzyskane wyniki interpolacji temperatury powietrza korzystając z innych metod krigingu.
 
 ```{r ploty_trzy, echo=FALSE, fig.height=12}
-zmax <- round(max(sk$var1.pred, ok$var1.pred, kzt$var1.pred, na.rm=TRUE), 1) + 0.1    
-zmin <- round(min(sk$var1.pred, ok$var1.pred, kzt$var1.pred, na.rm=TRUE), 1) - 0.1    
-ramp <- seq(from=zmin, to=zmax, by=(zmax-zmin)/20)
-p1 <- spplot(sk, 'var1.pred', at=ramp, main='SK')
-p2 <- spplot(ok, 'var1.pred', at=ramp, main='OK')
-p3 <- spplot(kzt, 'var1.pred', at=ramp, main='KZT')
-grid.arrange(p1, p2, p3, ncol=1, padding = unit(0, 'line'))
+zmax <- round(max(sk$var1.pred, ok$var1.pred, kzt$var1.pred, na.rm = TRUE), 1) + 0.1
+zmin <- round(min(sk$var1.pred, ok$var1.pred, kzt$var1.pred, na.rm = TRUE), 1) - 0.1
+ramp <- seq(from = zmin, to = zmax, by = (zmax - zmin) / 20)
+p1 <- spplot(sk, "var1.pred", at = ramp, main = "SK")
+p2 <- spplot(ok, "var1.pred", at = ramp, main = "OK")
+p3 <- spplot(kzt, "var1.pred", at = ramp, main = "KZT")
+grid.arrange(p1, p2, p3, ncol = 1, padding = unit(0, "line"))
 ```

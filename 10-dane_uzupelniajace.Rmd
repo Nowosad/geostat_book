@@ -5,25 +5,25 @@ knit: bookdown::preview_chapter
 # Wykorzystanie do estymacji danych uzupełniających {#wykorzystanie-do-estymacji-danych-uzupeniajacych}
 
 ```{r, message=FALSE, warning=FALSE}
-library('gstat')
-library('sp')
-library('geostatbook')
+library("gstat")
+library("sp")
+library("geostatbook")
 data(punkty)
 data(siatka)
 ```
 
 ```{r, include=FALSE}
-library('methods')
+library("methods")
 ```
 
 ```{r setup7, echo=FALSE, include=FALSE}
-library('knitr')
-knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+library("knitr")
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 # options(device = "cairo_pdf")
 ```
 
 ```{r, echo=FALSE}
-par(mar=c(rep(0, 4)))
+par(mar = c(rep(0, 4)))
 ```
 
 W wielu przypadkach, oprócz konkretnych pomiarów, istnieje również informacja na temat zmienności innych cech na analizowanym obszarze. W sytuacji, gdy dodatkowe zmienne są skorelowane ze zmienną analizowaną można wykorzystać jedną z metod krigingu wykorzystującą dane uzupełniające, tj. kriging stratyfikowany, prosty kriging ze zmiennymi średnimi lokalnymi, czy kriging uniwersalny.
@@ -37,25 +37,25 @@ W poniższym przykładzie zmienną jakościową jest uproszczone pokrycie terenu
 
 ```{r }
 siatka$clc <- as.factor(siatka$clc)
-spplot(siatka, 'clc')
+spplot(siatka, "clc")
 ```
 
 Kriging stratyfikowany polega na niezależnym tworzeniu i modelowaniu semiwariogramów dla każdej z kategorii.
 
 ```{r }
-vario_kws1 <- variogram(temp~1, punkty[punkty$clc==1, ])
+vario_kws1 <- variogram(temp~1, punkty[punkty$clc == 1, ])
 plot(vario_kws1)
-fitted_kws1 <- fit.variogram(vario_kws1, vgm(10, model = 'Sph', range = 4500, nugget = 0.5))
+fitted_kws1 <- fit.variogram(vario_kws1, vgm(10, model = "Sph", range = 4500, nugget = 0.5))
 plot(vario_kws1, fitted_kws1)
 
-vario_kws2 <- variogram(temp~1, punkty[punkty$clc==2, ])
+vario_kws2 <- variogram(temp~1, punkty[punkty$clc == 2, ])
 plot(vario_kws2)
-fitted_kws2 <- fit.variogram(vario_kws2, vgm(5, model = 'Gau', range = 4500, nugget = 0.1))
+fitted_kws2 <- fit.variogram(vario_kws2, vgm(5, model = "Gau", range = 4500, nugget = 0.1))
 plot(vario_kws2, fitted_kws2)
 
-vario_kws4 <- variogram(temp~1, punkty[punkty$clc==4, ])
+vario_kws4 <- variogram(temp~1, punkty[punkty$clc == 4, ])
 plot(vario_kws4)
-fitted_kws4 <- fit.variogram(vario_kws4, vgm(0.5, model = 'Nug', range = 0))
+fitted_kws4 <- fit.variogram(vario_kws4, vgm(0.5, model = "Nug", range = 0))
 plot(vario_kws4, fitted_kws4)
 ```
 
@@ -63,34 +63,34 @@ Następnie dla każdego obszaru przeprowadzona jest niezależna estymacja warto�
 
 ```{r}
 siatka2 <- siatka[!is.na(siatka$clc), ]
-kws1 <- krige(temp~1, punkty[punkty$clc==1, ], siatka2[na.omit(siatka2$clc==1), ], model = fitted_kws1)
-spplot(kws1, 'var1.pred')
-kws2 <- krige(temp~1, punkty[punkty$clc==2, ], siatka2[na.omit(siatka2$clc==2), ], model = fitted_kws2)
-spplot(kws2, 'var1.pred')
-kws4 <- krige(temp~1, punkty[punkty$clc==4, ], siatka2[na.omit(siatka2$clc==4), ], model = fitted_kws4)
-spplot(kws4, 'var1.pred')
+kws1 <- krige(temp~1, punkty[punkty$clc == 1, ], siatka2[na.omit(siatka2$clc == 1), ], model = fitted_kws1)
+spplot(kws1, "var1.pred")
+kws2 <- krige(temp~1, punkty[punkty$clc == 2, ], siatka2[na.omit(siatka2$clc == 2), ], model = fitted_kws2)
+spplot(kws2, "var1.pred")
+kws4 <- krige(temp~1, punkty[punkty$clc == 4, ], siatka2[na.omit(siatka2$clc == 4), ], model = fitted_kws4)
+spplot(kws4, "var1.pred")
 ```
 
 Ostatnim etapem jest połączenie cząstkowych wyników w jeden obiekt klasy `SpatialPixelsDataFrame`.
 
 ```{r}
 kws <- rbind(as.data.frame(kws1), as.data.frame(kws2), as.data.frame(kws4))
-coordinates(kws) <- ~x+y
-kws <- as(kws, 'SpatialPixelsDataFrame')
+coordinates(kws) <- ~x + y
+kws <- as(kws, "SpatialPixelsDataFrame")
 ```
 
 Uzyskane w ten sposób wyniki znacząco różnią się od estymacji krigingem prostym czy zwykłym, wykazując odrębność zmienności w poszczególnych kategoriach pokrycia/użytkowania terenu.
 
 ```{r plotsykws1, eval=FALSE}
-spplot(kws, 'var1.pred', sp.layout=punkty)
-spplot(kws, 'var1.var', sp.layout=punkty)
+spplot(kws, "var1.pred", sp.layout = punkty)
+spplot(kws, "var1.var", sp.layout = punkty)
 ```
 
 ```{r plotsykws2, echo=FALSE, fig.height=8}
-library('gridExtra')
-p1 <- spplot(kws, "var1.pred", main='Predykcja KWS')
-p2 <- spplot(kws, "var1.var", main='Wariancja predykcji KWS')
-grid.arrange(p1, p2, ncol=1)
+library("gridExtra")
+p1 <- spplot(kws, "var1.pred", main = "Predykcja KWS")
+p2 <- spplot(kws, "var1.var", main = "Wariancja predykcji KWS")
+grid.arrange(p1, p2, ncol = 1)
 ```
 
 
@@ -108,30 +108,30 @@ Wykorzystując relację pomiędzy tymi dwoma zmiennymi tworzony jest semiwariogr
 
 ```{r}
 vario <- variogram(temp~srtm, punkty)
-model_sim <- vgm(10, model = 'Sph', range = 4000, nugget = 1)
+model_sim <- vgm(10, model = "Sph", range = 4000, nugget = 1)
 model_sim
 fitted_sim <- fit.variogram(vario, model_sim)
 fitted_sim
-plot(vario, model=fitted_sim)
+plot(vario, model = fitted_sim)
 ```
 
 Ostatnim krokiem jest estymacja geostatystyczna, w której oprócz czterech podstawowych argumentów, definiujemy także parametr `beta`. W tym wypadku jest to wypadku obiekt uzyskany na podstawie regresji liniowej.
 
 ```{r}
-sk_lvm <- krige(temp~srtm, punkty, siatka, model=fitted_sim, beta = coef)
+sk_lvm <- krige(temp~srtm, punkty, siatka, model = fitted_sim, beta = coef)
 summary(sk_lvm)
 ```
 
 ```{r plotsylvm1, eval=FALSE}
-spplot(sk_lvm, 'var1.pred')
-spplot(sk_lvm, 'var1.var')
+spplot(sk_lvm, "var1.pred")
+spplot(sk_lvm, "var1.var")
 ```
 
 ```{r plotsylvm2, echo=FALSE, fig.height=8}
-library('gridExtra')
-p1 <- spplot(sk_lvm, "var1.pred", main='Predykcja SK LVM')
-p2 <- spplot(sk_lvm, "var1.var", main='Wariancja predykcji SK LVM')
-grid.arrange(p1, p2, ncol=1)
+library("gridExtra")
+p1 <- spplot(sk_lvm, "var1.pred", main = "Predykcja SK LVM")
+p2 <- spplot(sk_lvm, "var1.var", main = "Wariancja predykcji SK LVM")
+grid.arrange(p1, p2, ncol = 1)
 ```
 
 ## Kriging uniwersalny 
@@ -146,52 +146,52 @@ punkty$clc <- as.factor(punkty$clc)
 vario_uk1 <- variogram(temp~clc, punkty)
 vario_uk1
 plot(vario_uk1)
-model_uk1 <- vgm(8, model = 'Sph', range = 3000, nugget = 1)
-vario_fit_uk1 <- fit.variogram(vario_uk1, model=model_uk1)
+model_uk1 <- vgm(8, model = "Sph", range = 3000, nugget = 1)
+vario_fit_uk1 <- fit.variogram(vario_uk1, model = model_uk1)
 vario_fit_uk1
 plot(vario_uk1, vario_fit_uk1)
 ```
 
 ```{r }
 siatka$clc <- as.factor(siatka$clc)
-spplot(siatka, 'clc')
-uk1 <- krige(temp~clc, locations = punkty, newdata=siatka, model=vario_fit_uk1)
+spplot(siatka, "clc")
+uk1 <- krige(temp~clc, locations = punkty, newdata = siatka, model = vario_fit_uk1)
 ```
 
 ```{r plotsy3uk1, eval=FALSE}
-spplot(uk1, 'var1.pred')
-spplot(uk1, 'var1.var')
+spplot(uk1, "var1.pred")
+spplot(uk1, "var1.var")
 ```
 
 ```{r plotsy4uk1, echo=FALSE, fig.height=8}
-library('gridExtra')
-p1 <- spplot(uk1, "var1.pred", main='Predykcja KED')
-p2 <- spplot(uk1, "var1.var", main='Wariancja predykcji KED')
-grid.arrange(p1, p2, ncol=1)
+library("gridExtra")
+p1 <- spplot(uk1, "var1.pred", main = "Predykcja KED")
+p2 <- spplot(uk1, "var1.var", main = "Wariancja predykcji KED")
+grid.arrange(p1, p2, ncol = 1)
 ```
 
 W kolejnym przykładzie zastosowane są już dwie zmienne uzupełniające - wartość wskaźnika wegetacji (`ndvi`) oraz wysokość nad poziomem morza (`srtm`). 
 
 ```{r }
-vario_uk2 <- variogram(temp~ndvi+srtm, punkty)
+vario_uk2 <- variogram(temp~ndvi + srtm, punkty)
 vario_uk2
 plot(vario_uk2)
-model <- vgm(8, model = 'Sph', range = 3000, nugget = 1)
-vario_fit_uk2 <- fit.variogram(vario_uk2, model=model)
+model <- vgm(8, model = "Sph", range = 3000, nugget = 1)
+vario_fit_uk2 <- fit.variogram(vario_uk2, model = model)
 vario_fit_uk2
 plot(vario_uk2, vario_fit_uk2)
 
-uk2 <- krige(temp~ndvi+srtm, locations = punkty, newdata=siatka, model=vario_fit_uk2)
+uk2 <- krige(temp~ndvi + srtm, locations = punkty, newdata = siatka, model = vario_fit_uk2)
 ```
 
 ```{r plotsy3ked, eval=FALSE}
-spplot(uk2, 'var1.pred')
-spplot(uk2, 'var1.var')
+spplot(uk2, "var1.pred")
+spplot(uk2, "var1.var")
 ```
 
 ```{r plotsy4ked, echo=FALSE, fig.height=8}
-library('gridExtra')
-p1 <- spplot(uk2, "var1.pred", main='Predykcja KED')
-p2 <- spplot(uk2, "var1.var", main='Wariancja predykcji KED')
-grid.arrange(p1, p2, ncol=1)
+library("gridExtra")
+p1 <- spplot(uk2, "var1.pred", main = "Predykcja KED")
+p2 <- spplot(uk2, "var1.var", main = "Wariancja predykcji KED")
+grid.arrange(p1, p2, ncol = 1)
 ```
