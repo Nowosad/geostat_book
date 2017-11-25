@@ -8,6 +8,8 @@ library("sp")
 library("gstat")
 library("fields")
 library("geostatbook")
+library("deldir")
+library("rgeos")
 data(punkty)
 data(siatka)
 data(granica)
@@ -36,7 +38,7 @@ Metoda diagramów Voronoi'a polega na stworzeniu nieregularnych poligonów na po
 
 ```{r }
 voronoi_interp <- voronoi(punkty)
-voronoi_interp <- intersect(granica, voronoi_interp)
+voronoi_interp <- raster::intersect(granica, voronoi_interp)
 spplot(voronoi_interp, "temp", contour = TRUE, main = "Poligony Voronoia")
 ```
 
