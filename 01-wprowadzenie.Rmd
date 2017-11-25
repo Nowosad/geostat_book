@@ -5,10 +5,11 @@
 
 ### Pakiety
 
-R zawiera wiele funkcji pozwalających na przetwarzanie, wizualizację i analizowanie danych przestrzennych. Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi:
+R zawiera wiele funkcji pozwalających na przetwarzanie, wizualizację i analizowanie danych przestrzennych.
+Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi:
     
-- GIS - `sp`, `rgdal`, `raster`, `rasterVis`, `rgeos`, `maptools`, `GeoXp`, `deldir`, `pgirmess`, `spatstat`
-- Geostatystyka - `gstat`, `geoR`, `geoRglm`, `fields`, `spBayes`, `RandomFields`, `vardiag`
+- GIS - **sp**, **rgdal**, **raster**, **rasterVis**, **rgeos**, **maptools**, **GeoXp**, **deldir**, **pgirmess**, **spatstat**
+- Geostatystyka - **gstat**, **geoR**, **geoRglm**, **fields**, **spBayes**, **RandomFields**, **vardiag**
 
 Więcej szczegółów na ten temat pakietów R służących do analizy przestrzennej można znaleźć pod adresem https://cran.r-project.org/web/views/Spatial.html.
 
@@ -25,11 +26,11 @@ Więcej szczegółów na ten temat pakietów R służących do analizy przestrze
 
 ### Reprezentacja danych przestrzennych
 
-- Obiekty klasy `Spatial*` z pakietu `sp` - wszystkie z nich zawierają dwie dodatkowe informacje:
+- Obiekty klasy `Spatial*` z pakietu **sp** - wszystkie z nich zawierają dwie dodatkowe informacje:
     - bounding box (`bbox`) - obwiednia - określa zasięg danych
     - CRS (`proj4string`) - układ współrzędnych
 - Najczęściej stosowane obiekty klasy `Spatial*` to `SpatialPointsDataFrame`, `SpatialPolygonsDataFrame` oraz `SpatialGridDataFrame`
-- Obiekty klasy `Raster*` z pakietu `raster`, tj. `RasterLayer`, `RasterStack`, `RasterBrick`
+- Obiekty klasy `Raster*` z pakietu **raster**, tj. `RasterLayer`, `RasterStack`, `RasterBrick`
 - Inne
 
 ### GDAL/OGR
@@ -62,7 +63,8 @@ Więcej szczegółów na ten temat pakietów R służących do analizy przestrze
 
 ## Import danych
 
-R pozwala na odczytywanie danych przestrzennych z wielu formatów. Do najpopularniejszych należą dane z plików .csv, dane z plików .shp, oraz dane z plików w formacie geotiff.
+R pozwala na odczytywanie danych przestrzennych z wielu formatów.
+Do najpopularniejszych należą dane z plików .csv, dane z plików .shp, oraz dane z plików w formacie geotiff.
 
 ### Format .csv (dane punktowe)
 
@@ -76,10 +78,13 @@ dane_punktowe <- read.csv("dane/punkty.csv")
 head(dane_punktowe)
 ```
 
-Po wczytaniu za pomocą funkcji `read.csv()`, nowy obiekt (np. `dane_punktowe`) jest reprezentowany za pomocą klasy nieprzestrzennej `data.frame`. Aby obiekt został przetworzony do klasy przestrzennej, konieczne jest nadanie mu współrzędnych. W tym wypadku współrzędne znajdowały się w kolumnach `x` oraz `y`. Nadanie układu współrzędnych odbywa się poprzez funkcję `coordinates()`.
+Po wczytaniu za pomocą funkcji `read.csv()`, nowy obiekt (np. `dane_punktowe`) jest reprezentowany za pomocą klasy nieprzestrzennej `data.frame`. 
+Aby obiekt został przetworzony do klasy przestrzennej, konieczne jest nadanie mu współrzędnych.
+W tym wypadku współrzędne znajdowały się w kolumnach `x` oraz `y`. 
+Nadanie układu współrzędnych odbywa się poprzez funkcję `coordinates()`.
 
 ```{r, message=FALSE}
-library(sp)
+library("sp")
 coordinates(dane_punktowe) <- ~x + y
 summary(dane_punktowe)
 ```
@@ -122,20 +127,27 @@ sp_na_omit <- function(x, margin=1) {
 
 ### Dane poligonowe (formaty gisowe)
 
-Dane wektorowe (np. shapefile) można odczytać za pomocą funkcji `readOGR()` z pakietu `rgdal`. Dla danych w formacie shapefile, przyjmuje ona co najmniej dwa argumenty - `dsn` oraz `layer`. Argument `dsn` określa folder, w którym znajdują się dane. W przypadku, gdy dane znajdują się w folderze roboczym należy ten argument określić za pomocą znaku kropki (`"."`). Argument `layer` wymaga podania nazwy pliku bez jego rozszerzenia. Przykładowo, gdy pliki nazywają się `granica.dbf`, `granica.prj`, `granica.shp`, oraz `granica.shx` - konieczne jest podanie w argumencie `layer` jedynie nazwy `granica`.
+Dane wektorowe (np. shapefile) można odczytać za pomocą funkcji `readOGR()` z pakietu **rgdal**. 
+Dla danych w formacie shapefile, przyjmuje ona co najmniej dwa argumenty - `dsn` oraz `layer`. 
+Argument `dsn` określa folder, w którym znajdują się dane. 
+W przypadku, gdy dane znajdują się w folderze roboczym należy ten argument określić za pomocą znaku kropki (`"."`). 
+Argument `layer` wymaga podania nazwy pliku bez jego rozszerzenia.
+Przykładowo, gdy pliki nazywają się `granica.dbf`, `granica.prj`, `granica.shp`, oraz `granica.shx` - konieczne jest podanie w argumencie `layer` jedynie nazwy `granica`.
 
 ```{r}
-library(rgdal)
+library("rgdal")
 granica <- readOGR(dsn = "dane", layer = "granica")
 plot(granica)
 ```
 
 ### Rastry
 
-Istnieje kilka sposobów odczytu danych rastrowych w R. Do najpopularniejszych należą funkcje `readGDAL()` z pakietu `rgdal` oraz `raster()` z pakietu `raster`. W tym drugim przypadku należy jedynie podać ścieżkę do pliku rastrowego.
+Istnieje kilka sposobów odczytu danych rastrowych w R. 
+Do najpopularniejszych należą funkcje `readGDAL()` z pakietu `rgdal` oraz `raster()` z pakietu **raster**.
+W tym drugim przypadku należy jedynie podać ścieżkę do pliku rastrowego.
 
 ```{r}
-library(raster)
+library("raster")
 siatka_raster <- raster("dane/siatka.tif")
 plot(siatka_raster)
 ```
@@ -144,7 +156,8 @@ plot(siatka_raster)
 
 ### Zapisywanie danych wektorowych
 
-R pozwala również na zapisywanie danych przestrzennych. W przypadku zapisu danych wektorowych za pomocą funkcji `writeOGR()` konieczne jest podanie nazwy zapisywanego obiektu (np. `poligon`), folderu w którym chcemy zapisać plik (np. `nazwa_folderu`), nazwę zapisywanych plików bez rozszerzenia (np. `nowy_poligon`), oraz sterownik - w przypadku danych shapefile jest to `ESRI Shapefile`.
+R pozwala również na zapisywanie danych przestrzennych. 
+W przypadku zapisu danych wektorowych za pomocą funkcji `writeOGR()` konieczne jest podanie nazwy zapisywanego obiektu (np. `poligon`), folderu w którym chcemy zapisać plik (np. `nazwa_folderu`), nazwę zapisywanych plików bez rozszerzenia (np. `nowy_poligon`), oraz sterownik - w przypadku danych shapefile jest to `ESRI Shapefile`.
 
 ```{r zapis_wektora, eval=FALSE}
 writeOGR(poligon, dsn = "nazwa_folderu", layer = "nowy_poligon", driver = "ESRI Shapefile")
@@ -152,7 +165,8 @@ writeOGR(poligon, dsn = "nazwa_folderu", layer = "nowy_poligon", driver = "ESRI 
 
 ### Zapisywanie danych rastrowych
 
-Najprostszym sposobem zapisania danych rastrowych jest użycie funkcji `writeRaster()`. Wymaga ona podania dwóch argumentów - nazwy zapisywanego obiektu (np. `siatka_raster`) oraz ścieżki i nazwy nowego pliku wraz z rozszerzeniem (np. `nazwa_folderu/nowy_raster.tif`).
+Najprostszym sposobem zapisania danych rastrowych jest użycie funkcji `writeRaster()`. 
+Wymaga ona podania dwóch argumentów - nazwy zapisywanego obiektu (np. `siatka_raster`) oraz ścieżki i nazwy nowego pliku wraz z rozszerzeniem (np. `nazwa_folderu/nowy_raster.tif`).
 
 ```{r zapis_rastra, eval=FALSE}
 writeRaster(siatka_raster, filename = "nazwa_folderu/nowy_raster.tif")
@@ -160,7 +174,8 @@ writeRaster(siatka_raster, filename = "nazwa_folderu/nowy_raster.tif")
 
 ## Wizualizacja danych 2D
 
-Do wizualizacji danych przestrzennych w R służy co najmniej kilkanaście różnych pakietów. Poniżej pokazane są przykłady kilku najprostszych funkcji - `plot()` oraz `spplot()` z pakietu `sp` oraz `levelplot()` z pakietu `rasterVis`.
+Do wizualizacji danych przestrzennych w R służy co najmniej kilkanaście różnych pakietów. 
+Poniżej pokazane są przykłady kilku najprostszych funkcji - `plot()` oraz `spplot()` z pakietu `sp` oraz `levelplot()` z pakietu `rasterVis`.
 
 ### Dane punktowe
 
@@ -170,7 +185,9 @@ Funkcja `plot()` idealnie nadaje się do szybkiego przyjrzenia się, np. rodzajo
 plot(dane_punktowe)
 ```
 
-Funkcja `spplot()` w prosty sposób pozwala na obejrzenie rozkładu wartości wybranej zmiennej. Należy w niej podać nazwę obiektu oraz nazwę wyświetlanej zmiennej. Poniżej można zobaczyć przykłady dla zmiennych `temp` oraz `srtm`.
+Funkcja `spplot()` w prosty sposób pozwala na obejrzenie rozkładu wartości wybranej zmiennej. 
+Należy w niej podać nazwę obiektu oraz nazwę wyświetlanej zmiennej. 
+Poniżej można zobaczyć przykłady dla zmiennych `temp` oraz `srtm`.
 
 ```{r }
 spplot(dane_punktowe, "temp")
@@ -182,7 +199,9 @@ spplot(dane_punktowe, "srtm")
 
 ### Dane punktowe - kategorie
 
-Nie zawsze dane mają postać ciągłych wartości - bywają one również określeniami różnych klas. W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci kategorycznej (`as.factor()`). Następnie można je wyświetlić za pomocą funkcji `spplot()`.
+Nie zawsze dane mają postać ciągłych wartości - bywają one również określeniami różnych klas. 
+W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci kategorycznej (`as.factor()`).
+Następnie można je wyświetlić za pomocą funkcji `spplot()`.
 
 ```{r }
 dane_punktowe@data$clc <- as.factor(dane_punktowe@data$clc)
@@ -191,27 +210,34 @@ spplot(dane_punktowe, "clc")
 
 ### Rastry
 
-Wyświetlanie danych w formacie rastrowym może odbyć się z użyciem funkcji `levelplot()`. Wymaga ona jedynie zdefiniowania obiektu do wizualizacji. W poniższym przypadku dodatkowo ustawiono argument `margin=FALSE` co wyłącza wyświetlanie tzw. histogramów marginalnych (ang. *marginal historgram*).
+Wyświetlanie danych w formacie rastrowym może odbyć się z użyciem funkcji `levelplot()`. 
+Wymaga ona jedynie zdefiniowania obiektu do wizualizacji. 
+W poniższym przypadku dodatkowo ustawiono argument `margin = FALSE` co wyłącza wyświetlanie tzw. histogramów krawędziowych (ang. *marginal histogram*).
 
 ```{r, message=FALSE, warning=FALSE}
-library(rasterVis)
+library("rasterVis")
 levelplot(siatka_raster, margin = FALSE)
 ```
 
 ## Tworzenie siatek
 
-W większości przypadków analiz geostatystycznych konieczne jest stworzenie siatki interpolacyjnej. Istnieją dwa podstawowe rodzaje takich siatek - siatki regularne oraz siatki nieregularne.
+W większości przypadków analiz geostatystycznych konieczne jest stworzenie siatki interpolacyjnej. 
+Istnieją dwa podstawowe rodzaje takich siatek - siatki regularne oraz siatki nieregularne.
 
 ### Siatki regularne
 
-Siatki regularne mają kształt prostokąta obejmującego cały analizowany obszar. Określenie granic obszaru można wykonać na podstawie zasięgu danych punktowych za pomocą funkcji `bbox()` z pakietu `sp` lub funkcji `extent()` z pakietu `raster`.
+Siatki regularne mają kształt prostokąta obejmującego cały analizowany obszar. 
+Określenie granic obszaru można wykonać na podstawie zasięgu danych punktowych za pomocą funkcji `bbox()` z pakietu **sp** lub funkcji `extent()` z pakietu **raster**.
 
 ```{r}
 bbox(dane_punktowe)
 extent(dane_punktowe)
 ```
 
-Do stworzenia siatki można użyć funkcji `expand.grid()`. Wymaga ona określenia dwóch argumentów - `x` oraz `y` (taka ich nazwa nie jest obowiązkowa). Oba argumenty przyjmują trzy wartości: (i) `from` oznaczający wartość początkową współrzędnej, (ii) `to` określający wartość końcową współrzędnej, oraz (iii) `by` określający rozdzielczość. Przy ustalaniu wartości początkowej i końcowej konieczne jest ich rozszerzenie względem wartości z funkcji `bbox()` lub `extent()`, aby wszystkie analizowane punkty znalazły się na badanym obszarze. 
+Do stworzenia siatki można użyć funkcji `expand.grid()`.
+Wymaga ona określenia dwóch argumentów - `x` oraz `y` (taka ich nazwa nie jest obowiązkowa). 
+Oba argumenty przyjmują trzy wartości: (i) `from` oznaczający wartość początkową współrzędnej, (ii) `to` określający wartość końcową współrzędnej, oraz (iii) `by` określający rozdzielczość. 
+Przy ustalaniu wartości początkowej i końcowej konieczne jest ich rozszerzenie względem wartości z funkcji `bbox()` lub `extent()`, aby wszystkie analizowane punkty znalazły się na badanym obszarze. 
 
 ```{r }
 siatka <- expand.grid(
@@ -228,7 +254,8 @@ gridded(siatka) <- TRUE
 proj4string(siatka) <- proj4string(dane_punktowe)
 ```
 
-Alternatywnie, do stworzenia siatki można wykorzystać funkcję `makegrid()`. Tworzy ona nowy obiekt na podstawie istniejącego obiektu punktowego oraz zadanej rozdzielczości. 
+Alternatywnie, do stworzenia siatki można wykorzystać funkcję `makegrid()`.
+Tworzy ona nowy obiekt na podstawie istniejącego obiektu punktowego oraz zadanej rozdzielczości. 
 
 ```{r}
 siatka <- makegrid(dane_punktowe, cellsize = 500)
@@ -240,7 +267,8 @@ proj4string(siatka) <- proj4string(dane_punktowe)
 
 ### Siatki regularne
 
-Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić za pomocą funkcji `plot()`. W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add`.
+Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić za pomocą funkcji `plot()`. 
+W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add`.
 
 ```{r }
 plot(siatka)
@@ -249,9 +277,16 @@ plot(dane_punktowe, add = TRUE)
 
 ### Siatki nieregularne - klasa `RasterLayer`
 
-Siatki nieregularne mają zazwyczaj kształt wieloboku obejmującego analizowany obszar. Mogą one powstać, np. w oparciu o wcześniej istniejące granice. Siatki nieregularne w R mają zazwyczaj klasę `RasterLayer` lub `SpatialPixelsDataFrame`. Pierwsza z klas jest elastyczniejsza i prostsza w użyciu, podczas gdy druga jest lepiej wspierana przez funkcje geostatystyczne, np. z pakietu `gstat`.
+Siatki nieregularne mają zazwyczaj kształt wieloboku obejmującego analizowany obszar. 
+Mogą one powstać, np. w oparciu o wcześniej istniejące granice.
+Siatki nieregularne w R mają zazwyczaj klasę `RasterLayer` lub `SpatialPixelsDataFrame`. 
+Pierwsza z klas jest elastyczniejsza i prostsza w użyciu, podczas gdy druga jest lepiej wspierana przez funkcje geostatystyczne, np. z pakietu **gstat**.
 
-W poniższym przypadku odczytywana jest granica badanego obszaru z pliku shapefile. Taki obiekt można np. stworzyć za pomocą oprogramowania gisowego takiego jak [QGIS](http://www.qgis.org/pl/site/). Następnie na podstawie tego obiektu tworzony jest obiekt klasy `RasterLayer`, a za pomocą funkcji `res()` definiowana jest jego rozdzielczość. W kolejnym kroku ustala się wartość wszystkich oczek siatki na zero, oraz poprzez funkcję `proj4string()` ujednolica się definicję układu współrzędnych siatki. Ostatnim krokiem jest przycięcie siatki do nieregularnego obszaru z użyciem funkcji `mask()`.
+W poniższym przypadku odczytywana jest granica badanego obszaru z pliku shapefile.
+Taki obiekt można np. stworzyć za pomocą oprogramowania gisowego takiego jak [QGIS](http://www.qgis.org/pl/site/).
+Następnie na podstawie tego obiektu tworzony jest obiekt klasy `RasterLayer`, a za pomocą funkcji `res()` definiowana jest jego rozdzielczość.
+W kolejnym kroku ustala się wartość wszystkich oczek siatki na zero, oraz poprzez funkcję `proj4string()` ujednolica się definicję układu współrzędnych siatki. 
+Ostatnim krokiem jest przycięcie siatki do nieregularnego obszaru z użyciem funkcji `mask()`.
 
 ```{r siatkaniereg, warning=FALSE}
 granica <- readOGR(dsn = "dane", layer = "granica")
