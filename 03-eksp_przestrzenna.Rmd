@@ -2,12 +2,13 @@
 # Eksploracyjna analiza danych przestrzennych {#eksploracyjna-analiza-danych-przestrzennych}
 
 ```{r, interpolate_init, message=FALSE, warning=FALSE}
-library("sp")
 library("raster")
+library("sp")
 library("gstat")
 library("dismo")
 library("rgeos")
 library("geostatbook")
+library("deldir")
 data(punkty)
 data(granica)
 ```
@@ -173,9 +174,9 @@ Drugi rodzaj rozgrupowania komórkowego polega na:
 - Przygotowanie danych
 https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html
 
-When "interpolating" with nmax=1, you basically assign the value of the 
-nearest observation to each grid cell, so, honoustly, it's hard to call 
-this interpolation, it is rather something of a discretized Thiessen 
+When "interpolating" with nmax=1, you basically assign the value of the
+nearest observation to each grid cell, so, honoustly, it's hard to call
+this interpolation, it is rather something of a discretized Thiessen
 polygon.
 -->
 
@@ -200,10 +201,10 @@ out <- krige(id~1, punkty_pref, siatka_n, nmax = 1)
 spplot(out, "var1.pred")
 df <- as.data.frame(table(out[[1]]))
 df$waga <- df$Freq / sum(df$Freq)
-punkty_pref <- merge(punkty_pref, df, by.x = "id", by.y = "Var1")
+punkty_pref <- sp::merge(punkty_pref, df, by.x = "id", by.y = "Var1")
 summary(punkty_pref$waga)
 spplot(out, "var1.pred", sp.layout = list("sp.points", punkty_pref))
-spplot(punkty_pref["waga"])
+# spplot(punkty_pref, "waga")
 
 srednia_arytmetyczna <- mean(punkty_pref$temp)
 srednia_wazona_c2 <- sum(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE)
@@ -234,7 +235,7 @@ plot(v, add = TRUE)
 v$pow <- area(v)
 v$waga <- v$pow / sum(v$pow) * length(punkty_pref)
 
-punkty_pref <- merge(punkty_pref, v[c("id", "waga")], by = "id")
+punkty_pref <- sp::merge(punkty_pref, v[c("id", "waga")], by = "id")
 spplot(punkty_pref, "waga")
 
 srednia_arytmetyczna <- mean(punkty_pref$temp, na.rm = TRUE)
@@ -270,7 +271,6 @@ srednia_wazona_p <- mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE)
 Średnia wartość temperatury dla badanego obszaru wynosiła 15,59 stopni Celsjusza, jednak w preferencyjnej próbie ta wartość wynosiła 14,28 stopni Celsjusza. Porównując trzy zastosowane metody próbkowania warto zauważyć, że najbliższy wynik uzyskano korzystając z pierwszego rodzaju rozgrupowania komórkowego, która nieznacznie zaniżyła rzeczywistą wartość temperatury. Rozgrupowanie komórkowe II oraz rozgrupowanie poligonowe były w tym przypadku mniej dokładne, wyraźnie zawyżając wartości temperatury. 
 
 ```{r tab_dec_1, echo=FALSE}
-library("knitr")
 srednia_arytmetyczna_pop <- 15.5912781
 df <- data.frame(sa = c(srednia_arytmetyczna_pop, srednia_arytmetyczna, srednia_wazona_c1, srednia_wazona_c2, srednia_wazona_p))
 rownames(df) <- c("Populacja", "Próba", "Rozgrupowanie komórkowe I", "Rozgrupowanie komórkowe II", "Rozgrupowanie poligonowe")
