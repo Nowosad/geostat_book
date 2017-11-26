@@ -1,6 +1,6 @@
 # Geostatystyka w R
 
-[![Build Status](https://travis-ci.org/nowosad/geostat_book.svg?branch=master)](https://travis-ci.org/nowosad/geostat_book)
+[![Build Status](https://travis-ci.org/Nowosad/geostat_book.svg?branch=master)](https://travis-ci.org/Nowosad/geostat_book)
 
 Repozytorium zawierające kod źródłowy do skryptu akademickiego "Geostatystyka w R".
 Wersję online tego skryptu można znaleźć pod adresem https://bookdown.org/nowosad/Geostatystyka/.
