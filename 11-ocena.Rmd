@@ -20,7 +20,8 @@ par(mar = c(rep(0, 4)))
 ## Statystyki jakości estymacji
 ### Statystyki jakości estymacji
 
-W momencie, gdy trzeba określić jakość estymacji lub porównać wyniki pomiędzy estymacjami należy zastosować tzw. statystyki jakości estymacji. Do podstawowych statystyk ocen jakości estymacji należą:
+W momencie, gdy trzeba określić jakość estymacji lub porównać wyniki pomiędzy estymacjami należy zastosować tzw. statystyki jakości estymacji. 
+Do podstawowych statystyk ocen jakości estymacji należą:
 
 - Średni błąd predykcji (MPE, ang. *mean prediction error*)
 - Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root mean square error*)
@@ -58,7 +59,8 @@ Optymalnie wartość pierwiastka średniego błędu kwadratowego powinna być ja
 
 ### Statystyki jakości estymacji | Mapa
 
-Do oceny przestrzennej jakości predykcji można również zastosować mapę przestawiającą błędy predykcji (błędy estymacji). Wyliczenie błędów estymacji odbywa się poprzez odjęcie od predykcji wartości obserwowanej.
+Do oceny przestrzennej jakości predykcji można również zastosować mapę przestawiającą błędy predykcji (błędy estymacji).
+Wyliczenie błędów estymacji odbywa się poprzez odjęcie od predykcji wartości obserwowanej.
 
 ```{r, eval=FALSE}
 blad_predykcji <- estymacja - obserwowane
@@ -99,13 +101,23 @@ ggplot(as.data.frame(test_sk), aes(var1.pred, true)) + geom_point() + xlab("Pred
 
 ### Walidacja wyników estymacji
 
-Dokładne dopasowanie modelu do danych może w efekcie nie dawać najlepszych wyników. Szczególnie będzie to widoczne w przypadku modelowania, w którym dane obarczone są znacznym szumem (zawierają wyraźny błąd) lub też posiadają kilka wartości odstających. W efekcie ważne jest stosowanie metod pozwalających na wybranie optymalnego modelu. Do takich metod należy, między innymi, walidacja podzbiorem (ang. *jackknifing*) oraz kroswalidacja (ang. *crossvalidation*).
+Dokładne dopasowanie modelu do danych może w efekcie nie dawać najlepszych wyników. 
+Szczególnie będzie to widoczne w przypadku modelowania, w którym dane obarczone są znacznym szumem (zawierają wyraźny błąd) lub też posiadają kilka wartości odstających. 
+W efekcie ważne jest stosowanie metod pozwalających na wybranie optymalnego modelu. 
+Do takich metod należy, między innymi, walidacja podzbiorem (ang. *jackknifing*) oraz kroswalidacja (ang. *crossvalidation*).
 
 ### Walidacja podzbiorem 
 
-Walidacja podzbiorem polega na podziale zbioru danych na dwa podzbiory - treningowy i testowy. Zbiór treningowy służy do stworzenia semiwariogramu empirycznego, zbudowania modelu oraz estymacji wartości. Następnie wynik estymacji porównywany jest z rzeczywistymi wartościami ze zbioru testowego. Zaletą tego podejścia jest stosowanie danych niezależnych od estymacji do oceny jakości modelu. Wadą natomiast jest konieczność posiadania (relatywnie) dużego zbioru danych.
+Walidacja podzbiorem polega na podziale zbioru danych na dwa podzbiory - treningowy i testowy.
+Zbiór treningowy służy do stworzenia semiwariogramu empirycznego, zbudowania modelu oraz estymacji wartości.
+Następnie wynik estymacji porównywany jest z rzeczywistymi wartościami ze zbioru testowego.
+Zaletą tego podejścia jest stosowanie danych niezależnych od estymacji do oceny jakości modelu. 
+Wadą natomiast jest konieczność posiadania (relatywnie) dużego zbioru danych.
 
-Na poniższym przykładzie zbiór danych dzielony jest używając funkcji `createDataPartition()` z pakietu `caret`. Użycie tej funkcji powoduje stworzenie indeksu zawierającego numery wierszy dla zbioru treningowego. Ważną zaletą funkcji `createDataPartition()` jest to, iż  w zbiorze treningowym i testowym zachowane są podobne rozkłady wartości. W przykładzie użyto argumentu `p=0.75`, który oznacza, że 75% danych będzie należało do zbioru treningowego, a 25% do zbioru testowego. Następnie korzystając ze stworzonego indeksu, budowane są dwa zbiory danych - treningowy (`train`) oraz testowy (`test`).
+Na poniższym przykładzie zbiór danych dzielony jest używając funkcji `createDataPartition()` z pakietu **caret**.
+Użycie tej funkcji powoduje stworzenie indeksu zawierającego numery wierszy dla zbioru treningowego.
+Ważną zaletą funkcji `createDataPartition()` jest to, iż  w zbiorze treningowym i testowym zachowane są podobne rozkłady wartości. W przykładzie użyto argumentu `p = 0.75`, który oznacza, że 75% danych będzie należało do zbioru treningowego, a 25% do zbioru testowego.
+Następnie korzystając ze stworzonego indeksu, budowane są dwa zbiory danych - treningowy (`train`) oraz testowy (`test`).
 
 ```{r }
 set.seed(124)
@@ -124,7 +136,10 @@ fitted <- fit.variogram(vario, model)
 plot(vario, model = fitted)
 ```
 
-Do porównania wyników estymacji w stosunku do zbioru testowego posłuży funkcja `krige()`. Wcześniej wymagała ona podania wzoru, zbioru punktowego, siatki oraz modelu. W tym przypadku jednak chcemy porównać wynik estymacji i testowy zbiór punktowy. Dlatego też, zamiast obiektu siatki definiujemy obiekt zawierający zbiór testowy (`test`).
+Do porównania wyników estymacji w stosunku do zbioru testowego posłuży funkcja `krige()`. 
+Wcześniej wymagała ona podania wzoru, zbioru punktowego, siatki oraz modelu.
+W tym przypadku jednak chcemy porównać wynik estymacji i testowy zbiór punktowy. 
+Dlatego też, zamiast obiektu siatki definiujemy obiekt zawierający zbiór testowy (`test`).
 
 ```{r}
 test_sk <- krige(temp~1, train, test, model = fitted, beta = 15.324)
@@ -156,7 +171,8 @@ spplot(test_sk, "var1.pred")
 
 ### Kroswalidacja
 
-W przypadku kroswalidacji te same dane wykorzystywane są do budowy modelu, estymacji, a następnie do oceny prognozy. Procedura kroswalidacji LOO (ang. *leave-one-out cross-validation*) składa się z poniższych kroków:
+W przypadku kroswalidacji te same dane wykorzystywane są do budowy modelu, estymacji, a następnie do oceny prognozy.
+Procedura kroswalidacji LOO (ang. *leave-one-out cross-validation*) składa się z poniższych kroków:
 
 1. Zbudowanie matematycznego modelu z dostępnych obserwacji
 2. Dla każdej znanej obserwacji następuje:
@@ -165,7 +181,8 @@ W przypadku kroswalidacji te same dane wykorzystywane są do budowy modelu, esty
     - Wyliczenie reszty (ang. *residual*), czyli różnicy pomiędzy znaną wartością a estymacją
 3. Podsumowanie otrzymanych wyników
     
-W pakiecie `gstat`, kroswalidacja LOO jest dostępna w funkcjach `krige.cv()` oraz `gstat.cv()`. Działają one bardzo podobnie jak funkcje `krige()` oraz `gstat()`, jednak w przeciwieństwie do nich nie wymagają podania obiektu siatki.
+W pakiecie **gstat**, kroswalidacja LOO jest dostępna w funkcjach `krige.cv()` oraz `gstat.cv()`. 
+Działają one bardzo podobnie jak funkcje `krige()` oraz `gstat()`, jednak w przeciwieństwie do nich nie wymagają podania obiektu siatki.
 
 ```{r loovv, cache=TRUE}
 vario <- variogram(temp~1, data = punkty)
