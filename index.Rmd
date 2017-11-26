@@ -11,6 +11,7 @@ classoption: a4paper
 cover-image: Rfigs/book_cover.png
 description: "Introduction to geostatistics with R (in Polish)."
 url: 'https\://bookdown.org/nowosad/Geostatystyka/'
+github-repo: "nowosad/geostat_book"
 ---
 
 # Wprowadzenie
