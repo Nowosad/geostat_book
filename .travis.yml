@@ -11,9 +11,9 @@ r_packages:
   - rgdal
   - sp
   - rgeos
-  - devtools
-  
+
 install:
+  - R -e "install.packages('devtools')"
   - R -e "devtools::install_github('nowosad/geostatbook')"
 
 script:
