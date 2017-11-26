@@ -1,3 +1,3 @@
 #!/usr/bin/env Rscript
+devtools::install_github("nowosad/geostatbook")
 bookdown::render_book("index.Rmd")
-bookdown::publish_book(name = "Geostatystyka", account = "nowosad", render = c("none"), server = "bookdown.org")
