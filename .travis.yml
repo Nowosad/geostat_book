@@ -21,7 +21,7 @@ script:
   - ./_build.sh
 
 after_success:
-  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" 
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && ./_publish.sh
 
 notifications:
   email:
