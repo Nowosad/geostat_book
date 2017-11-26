@@ -12,9 +12,12 @@ r_packages:
   - sp
   - rgeos
   - devtools
+  
+install:
+  - R -e "devtools::install_github('nowosad/geostatbook')"
 
 script:
-  - sh _build.sh
+  - ./_build.sh
 
 after_success:
   - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" 
