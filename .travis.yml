@@ -12,6 +12,7 @@ r_packages:
   - rgdal
   - sp
   - rgeos
+  - rsconnect
 
 install:
   - R -e "install.packages('devtools')"
