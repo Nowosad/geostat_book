@@ -39,7 +39,7 @@ Więcej szczegółów na ten temat pakietów R służących do analizy przestrze
 - OGR to biblioteka służąca to odczytywania i zapisywania danych w formatach wektorowych
 - Pakiet `rgdal` pozwala na wykorzystanie bibliotek GDAL/OGR w R
 
-### PROJ.4
+### PROJ
 - Dane przestrzenne powinny być zawsze powiązane z układem współrzędnych
 - PROJ.4 - to biblioteka pozwalająca na identyfikację oraz konwersję pomiędzy różnymi układami współrzędnych
 - Strona http://www.spatialreference.org/ zawiera bazę danych układów współrzędnych 
