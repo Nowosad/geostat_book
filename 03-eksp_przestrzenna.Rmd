@@ -1,14 +1,17 @@
 
 # Eksploracyjna analiza danych przestrzennych {#eksploracyjna-analiza-danych-przestrzennych}
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, interpolate_init, message=FALSE, warning=FALSE}
-library("raster")
-library("sp")
-library("gstat")
-library("dismo")
-library("rgeos")
-library("geostatbook")
-library("deldir")
+library(raster)
+library(sf)
+library(mapview)
+library(gstat)
+library(dismo)
+library(rgeos)
+library(geostatbook)
+library(deldir)
 data(punkty)
 data(granica)
 ```
@@ -21,8 +24,8 @@ par(mar = c(rep(0, 4)))
 
 ### Podstawowe terminy | Kontekst przestrzenny
 
-- Populacja - cały obszar, dla którego chcemy określić wybrane właściwości
-- Próba - zbiór obserwacji, dla których mamy informacje.
+- Populacja - cały obszar, dla którego chcemy określić wybrane właściwości, np. temperatura powietrza.
+- Próba - zbiór obserwacji, dla których mamy informacje, np. pomiary ze stacji meteorologicznych.
 Inaczej, próba to podzbiór populacji. 
 Zazwyczaj niemożliwe (lub bardzo kosztowne) jest zdobycie informacji o całej populacji. 
 Z tego powodu bardzo cenne jest odpowiednie wykorzystanie informacji z próby.
@@ -54,7 +57,7 @@ W regularnym typie próbkowania, kolejne punkty rozłożone są równomiernie na
 
 ```{r }
 set.seed(225)
-regularny <- spsample(granica, 150, type = "regular")
+regularny <- st_sample(granica, 150, type = "regular")
 plot(regularny)
 ```
 
@@ -65,237 +68,237 @@ Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych.
 
 ```{r }
 set.seed(301)
-losowy <- spsample(granica, 150, type = "random")
+losowy <- st_sample(granica, 150, type = "random")
 plot(losowy)
 ```
 
-### Typ próbowania | Losowy stratyfikowany
+<!-- ### Typ próbowania | Losowy stratyfikowany -->
 
-Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu.
+<!-- Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu. -->
 
-```{r }
-set.seed(125)
-strat <- spsample(granica, 150, type = "stratified")
-plot(strat)
-```
+<!-- ```{r } -->
+<!-- set.seed(125) -->
+<!-- strat <- spsample(granica, 150, type = "stratified") -->
+<!-- plot(strat) -->
+<!-- ``` -->
 
-### Typ próbowania | Preferencyjny
+<!-- ### Typ próbowania | Preferencyjny -->
 
-W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbkowane niż inne.
+<!-- W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbkowane niż inne. -->
 
-```{r }
-set.seed(425)
-pref <- spsample(granica, 150, type = "clustered", nclusters = 30)
-plot(pref)
-```
+<!-- ```{r } -->
+<!-- set.seed(425) -->
+<!-- pref <- spsample(granica, 150, type = "clustered", nclusters = 30) -->
+<!-- plot(pref) -->
+<!-- ``` -->
 
 ## Dane lokalnie odstające
 
 Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()`.
 
 ```{r}
-plot(granica)
-plot(punkty, add = TRUE)
+plot(st_geometry(granica))
+plot(st_geometry(punkty), add = TRUE)
 ```
 
 Dane lokalnie odstające oznaczają nietypowe przestrzennie wartości danej cechy.
 Inaczej mówiąc, może to być niska wartość otoczona wysokimi wartościami lub też wysoka wartość otoczona niskimi wartościami.
 Dane lokalnie ostające mogą oznaczać zarówno błąd w danych albo wpływ innego czynnika na analizowaną cechę. 
-Przyjrzenie się wartościom analizowanej cechy można wykonać z użyciem funkcji `spplot()`. 
+Przyjrzenie się wartościom analizowanej cechy można wykonać z użyciem funkcji `plot()`. 
 Na poniższym przykładzie wyświetlona jest zmienna `temp` oznaczająca średnią temperaturę dobową.
 
 ```{r }
-spplot(punkty, "temp", sp.layout = granica)
+plot(punkty["temp"])
+plot(st_geometry(granica), add = TRUE)
 ```
 
-Dodatkowo, używając argumentu `identify = TRUE` można interaktywnie określić numer punktu (numer wiersza w tabeli atrybutów).
-Działanie tej funkcji polega na wybraniu punktów za pomocą lewego przycisk myszy, a po wybraniu serii punktów klawisza Esc.
+Dodatkowo można wykorzystać pakiet **mapview** do interaktywnego określania wartości oraz numeru punktu (numer wiersza w tabeli atrybutów).
 
 ```{r klik, eval=FALSE}
-spplot(punkty, "temp", identify = TRUE)
+mapview(punkty["temp"])
 ```
 
-## Rozgrupowanie danych
+<!-- ## Rozgrupowanie danych -->
 
-### Rozgrupowanie danych
+<!-- ### Rozgrupowanie danych -->
 
-Istnieje szereg metod rozgrupowywania danych, między innymi jest to rozgrupowywanie komórkowe oraz rozgrupowywanie poligonowe. 
-Celem tych metod jest nadanie wag obserwacjom w celu zapewnienia reprezentatywności przestrzennej danych. 
-Poniżej znajdują się przykłady użycia dwóch wersji rozgrupowania komórkowego (rozgrupowywanie komórkowe I oraz rozgrupowywanie komórkowe II) i jedna wersja rozgrupowania poligonowego.
+<!-- Istnieje szereg metod rozgrupowywania danych, między innymi jest to rozgrupowywanie komórkowe oraz rozgrupowywanie poligonowe.  -->
+<!-- Celem tych metod jest nadanie wag obserwacjom w celu zapewnienia reprezentatywności przestrzennej danych.  -->
+<!-- Poniżej znajdują się przykłady użycia dwóch wersji rozgrupowania komórkowego (rozgrupowywanie komórkowe I oraz rozgrupowywanie komórkowe II) i jedna wersja rozgrupowania poligonowego. -->
 
-### Rozgrupowanie danych
+<!-- ### Rozgrupowanie danych -->
 
-Na potrzeby przykładów związanych z rozgrupowaniem danych w pakiecie `geostatbook` znajduje się zbiór danych `punkty_pref`. 
-W tym zbiorze gęściej opróbkowane są niskie wartości temperatury, co powoduje, że średnia dla całego obszaru jest znacznie niższa niż w rzeczywistości.
+<!-- Na potrzeby przykładów związanych z rozgrupowaniem danych w pakiecie **geostatbook** znajduje się zbiór danych `punkty_pref`.  -->
+<!-- W tym zbiorze gęściej opróbkowane są niskie wartości temperatury, co powoduje, że średnia dla całego obszaru jest znacznie niższa niż w rzeczywistości. -->
 
-```{r }
-data(punkty_pref)
-spplot(punkty_pref, "temp")
-summary(punkty_pref$temp)
-```
+<!-- ```{r } -->
+<!-- data(punkty_pref) -->
+<!-- spplot(punkty_pref, "temp") -->
+<!-- summary(punkty_pref$temp) -->
+<!-- ``` -->
 
-### Rozgrupowanie komórkowe I | (ang. *cell declustering*)
+<!-- ### Rozgrupowanie komórkowe I | (ang. *cell declustering*) -->
 
-Pierwszy rodzaj rozgrupowania komórkowego polega na:
+<!-- Pierwszy rodzaj rozgrupowania komórkowego polega na: -->
 
-1. Stworzeniu siatki dla badanego obszaru
-2. Policzeniu liczby obserwacji w każdym oczku siatki
-3. Nadanie wagi dla każdego punktu, zgodnie ze wzorem:
+<!-- 1. Stworzeniu siatki dla badanego obszaru -->
+<!-- 2. Policzeniu liczby obserwacji w każdym oczku siatki -->
+<!-- 3. Nadanie wagi dla każdego punktu, zgodnie ze wzorem: -->
 
-$$w'_j=\frac{\frac{1}{n_i}}{\text{liczba komorek z danymi}} \cdot n$$
-, gdzie $n_i$ to liczba obserwacji w komórce, a $n$ to łączna liczba obserwacji
+<!-- $$w'_j=\frac{\frac{1}{n_i}}{\text{liczba komorek z danymi}} \cdot n$$ -->
+<!-- , gdzie $n_i$ to liczba obserwacji w komórce, a $n$ to łączna liczba obserwacji -->
 
-### Rozgrupowanie komórkowe I | (ang. *cell declustering*)
+<!-- ### Rozgrupowanie komórkowe I | (ang. *cell declustering*) -->
 
-```{r rozkom01}
-data(punkty_pref)
-punkty_pref$id <- 1:nrow(punkty_pref)
-spplot(punkty_pref, "id", colorkey = TRUE)
+<!-- ```{r rozkom01} -->
+<!-- data(punkty_pref) -->
+<!-- punkty_pref$id <- 1:nrow(punkty_pref) -->
+<!-- spplot(punkty_pref, "id", colorkey = TRUE) -->
 
-data(granica)
-siatka_n <- raster(extent(gBuffer(granica, width = 500)))
-res(siatka_n) <- c(1000, 1000)
-siatka_n[] <- 0
-proj4string(siatka_n) <- CRS(proj4string(punkty_pref))
-siatka_n <- as(siatka_n, "SpatialPolygonsDataFrame")
-siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
-plot(siatka_n)
-plot(punkty_pref, add = TRUE)
+<!-- data(granica) -->
+<!-- siatka_n <- raster(extent(gBuffer(granica, width = 500))) -->
+<!-- res(siatka_n) <- c(1000, 1000) -->
+<!-- siatka_n[] <- 0 -->
+<!-- proj4string(siatka_n) <- CRS(proj4string(punkty_pref)) -->
+<!-- siatka_n <- as(siatka_n, "SpatialPolygonsDataFrame") -->
+<!-- siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ] -->
+<!-- plot(siatka_n) -->
+<!-- plot(punkty_pref, add = TRUE) -->
 
-punkty_pref$liczebnosc <- rep(0, length(punkty_pref))
-siatka_nr <- aggregate(punkty_pref["liczebnosc"], by = siatka_n, FUN = length)
-spplot(siatka_nr, "liczebnosc")
+<!-- punkty_pref$liczebnosc <- rep(0, length(punkty_pref)) -->
+<!-- siatka_nr <- aggregate(punkty_pref["liczebnosc"], by = siatka_n, FUN = length) -->
+<!-- spplot(siatka_nr, "liczebnosc") -->
 
-liczba <- over(punkty_pref, siatka_nr)
-punkty_pref$waga <- ((1 / liczba$liczebnosc) / sum(!is.na(siatka_nr$liczebnosc))) * length(punkty_pref)
+<!-- liczba <- over(punkty_pref, siatka_nr) -->
+<!-- punkty_pref$waga <- ((1 / liczba$liczebnosc) / sum(!is.na(siatka_nr$liczebnosc))) * length(punkty_pref) -->
 
-spplot(punkty_pref, "waga")
+<!-- spplot(punkty_pref, "waga") -->
 
-srednia_arytmetyczna <- mean(punkty_pref$temp)
-srednia_wazona_c1 <- mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE)
-```
+<!-- srednia_arytmetyczna <- mean(punkty_pref$temp) -->
+<!-- srednia_wazona_c1 <- mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
+<!-- ``` -->
 
-### Rozgrupowanie komórkowe II | (ang. *cell declustering*)
+<!-- ### Rozgrupowanie komórkowe II | (ang. *cell declustering*) -->
 
-Drugi rodzaj rozgrupowania komórkowego polega na:
+<!-- Drugi rodzaj rozgrupowania komórkowego polega na: -->
 
-1. Stworzeniu siatki dla badanego obszaru
-2. Wykonaniu interpolacji z użyciem funkcji `krige()` z pakietu **gstat**. W tym wypadku konieczne jest użycie argumentu `nmax = 1`, który przypisuje wartość najbliższej obserwacji do każdego oczka siatki.
-3. Waga dla każdego punktu nadawana jest poprzez zliczenie liczby oczek siatki dla konkretnej wartości, a następnie podzielenie tego przez liczbę oczek siatki.
+<!-- 1. Stworzeniu siatki dla badanego obszaru -->
+<!-- 2. Wykonaniu interpolacji z użyciem funkcji `krige()` z pakietu **gstat**. W tym wypadku konieczne jest użycie argumentu `nmax = 1`, który przypisuje wartość najbliższej obserwacji do każdego oczka siatki. -->
+<!-- 3. Waga dla każdego punktu nadawana jest poprzez zliczenie liczby oczek siatki dla konkretnej wartości, a następnie podzielenie tego przez liczbę oczek siatki. -->
 
-<!--
-- Przygotowanie danych
-https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html
+<!-- <!-- -->
+<!-- - Przygotowanie danych -->
+<!-- https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html -->
 
-When "interpolating" with nmax=1, you basically assign the value of the
-nearest observation to each grid cell, so, honoustly, it's hard to call
-this interpolation, it is rather something of a discretized Thiessen
-polygon.
--->
+<!-- When "interpolating" with nmax=1, you basically assign the value of the -->
+<!-- nearest observation to each grid cell, so, honoustly, it's hard to call -->
+<!-- this interpolation, it is rather something of a discretized Thiessen -->
+<!-- polygon. -->
+<!-- --> -->
 
-```{r rozkom02}
-data(punkty_pref)
-punkty_pref$id <- 1:nrow(punkty_pref)
-spplot(punkty_pref, "id", colorkey = TRUE)
+<!-- ```{r rozkom02} -->
+<!-- data(punkty_pref) -->
+<!-- punkty_pref$id <- 1:nrow(punkty_pref) -->
+<!-- spplot(punkty_pref, "id", colorkey = TRUE) -->
 
-data(granica)
-siatka_n <- raster(extent(gBuffer(granica, width = 500)))
-res(siatka_n) <- c(100, 100)
-siatka_n[] <- 0
-proj4string(siatka_n) <- CRS(proj4string(punkty_pref))
-siatka_n <- as(siatka_n, "SpatialPointsDataFrame")
-siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
-gridded(siatka_n) <- TRUE
-plot(siatka_n, border = TRUE)
-```
+<!-- data(granica) -->
+<!-- siatka_n <- raster(extent(gBuffer(granica, width = 500))) -->
+<!-- res(siatka_n) <- c(100, 100) -->
+<!-- siatka_n[] <- 0 -->
+<!-- proj4string(siatka_n) <- CRS(proj4string(punkty_pref)) -->
+<!-- siatka_n <- as(siatka_n, "SpatialPointsDataFrame") -->
+<!-- siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ] -->
+<!-- gridded(siatka_n) <- TRUE -->
+<!-- plot(siatka_n, border = TRUE) -->
+<!-- ``` -->
 
-```{r rozkom02b}
-out <- krige(id~1, punkty_pref, siatka_n, nmax = 1)
-spplot(out, "var1.pred")
-df <- as.data.frame(table(out[[1]]))
-df$waga <- df$Freq / sum(df$Freq)
-punkty_pref <- sp::merge(punkty_pref, df, by.x = "id", by.y = "Var1")
-summary(punkty_pref$waga)
-spplot(out, "var1.pred", sp.layout = list("sp.points", punkty_pref))
-# spplot(punkty_pref, "waga")
+<!-- ```{r rozkom02b} -->
+<!-- out <- krige(id~1, punkty_pref, siatka_n, nmax = 1) -->
+<!-- spplot(out, "var1.pred") -->
+<!-- df <- as.data.frame(table(out[[1]])) -->
+<!-- df$waga <- df$Freq / sum(df$Freq) -->
+<!-- punkty_pref <- sp::merge(punkty_pref, df, by.x = "id", by.y = "Var1") -->
+<!-- summary(punkty_pref$waga) -->
+<!-- spplot(out, "var1.pred", sp.layout = list("sp.points", punkty_pref)) -->
+<!-- # spplot(punkty_pref, "waga") -->
 
-srednia_arytmetyczna <- mean(punkty_pref$temp)
-srednia_wazona_c2 <- sum(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE)
-```
+<!-- srednia_arytmetyczna <- mean(punkty_pref$temp) -->
+<!-- srednia_wazona_c2 <- sum(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
+<!-- ``` -->
 
-### Rozgrupowanie poligonowe | (ang. *polygon declustering*)
+<!-- ### Rozgrupowanie poligonowe | (ang. *polygon declustering*) -->
 
-Rozgrupowanie poligonowe polega na zastosowaniu jednej z metod triangulacji, np. poligonów Voronoi'a:
+<!-- Rozgrupowanie poligonowe polega na zastosowaniu jednej z metod triangulacji, np. poligonów Voronoi'a: -->
 
-1. Dla każdego punktu określany jest poligon.
-2. Wyliczana jest powierzchnia poligonu.
-3. Waga każdego punktu wyliczana jest poprzez podzielenie powierzchni indywidualnych przez powierzchnię całego obszaru, a następnie pomnożenie przez liczbę punktów.
+<!-- 1. Dla każdego punktu określany jest poligon. -->
+<!-- 2. Wyliczana jest powierzchnia poligonu. -->
+<!-- 3. Waga każdego punktu wyliczana jest poprzez podzielenie powierzchni indywidualnych przez powierzchnię całego obszaru, a następnie pomnożenie przez liczbę punktów. -->
 
-$$w'_j=\frac{area_j}{\sum_{j=1}^{n}area_j} \cdot n$$
-, gdzie $area_j$ powierzchnia dla wybranej obserwacji, a $n$ to łączna liczba obserwacji
+<!-- $$w'_j=\frac{area_j}{\sum_{j=1}^{n}area_j} \cdot n$$ -->
+<!-- , gdzie $area_j$ powierzchnia dla wybranej obserwacji, a $n$ to łączna liczba obserwacji -->
 
-### Rozgrupowanie poligonowe | (ang. *polygon declustering*)
+<!-- ### Rozgrupowanie poligonowe | (ang. *polygon declustering*) -->
 
-```{r rozpoly}
-data(punkty_pref)
-punkty_pref$id <- 1:nrow(punkty_pref)
-spplot(punkty_pref, "id", colorkey = TRUE)
+<!-- ```{r rozpoly} -->
+<!-- data(punkty_pref) -->
+<!-- punkty_pref$id <- 1:nrow(punkty_pref) -->
+<!-- spplot(punkty_pref, "id", colorkey = TRUE) -->
 
-v <- voronoi(punkty_pref)
-plot(punkty_pref, cex = 0.2, col = "red")
-plot(v, add = TRUE)
+<!-- v <- voronoi(punkty_pref) -->
+<!-- plot(punkty_pref, cex = 0.2, col = "red") -->
+<!-- plot(v, add = TRUE) -->
 
-v$pow <- area(v)
-v$waga <- v$pow / sum(v$pow) * length(punkty_pref)
+<!-- v$pow <- area(v) -->
+<!-- v$waga <- v$pow / sum(v$pow) * length(punkty_pref) -->
 
-punkty_pref <- sp::merge(punkty_pref, v[c("id", "waga")], by = "id")
-spplot(punkty_pref, "waga")
+<!-- punkty_pref <- sp::merge(punkty_pref, v[c("id", "waga")], by = "id") -->
+<!-- spplot(punkty_pref, "waga") -->
 
-srednia_arytmetyczna <- mean(punkty_pref$temp, na.rm = TRUE)
-srednia_wazona_p <- mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE)
-```
+<!-- srednia_arytmetyczna <- mean(punkty_pref$temp, na.rm = TRUE) -->
+<!-- srednia_wazona_p <- mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
+<!-- ``` -->
 
-```{r old_with_intersect, echo=FALSE, eval=FALSE}
-data(punkty_pref)
-punkty_pref$id <- 1:nrow(punkty_pref)
-spplot(punkty_pref, "id", colorkey = TRUE)
+<!-- ```{r old_with_intersect, echo=FALSE, eval=FALSE} -->
+<!-- data(punkty_pref) -->
+<!-- punkty_pref$id <- 1:nrow(punkty_pref) -->
+<!-- spplot(punkty_pref, "id", colorkey = TRUE) -->
 
-v <- voronoi(punkty_pref)
-plot(punkty_pref, cex = 0.2, col = "red")
-plot(v, add = TRUE)
+<!-- v <- voronoi(punkty_pref) -->
+<!-- plot(punkty_pref, cex = 0.2, col = "red") -->
+<!-- plot(v, add = TRUE) -->
 
-v_intersect <- intersect(granica, v)
-plot(punkty_pref, cex = 0.2, col = "red")
-plot(v_intersect, add = TRUE)
+<!-- v_intersect <- intersect(granica, v) -->
+<!-- plot(punkty_pref, cex = 0.2, col = "red") -->
+<!-- plot(v_intersect, add = TRUE) -->
 
-v_intersect$pow <- area(v_intersect)
-v_intersect$waga <- v_intersect$pow / sum(v_intersect$pow) * length(punkty_pref)
+<!-- v_intersect$pow <- area(v_intersect) -->
+<!-- v_intersect$waga <- v_intersect$pow / sum(v_intersect$pow) * length(punkty_pref) -->
 
-punkty_pref <- merge(punkty_pref, v_intersect[c("id", "waga")], by = "id")
-spplot(punkty_pref, "waga")
+<!-- punkty_pref <- merge(punkty_pref, v_intersect[c("id", "waga")], by = "id") -->
+<!-- spplot(punkty_pref, "waga") -->
 
-srednia_arytmetyczna <- mean(punkty_pref$temp, na.rm = TRUE)
-srednia_wazona_p <- mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE)
-```
+<!-- srednia_arytmetyczna <- mean(punkty_pref$temp, na.rm = TRUE) -->
+<!-- srednia_wazona_p <- mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
+<!-- ``` -->
 
 
-### Porównanie metod rozgrupowania
+<!-- ### Porównanie metod rozgrupowania -->
 
-Średnia wartość temperatury dla badanego obszaru wynosiła 15,59 stopni Celsjusza, jednak w preferencyjnej próbie ta wartość wynosiła 14,28 stopni Celsjusza. 
-Porównując trzy zastosowane metody próbkowania warto zauważyć, że najbliższy wynik uzyskano korzystając z pierwszego rodzaju rozgrupowania komórkowego, która nieznacznie zaniżyła rzeczywistą wartość temperatury.
-Rozgrupowanie komórkowe II oraz rozgrupowanie poligonowe były w tym przypadku mniej dokładne, wyraźnie zawyżając wartości temperatury. 
+<!-- Średnia wartość temperatury dla badanego obszaru wynosiła 15,59 stopni Celsjusza, jednak w preferencyjnej próbie ta wartość wynosiła 14,28 stopni Celsjusza.  -->
+<!-- Porównując trzy zastosowane metody próbkowania warto zauważyć, że najbliższy wynik uzyskano korzystając z pierwszego rodzaju rozgrupowania komórkowego, która nieznacznie zaniżyła rzeczywistą wartość temperatury. -->
+<!-- Rozgrupowanie komórkowe II oraz rozgrupowanie poligonowe były w tym przypadku mniej dokładne, wyraźnie zawyżając wartości temperatury.  -->
 
-```{r tab_dec_1, echo=FALSE}
-srednia_arytmetyczna_pop <- 15.5912781
-df <- data.frame(sa = c(srednia_arytmetyczna_pop, srednia_arytmetyczna, srednia_wazona_c1, srednia_wazona_c2, srednia_wazona_p))
-rownames(df) <- c("Populacja", "Próba", "Rozgrupowanie komórkowe I", "Rozgrupowanie komórkowe II", "Rozgrupowanie poligonowe")
-knitr::kable(df, col.names = "Średnia arytmetyczna", row.names = TRUE, digits = 4)
-```
+<!-- ```{r tab_dec_1, echo=FALSE} -->
+<!-- srednia_arytmetyczna_pop <- 15.5912781 -->
+<!-- df <- data.frame(sa = c(srednia_arytmetyczna_pop, srednia_arytmetyczna, srednia_wazona_c1, srednia_wazona_c2, srednia_wazona_p)) -->
+<!-- rownames(df) <- c("Populacja", "Próba", "Rozgrupowanie komórkowe I", "Rozgrupowanie komórkowe II", "Rozgrupowanie poligonowe") -->
+<!-- knitr::kable(df, col.names = "Średnia arytmetyczna", row.names = TRUE, digits = 4) -->
+<!-- ``` -->
 
-W przypadku metod rozgrupowania należy jednak pamiętać, że ich wynik zależy od szeregu wprowadzonych parametrów, w szczególności granic badanego obszaru oraz zastosowanej wielkości oczka siatki.
+<!-- W przypadku metod rozgrupowania należy jednak pamiętać, że ich wynik zależy od szeregu wprowadzonych parametrów, w szczególności granic badanego obszaru oraz zastosowanej wielkości oczka siatki. -->
 
-<!--
-polygon declustering - http://gis.stackexchange.com/questions/122376/cell-declustering-using-open-source-software
-cell declustering - https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html
-http://gaa.org.au/pdf/DeclusterDebias-CCG.pdf
--->
+<!-- <!-- -->
+<!-- polygon declustering - http://gis.stackexchange.com/questions/122376/cell-declustering-using-open-source-software -->
+<!-- cell declustering - https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html -->
+<!-- http://gaa.org.au/pdf/DeclusterDebias-CCG.pdf -->
+<!-- --> -->
