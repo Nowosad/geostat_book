@@ -1,18 +1,20 @@
 
 # Eksploracyjna analiza danych nieprzestrzennych {#eksploracja-analiza-danych-nieprzestrzennych}
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, message=FALSE, warning=FALSE}
-library("sp")
-library("ggplot2")
-library("corrplot")
-library("geostatbook")
+library(sf)
+library(ggplot2)
+library(corrplot)
+library(geostatbook)
 data(punkty)
 data(granica)
 ```
 
 ## Cele eksploracyjnej analizy danych
 
-Zazwyczaj przed przystąpieniem do analiz geostatystycznych koniecznie jest wykonanie eksploracyjnej analizy danych nieprzestrzennych. 
+Zazwyczaj przed przystąpieniem do analiz (geo-)statystycznych koniecznie jest wykonanie eksploracyjnej analizy danych nieprzestrzennych. 
 Jej ogólne cele obejmują:
 
 - Stworzenie ogólnej charakterystyki danych oraz badanego zjawiska
@@ -20,36 +22,30 @@ Jej ogólne cele obejmują:
 - Uzyskanie informacji o relacji pomiędzy lokalizacją obserwacji a czynnikami wpływającymi na zmienność przestrzenną badanych cech
 
 ## Dane
+
 ### Dane 
 
 Nie istnieje jedyna, optymalna ścieżka eksploracji danych. 
 Proces ten różni się w zależności od posiadanego zbioru danych, jak i od postawionego pytania.
 Warto jednak, aby jednym z pierwszych kroków było przyjrzenie się danym wejściowym. 
 Pozwala na to, między innymi, funkcja `str()`. 
-Przykładowo, dla obiektu klasy `SpatialPointsDataFrame` wyświetla ona szereg ważnych informacji. 
-Oprócz klasy można również odczytać, że obiekt `punkty` zawiera pięć elementów (ang. *slots*) rozpoczynających się od symbolu `@`. 
-Pierwszy z nich, `@data` jest obiektem klasy `data.frame` zawierającym informacje o kolejnych punktach w tym zbiorze. 
-Element `@coords.nrs` określa numer kolumn zawierających współrzędne w oryginalnym zbiorze danych.
-W poniższym przypadku żadna kolumna nie ma takich informacji. 
-Kolejny element, `@coords` definiuje współrzędne kolejnych punktów w obiekcie `punkty`. 
-Ostatnie dwa elementy, `@bbox` i `@proj4string` określają kolejno zasięg przestrzenny danych oraz definicję ich układu współrzędnych.
+Przykładowo, dla obiektu klasy `sf` wyświetla ona szereg ważnych informacji. 
+<!-- Oprócz klasy można również odczytać, że obiekt `punkty` zawiera pięć elementów (ang. *slots*) rozpoczynających się od symbolu `@`.  -->
+<!-- Pierwszy z nich, `@data` jest obiektem klasy `data.frame` zawierającym informacje o kolejnych punktach w tym zbiorze.  -->
+<!-- Element `@coords.nrs` określa numer kolumn zawierających współrzędne w oryginalnym zbiorze danych. -->
+<!-- W poniższym przypadku żadna kolumna nie ma takich informacji.  -->
+<!-- Kolejny element, `@coords` definiuje współrzędne kolejnych punktów w obiekcie `punkty`.  -->
+<!-- Ostatnie dwa elementy, `@bbox` i `@proj4string` określają kolejno zasięg przestrzenny danych oraz definicję ich układu współrzędnych. -->
 
 ```{r}
 str(punkty)
 ```
 
-Oczywiście, każdy z elementów można obejrzeć indywidualnie, poprzez połączenie nazwy obiekty, znaku `@`, oraz nazwy elementu.
-Przykładowo `punkty@data` pozwala na obejrzenie tabeli atrybutów zbioru punktowego.
+Oczywiście, każdą ze zmiennych można obejrzeć oddzielnie, poprzez połączenie nazwy obiekty, znaku `$`, oraz nazwy elementu.
+Przykładowo `punkty$temp` pozwala na obejrzenie wartości wybranej zmiennej z tabeli atrybutów.
 
 ```{r}
-str(punkty@data)
-```
-
-Istnieją dwa sposoby uzyskania wartości wybranej zmiennej z tabeli atrybutów.
-
-```{r, eval=FALSE}
-punkty@data$temp # 1
-punkty$temp # 2
+str(punkty$temp)
 ```
 
 Z uwagi na to, że zajmujemy się danymi przestrzennymi - warto też się upewnić czy dane zostały poprawnie wczytane i obejmują analizowany obszar.
@@ -60,18 +56,19 @@ par(mar = c(rep(0, 4)))
 ```
 
 ```{r, message=FALSE, warning=FALSE}
-plot(punkty)
-plot(granica, add = TRUE)
+plot(st_geometry(punkty))
+plot(st_geometry(granica), add = TRUE)
 ```
 
 ## Statystyki opisowe
+
 ### Statystyki opisowe
 
 Podstawową funkcją w R służącą wyliczaniu podstawowych statystyk jest `summary()`. 
 Dla zmiennych numerycznych wyświetla ona wartość minimalną, pierwszy kwartyl, medianę, średnią, trzeci kwartyl, oraz wartość maksymalną. 
 
 ```{r }
-summary(punkty@data)
+summary(punkty)
 ```
 
 ### Statystyki opisowe | średnia i mediana
@@ -121,12 +118,13 @@ sd(punkty$temp, na.rm = TRUE)
 ```
 
 ## Wykresy
+
 ### Histogram
 
 Histogram należy do typów wykresów najczęściej używanych w eksploracyjnej analizie danych.
 
 ```{r }
-ggplot(punkty@data, aes(temp)) + geom_histogram()
+ggplot(punkty, aes(temp)) + geom_histogram()
 ```
 
 - Stworzony przez Karla Pearsona
@@ -141,7 +139,7 @@ Podobną funkcję do histogramu spełnia estymator jądrowy gęstości.
 Przypomina on wygładzony wykres histogramu i również służy graficznej reprezentacji rozkładu danych.
 
 ```{r }
-ggplot(punkty@data, aes(temp)) + geom_density()
+ggplot(punkty, aes(temp)) + geom_density()
 ```
 
 ### Wykres kwantyl-kwantyl (ang.*quantile-quantile*)
@@ -149,7 +147,7 @@ ggplot(punkty@data, aes(temp)) + geom_density()
 Wykres kwantyl-kwantyl ułatwia interpretację rozkładu danych. 
 
 ```{r }
-ggplot(punkty@data, aes(sample = temp)) + stat_qq()
+ggplot(punkty, aes(sample = temp)) + stat_qq()
 ```
 
 Na poniższej rycinie można zobaczyć przykłady najczęściej spotykanych cech rozkładu danych w wykresach kwantyl-kwantyl.
@@ -163,7 +161,7 @@ knitr::include_graphics("figs/qq_plot_explained.png")
 Dystrybuanta (ang. *cumulative distribution function* - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości.
 
 ```{r }
-ggplot(punkty@data, aes(temp)) + stat_ecdf()
+ggplot(punkty, aes(temp)) + stat_ecdf()
 ```
 
 ## Porównanie zmiennych
@@ -193,13 +191,13 @@ Z racji unormowania nie jest ona uzależniona od jednostki. Korelację można wy
 Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego obiektu zawierającego zmienne numeryczne.
 
 ```{r }
-ggplot(punkty@data, aes(temp, ndvi)) + geom_point()
+ggplot(punkty, aes(temp, ndvi)) + geom_point()
 cor(punkty$temp, punkty$ndvi)
 ```
 
-```{r }
-cor(punkty@data[c(1, 3:5)])
-```
+<!-- ```{r } -->
+<!-- cor(punkty[c(1, 3:5)]) -->
+<!-- ``` -->
 
 Dodatkowo funkcja `cor.test()` służy do testowania istotności korelacji.
 Za pomocą argumentu `method` można również wybrać jedną z trzech dostępnych miar korelacji.
@@ -208,12 +206,12 @@ Za pomocą argumentu `method` można również wybrać jedną z trzech dostępny
 cor.test(punkty$temp, punkty$ndvi)
 ```
 
-W przypadku posiadania co najmniej kilku par zmiennych, można również skorzystać z funkcji `corrplot()` z pakietu **corrplot**.
-Wyświetla ona wykres pokazujący wartości korelacji pomiędzy kolejnymi zmiennymi.
+<!-- W przypadku posiadania co najmniej kilku par zmiennych, można również skorzystać z funkcji `corrplot()` z pakietu **corrplot**. -->
+<!-- Wyświetla ona wykres pokazujący wartości korelacji pomiędzy kolejnymi zmiennymi. -->
 
-```{r }
-corrplot(cor(punkty@data[c(1, 3:5)]))
-```
+<!-- ```{r } -->
+<!-- corrplot(cor(punkty@data[c(1, 3:5)])) -->
+<!-- ``` -->
 
 ### Wykres pudełkowy
 
@@ -224,7 +222,7 @@ Linia środkowa to mediana.
 
 ```{r }
 punkty$clc <- as.factor(punkty$clc)
-ggplot(punkty@data, aes(clc, temp)) + geom_boxplot()
+ggplot(punkty, aes(x = clc, y = temp)) + geom_boxplot()
 ```
 
 ### Testowanie istotności różnić średniej pomiędzy grupami
@@ -241,12 +239,12 @@ aov_test <- aov(temp~clc, data = punkty)
 summary(aov_test)
 ```
 
+Do wykonania porównań wielokrotnych służy funkcja `TukeyHSD()`.
+Dodatkowo wyniki można wizualizować za pomocą funkcji `plot()`.
+
 ```{r, echo=FALSE}
 dev.off()
 ```
-
-Do wykonania porównań wielokrotnych służy funkcja `TukeyHSD()`.
-Dodatkowo wyniki można wizualizować za pomocą funkcji `plot()`.
 
 ```{r }
 tukey <- TukeyHSD(aov_test, "clc")
@@ -254,9 +252,11 @@ plot(tukey, las = 1)
 ```
 
 ## Transformacje danych
+
 ### Transformacje danych
 
 Transformacja danych może mieć na celu ułatwienie porównywania różnych zmiennych, zniwelowanie skośności rozkładu lub też zmniejszenie wpływu danych odstających.
+W efekcie transformacja danych ułatwia przeprowadzenie analiz (geo-)statystycznych i polepsza wyniki prognoz z modeli.
 
 ### Transformacja danych | Standaryzacja
 
@@ -269,17 +269,17 @@ Centrowanie i skalowanie (standaryzacja):
 ### Transformacja danych | Centrowanie
 
 ```{r }
-ggplot(punkty@data, aes(temp)) + geom_density()
+ggplot(punkty, aes(temp)) + geom_density()
 punkty$temp_center <- punkty$temp - mean(punkty$temp)
-ggplot(punkty@data, aes(temp_center)) + geom_density()
+ggplot(punkty, aes(temp_center)) + geom_density()
 ```
 
 ### Transformacja danych | Skalowanie
 
 ```{r }
-ggplot(punkty@data, aes(temp)) + geom_density()
+ggplot(punkty, aes(temp)) + geom_density()
 punkty$temp_scale <- punkty$temp / sd(punkty$temp)
-ggplot(punkty@data, aes(temp_scale)) + geom_density()
+ggplot(punkty, aes(temp_scale)) + geom_density()
 ```
 
 ### Transformacja danych | Standaryzacja
@@ -287,9 +287,9 @@ ggplot(punkty@data, aes(temp_scale)) + geom_density()
 Do standaryzacji (centrowanie i skalowanie) służy funkcja `scale()`.
 
 ```{r }
-ggplot(punkty@data, aes(temp)) + geom_density()
+ggplot(punkty, aes(temp)) + geom_density()
 punkty$temp_standard <- as.numeric(scale(punkty$temp))
-ggplot(punkty@data, aes(temp_standard)) + geom_density()
+ggplot(punkty, aes(temp_standard)) + geom_density()
 ```
 
 ### Transformacja danych | Redukcja skośności
@@ -306,11 +306,11 @@ Logarytmizacja w R może odbyć się za pomocą funkcji `log()`.
 Transformację logarytmiczną można odwrócić używając funkcji `exp()`.
 
 ```{r }
-ggplot(punkty@data, aes(temp)) + geom_density()
+ggplot(punkty, aes(temp)) + geom_density()
 punkty$log_tpz <- log(punkty$temp)
-ggplot(punkty@data, aes(log_tpz)) + geom_density()
+ggplot(punkty, aes(log_tpz)) + geom_density()
 punkty$exp_tpz <- exp(punkty$log_tpz)
-ggplot(punkty@data, aes(exp_tpz)) + geom_density()
+ggplot(punkty, aes(exp_tpz)) + geom_density()
 ```
 
 ### Transformacja danych | Pierwiastkowanie
@@ -319,11 +319,11 @@ Pierwiastkowanie w R może odbyć się za pomocą funkcji `sqrt()`.
 Odwrócenie tej transformacji odbywa się poprzez podniesienie wartości do potęgi (`^2`).
 
 ```{r }
-ggplot(punkty@data, aes(temp)) + geom_density()
+ggplot(punkty, aes(temp)) + geom_density()
 punkty$sqrt_tpz <- sqrt(punkty$temp)
-ggplot(punkty@data, aes(sqrt_tpz)) + geom_density()
+ggplot(punkty, aes(sqrt_tpz)) + geom_density()
 punkty$pow_tpz <- punkty$sqrt_tpz ^ 2
-ggplot(punkty@data, aes(pow_tpz)) + geom_density()
+ggplot(punkty, aes(pow_tpz)) + geom_density()
 ```
 
 <!--
