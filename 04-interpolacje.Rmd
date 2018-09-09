@@ -1,28 +1,31 @@
 
 # Metody interpolacji {#metody-interpolacji}
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, interpolate_inits, message=FALSE, warning=FALSE}
-library("dismo")
-library("raster")
-library("sp")
-library("gstat")
-library("fields")
-library("geostatbook")
-library("deldir")
-library("rgeos")
+library(dismo)
+library(raster)
+library(sf)
+library(gstat)
+library(fields)
+library(geostatbook)
+library(deldir)
+library(rgeos)
 data(punkty)
 data(siatka)
 data(granica)
 ```
 
-Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania. 
+Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania do stworzenia predykcji przestrzennych. 
 Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne oraz modele statystyczne.
 
 ## Modele deterministyczne
 
 Modele deterministyczne charakteryzują się tym, że ich parametry są zazwyczaj ustalane w oparciu o funkcję odległości lub powierzchni. 
 W tych modelach brakuje szacunków na temat oceny błędu modelu.
-Do zalet tych modeli należy szczególnie krótki czas obliczeń. Do modeli deterministycznych należą, między innymi:
+Zaletą tych modeli jest ich prosta oraz krótki czas obliczeń. 
+Do modeli deterministycznych należą, między innymi:
 
 - Metoda diagramów Voronoi'a (ang.  *Voronoi diagram*)
 - Metoda średniej ważonej odległością (ang. *Inverse Distance Weighted - IDW*)
@@ -42,21 +45,26 @@ Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi(
 Wyniki następnie można przyciąć do badanego obszaru z użyciem funkcji `intersect()` z pakietu **raster**.
 
 ```{r }
-voronoi_interp <- voronoi(punkty)
-voronoi_interp <- raster::intersect(granica, voronoi_interp)
-spplot(voronoi_interp, "temp", contour = TRUE, main = "Poligony Voronoia")
+voronoi_interp <- voronoi(as(punkty, "Spatial")) %>% 
+        st_as_sf()
+plot(st_geometry(voronoi_interp), main = "Poligony Voronoia")
+plot(voronoi_interp, main = "Poligony Voronoia")
 ```
 
 ### Modele deterministyczne | IDW
 
 Metoda średniej ważonej odległością (IDW) wylicza wartość dla każdej komórki na podstawie wartości punktów obokległych ważonych odwrotnością ich odległości. 
-W efekcie, czym punkt jest bardziej oddalony, tym mniejszy jest jego wpływ na interpolowaną wartość. 
+W efekcie, czym bardziej jest punkt oddalony, tym mniejszy jest jego wpływ na interpolowaną wartość. 
 Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (ang. *power*).
 W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`).
 
 ```{r }
-idw_wolin <- idw(temp~1, punkty, siatka, idp = 2)
-spplot(idw_wolin, "var1.pred", contour = TRUE, main = "IDW")
+projection(siatka) <- st_crs(punkty)$proj4string
+punkty_sp <- as(punkty, "Spatial")
+idw_wolin <- idw(temp~1, punkty_sp, siatka, idp = 2)
+idw_wolin_r <- raster(idw_wolin)
+plot(idw_wolin_r, main = "IDW")
+contour(idw_wolin_r, add = TRUE)
 ```
 
 <!--
@@ -71,15 +79,24 @@ Wymaga ona podania trzech argumentów: `formula` określającego naszą analizow
 Następnie funkcja `predict()` przenosi nowe wartości na wcześniej stworzoną siatkę.
 
 ```{r }
-wielomian_1 <- gstat(formula = temp~1, data = punkty, degree = 1)
+# wielomian 1 stopnia
+wielomian_1 <- gstat(formula = temp~1, data = punkty_sp, degree = 1)
 wielomian_1_pred <- predict(wielomian_1, newdata = siatka)
-spplot(wielomian_1_pred[1], contour = TRUE, main = "Powierzchnia trendu - wielomian pierwszego stopnia")
-wielomian_2 <- gstat(formula = temp~1, data = punkty, degree = 2)
+wielomian_1_pred_r <- raster(wielomian_1_pred)
+plot(wielomian_1_pred_r, main = "Powierzchnia trendu - wielomian pierwszego stopnia")
+contour(wielomian_1_pred_r, add = TRUE)
+# wielomian 2 stopnia
+wielomian_2 <- gstat(formula = temp~1, data = punkty_sp, degree = 2)
 wielomian_2_pred <- predict(wielomian_2, newdata = siatka)
-spplot(wielomian_2_pred[1], contour = TRUE, main = "Powierzchnia trendu - wielomian drugiego stopnia")
-wielomian_3 <- gstat(formula = temp~1, data = punkty, degree = 3)
+wielomian_2_pred_r <- raster(wielomian_2_pred)
+plot(wielomian_2_pred_r, main = "Powierzchnia trendu - wielomian drugiego stopnia")
+contour(wielomian_2_pred_r, add = TRUE)
+# wielomian 3 stopnia
+wielomian_3 <- gstat(formula = temp~1, data = punkty_sp, degree = 3)
 wielomian_3_pred <- predict(wielomian_3, newdata = siatka)
-spplot(wielomian_3_pred[1], contour = TRUE, main = "Powierzchnia trendu - wielomian trzeciego stopnia")
+wielomian_3_pred_r <- raster(wielomian_3_pred)
+plot(wielomian_3_pred_r, main = "Powierzchnia trendu - wielomian trzeciego stopnia")
+contour(wielomian_3_pred_r, add = TRUE)
 ```
 
 ### Modele deterministyczne | Funkcje sklejane
@@ -87,17 +104,18 @@ spplot(wielomian_3_pred[1], contour = TRUE, main = "Powierzchnia trendu - wielom
 Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**) dopasowuje krzywą powierzchnię do wartości analizowanych punktów.
 
 ```{r }
-tps <- Tps(coordinates(punkty), punkty@data$temp)
+tps <- Tps(st_coordinates(punkty), punkty$temp)
 ras <- raster(siatka)
 spline <- interpolate(ras, tps)
 spline <- mask(spline, ras)
-spplot(spline, contour = TRUE, main = "Funkcje sklejane")
+plot(spline, main = "Funkcje sklejane")
+contour(spline, add = TRUE)
 ```
 
 ### Modele deterministyczne | Porównanie
 
 ```{r echo=FALSE}
-library("gridExtra")
+library(gridExtra)
 p1 <- spplot(wielomian_3_pred[1], main = "Wielomiany")
 p2 <- spplot(spline, main = "Funkcje sklejane")
 p3 <- spplot(voronoi_interp, "temp", main = "Poligony Voronoia")
@@ -108,8 +126,7 @@ grid.arrange(p3, p4, p1, p2)
 ## Modele statystyczne
 
 Modele statystyczne charakteryzują się tym, że ich parametry określane są w oparciu o teorię prawdopodobieństwa.
-Dodatkowo wynik estymacji zawiera także oszacowanie błędu.
-Te metody zazwyczaj wymagają większych zasobów sprzętowych.
+Dodatkowo wynik estymacji zawiera także oszacowanie błędu, jednak te metody zazwyczaj wymagają większych zasobów sprzętowych.
 Do modeli statystycznych należą, między innymi:
 
 - Kriging
