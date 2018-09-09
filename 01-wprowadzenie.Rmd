@@ -202,6 +202,12 @@ Domyślnie wyświetla ona szereg map - po jeden dla każdej zmiennej:
 plot(dane_punktowe_sf)
 ```
 
+Do wyświetlenia tylko geometrii (np. punktów) bez atrybutów służy funkcja `plot()` połączona z funkcją `st_geometry()`:
+
+```{r}
+plot(st_geometry(dane_punktowe_sf))
+```
+
 Aby wyświetlić tylko jedną zmienną należy ją zadeklarować poprzez nawias kwadratowy.
 Poniżej można zobaczyć przykłady dla zmiennych `temp` oraz `srtm`.
 
