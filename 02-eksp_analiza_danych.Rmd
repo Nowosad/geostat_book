@@ -4,7 +4,7 @@
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
 ```{r, message=FALSE, warning=FALSE}
-library(sf)
+library(sp)
 library(ggplot2)
 library(corrplot)
 library(geostatbook)
@@ -56,8 +56,8 @@ par(mar = c(rep(0, 4)))
 ```
 
 ```{r, message=FALSE, warning=FALSE}
-plot(st_geometry(punkty))
-plot(st_geometry(granica), add = TRUE)
+plot(punkty)
+plot(granica, add = TRUE)
 ```
 
 ## Statystyki opisowe
@@ -124,7 +124,7 @@ sd(punkty$temp, na.rm = TRUE)
 Histogram należy do typów wykresów najczęściej używanych w eksploracyjnej analizie danych.
 
 ```{r }
-ggplot(punkty, aes(temp)) + geom_histogram()
+ggplot(punkty@data, aes(temp)) + geom_histogram()
 ```
 
 - Stworzony przez Karla Pearsona
@@ -139,7 +139,7 @@ Podobną funkcję do histogramu spełnia estymator jądrowy gęstości.
 Przypomina on wygładzony wykres histogramu i również służy graficznej reprezentacji rozkładu danych.
 
 ```{r }
-ggplot(punkty, aes(temp)) + geom_density()
+ggplot(punkty@data, aes(temp)) + geom_density()
 ```
 
 ### Wykres kwantyl-kwantyl (ang.*quantile-quantile*)
@@ -147,7 +147,7 @@ ggplot(punkty, aes(temp)) + geom_density()
 Wykres kwantyl-kwantyl ułatwia interpretację rozkładu danych. 
 
 ```{r }
-ggplot(punkty, aes(sample = temp)) + stat_qq()
+ggplot(punkty@data, aes(sample = temp)) + stat_qq()
 ```
 
 Na poniższej rycinie można zobaczyć przykłady najczęściej spotykanych cech rozkładu danych w wykresach kwantyl-kwantyl.
@@ -191,7 +191,7 @@ Z racji unormowania nie jest ona uzależniona od jednostki. Korelację można wy
 Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego obiektu zawierającego zmienne numeryczne.
 
 ```{r }
-ggplot(punkty, aes(temp, ndvi)) + geom_point()
+ggplot(punkty@data, aes(temp, ndvi)) + geom_point()
 cor(punkty$temp, punkty$ndvi)
 ```
 
@@ -222,7 +222,7 @@ Linia środkowa to mediana.
 
 ```{r }
 punkty$clc <- as.factor(punkty$clc)
-ggplot(punkty, aes(x = clc, y = temp)) + geom_boxplot()
+ggplot(punkty@data, aes(x = clc, y = temp)) + geom_boxplot()
 ```
 
 ### Testowanie istotności różnić średniej pomiędzy grupami
@@ -269,17 +269,17 @@ Centrowanie i skalowanie (standaryzacja):
 ### Transformacja danych | Centrowanie
 
 ```{r }
-ggplot(punkty, aes(temp)) + geom_density()
+ggplot(punkty@data, aes(temp)) + geom_density()
 punkty$temp_center <- punkty$temp - mean(punkty$temp)
-ggplot(punkty, aes(temp_center)) + geom_density()
+ggplot(punkty@data, aes(temp_center)) + geom_density()
 ```
 
 ### Transformacja danych | Skalowanie
 
 ```{r }
-ggplot(punkty, aes(temp)) + geom_density()
+ggplot(punkty@data, aes(temp)) + geom_density()
 punkty$temp_scale <- punkty$temp / sd(punkty$temp)
-ggplot(punkty, aes(temp_scale)) + geom_density()
+ggplot(punkty@data, aes(temp_scale)) + geom_density()
 ```
 
 ### Transformacja danych | Standaryzacja
@@ -287,9 +287,9 @@ ggplot(punkty, aes(temp_scale)) + geom_density()
 Do standaryzacji (centrowanie i skalowanie) służy funkcja `scale()`.
 
 ```{r }
-ggplot(punkty, aes(temp)) + geom_density()
+ggplot(punkty@data, aes(temp)) + geom_density()
 punkty$temp_standard <- as.numeric(scale(punkty$temp))
-ggplot(punkty, aes(temp_standard)) + geom_density()
+ggplot(punkty@data, aes(temp_standard)) + geom_density()
 ```
 
 ### Transformacja danych | Redukcja skośności
@@ -306,11 +306,11 @@ Logarytmizacja w R może odbyć się za pomocą funkcji `log()`.
 Transformację logarytmiczną można odwrócić używając funkcji `exp()`.
 
 ```{r }
-ggplot(punkty, aes(temp)) + geom_density()
+ggplot(punkty@data, aes(temp)) + geom_density()
 punkty$log_tpz <- log(punkty$temp)
-ggplot(punkty, aes(log_tpz)) + geom_density()
+ggplot(punkty@data, aes(log_tpz)) + geom_density()
 punkty$exp_tpz <- exp(punkty$log_tpz)
-ggplot(punkty, aes(exp_tpz)) + geom_density()
+ggplot(punkty@data, aes(exp_tpz)) + geom_density()
 ```
 
 ### Transformacja danych | Pierwiastkowanie
@@ -319,11 +319,11 @@ Pierwiastkowanie w R może odbyć się za pomocą funkcji `sqrt()`.
 Odwrócenie tej transformacji odbywa się poprzez podniesienie wartości do potęgi (`^2`).
 
 ```{r }
-ggplot(punkty, aes(temp)) + geom_density()
+ggplot(punkty@data, aes(temp)) + geom_density()
 punkty$sqrt_tpz <- sqrt(punkty$temp)
-ggplot(punkty, aes(sqrt_tpz)) + geom_density()
+ggplot(punkty@data, aes(sqrt_tpz)) + geom_density()
 punkty$pow_tpz <- punkty$sqrt_tpz ^ 2
-ggplot(punkty, aes(pow_tpz)) + geom_density()
+ggplot(punkty@data, aes(pow_tpz)) + geom_density()
 ```
 
 <!--
