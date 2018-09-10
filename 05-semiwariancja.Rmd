@@ -3,7 +3,7 @@
 
 ```{r, message=FALSE, warning=FALSE}
 library(gstat)
-library(sf)
+library(sp)
 library(pgirmess)
 library(ggplot2)
 library(raster)
@@ -132,7 +132,7 @@ Przestrzenna kowariancja, korelacja i semiwariancja to miary określające przes
 - Jednocześnie, dla potrzeb interpretacji relacji, kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
 
 ```{r z_przs0, echo=FALSE}
-hscat(temp~1, as(punkty, "Spatial"), breaks = c(0, 200))
+hscat(temp~1, data = punkty, breaks = c(0, 200))
 ```
 
 ### Wykres rozrzutu z przesunięciem
@@ -144,7 +144,7 @@ W przedziale 3500 do 4000 metrów osiąga jedynie 0,128.
 Pozwala to na stwierdzenie, że cecha `temp` wykazuje zmienność przestrzenną - podobieństwo jej wartości zmniejsza się wraz z odległością.
 
 ```{r z_przs, fig.height=7}
-hscat(temp~1, as(punkty, "Spatial"), breaks = seq(0, 4000, by = 500))
+hscat(temp~1, data = punkty, breaks = seq(0, 4000, by = 500))
 ```
 
 ### Autokowariancja
@@ -153,7 +153,7 @@ Podobną informację jak wykres rozrzutu z przesunięciem daje autokowariancja. 
 Jej wyliczenie jest możliwe z użyciem funkcji `variogram()` z pakietu **gstat**, gdzie definiuje się analizowaną zmienną, zbiór punktowy, oraz ustala się argument `covariogram` na `TRUE`.
 
 ```{r }
-kowario <- variogram(temp~1, as(punkty, "Spatial"), covariogram = TRUE)
+kowario <- variogram(temp~1, locations = punkty, covariogram = TRUE)
 plot(kowario)
 ```
 
@@ -164,7 +164,7 @@ Jej wykres (autokorelogram) pokazuje wartość jednej z miar autokorelacji (np. 
 Na poniższym przykładzie, wartość statystyki I Morana jest wyliczana poprzez funkcję `correlog()` z pakietu **pgirmess**.
  
 ```{r }
-wsp <- st_coordinates(punkty)
+wsp <- coordinates(punkty)
 kor <- correlog(wsp, punkty$temp, method = "Moran")
 kor <- as.data.frame(kor)
 ggplot(kor, aes(dist.class, coef)) + geom_smooth(linetype = 0) + geom_line() + geom_point(size = 5)
@@ -182,7 +182,7 @@ Korzystając z wzoru na semiwariację otrzymujemy wartość równą ok. 20,60.
 Znamy również odległość między punktami (ok. 4576,59 metra), więc możemy w uproszczeniu stwierdzić, że dla tej pary punktów odległych o 4577 metry wartość semiwariancji wynosi około 20,6.
 
 ```{r }
-odl <- dist(st_coordinates(punkty)[c(1, 2), ])
+odl <- dist(coordinates(punkty)[c(1, 2), ])
 gamma <- 0.5 * (punkty$temp[1] - punkty$temp[2]) ^ 2
 gamma
 ```
@@ -195,7 +195,7 @@ Tę semiwariancję można zaprezentować na wykresie zwanym chmurą semiwariogra
 Do jej wyliczenia służy funkcja `variogram()` z argumentem `cloud = TRUE`.
 
 ```{r }
-vario_cloud <- variogram(temp~1, as(punkty, "Spatial"), cloud = TRUE)
+vario_cloud <- variogram(temp~1, locations = punkty, cloud = TRUE)
 plot(vario_cloud)
 ```
 
@@ -204,7 +204,7 @@ Aby zlokalizować te pary punktów, można zastosować funkcję `plot()` z argum
 Po skończonym wyborze należy nacisnąć klawisz Esc.
 
 ```{r chmurkowanie, eval=FALSE}
-vario_cloud_sel <- plot(variogram(temp~1, as(punkty, "Spatial"), cloud = TRUE), digitize = TRUE)
+vario_cloud_sel <- plot(variogram(temp~1, locations = punkty, cloud = TRUE), digitize = TRUE)
 ```
 
 ```{r, echo=FALSE, fig.width=6}
@@ -215,7 +215,7 @@ knitr::include_graphics("figs/cloud_sel.png")
 Następnie można wyświetlić wybrane pary punktów z użyciem funkcji `plot()`.
 
 ```{r chmurkowanie2, eval=FALSE}
-plot(vario_cloud_sel, as(punkty, "Spatial"))
+plot(vario_cloud_sel, punkty, "Spatial")
 ```
 
 ```{r, echo=FALSE, fig.width=6}
@@ -245,7 +245,7 @@ W oparciu o semiwariogram empiryczny (czyli oparty na danych) możemy następnie
 - Połowa pierwiastka powierzchni:
 
 ```{r }
-pow <- st_area(granica)
+pow <- area(granica)
 0.5 * sqrt(pow)
 ```
 
@@ -267,7 +267,7 @@ z_kwadrat <- kraw_x ^ 2 + kraw_y ^ 2
 - Powierzchnia zajmowana przez jedną próbkę:
 
 ```{r }
-pow_pr <- st_area(granica) / nrow(punkty)
+pow_pr <- area(granica) / nrow(punkty)
 pow_pr
 ```
 
@@ -303,7 +303,7 @@ Stworzenie podstawowego semiwariogramu w pakiecie **gstat** odbywa się z użyci
 Należy w niej zdefiniować analizowaną zmienną (w tym przykładzie `temp~1`) oraz zbiór punktowy (`punkty`).
 
 ```{r }
-vario_par <- variogram(temp~1, as(punkty, "Spatial"))
+vario_par <- variogram(temp~1, locations = punkty)
 vario_par
 ```
 
@@ -318,7 +318,7 @@ Maksymalny zasięg semiwariogramu (ang. *cutoff distance*) jest domyślnie wylic
 Można jednak tę wartość zmodyfikować używając argumentu `cutoff`.
 
 ```{r}
-vario_par <- variogram(temp~1, as(punkty, "Spatial"), cutoff = 4000)
+vario_par <- variogram(temp~1, locations = punkty, cutoff = 4000)
 plot(vario_par)
 ```
 
@@ -326,7 +326,7 @@ Dodatkowo, domyślnie w pakiecie **gstat** odległość między przedziałami (a
 Można to oczywiście zmienić używając zarówno argumentu `cutoff`, jak i argumentu `width` mówiącego o szerokości odstępów.
 
 ```{r }
-vario_par <- variogram(temp~1, as(punkty, "Spatial"), cutoff = 1000, width = 250)
+vario_par <- variogram(temp~1, locations = punkty, cutoff = 1000, width = 250)
 plot(vario_par)
 ```
 
@@ -376,14 +376,14 @@ Następnie można ją wyświetlić używając funkcji `plot()`.
 Warto w tym wypadku użyć dodatkowego argumentu `threshold`, który powoduje, że niepewna wartość semiwariancji (wyliczona na małej liczbie punktów) nie jest wyświetlana.
 
 ```{r }
-vario_map <- variogram(temp~1, as(punkty, "Spatial"), cutoff = 4000, width = 400, map = TRUE)
+vario_map <- variogram(temp~1, locations = punkty, cutoff = 4000, width = 400, map = TRUE)
 plot(vario_map, threshold = 30) # co najmniej 30 par punktów
 ```
 
 Mapie semiwariogramu można również się przyjrzeć interaktywnie używając funkcję `plot3D()` z pakietu **rasterVis**.
 
 ```{r mapa_semi, eval=FALSE, fig.width=6}
-plot3D(raster(vario_map$map), col = rainbow)
+plot3D(raster(vario_map$map), col = terrain.colors)
 ```
 
 ```{r, echo=FALSE}
@@ -397,6 +397,6 @@ Dla argumentu `alpha = c(0, 45, 90, 135)` wybrane cztery główne kierunki to 0,
 Oznacza to, że przykładowo dla kierunku 45 stopni brane pod uwagę będą wszystkie pary punktów pomiędzy 22,5 a 67,5 stopnia.
 
 ```{r }
-vario_kier <- variogram(temp~1, as(punkty, "Spatial"), alpha = c(0, 45, 90, 135))
+vario_kier <- variogram(temp~1, locations = punkty, alpha = c(0, 45, 90, 135))
 plot(vario_kier)
 ```
