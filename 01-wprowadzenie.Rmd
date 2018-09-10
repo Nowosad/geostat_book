@@ -10,7 +10,7 @@ Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi:
 
 <!-- uzupełnij -->
 
-- GIS - **sf**, **raster**
+- GIS - **sp**, **raster**
 - Geostatystyka - **gstat**, **geoR**
     
 <!-- - GIS - **sp**, **rgdal**, **raster**, **rasterVis**, **rgeos**, **maptools**, **GeoXp**, **deldir**, **pgirmess**, **spatstat** -->
