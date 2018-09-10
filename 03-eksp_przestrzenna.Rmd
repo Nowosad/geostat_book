@@ -5,7 +5,7 @@ Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietó
 
 ```{r, interpolate_init, message=FALSE, warning=FALSE}
 library(raster)
-library(sf)
+library(sp)
 library(mapview)
 library(gstat)
 library(dismo)
@@ -16,11 +16,11 @@ data(punkty)
 data(granica)
 ```
 
-## Mapy 
-
 ```{r, echo=FALSE}
 par(mar = c(rep(0, 4)))
 ```
+
+## Mapy 
 
 ### Podstawowe terminy | Kontekst przestrzenny
 
@@ -57,7 +57,7 @@ W regularnym typie próbkowania, kolejne punkty rozłożone są równomiernie na
 
 ```{r }
 set.seed(225)
-regularny <- st_sample(granica, 150, type = "regular")
+regularny <- spsample(granica, 150, type = "regular")
 plot(regularny)
 ```
 
@@ -68,37 +68,37 @@ Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych.
 
 ```{r }
 set.seed(301)
-losowy <- st_sample(granica, 150, type = "random")
+losowy <- spsample(granica, 150, type = "random")
 plot(losowy)
 ```
 
-<!-- ### Typ próbowania | Losowy stratyfikowany -->
+### Typ próbowania | Losowy stratyfikowany
 
-<!-- Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu. -->
+Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu.
 
-<!-- ```{r } -->
-<!-- set.seed(125) -->
-<!-- strat <- spsample(granica, 150, type = "stratified") -->
-<!-- plot(strat) -->
-<!-- ``` -->
+```{r }
+set.seed(125)
+strat <- spsample(granica, 150, type = "stratified")
+plot(strat)
+```
 
-<!-- ### Typ próbowania | Preferencyjny -->
+### Typ próbowania | Preferencyjny
 
-<!-- W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbkowane niż inne. -->
+W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbkowane niż inne.
 
-<!-- ```{r } -->
-<!-- set.seed(425) -->
-<!-- pref <- spsample(granica, 150, type = "clustered", nclusters = 30) -->
-<!-- plot(pref) -->
-<!-- ``` -->
+```{r }
+set.seed(425)
+pref <- spsample(granica, 150, type = "clustered", nclusters = 30)
+plot(pref)
+```
 
 ## Dane lokalnie odstające
 
 Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()`.
 
 ```{r}
-plot(st_geometry(granica))
-plot(st_geometry(punkty), add = TRUE)
+plot(granica)
+plot(punkty, add = TRUE)
 ```
 
 Dane lokalnie odstające oznaczają nietypowe przestrzennie wartości danej cechy.
@@ -108,8 +108,7 @@ Przyjrzenie się wartościom analizowanej cechy można wykonać z użyciem funkc
 Na poniższym przykładzie wyświetlona jest zmienna `temp` oznaczająca średnią temperaturę dobową.
 
 ```{r }
-plot(punkty["temp"])
-plot(st_geometry(granica), add = TRUE)
+spplot(punkty, "temp", sp.layout = granica)
 ```
 
 Dodatkowo można wykorzystać pakiet **mapview** do interaktywnego określania wartości oraz numeru punktu (numer wiersza w tabeli atrybutów).
