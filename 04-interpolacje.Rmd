@@ -6,7 +6,7 @@ Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietó
 ```{r, interpolate_inits, message=FALSE, warning=FALSE}
 library(dismo)
 library(raster)
-library(sf)
+library(sp)
 library(gstat)
 library(fields)
 library(geostatbook)
@@ -15,6 +15,10 @@ library(rgeos)
 data(punkty)
 data(siatka)
 data(granica)
+```
+
+```{r, echo=FALSE}
+par(mar = c(rep(0, 4)))
 ```
 
 Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania do stworzenia predykcji przestrzennych. 
@@ -34,10 +38,6 @@ Do modeli deterministycznych należą, między innymi:
 
 <!--http://neondataskills.org/Data-Workshops/ESA15-Going-On-The-Grid-Spatial-Interpolation-Basics/-->
 
-```{r, echo=FALSE}
-par(mar = c(rep(0, 4)))
-```
-
 ### Modele deterministyczne | Voronoi
 
 Metoda diagramów Voronoi'a polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego punktu. 
@@ -45,10 +45,9 @@ Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi(
 Wyniki następnie można przyciąć do badanego obszaru z użyciem funkcji `intersect()` z pakietu **raster**.
 
 ```{r }
-voronoi_interp <- voronoi(as(punkty, "Spatial")) %>% 
-        st_as_sf()
-plot(st_geometry(voronoi_interp), main = "Poligony Voronoia")
+voronoi_interp <- voronoi(punkty) 
 plot(voronoi_interp, main = "Poligony Voronoia")
+spplot(voronoi_interp, zcol = "temp", main = "Poligony Voronoia - temperatura")
 ```
 
 ### Modele deterministyczne | IDW
@@ -59,12 +58,8 @@ Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (ang. *p
 W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`).
 
 ```{r }
-projection(siatka) <- st_crs(punkty)$proj4string
-punkty_sp <- as(punkty, "Spatial")
-idw_wolin <- idw(temp~1, punkty_sp, siatka, idp = 2)
-idw_wolin_r <- raster(idw_wolin)
-plot(idw_wolin_r, main = "IDW")
-contour(idw_wolin_r, add = TRUE)
+idw_wolin <- idw(temp~1, locations = punkty, newdata = siatka, idp = 2)
+spplot(idw_wolin, zcol = "var1.pred", contour = TRUE, main = "IDW")
 ```
 
 <!--
@@ -80,23 +75,17 @@ Następnie funkcja `predict()` przenosi nowe wartości na wcześniej stworzoną 
 
 ```{r }
 # wielomian 1 stopnia
-wielomian_1 <- gstat(formula = temp~1, data = punkty_sp, degree = 1)
+wielomian_1 <- gstat(formula = temp~1, locations = punkty, degree = 1)
 wielomian_1_pred <- predict(wielomian_1, newdata = siatka)
-wielomian_1_pred_r <- raster(wielomian_1_pred)
-plot(wielomian_1_pred_r, main = "Powierzchnia trendu - wielomian pierwszego stopnia")
-contour(wielomian_1_pred_r, add = TRUE)
+spplot(wielomian_1_pred, zcol = "var1.pred", contour = TRUE, main = "Powierzchnia trendu - wielomian pierwszego stopnia")
 # wielomian 2 stopnia
-wielomian_2 <- gstat(formula = temp~1, data = punkty_sp, degree = 2)
+wielomian_2 <- gstat(formula = temp~1, locations = punkty, degree = 2)
 wielomian_2_pred <- predict(wielomian_2, newdata = siatka)
-wielomian_2_pred_r <- raster(wielomian_2_pred)
-plot(wielomian_2_pred_r, main = "Powierzchnia trendu - wielomian drugiego stopnia")
-contour(wielomian_2_pred_r, add = TRUE)
+spplot(wielomian_2_pred, zcol = "var1.pred", contour = TRUE, main = "Powierzchnia trendu - wielomian drugiego stopnia")
 # wielomian 3 stopnia
-wielomian_3 <- gstat(formula = temp~1, data = punkty_sp, degree = 3)
+wielomian_3 <- gstat(formula = temp~1, locations = punkty, degree = 3)
 wielomian_3_pred <- predict(wielomian_3, newdata = siatka)
-wielomian_3_pred_r <- raster(wielomian_3_pred)
-plot(wielomian_3_pred_r, main = "Powierzchnia trendu - wielomian trzeciego stopnia")
-contour(wielomian_3_pred_r, add = TRUE)
+spplot(wielomian_3_pred, zcol = "var1.pred", contour = TRUE, main = "Powierzchnia trendu - wielomian trzeciego stopnia")
 ```
 
 ### Modele deterministyczne | Funkcje sklejane
@@ -104,12 +93,11 @@ contour(wielomian_3_pred_r, add = TRUE)
 Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**) dopasowuje krzywą powierzchnię do wartości analizowanych punktów.
 
 ```{r }
-tps <- Tps(st_coordinates(punkty), punkty$temp)
+tps <- Tps(coordinates(punkty), punkty$temp)
 ras <- raster(siatka)
 spline <- interpolate(ras, tps)
 spline <- mask(spline, ras)
-plot(spline, main = "Funkcje sklejane")
-contour(spline, add = TRUE)
+spplot(spline, contour = TRUE, main = "Funkcje sklejane")
 ```
 
 ### Modele deterministyczne | Porównanie
