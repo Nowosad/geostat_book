@@ -92,7 +92,7 @@ knitr::include_graphics("figs/eyefit.png", dpi = 90, auto_pdf = FALSE)
 ### Metody modelowania  | funkcja `fit.variogram()`
 
 Funkcja `fit.variogram()` z pakietu **gstat** dopasowuje zasięg oraz semiwariancję progową w oparciu o ustalone "ręcznie" wejściowe parametry modelu.
-<!-- https://www.r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html -->
+Więcej na temat działania tej funkcji można przeczytać we wpisie na stronie https://www.r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html.
 
 ### Metody modelowania | Liniowy model regionalizacji
 
