@@ -1,7 +1,7 @@
 
 # R a dane przestrzenne {#r-a-dane-przestrzenne}
 
-## R a dane przestrzenne
+## Wprowadzenie
 
 ### Pakiety
 
@@ -31,17 +31,27 @@ Więcej szczegółów na ten temat pakietów R służących do analizy przestrze
 
 ### Reprezentacja danych przestrzennych
 
-- Obiekty klasy `Raster*` z pakietu **raster**, tj. `RasterLayer`, `RasterStack`, `RasterBrick`
-- Inne
+Dane przestrzenne mogą być reprezentowane w R poprzez szereg różnych klas obiektów z użyciem różnych pakietów R. 
+Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klasy `Spatial*` z pakietu **sp** oraz obiekty klasy `sf` z pakietu **sf**.
 
-<!-- ### Reprezentacja danych przestrzennych  -->
+Wszystkie obiekty klasy `Spatial*` z pakietu **sp** zawierają tablę atrybutów oraz dwie dodatkowe informacje:
+    - bounding box (`bbox`) - obwiednia - określa zasięg danych
+    - CRS (`proj4string`) - układ współrzędnych
+Ten pakiet definiuje klasę obiektów - sposób reprezentacji danych.
+Najczęściej stosowane obiekty klasy `Spatial*` to `SpatialPointsDataFrame`, `SpatialPolygonsDataFrame` oraz `SpatialGridDataFrame`. 
+Ostatnia klasa reprezentuje dane rastrowe.  
+Dodatkowo ten pakiet współpracuje z pakietami **rgdal** służącym do wczytywania i zapisywania danych oraz **rgeos** służącym do przetwarzania danych przestrzennych.
+W oparciu o pakiet **sp** powstało kilkaset dodatkowych pakietów R do analizy danych przestrzennych.
 
-<!-- - Obiekty klasy `Spatial*` z pakietu **sp** - wszystkie z nich zawierają dwie dodatkowe informacje: -->
-<!--     - bounding box (`bbox`) - obwiednia - określa zasięg danych -->
-<!--     - CRS (`proj4string`) - układ współrzędnych -->
-<!-- - Najczęściej stosowane obiekty klasy `Spatial*` to `SpatialPointsDataFrame`, `SpatialPolygonsDataFrame` oraz `SpatialGridDataFrame` -->
-<!-- - Obiekty klasy `Raster*` z pakietu **raster**, tj. `RasterLayer`, `RasterStack`, `RasterBrick` -->
-<!-- - Inne -->
+Pakiet **sf** to następca pakietu **sp** oparty o OGC standard Simple Features.
+Łączy on możliwości zarówno pakietu **sp** jak i pakietów **rgdal** i **rgeos**.
+Więkość jego funkcji zaczyna się od prefiksu `st_`.
+Ten pakiet pozwala na obsługę dodatkowych typów danych wektorowych (np. poligon i multipoligon to dwie oddzielne klasy), łatwiejsze przetwarzanie danych, oraz obsługę przestrzennych baz danych takich jak PostGIS.
+Pakiet **sf** jest używany przez kilkadziesiąt dodatkowych pakietów R, jednak wiele metod i funkcji nadal wymaga obiektów klasy **sp**.
+
+Porównanie funkcji dostępnych w pakietach **sp** i **sf** można znaleźć pod adresem https://github.com/r-spatial/sf/wiki/Migrating.
+
+Dane rastrowe są reprezentowane między innymi poprzez klasę `SpatialGridDataFrame` z pakietu **sp** oraz obiekty klasy `Raster*` z pakietu **raster**, tj. `RasterLayer`, `RasterStack`, `RasterBrick`.
 
 ### GDAL/OGR
 
@@ -101,7 +111,7 @@ Nadanie układu współrzędnych odbywa się poprzez funkcję `st_as_sf()`.
 ```{r}
 library(sf)
 dane_punktowe_sf <- st_as_sf(dane_punktowe, coords = c("x", "y"))
-summary(dane_punktowe)
+summary(dane_punktowe_sf)
 ```
 
 Ważne, ale nie wymagane, jest także dodanie informacji o układzie przestrzennym danych za pomocą funkcji `st_set_crs()`. 
@@ -159,8 +169,54 @@ W tym drugim przypadku należy jedynie podać ścieżkę do pliku rastrowego.
 
 ```{r}
 library(raster)
-siatka_raster <- raster("dane/siatka.tif")
-plot(siatka_raster)
+siatka <- raster("dane/siatka.tif")
+plot(siatka)
+```
+
+## Zmiany klasy obiektów
+
+W R nie istnieje jednolity standard obsługi danych przestrzennych.
+W efekcie można czasem natrafić na komunikat podobny do poniższego błędu:
+
+```
+Error in (function (classes, fdef, mtable)  : 
+  unable to find an inherited method for function ‘raster’ for signature ‘"sf"’
+```
+
+Oznacza on, że chcemy użyć funkcję `raster()` na obiekcie klasy `sf`.
+Ta funkcja jednak wymaga innej klasy, np. obiektu `SpatialGridDataFrame`.
+Dlatego też konieczna jest wcześniej zmiana klasy naszego obiektu i do tego celu istnieje szereg funkcji zarówno dla danych wektorowych jak i rastrowych.
+
+### Dane wektorowe
+
+Konwersja obiektów klasy `sf` do `Spatial*` odbywa się poprzez funkcję `as(dane_sf, "Spatial")`:
+
+```{r}
+dane_punktowe_sp <- as(dane_punktowe_sf, "Spatial")
+dane_punktowe_sp
+```
+
+W odwrotną stronę obiekty przetwarza się używając funkcji `st_as_sf()`:
+
+```{r}
+dane_punktowe_sf <- st_as_sf(dane_punktowe_sp)
+dane_punktowe_sf
+```
+
+### Dane rastrowe
+
+Obiekty klas `Raster*` zamienia się na klasy `Spatial*` z użyciem funkcji `as(dane_raster, nowa_klasa_sp)`:
+
+```{r}
+siatka_sp <- as(siatka, "SpatialGridDataFrame")
+siatka_sp
+```
+
+Natomiast konwersja do klasy `Raster*` jest wykonywana poprzez funkcję `raster()`:
+
+```{r}
+siatka_raster <- raster(siatka_sp)
+siatka_raster
 ```
 
 ## Eksport danych
@@ -243,7 +299,7 @@ levelplot(siatka_raster, margin = FALSE)
 
 ## Tworzenie siatek
 
-W większości przypadków analiz geostatystycznych konieczne jest stworzenie siatki interpolacyjnej.
+W większości przypadków analiz geostatystycznych konieczne jest stworzenie siatki interpolacyjnej (pustego rastra).
 Istnieją dwa podstawowe rodzaje takich siatek - siatki regularne oraz siatki nieregularne.
 
 ### Siatki regularne
