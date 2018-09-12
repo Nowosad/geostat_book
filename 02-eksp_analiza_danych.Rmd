@@ -17,9 +17,9 @@ data(granica)
 Zazwyczaj przed przystąpieniem do analiz (geo-)statystycznych koniecznie jest wykonanie eksploracyjnej analizy danych nieprzestrzennych. 
 Jej ogólne cele obejmują:
 
-- Stworzenie ogólnej charakterystyki danych oraz badanego zjawiska
-- Określenie przestrzennego/czasowego typu próbkowania
-- Uzyskanie informacji o relacji pomiędzy lokalizacją obserwacji a czynnikami wpływającymi na zmienność przestrzenną badanych cech
+- Stworzenie ogólnej charakterystyki danych oraz badanego zjawiska.
+- Określenie przestrzennego/czasowego typu próbkowania.
+- Uzyskanie informacji o relacji pomiędzy lokalizacją obserwacji a czynnikami wpływającymi na zmienność przestrzenną badanych cech.
 
 ## Dane
 
@@ -29,19 +29,19 @@ Nie istnieje jedyna, optymalna ścieżka eksploracji danych.
 Proces ten różni się w zależności od posiadanego zbioru danych, jak i od postawionego pytania.
 Warto jednak, aby jednym z pierwszych kroków było przyjrzenie się danym wejściowym. 
 Pozwala na to, między innymi, funkcja `str()`. 
-Przykładowo, dla obiektu klasy `sf` wyświetla ona szereg ważnych informacji. 
-<!-- Oprócz klasy można również odczytać, że obiekt `punkty` zawiera pięć elementów (ang. *slots*) rozpoczynających się od symbolu `@`.  -->
-<!-- Pierwszy z nich, `@data` jest obiektem klasy `data.frame` zawierającym informacje o kolejnych punktach w tym zbiorze.  -->
-<!-- Element `@coords.nrs` określa numer kolumn zawierających współrzędne w oryginalnym zbiorze danych. -->
-<!-- W poniższym przypadku żadna kolumna nie ma takich informacji.  -->
-<!-- Kolejny element, `@coords` definiuje współrzędne kolejnych punktów w obiekcie `punkty`.  -->
-<!-- Ostatnie dwa elementy, `@bbox` i `@proj4string` określają kolejno zasięg przestrzenny danych oraz definicję ich układu współrzędnych. -->
+Przykładowo, dla obiektu klasy `SpatialPointsDataFrame` wyświetla ona szereg ważnych informacji. 
+OMożna tam odczytać, że obiekt `punkty` zawiera pięć elementów (ang. *slots*) rozpoczynających się od symbolu `@`.
+Pierwszy z nich, `@data` jest obiektem klasy `data.frame` zawierającym informacje o kolejnych punktach w tym zbiorze.
+Element `@coords.nrs` określa numer kolumn zawierających współrzędne w oryginalnym zbiorze danych.
+W poniższym przypadku żadna kolumna nie ma takich informacji.
+Kolejny element, `@coords` definiuje współrzędne kolejnych punktów w obiekcie `punkty`.
+Ostatnie dwa elementy, `@bbox` i `@proj4string` określają kolejno zasięg przestrzenny danych oraz definicję ich układu współrzędnych.
 
 ```{r}
 str(punkty)
 ```
 
-Oczywiście, każdą ze zmiennych można obejrzeć oddzielnie, poprzez połączenie nazwy obiekty, znaku `$`, oraz nazwy elementu.
+Każdą ze zmiennych można obejrzeć oddzielnie, poprzez połączenie nazwy obiekty, znaku `$`, oraz nazwy elementu.
 Przykładowo `punkty$temp` pozwala na obejrzenie wartości wybranej zmiennej z tabeli atrybutów.
 
 ```{r}
@@ -161,7 +161,7 @@ knitr::include_graphics("figs/qq_plot_explained.png")
 Dystrybuanta (ang. *cumulative distribution function* - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości.
 
 ```{r }
-ggplot(punkty, aes(temp)) + stat_ecdf()
+ggplot(punkty@data, aes(temp)) + stat_ecdf()
 ```
 
 ## Porównanie zmiennych
@@ -341,3 +341,12 @@ ggplot(punkty@data, aes(bc_tpz_inv)) + geom_density()
 ```
 
 -->
+
+## Zadania (#z2)
+
+<!-- Wykonać eksploracyjną nieprzestrzenną analizę danych dla zmiennej VI (czerwiec): -->
+
+<!--     Analizę typu rozkładu danych (wykresy, statystyki) -->
+<!--     Identyfikację wartości globalnie odstających -->
+<!--     Czy sumy opadów z czerwca (VI) różnią się istotnie statystycznie pomiędzy regionami klimatycznymi wyznaczonymi przez zmienną Region? -->
+
