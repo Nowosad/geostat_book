@@ -1,1 +1,6 @@
 <!-- reprex explained -->
+
+<!-- reprex - co to i po co to -->
+<!-- przykład działającego reprex -->
+<!-- przykład niedziałającego reprex z winy twórcy -->
+<!-- przykład reprex wskazującego na czyjś błąd -->
