@@ -222,3 +222,7 @@ spplot(sym_ind, main = "Symulacje warunkowe")
 -->
 
 ## Zadania {#z12}
+
+1. Symulacja bezwarunkowa
+2. Symulacja warunkowa
+3. Symulacja danych kodowanych
