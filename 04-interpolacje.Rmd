@@ -222,3 +222,13 @@ Do modeli statystycznych należą, między innymi:
 - Modele hybrydowe
 
 W kolejnych rozdziałach można znaleźć omówienie kilku podstawowych typów pierwszej z tych metod - krigingu.
+
+## Zadania {#z3}
+
+1. Korzystając z danych XX wykonaj interpolację używając:
+- Poligonów Voronoi'a
+- Metody IDW
+- Funkcji wielomianowych
+- Funckji sklejanych
+
+2. Porównaj uzyskane wyniki poprzez ich wizualizację.
