@@ -400,3 +400,5 @@ Oznacza to, że przykładowo dla kierunku 45 stopni brane pod uwagę będą wszy
 vario_kier <- variogram(temp~1, locations = punkty, alpha = c(0, 45, 90, 135))
 plot(vario_kier)
 ```
+
+## Zadania {#z5}

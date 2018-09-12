@@ -141,3 +141,5 @@ p2 <- spplot(ik16, "var1.pred", main = "Prawdopodobieństwo Temp < 16")
 p3 <- spplot(ik12, "var1.pred", main = "Prawdopodobieństwo Temp < 12")
 grid.arrange(p1, p2, p3, ncol = 1)
 ```
+
+## Zadania {#z8}

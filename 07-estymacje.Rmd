@@ -196,3 +196,5 @@ p2 <- spplot(ok, "var1.pred", at = ramp, main = "OK")
 p3 <- spplot(kzt, "var1.pred", at = ramp, main = "KZT")
 grid.arrange(p1, p2, p3, ncol = 1, padding = unit(0, "line"))
 ```
+
+## Zadania {#z7}

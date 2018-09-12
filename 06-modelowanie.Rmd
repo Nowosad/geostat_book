@@ -287,3 +287,5 @@ vario_kier_fit2 <- fit.variogram(vario_kier, vgm(model = "Sph", anis = c(45, 0.4
 plot(vario_kier, vario_kier_fit2, as.table = TRUE)
 ```
 
+## Zadania {#z6}
+

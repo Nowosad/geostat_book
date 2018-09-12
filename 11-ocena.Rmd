@@ -273,3 +273,5 @@ krige.cv
 # spplot(grid, 'KU_se')
 ```
 -->
+
+## Zadania {#z11}

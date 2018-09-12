@@ -220,3 +220,5 @@ spplot(sym_ind, main = "Symulacje warunkowe")
 <!--
 łączenie sis - wiele symulacji
 -->
+
+## Zadania {#z12}
