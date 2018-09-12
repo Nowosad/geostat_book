@@ -1,1 +1,4 @@
 <!-- opis danych do książki -->
+<!-- opis po kolei wszystkich danych z pakietu oraz z udostępnionych plików -->
+<!-- + wykresy i mapy -->
+<!-- btw przygotuj dane z wyspy wolin do przykładów? -->
