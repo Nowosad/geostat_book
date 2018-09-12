@@ -43,14 +43,6 @@ Ostatnia klasa reprezentuje dane rastrowe.
 Dodatkowo ten pakiet współpracuje z pakietami **rgdal** służącym do wczytywania i zapisywania danych oraz **rgeos** służącym do przetwarzania danych przestrzennych.
 W oparciu o pakiet **sp** powstało kilkaset dodatkowych pakietów R do analizy danych przestrzennych.
 
-Pakiet **sf** to następca pakietu **sp** oparty o OGC standard Simple Features.
-Łączy on możliwości zarówno pakietu **sp** jak i pakietów **rgdal** i **rgeos**.
-Więkość jego funkcji zaczyna się od prefiksu `st_`.
-Ten pakiet pozwala na obsługę dodatkowych typów danych wektorowych (np. poligon i multipoligon to dwie oddzielne klasy), łatwiejsze przetwarzanie danych, oraz obsługę przestrzennych baz danych takich jak PostGIS.
-Pakiet **sf** jest używany przez kilkadziesiąt dodatkowych pakietów R, jednak wiele metod i funkcji nadal wymaga obiektów klasy **sp**.
-
-Porównanie funkcji dostępnych w pakietach **sp** i **sf** można znaleźć pod adresem https://github.com/r-spatial/sf/wiki/Migrating.
-
 Dane rastrowe są reprezentowane między innymi poprzez klasę `SpatialGridDataFrame` z pakietu **sp** oraz obiekty klasy `Raster*` z pakietu **raster**, tj. `RasterLayer`, `RasterStack`, `RasterBrick`.
 
 ### GDAL/OGR
@@ -78,6 +70,12 @@ Dane rastrowe są reprezentowane między innymi poprzez klasę `SpatialGridDataF
 
 `"+init=epsg:2180"`
 
+### GEOS
+
+- http://geos.osgeo.org/
+- GEOS to biblioteka pozwalająca na przetwarzanie obiektów przestrzennych
+- Przykładowe funkcje tej biblioteki to tworzenie buforów, wyliczanie centroidów, określanie relacji topologicznych (np. przecina, zawiera, etc.) i wiele innych
+
 ### Układ geograficzny
 
 - Proporcje pomiędzy współrzędną oznaczającą długość geograficzną (X) a oznaczającą szerokość geograficzną (Y) nie są równe 1:1
@@ -85,6 +83,10 @@ Dane rastrowe są reprezentowane między innymi poprzez klasę `SpatialGridDataF
 - Nie pozwala to na proste określanie odległości czy powierzchni
 - Jednostka mapy jest abstrakcyjna
 - Powyższe cechy układów geograficznych powodują, że do większości algorytmów w geostatystyce wykorzystywane są układy współrzędnych prostokątnych płaskich
+
+### Układ współrzędnych prostokątnych płaskich
+
+- 
 
 ## Import danych
 
@@ -104,26 +106,27 @@ head(dane_punktowe)
 ```
 
 Po wczytaniu za pomocą funkcji `read.csv()`, nowy obiekt (np. `dane_punktowe`) jest reprezentowany za pomocą klasy nieprzestrzennej `data.frame`. 
-Aby obiekt został przetworzony do klasy przestrzennej, konieczne jest określenie które kolumny zawierają informacje o współrzędnych.
-W tym wypadku współrzędne znajduję się w kolumnach `x` oraz `y`. 
-Nadanie układu współrzędnych odbywa się poprzez funkcję `st_as_sf()`.
+Aby obiekt został przetworzony do klasy przestrzennej, konieczne jest nadanie mu współrzędnych.
+W tym wypadku współrzędne znajdowały się w kolumnach `x` oraz `y`. 
+Nadanie układu współrzędnych odbywa się poprzez funkcję `coordinates()`.
 
-```{r}
-library(sf)
-dane_punktowe_sf <- st_as_sf(dane_punktowe, coords = c("x", "y"))
-summary(dane_punktowe_sf)
+```{r, message=FALSE}
+library(sp)
+coordinates(dane_punktowe) <- ~x + y
+summary(dane_punktowe)
 ```
 
-Ważne, ale nie wymagane, jest także dodanie informacji o układzie przestrzennym danych za pomocą funkcji `st_set_crs()`. 
+Ważne, ale nie wymagane, jest także dodanie informacji o układzie przestrzennym danych za pomocą funkcji `proj4string()`. 
 
 ```{r}
-dane_punktowe_sf <- st_set_crs(dane_punktowe_sf, 2180)
+proj4string(dane_punktowe) <- "+init=epsg:2180"
+summary(dane_punktowe)
 ```
 
-Proste wizualizacje uzyskanych danych klasy przestrzennej, np. `sf`, można uzyskać za pomocą funkcji `plot()`.
+Proste wyświetlenie uzyskanych danych klasy przestrzennej, np. `SpatialPointsDataFrame`, można uzyskać za pomocą funkcji `plot()`.
 
 ```{r}
-plot(dane_punktowe_sf)
+plot(dane_punktowe)
 ```
 
 <!--
@@ -151,15 +154,18 @@ sp_na_omit <- function(x, margin=1) {
 
 ### Dane poligonowe (formaty gisowe)
 
-Dane wektorowe (np. w formacie ESRI Shapefile czy GeoPackage) można odczytać za pomocą funkcji `st_read()` z pakietu **sf**.
-Przyjmuje ona co najmniej jeden argument - `dsn`, który określa główny plik w którym znajdują się dane. 
+Dane wektorowe (np. shapefile) można odczytać za pomocą funkcji `readOGR()` z pakietu **rgdal**. 
+Dla danych w formacie shapefile, przyjmuje ona co najmniej dwa argumenty - `dsn` oraz `layer`. 
+Argument `dsn` określa folder, w którym znajdują się dane. 
+W przypadku, gdy dane znajdują się w folderze roboczym należy ten argument określić za pomocą znaku kropki (`"."`). 
+Argument `layer` wymaga podania nazwy pliku bez jego rozszerzenia.
+Przykładowo, gdy pliki nazywają się `granica.dbf`, `granica.prj`, `granica.shp`, oraz `granica.shx` - konieczne jest podanie w argumencie `layer` jedynie nazwy `granica`.
 
 ```{r}
-library(sf)
-granica <- st_read(dsn = "dane/granica.gpkg")
+library(rgdal)
+granica <- readOGR(dsn = "dane", layer = "granica")
+plot(granica)
 ```
-
-Alternatywną możliwością jest użycie funkcji `readOGR()` z pakietu **rgdal**.
 
 ### Rastry
 
@@ -169,54 +175,8 @@ W tym drugim przypadku należy jedynie podać ścieżkę do pliku rastrowego.
 
 ```{r}
 library(raster)
-siatka <- raster("dane/siatka.tif")
-plot(siatka)
-```
-
-## Zmiany klasy obiektów
-
-W R nie istnieje jednolity standard obsługi danych przestrzennych.
-W efekcie można czasem natrafić na komunikat podobny do poniższego błędu:
-
-```
-Error in (function (classes, fdef, mtable)  : 
-  unable to find an inherited method for function ‘raster’ for signature ‘"sf"’
-```
-
-Oznacza on, że chcemy użyć funkcję `raster()` na obiekcie klasy `sf`.
-Ta funkcja jednak wymaga innej klasy, np. obiektu `SpatialGridDataFrame`.
-Dlatego też konieczna jest wcześniej zmiana klasy naszego obiektu i do tego celu istnieje szereg funkcji zarówno dla danych wektorowych jak i rastrowych.
-
-### Dane wektorowe
-
-Konwersja obiektów klasy `sf` do `Spatial*` odbywa się poprzez funkcję `as(dane_sf, "Spatial")`:
-
-```{r}
-dane_punktowe_sp <- as(dane_punktowe_sf, "Spatial")
-dane_punktowe_sp
-```
-
-W odwrotną stronę obiekty przetwarza się używając funkcji `st_as_sf()`:
-
-```{r}
-dane_punktowe_sf <- st_as_sf(dane_punktowe_sp)
-dane_punktowe_sf
-```
-
-### Dane rastrowe
-
-Obiekty klas `Raster*` zamienia się na klasy `Spatial*` z użyciem funkcji `as(dane_raster, nowa_klasa_sp)`:
-
-```{r}
-siatka_sp <- as(siatka, "SpatialGridDataFrame")
-siatka_sp
-```
-
-Natomiast konwersja do klasy `Raster*` jest wykonywana poprzez funkcję `raster()`:
-
-```{r}
-siatka_raster <- raster(siatka_sp)
-siatka_raster
+siatka_raster <- raster("dane/siatka.tif")
+plot(siatka_raster)
 ```
 
 ## Eksport danych
@@ -224,66 +184,55 @@ siatka_raster
 ### Zapisywanie danych wektorowych
 
 R pozwala również na zapisywanie danych przestrzennych. 
-W przypadku zapisu danych wektorowych za pomocą funkcji `st_write()` konieczne jest podanie ścieżki i  nazwy zapisywanego obiektu wraz z rozszerzeniem (np. `dane/granica.gpkg`).
+W przypadku zapisu danych wektorowych za pomocą funkcji `writeOGR()` konieczne jest podanie nazwy zapisywanego obiektu (np. `poligon`), folderu w którym chcemy zapisać plik (np. `nazwa_folderu`), nazwę zapisywanych plików bez rozszerzenia (np. `nowy_poligon`), oraz sterownik - w przypadku danych shapefile jest to `ESRI Shapefile`.
 
 ```{r zapis_wektora, eval=FALSE}
-st_write(granica, dsn = "dane/granica.gpkg")
+writeOGR(poligon, dsn = "nazwa_folderu", layer = "nowy_poligon", driver = "ESRI Shapefile")
 ```
 
 ### Zapisywanie danych rastrowych
 
 Najprostszym sposobem zapisania danych rastrowych jest użycie funkcji `writeRaster()`. 
-Wymaga ona podania dwóch argumentów - nazwy zapisywanego obiektu (np. `siatka_raster`) oraz ścieżki i nazwy nowego pliku wraz z rozszerzeniem (np. `dane/nowa_siatka.tif`).
+Wymaga ona podania dwóch argumentów - nazwy zapisywanego obiektu (np. `siatka_raster`) oraz ścieżki i nazwy nowego pliku wraz z rozszerzeniem (np. `nazwa_folderu/nowy_raster.tif`).
 
 ```{r zapis_rastra, eval=FALSE}
-writeRaster(siatka_raster, filename = "dane/nowa_siatka.tif")
+writeRaster(siatka_raster, filename = "nazwa_folderu/nowy_raster.tif")
 ```
-
-Możliwe jest także użycie szeregu dodatkowych argumentów, np.:
-- `datatype` - określającego typ danych wyjściowych (`?dataType`) 
-- `options` - pozwalającego na użycie dodatkowych opcji sterownika, np. użycie kompresji danych
 
 ## Wizualizacja danych 2D
 
 Do wizualizacji danych przestrzennych w R służy co najmniej kilkanaście różnych pakietów. 
-Poniżej pokazane są przykłady kilku najprostszych funkcji - standardowej funkcji `plot()` oraz `levelplot()` z pakietu **rasterVis**.
-Więcej o wizualizacji danych przestrzennych można przeczytać w rozdziale [Making maps with R](https://geocompr.robinlovelace.net/adv-map.html) książki Geocomputation with R.
+Poniżej pokazane są przykłady kilku najprostszych funkcji - `plot()` oraz `spplot()` z pakietu `sp` oraz `levelplot()` z pakietu `rasterVis`.
 
 ### Dane punktowe
 
 Funkcja `plot()` idealnie nadaje się do szybkiego przyjrzenia się, np. rodzajowi próbkowania danych.
-Domyślnie wyświetla ona szereg map - po jeden dla każdej zmiennej:
 
 ```{r}
-plot(dane_punktowe_sf)
+plot(dane_punktowe)
 ```
 
-Do wyświetlenia tylko geometrii (np. punktów) bez atrybutów służy funkcja `plot()` połączona z funkcją `st_geometry()`:
-
-```{r}
-plot(st_geometry(dane_punktowe_sf))
-```
-
-Aby wyświetlić tylko jedną zmienną należy ją zadeklarować poprzez nawias kwadratowy.
+Funkcja `spplot()` w prosty sposób pozwala na obejrzenie rozkładu wartości wybranej zmiennej. 
+Należy w niej podać nazwę obiektu oraz nazwę wyświetlanej zmiennej. 
 Poniżej można zobaczyć przykłady dla zmiennych `temp` oraz `srtm`.
 
-```{r}
-plot(dane_punktowe_sf["temp"])
+```{r }
+spplot(dane_punktowe, "temp")
 ```
 
-```{r}
-plot(dane_punktowe_sf["srtm"])
+```{r }
+spplot(dane_punktowe, "srtm")
 ```
 
 ### Dane punktowe - kategorie
 
 Nie zawsze dane mają postać ciągłych wartości - bywają one również określeniami różnych klas. 
-W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci kategoryzowanej (`as.factor()`).
-Następnie można je wyświetlić za pomocą funkcji `plot()`.
+W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci kategorycznej (`as.factor()`).
+Następnie można je wyświetlić za pomocą funkcji `spplot()`.
 
-```{r}
-dane_punktowe_sf$clc <- as.factor(dane_punktowe_sf$clc)
-plot(dane_punktowe_sf["clc"])
+```{r }
+dane_punktowe@data$clc <- as.factor(dane_punktowe@data$clc)
+spplot(dane_punktowe, "clc")
 ```
 
 ### Rastry
@@ -296,3 +245,8 @@ W poniższym przypadku dodatkowo ustawiono argument `margin = FALSE` co wyłącz
 library(rasterVis)
 levelplot(siatka_raster, margin = FALSE)
 ```
+
+## Zadania {#z1}
+
+1. Wczytaj dane z pliku XX, przetwórz je do postaci obiektu przestrzennego, stwórz mapę zmiennej XX, a następnie zapisz obiekt przestrzenny do formatu XX.
+2. Stwórz powtarzalny przykład (ang. *reproducible example*) w oparciu o stworzony kod używając pakietu **reprex**.
