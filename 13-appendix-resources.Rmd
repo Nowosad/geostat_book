@@ -1,6 +1,4 @@
----
-knit: bookdown::preview_chapter
----
+# (APPENDIX) Appendix {-}
 
 # Źródła wiedzy {#zrodla-wiedzy}
 
