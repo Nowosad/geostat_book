@@ -1,4 +1,4 @@
-# (APPENDIX) Appendix {-}
+# Dane
 
 <!-- opis danych do książki -->
 <!-- opis po kolei wszystkich danych z pakietu oraz z udostępnionych plików -->
