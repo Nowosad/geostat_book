@@ -1,3 +1,5 @@
+# Inne pakiety R do danych przestrzennych {#r-spatial}
+
 <!-- move stuff about raster and sf here -->
 <!-- remove all of the raster stuff from the chapters -->
 
