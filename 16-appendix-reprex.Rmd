@@ -1,3 +1,15 @@
+# Powtarzalny przykład
+
+## ....
+
+Powtarzalny przykład 
+
+
+## Pakiet **reprex**
+
+
+## Tworzenie powtarzalnego przykładu
+
 <!-- reprex explained -->
 
 <!-- reprex - co to i po co to -->
