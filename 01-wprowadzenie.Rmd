@@ -10,9 +10,9 @@ Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi:
 
 <!-- uzupełnij -->
 
-- GIS - **sp**, **raster**
-- Geostatystyka - **gstat**, **geoR**
-    
+- GIS - **sf**, **raster**, **sp**, **rgdal**, **rgeos**
+- Geostatystyka - **gstat**, **geoR**, **geoRglm**
+
 <!-- - GIS - **sp**, **rgdal**, **raster**, **rasterVis**, **rgeos**, **maptools**, **GeoXp**, **deldir**, **pgirmess**, **spatstat** -->
 <!-- - Geostatystyka - **gstat**, **geoR**, **geoRglm**, **fields**, **spBayes**, **RandomFields**, **vardiag** -->
 
@@ -32,7 +32,8 @@ Więcej szczegółów na ten temat pakietów R służących do analizy przestrze
 ### Reprezentacja danych przestrzennych
 
 Dane przestrzenne mogą być reprezentowane w R poprzez szereg różnych klas obiektów z użyciem różnych pakietów R. 
-Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klasy `Spatial*` z pakietu **sp** oraz obiekty klasy `sf` z pakietu **sf**.
+Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klas `Spatial*` z pakietu **sp** oraz obiekty klasy `sf` z pakietu **sf**.
+Więcej o pakiecie **sf** można przeczytać w appendiksie \@ref(r-spatial).
 
 Wszystkie obiekty klasy `Spatial*` z pakietu **sp** zawierają tablę atrybutów oraz dwie dodatkowe informacje:
     - bounding box (`bbox`) - obwiednia - określa zasięg danych
@@ -86,7 +87,8 @@ Dane rastrowe są reprezentowane między innymi poprzez klasę `SpatialGridDataF
 
 ### Układ współrzędnych prostokątnych płaskich
 
-- 
+- Okreslane są w miarach liniowych (np. metrach)
+<!-- -->
 
 ## Import danych
 
@@ -98,35 +100,35 @@ Do najpopularniejszych należą dane tekstowe z plików .csv, dane wektorowe z p
 Dane z plików tekstowych (np. .csv) można odczytać za pomocą uogólnionej funkcji `read.table()` lub też funkcji szczegółowych - `read.csv()` lub `read.csv2()`.
 
 ```{r}
-dane_punktowe <- read.csv("dane/punkty.csv")
+punkty_sp <- read.csv("dane/punkty.csv")
 ```
 
 ```{r}
-head(dane_punktowe)
+head(punkty_sp)
 ```
 
-Po wczytaniu za pomocą funkcji `read.csv()`, nowy obiekt (np. `dane_punktowe`) jest reprezentowany za pomocą klasy nieprzestrzennej `data.frame`. 
+Po wczytaniu za pomocą funkcji `read.csv()`, nowy obiekt (np. `punkty_sp`) jest reprezentowany za pomocą klasy nieprzestrzennej `data.frame`. 
 Aby obiekt został przetworzony do klasy przestrzennej, konieczne jest nadanie mu współrzędnych.
 W tym wypadku współrzędne znajdowały się w kolumnach `x` oraz `y`. 
 Nadanie układu współrzędnych odbywa się poprzez funkcję `coordinates()`.
 
 ```{r, message=FALSE}
 library(sp)
-coordinates(dane_punktowe) <- ~x + y
-summary(dane_punktowe)
+coordinates(punkty_sp) <- ~x + y
+summary(punkty_sp)
 ```
 
 Ważne, ale nie wymagane, jest także dodanie informacji o układzie przestrzennym danych za pomocą funkcji `proj4string()`. 
 
 ```{r}
-proj4string(dane_punktowe) <- "+init=epsg:2180"
-summary(dane_punktowe)
+proj4string(punkty_sp) <- "+init=epsg:2180"
+summary(punkty_sp)
 ```
 
 Proste wyświetlenie uzyskanych danych klasy przestrzennej, np. `SpatialPointsDataFrame`, można uzyskać za pomocą funkcji `plot()`.
 
 ```{r}
-plot(dane_punktowe)
+plot(punkty_sp)
 ```
 
 <!--
@@ -163,7 +165,7 @@ Przykładowo, gdy pliki nazywają się `granica.dbf`, `granica.prj`, `granica.sh
 
 ```{r}
 library(rgdal)
-granica <- readOGR(dsn = "dane", layer = "granica")
+granica <- readOGR(dsn = "dane/granica.gpkg")
 plot(granica)
 ```
 
@@ -171,12 +173,12 @@ plot(granica)
 
 Istnieje kilka sposobów odczytu danych rastrowych w R. 
 Do najpopularniejszych należą funkcje `readGDAL()` z pakietu `rgdal` oraz `raster()` z pakietu **raster**.
-W tym drugim przypadku należy jedynie podać ścieżkę do pliku rastrowego.
+Należy w nich jedynie podać ścieżkę do pliku rastrowego.
 
 ```{r}
 library(raster)
-siatka_raster <- raster("dane/siatka.tif")
-plot(siatka_raster)
+siatka_sp <- readGDAL("dane/siatka.tif")
+plot(siatka_sp)
 ```
 
 ## Eksport danych
@@ -184,32 +186,45 @@ plot(siatka_raster)
 ### Zapisywanie danych wektorowych
 
 R pozwala również na zapisywanie danych przestrzennych. 
-W przypadku zapisu danych wektorowych za pomocą funkcji `writeOGR()` konieczne jest podanie nazwy zapisywanego obiektu (np. `poligon`), folderu w którym chcemy zapisać plik (np. `nazwa_folderu`), nazwę zapisywanych plików bez rozszerzenia (np. `nowy_poligon`), oraz sterownik - w przypadku danych shapefile jest to `ESRI Shapefile`.
+W przypadku zapisu danych wektorowych za pomocą funkcji `writeOGR()` konieczne jest podanie nazwy zapisywanego obiektu (np. `granica`), folderu w którym chcemy zapisać plik (np. `dane`), nazwę zapisywanych plików bez rozszerzenia (np. `nowa_granica`), oraz sterownik - w przypadku danych shapefile jest to `ESRI Shapefile`.
 
-```{r zapis_wektora, eval=FALSE}
-writeOGR(poligon, dsn = "nazwa_folderu", layer = "nowy_poligon", driver = "ESRI Shapefile")
+```{r zapis_wektora1, eval=FALSE}
+# formaty wektorowe
+writeOGR(granica, dsn = "dane", layer = "nowa_granica", driver = "ESRI Shapefile")
+```
+
+Zapisywanie w bazach danych przestrzennych odbywa się poprzez nazwy zapisywanego obiektu (np. `granica`), ścieżki do zapisywanego pliku (np. `dane/nowa_granica.gpkg`), nazwę dla nowoutworzonej warstwy (np. `granica`), oraz sterownik - w przypadku danych GeoPackage jest to `GPKG`.
+
+```{r zapis_wektora2, eval=FALSE}
+# bazy danych przestrzennych
+writeOGR(granica, dsn = "dane/nowa_granica.gpkg", layer = "granica", driver = "GPKG")
 ```
 
 ### Zapisywanie danych rastrowych
 
-Najprostszym sposobem zapisania danych rastrowych jest użycie funkcji `writeRaster()`. 
-Wymaga ona podania dwóch argumentów - nazwy zapisywanego obiektu (np. `siatka_raster`) oraz ścieżki i nazwy nowego pliku wraz z rozszerzeniem (np. `nazwa_folderu/nowy_raster.tif`).
+Funkcja `writeGDAL()` pozwala na zapisywanie danych rastrowych.
+Wymaga ona podania dwóch argumentów - nazwy zapisywanego obiektu (np. `siatka_sp`) oraz ścieżki i nazwy nowego pliku wraz z rozszerzeniem (np. `dane/nowy_siatka.tif`).
 
 ```{r zapis_rastra, eval=FALSE}
-writeRaster(siatka_raster, filename = "nazwa_folderu/nowy_raster.tif")
+writeGDAL(siatka_sp, fname = "dane/nowy_siatka.tif")
 ```
+
+Możliwe jest także użycie szeregu dodatkowych argumentów, np.:
+- `type` - określającego typ danych wyjściowych 
+- `options` - pozwalającego na użycie dodatkowych opcji sterownika, np. użycie kompresji danych
 
 ## Wizualizacja danych 2D
 
 Do wizualizacji danych przestrzennych w R służy co najmniej kilkanaście różnych pakietów. 
 Poniżej pokazane są przykłady kilku najprostszych funkcji - `plot()` oraz `spplot()` z pakietu `sp` oraz `levelplot()` z pakietu `rasterVis`.
+Więcej o wizualizacji danych przestrzennych można przeczytać w rozdziale [Making maps with R](https://geocompr.robinlovelace.net/adv-map.html) książki Geocomputation with R.
 
 ### Dane punktowe
 
 Funkcja `plot()` idealnie nadaje się do szybkiego przyjrzenia się, np. rodzajowi próbkowania danych.
 
 ```{r}
-plot(dane_punktowe)
+plot(punkty_sp)
 ```
 
 Funkcja `spplot()` w prosty sposób pozwala na obejrzenie rozkładu wartości wybranej zmiennej. 
@@ -217,11 +232,11 @@ Należy w niej podać nazwę obiektu oraz nazwę wyświetlanej zmiennej.
 Poniżej można zobaczyć przykłady dla zmiennych `temp` oraz `srtm`.
 
 ```{r }
-spplot(dane_punktowe, "temp")
+spplot(punkty_sp, "temp")
 ```
 
 ```{r }
-spplot(dane_punktowe, "srtm")
+spplot(punkty_sp, "srtm")
 ```
 
 ### Dane punktowe - kategorie
@@ -231,19 +246,21 @@ W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci katego
 Następnie można je wyświetlić za pomocą funkcji `spplot()`.
 
 ```{r }
-dane_punktowe@data$clc <- as.factor(dane_punktowe@data$clc)
-spplot(dane_punktowe, "clc")
+punkty_sp@data$clc <- as.factor(punkty_sp@data$clc)
+spplot(punkty_sp, "clc")
 ```
 
 ### Rastry
 
-Wyświetlanie danych w formacie rastrowym może odbyć się z użyciem funkcji `levelplot()`. 
-Wymaga ona jedynie zdefiniowania obiektu do wizualizacji. 
-W poniższym przypadku dodatkowo ustawiono argument `margin = FALSE` co wyłącza wyświetlanie tzw. histogramów krawędziowych (ang. *marginal histogram*).
+Wyświetlanie danych w formacie rastrowym może odbyć się z użyciem funkcji `plot()` lub `spplot()`.
+Pierwsza z nich wymaga zdefiniowania obiektu do wizualizacji i domyślnie wyświetla pierwszą warstwę obiektu.
+Druga z nich domyślnie wyświetla wszystkie dostępne warstwy lub też pojedynczą warstwę poprzez podanie jej nazwy:
 
 ```{r, message=FALSE, warning=FALSE}
-library(rasterVis)
-levelplot(siatka_raster, margin = FALSE)
+# pierwsza zmienna
+plot(siatka_sp)
+# wybrana zmienna
+spplot(siatka_sp, "band3")
 ```
 
 ## Zadania {#z1}
