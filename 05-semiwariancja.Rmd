@@ -1,13 +1,14 @@
 
 # Geostatystyka - prolog {#geostatystyka-prolog}
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, message=FALSE, warning=FALSE}
-library(gstat)
 library(sp)
+library(rgeos)
+library(gstat)
 library(pgirmess)
 library(ggplot2)
-library(raster)
-library(rasterVis)
 library(geostatbook)
 data(punkty)
 data(siatka)
@@ -245,7 +246,7 @@ W oparciu o semiwariogram empiryczny (czyli oparty na danych) możemy następnie
 - Połowa pierwiastka powierzchni:
 
 ```{r }
-pow <- area(granica)
+pow <- gArea(granica)
 0.5 * sqrt(pow)
 ```
 
@@ -267,7 +268,7 @@ z_kwadrat <- kraw_x ^ 2 + kraw_y ^ 2
 - Powierzchnia zajmowana przez jedną próbkę:
 
 ```{r }
-pow_pr <- area(granica) / nrow(punkty)
+pow_pr <- gArea(granica) / nrow(punkty)
 pow_pr
 ```
 
