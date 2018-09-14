@@ -342,7 +342,7 @@ ggplot(punkty@data, aes(bc_tpz_inv)) + geom_density()
 
 -->
 
-## Zadania (#z2)
+## Zadania {#z2}
 
 <!-- Wykonać eksploracyjną nieprzestrzenną analizę danych dla zmiennej VI (czerwiec): -->
 
