@@ -22,7 +22,7 @@ knitr::include_graphics("Rfigs/book_cover.png")
 
 Masz przed sobą skrypt zawierający materiały do ćwiczeń z geostatystyki.
 Składa się ona z kilkunastu rozdziałów pokazujących jak: dodawać i wizualizować dane przestrzenne w R (rozdział \@ref(r-a-dane-przestrzenne)), wykonywać wstępną eksplorację danych nieprzestrzennych (rozdział \@ref(eksploracja-analiza-danych-nieprzestrzennych)), wstępnie analizować dane przestrzenne (rozdział \@ref(eksploracyjna-analiza-danych-przestrzennych)), wykorzystywać deterministyczne metody interpolacji (rozdział \@ref(metody-interpolacji)), rozumieć i tworzyć przestrzenne miary podobieństwa i niepodobieństwa (rozdział \@ref(geostatystyka-prolog)), modelować semiwariogramy bezkierunkowe i kierunkowe (rozdział \@ref(modelowanie-matematycznie-autokorelacji-przestrzennej)), tworzyć estymacje jednozmienne (rozdział \@ref(estymacje-jednozmienne)), estymacje danych kodowanych (rozdział \@ref(estymacja-lokalnego-rozkadu-prawdopodobienstwa)), estymacje wielozmienne (rozdział \@ref(estymacje-wielozmienne)), estymacje wykorzystujące dane uzupełniające (rozdział \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych)), oceniać jakość wykonanych estymacji (rozdział \@ref(ocena-jakosci-estymacji)) oraz budować symulacje przestrzenne (rozdział \@ref(symulacje)).
-Dodatkowo w rozdziale \@ref(zrodla-wiedzy) można znaleźć odnośniki do innych materiałów związanych z geostatystyką i R.
+Dodatkowo w appendiksie \@ref(zrodla-wiedzy) można znaleźć odnośniki do innych materiałów związanych z geostatystyką i R.
 Wszystkie zaprezentowane przykłady zawierają również kod w języku R.
 Skrypt został stworzony w R [@R-base] z wykorzystaniem pakietów `bookdown` [@R-bookdown], `rmarkdown` [@R-rmarkdown], `knitr` [@R-knitr] oraz programu [Pandoc](http://pandoc.org/). 
 Aktualna wersja skryptu znajduje się pod adresem https://bookdown.org/nowosad/Geostatystyka/. 
@@ -44,7 +44,7 @@ Dodatkowo, użyte zostały poniższe pakiety R [@R-caret;@R-corrplot;@R-dismo;@R
 ```{r pakietsy}
 pakiety <- c(
   "caret", "corrplot", "dismo", "fields", "ggplot2", "gridExtra",
-  "gstat", "pgirmess", "raster", "rasterVis", "rgdal", "rgeos", "sp"
+  "gstat", "mapview", "pgirmess", "rgdal", "rgeos", "sp"
 )
 ```
 
@@ -52,7 +52,7 @@ pakiety <- c(
 knitr::write_bib(c(pakiety, "bookdown", "knitr", "rmarkdown", "geostatbook", "base"), "packages.bib", width = 60)
 ```
 
-Pakiety R używane w tym skrypcie można również zainstalować poprzez funkcję `install.packages()`:
+Pakiety R używane w tym skrypcie można zainstalować poprzez funkcję `install.packages()`:
 
 ```{r pakiety_inst, eval=FALSE}
 install.packages(pakiety)
