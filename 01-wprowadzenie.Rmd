@@ -33,7 +33,6 @@ Więcej szczegółów na ten temat pakietów R służących do analizy przestrze
 
 Dane przestrzenne mogą być reprezentowane w R poprzez szereg różnych klas obiektów z użyciem różnych pakietów R. 
 Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klas `Spatial*` z pakietu **sp** oraz obiekty klasy `sf` z pakietu **sf**.
-Więcej o pakiecie **sf** można przeczytać w appendiksie \@ref(r-spatial).
 
 Wszystkie obiekty klasy `Spatial*` z pakietu **sp** zawierają tablę atrybutów oraz dwie dodatkowe informacje:
     - bounding box (`bbox`) - obwiednia - określa zasięg danych
@@ -45,6 +44,8 @@ Dodatkowo ten pakiet współpracuje z pakietami **rgdal** służącym do wczytyw
 W oparciu o pakiet **sp** powstało kilkaset dodatkowych pakietów R do analizy danych przestrzennych.
 
 Dane rastrowe są reprezentowane między innymi poprzez klasę `SpatialGridDataFrame` z pakietu **sp** oraz obiekty klasy `Raster*` z pakietu **raster**, tj. `RasterLayer`, `RasterStack`, `RasterBrick`.
+
+Więcej o pakiecie **sf** oraz **raster** można przeczytać w [rozdziale drugim](https://geocompr.robinlovelace.net/spatial-class.html) Geocomputation with R.
 
 ### GDAL/OGR
 
