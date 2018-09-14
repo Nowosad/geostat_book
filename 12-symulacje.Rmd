@@ -1,11 +1,13 @@
 
 # Symulacje {#symulacje}
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, message=FALSE, warning=FALSE}
-library(gstat)
 library(sp)
+library(gstat)
 library(ggplot2)
-library(raster)
+# library(raster)
 library(geostatbook)
 data(punkty)
 data(siatka)
@@ -126,8 +128,8 @@ shapiro.test(punkty$temp_log)
 Dalsze etapy przypominają przeprowadzenie estymacji statystycznej, jedynym wyjątkiem jest dodanie argumentu mówiącego o liczbie symulacji do przeprowadzenia (`nsim` w funkcji `krige()`).
 
 ```{r sym_ok, cache=TRUE}
-vario <- variogram(temp_log~1, punkty)
-model <- vgm(0.05, model = "Sph", range = 4500, nugget = 0.005)
+vario <- variogram(temp_log~1, locations = punkty)
+model <- vgm(model = "Sph", nugget = 0.005)
 fitted <- fit.variogram(vario, model)
 plot(vario, model = fitted)
 sym_ok <- krige(temp_log~1, 
@@ -164,19 +166,31 @@ sym_sk <- krige(temp_log~1,
                 nmax = 30)
 ```
 
-Uzyskane wyniki należy przeliczyć do oryginalnej jednostki, a następnie wyliczyć odchylenie standardowe ich wartości (używając funkcji `stack()` i `calc()` z pakietu **raster**).
+Uzyskane wyniki należy przeliczyć do oryginalnej jednostki, a następnie wyliczyć odchylenie standardowe ich wartości.
+Można to zrobić korzystając dwukrotnie z funkcji `apply()`.
+Prywrócenie oryginalnej jednostki odbywa się poprzez argumenty `MARGIN = 2` oraz `FUN = exp`.
+Oznacza on, że funkcja `exp()` będzie wykonana na każdej kolumnie.
+W efekcie tej operacji liczba kolumn nie ulega zmianie.
 
 ```{r unitsexp}
-sym_sk@data <- as.data.frame(apply(sym_sk@data, 2, exp))
-sym_sk <- stack(sym_sk)
-sym_sk_sd <- calc(sym_sk, fun = sd)
+# przywrócenie oryginalnej jednostki
+sym_sk@data <- data.frame(apply(sym_sk@data, MARGIN = 2, FUN = exp))
 ```
 
-W efekcie otrzymujemy mapę odchylenia standardowego symulowanych wartości.
+Wyliczenie odchylenia standardowego odbywa się poprzez argumenty `MARGIN = 1` oraz `FUN = sd`.
+W ten sposób funkcja `sd()` będzie wykonana na każdym wierszy.
+W efekcie tej operacji otrzymuje się tylko jedną kolumnę.
+
+```{r unitsexp2}
+# przywrócenie wyliczenie odchylenia standardowego
+sym_sk@data <- data.frame(apply(sym_sk@data, MARGIN = 1, FUN = sd))
+```
+
+Finalnie otrzymujemy mapę odchylenia standardowego symulowanych wartości.
 Można na niej odczytać obszary o najpewniejszych (najmniej zmiennych) wartościach (niebieski kolor) oraz obszary o największej zmienności cechy (kolor żółty).
 
 ```{r}
-spplot(sym_sk_sd)
+spplot(sym_sk)
 ```
 
 ## Sekwencyjna symulacja danych kodowanych
@@ -196,7 +210,7 @@ W tej metodzie kolejne etapy przypominają przeprowadzenie krigingu danych kodow
 Jedynie w funkcji `krige()` należy dodać argument mówiący o liczbie symulacji do przeprowadzenia (`nsim`).
 
 ```{r sym_ind, cache=TRUE}
-vario_ind <- variogram(temp_ind~1, punkty)
+vario_ind <- variogram(temp_ind~1, locations = punkty)
 plot(vario_ind)
 fitted_ind <- fit.variogram(vario_ind, vgm(model = "Sph", nugget = 0.3))
 fitted_ind
