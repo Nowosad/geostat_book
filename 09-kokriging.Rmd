@@ -1,9 +1,11 @@
 
 # Estymacje wielozmienne {#estymacje-wielozmienne}
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, message=FALSE, warning=FALSE}
-library(gstat)
 library(sp)
+library(gstat)
 library(geostatbook)
 data(punkty)
 data(punkty_ndvi)
@@ -95,10 +97,10 @@ W przypadku semiwariogramów funkcja `fit.variogram()` służyła dopasowaniu pa
 Podobną rolę w krossemiwariogramach spełnia funkcja `fit.lmc()`.
 Dopasowuje ona liniowy model koregionalizacji do semiwariogramów wielozmienych. 
 Funkcja `fit.lmc()` oczekuje co najmniej dwóch elementów, krossemiwariogramu oraz modelów krossemiwariancji. 
-<!-- W poniższym przykładzie dodatkowo użyto parametru `correct.diagonal = 1.01`, z uwagi na to że analizowane zmienne wykazywały bardzo silną korelację. -->
+W poniższym przykładzie dodatkowo użyto parametru `correct.diagonal = 1.01`, z uwagi na to że analizowane zmienne wykazywały bardzo silną korelację.
 
 ```{r}
-g_fit <- fit.lmc(v, g)
+g_fit <- fit.lmc(v, g, correct.diagonal = 1.01)
 g_fit
 plot(v, g_fit)
 ```
