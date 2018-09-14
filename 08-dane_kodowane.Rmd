@@ -1,10 +1,12 @@
 
 # Estymacja lokalnego rozkładu prawdopodobieństwa {#estymacja-lokalnego-rozkadu-prawdopodobienstwa}
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, message=FALSE, warning=FALSE}
-library(ggplot2)
-library(gstat)
 library(sp)
+library(gstat)
+library(ggplot2)
 library(geostatbook)
 data(punkty)
 data(siatka)
