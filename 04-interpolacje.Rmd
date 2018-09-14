@@ -4,14 +4,12 @@
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
 ```{r, interpolate_inits, message=FALSE, warning=FALSE}
-library(dismo)
-library(raster)
 library(sp)
+library(rgdal)
 library(gstat)
+library(dismo)
 library(fields)
 library(geostatbook)
-library(deldir)
-library(rgeos)
 data(punkty)
 data(siatka)
 data(granica)
@@ -32,11 +30,15 @@ Istnieją dwa podstawowe rodzaje takich siatek - siatki regularne oraz siatki ni
 ### Siatki regularne
 
 Siatki regularne mają kształt prostokąta obejmującego cały analizowany obszar. 
-Określenie granic obszaru można wykonać na podstawie zasięgu danych punktowych za pomocą funkcji `st_bbox()` z pakietu **sf** lub funkcji `extent()` z pakietu **raster**.
+Określenie granic obszaru można wykonać na podstawie zasięgu danych punktowych za pomocą funkcji `bbox()` z pakietu **sp**<!-- lub funkcji `extent()` z pakietu **raster**-->.
 
 ```{r}
-st_bbox(dane_punktowe_sf)
-extent(dane_punktowe_sf)
+bbox(punkty)
+```
+
+```{r, eval=FALSE, echo=FALSE}
+bbox(punkty)
+extent(punkty)
 ```
 
 Do stworzenia siatki można użyć funkcji `expand.grid()`.
@@ -45,7 +47,7 @@ Oba argumenty przyjmują trzy wartości: (i) `from` oznaczający wartość pocz�
 Przy ustalaniu wartości początkowej i końcowej konieczne jest ich rozszerzenie względem wartości z funkcji `bbox()` lub `extent()`, aby wszystkie analizowane punkty znalazły się na badanym obszarze. 
 
 ```{r }
-siatka <- expand.grid(
+nowa_siatka <- expand.grid(
   x = seq(from = 745050, to = 757050, by = 500),
   y = seq(from = 712650, to = 721650, by = 500)
 )
@@ -54,20 +56,22 @@ siatka <- expand.grid(
 Utworzony w ten sposób obiekt wymaga określenia współrzędnych (funkcja `coordinates()`), potwierdzenia że dane mają być siatką (funkcja `gridded()`), oraz przypisania układu współrzędnych z obiektu punktowego (funkcja `proj4string()`).
 
 ```{r }
-coordinates(siatka) <- ~x + y
-gridded(siatka) <- TRUE
-proj4string(siatka) <- proj4string(dane_punktowe)
+coordinates(nowa_siatka) <- ~x + y
+gridded(nowa_siatka) <- TRUE
+proj4string(nowa_siatka) <- proj4string(punkty)
+plot(nowa_siatka)
 ```
 
 Alternatywnie, do stworzenia siatki można wykorzystać funkcję `makegrid()`.
 Tworzy ona nowy obiekt na podstawie istniejącego obiektu punktowego oraz zadanej rozdzielczości. 
 
 ```{r}
-siatka <- makegrid(dane_punktowe, cellsize = 500)
-names(siatka) <- c("x", "y")
-coordinates(siatka) <- ~x + y
-gridded(siatka) <- TRUE
-proj4string(siatka) <- proj4string(dane_punktowe)
+nowa_siatka <- makegrid(punkty, cellsize = 500)
+names(nowa_siatka) <- c("x", "y")
+coordinates(nowa_siatka) <- ~x + y
+gridded(nowa_siatka) <- TRUE
+proj4string(nowa_siatka) <- proj4string(punkty)
+plot(nowa_siatka)
 ```
 
 ### Siatki regularne
@@ -76,47 +80,29 @@ Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają m
 W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add`.
 
 ```{r }
-plot(siatka)
-plot(dane_punktowe, add = TRUE)
+plot(nowa_siatka)
+plot(punkty, add = TRUE)
 ```
 
-### Siatki nieregularne - klasa `RasterLayer`
+### Siatki nieregularne
 
 Siatki nieregularne mają zazwyczaj kształt wieloboku obejmującego analizowany obszar. 
 Mogą one powstać, np. w oparciu o wcześniej istniejące granice.
-Siatki nieregularne w R mają zazwyczaj klasę `RasterLayer` lub `SpatialPixelsDataFrame`. 
-Pierwsza z klas jest elastyczniejsza i prostsza w użyciu, podczas gdy druga jest lepiej wspierana przez funkcje geostatystyczne, np. z pakietu **gstat**.
+Siatki nieregularne w R mogą być reprezentowane poprzez klasę `SpatialPixelsDataFrame`.
 
 W poniższym przypadku odczytywana jest granica badanego obszaru z pliku GeoPackage.
 Taki obiekt można np. stworzyć za pomocą oprogramowania gisowego takiego jak [QGIS](http://www.qgis.org/pl/site/).
-Następnie na podstawie tego obiektu tworzony jest obiekt klasy `RasterLayer`, a za pomocą funkcji `res()` definiowana jest jego rozdzielczość.
-W kolejnym kroku ustala się wartość wszystkich oczek siatki na zero, oraz poprzez funkcję `proj4string()` ujednolica się definicję układu współrzędnych siatki. 
-Ostatnim krokiem jest przycięcie siatki do nieregularnego obszaru z użyciem funkcji `mask()`.
+Następnie tworzony jest nowy obiekt `nowa_siatka_n` poprzez wybranie tylko tych oczek siatki, które znajdują się wewnątrz zadanych granic.
 
-```{r siatkaniereg, warning=FALSE}
-granica <- st_read("dane/granica.gpkg")
-siatka_n <- raster(extent(granica))
-res(siatka_n) <- c(250, 250)
-siatka_n[] <- 0
-proj4string(siatka_n) <- st_crs(granica)$proj4string
-siatka_n <- mask(siatka_n, granica)
+```{r siatkan}
+granica <- readOGR("dane/granica.gpkg")
+nowa_siatka_n <- nowa_siatka[granica]
 ```
 
-Wynik przetworzenia można zobaczyć z użyciem funkcji `levelplot`.
+Wynik przetworzenia można zobaczyć z użyciem funkcji `plot`.
 
 ```{r }
-levelplot(siatka_n, margin = FALSE)
-```
-
-### Siatki nieregularne - klasa `SpatialPixelsDataFrame`
-
-Nieregularną siatkę klasy `RasterLayer` łatwo jest przetworzyć do klasy `SpatialPixelsDataFrame`. 
-
-```{r }
-siatka_n <- as(siatka_n, "SpatialPointsDataFrame")
-siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ]
-gridded(siatka_n) <- TRUE
-plot(siatka_n)
+plot(nowa_siatka_n)
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
@@ -144,7 +130,7 @@ Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi(
 Wyniki następnie można przyciąć do badanego obszaru z użyciem funkcji `intersect()` z pakietu **raster**.
 
 ```{r }
-voronoi_interp <- voronoi(punkty) 
+voronoi_interp <- voronoi(punkty)
 plot(voronoi_interp, main = "Poligony Voronoia")
 spplot(voronoi_interp, zcol = "temp", main = "Poligony Voronoia - temperatura")
 ```
@@ -159,6 +145,19 @@ W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje ana
 ```{r }
 idw_wolin <- idw(temp~1, locations = punkty, newdata = siatka, idp = 2)
 spplot(idw_wolin, zcol = "var1.pred", contour = TRUE, main = "IDW")
+```
+
+```{r, echo=FALSE, warning=FALSE}
+library(tidyr)
+library(ggplot2)
+d = 1:100
+df_idw = data.frame(distance = d, idp0.00 = d^-0, idp0.25 = d^-0.25, idp0.50 = d^-0.5, idp1.00 = d^-1, idp2.00 = d^-2)
+df_idw = gather(df_idw, "key", "value", idp0.00:idp2.00, -distance)
+df_idw$key = extract_numeric(df_idw$key)
+ggplot(df_idw, aes(x = distance, y = value, color = as.factor(key), group = key)) +
+        geom_path(size = 2) + 
+        scale_color_brewer(type = "qual", name = "Inverse distance\nweighting power") +
+        labs(x = "Distance", y = "Weight")
 ```
 
 <!--
@@ -193,10 +192,8 @@ Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**
 
 ```{r }
 tps <- Tps(coordinates(punkty), punkty$temp)
-ras <- raster(siatka)
-spline <- interpolate(ras, tps)
-spline <- mask(spline, ras)
-spplot(spline, contour = TRUE, main = "Funkcje sklejane")
+siatka$tps_pred <- predict(tps, coordinates(siatka))
+spplot(siatka, "tps_pred", contour = TRUE, main = "Funkcje sklejane")
 ```
 
 ### Modele deterministyczne | Porównanie
@@ -204,7 +201,7 @@ spplot(spline, contour = TRUE, main = "Funkcje sklejane")
 ```{r echo=FALSE}
 library(gridExtra)
 p1 <- spplot(wielomian_3_pred[1], main = "Wielomiany")
-p2 <- spplot(spline, main = "Funkcje sklejane")
+p2 <- spplot(siatka, main = "Funkcje sklejane")
 p3 <- spplot(voronoi_interp, "temp", main = "Poligony Voronoia")
 p4 <- spplot(idw_wolin, "var1.pred", main = "IDW")
 grid.arrange(p3, p4, p1, p2)
@@ -223,7 +220,7 @@ Do modeli statystycznych należą, między innymi:
 
 W kolejnych rozdziałach można znaleźć omówienie kilku podstawowych typów pierwszej z tych metod - krigingu.
 
-## Zadania {#z3}
+## Zadania {#z4}
 
 1. Korzystając z danych XX wykonaj interpolację używając:
 - Poligonów Voronoi'a
