@@ -4,14 +4,9 @@
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
 ```{r, interpolate_init, message=FALSE, warning=FALSE}
-library(raster)
 library(sp)
 library(mapview)
-library(gstat)
-library(dismo)
-library(rgeos)
 library(geostatbook)
-library(deldir)
 data(punkty)
 data(granica)
 ```
@@ -193,7 +188,7 @@ mapview(punkty["temp"])
 <!-- nearest observation to each grid cell, so, honoustly, it's hard to call -->
 <!-- this interpolation, it is rather something of a discretized Thiessen -->
 <!-- polygon. -->
-<!-- --> -->
+<!-- --> 
 
 <!-- ```{r rozkom02} -->
 <!-- data(punkty_pref) -->
@@ -300,4 +295,7 @@ mapview(punkty["temp"])
 <!-- polygon declustering - http://gis.stackexchange.com/questions/122376/cell-declustering-using-open-source-software -->
 <!-- cell declustering - https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html -->
 <!-- http://gaa.org.au/pdf/DeclusterDebias-CCG.pdf -->
-<!-- --> -->
+<!-- --> 
+
+## Zadania (#z3)
+
