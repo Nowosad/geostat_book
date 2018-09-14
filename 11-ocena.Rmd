@@ -3,11 +3,13 @@
 
 <!--[UWAGA POMIESZANY ME Z RESZTĄ!!]-->
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, message=FALSE, warning=FALSE}
-library(gstat)
 library(sp)
-library(ggplot2)
+library(gstat)
 library(caret)
+library(ggplot2)
 library(geostatbook)
 data(punkty)
 data(siatka)

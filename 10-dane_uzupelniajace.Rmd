@@ -1,9 +1,11 @@
 
 # Wykorzystanie do estymacji danych uzupełniających {#wykorzystanie-do-estymacji-danych-uzupeniajacych}
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, message=FALSE, warning=FALSE}
-library(gstat)
 library(sp)
+library(gstat)
 library(geostatbook)
 data(punkty)
 data(siatka)
