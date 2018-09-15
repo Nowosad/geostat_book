@@ -89,6 +89,8 @@ Więcej o pakiecie **sf** oraz **raster** można przeczytać w [rozdziale drugim
 ### Układ współrzędnych prostokątnych płaskich
 
 - Okreslane są w miarach liniowych (np. metrach)
+- Proporcje między współrzędną X a Y są równe 1:1
+- Wielkość oczka jest stała
 <!-- -->
 
 ## Import danych
