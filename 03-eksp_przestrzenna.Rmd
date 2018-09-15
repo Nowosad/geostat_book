@@ -83,7 +83,8 @@ W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (
 
 ```{r }
 set.seed(425)
-pref <- spsample(granica, 150, type = "clustered", nclusters = 30)
+pref <- spsample(granica, 150, type = "clustered",
+                 nclusters = 30)
 plot(pref)
 ```
 

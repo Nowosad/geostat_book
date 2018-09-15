@@ -251,14 +251,16 @@ W przypadku zapisu danych wektorowych za pomocą funkcji `writeOGR()` konieczne 
 
 ```{r zapis_wektora1, eval=FALSE}
 # formaty wektorowe
-writeOGR(granica, dsn = "dane", layer = "nowa_granica", driver = "ESRI Shapefile")
+writeOGR(granica, dsn = "dane", layer = "nowa_granica",
+         driver = "ESRI Shapefile")
 ```
 
 Zapisywanie w bazach danych przestrzennych odbywa się poprzez nazwy zapisywanego obiektu (np. `granica`), ścieżki do zapisywanego pliku (np. `dane/nowa_granica.gpkg`), nazwę dla nowoutworzonej warstwy (np. `granica`), oraz sterownik - w przypadku danych GeoPackage jest to `GPKG`.
 
 ```{r zapis_wektora2, eval=FALSE}
 # bazy danych przestrzennych
-writeOGR(granica_sp, dsn = "dane/nowa_granica.gpkg", layer = "granica", driver = "GPKG")
+writeOGR(granica_sp, dsn = "dane/nowa_granica.gpkg",
+         layer = "granica", driver = "GPKG")
 ```
 
 ### Zapisywanie danych rastrowych

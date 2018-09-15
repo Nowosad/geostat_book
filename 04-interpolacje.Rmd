@@ -132,7 +132,8 @@ Wyniki następnie można przyciąć do badanego obszaru z użyciem funkcji `inte
 ```{r }
 voronoi_interp <- voronoi(punkty)
 plot(voronoi_interp, main = "Poligony Voronoia")
-spplot(voronoi_interp, zcol = "temp", main = "Poligony Voronoia - temperatura")
+spplot(voronoi_interp, zcol = "temp", 
+       main = "Poligony Voronoia - temperatura")
 ```
 
 ### Modele deterministyczne | IDW
@@ -143,8 +144,10 @@ Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (ang. *p
 W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`).
 
 ```{r }
-idw_wolin <- idw(temp~1, locations = punkty, newdata = siatka, idp = 2)
-spplot(idw_wolin, zcol = "var1.pred", contour = TRUE, main = "IDW")
+idw_wolin <- idw(temp~1, locations = punkty,
+                 newdata = siatka, idp = 2)
+spplot(idw_wolin, zcol = "var1.pred", contour = TRUE, 
+       main = "IDW")
 ```
 
 ```{r, echo=FALSE, warning=FALSE}
@@ -154,9 +157,12 @@ d = 1:100
 df_idw = data.frame(distance = d, idp0.00 = d^-0, idp0.25 = d^-0.25, idp0.50 = d^-0.5, idp1.00 = d^-1, idp2.00 = d^-2)
 df_idw = gather(df_idw, "key", "value", idp0.00:idp2.00, -distance)
 df_idw$key = extract_numeric(df_idw$key)
-ggplot(df_idw, aes(x = distance, y = value, color = as.factor(key), group = key)) +
+ggplot(df_idw, aes(x = distance, y = value, 
+                   color = as.factor(key), group = key)) +
         geom_path(size = 2) + 
-        scale_color_brewer(type = "qual", name = "Inverse distance\nweighting power") +
+        scale_color_brewer(type = "qual", 
+                           name = "Inverse distance\nweighting
+                           power") +
         labs(x = "Distance", y = "Weight")
 ```
 
@@ -173,17 +179,26 @@ Następnie funkcja `predict()` przenosi nowe wartości na wcześniej stworzoną 
 
 ```{r }
 # wielomian 1 stopnia
-wielomian_1 <- gstat(formula = temp~1, locations = punkty, degree = 1)
+wielomian_1 <- gstat(formula = temp~1, locations = punkty,
+                     degree = 1)
 wielomian_1_pred <- predict(wielomian_1, newdata = siatka)
-spplot(wielomian_1_pred, zcol = "var1.pred", contour = TRUE, main = "Powierzchnia trendu - wielomian pierwszego stopnia")
+spplot(wielomian_1_pred, zcol = "var1.pred", contour = TRUE,
+       main = "Powierzchnia trendu - wielomian pierwszego
+       stopnia")
 # wielomian 2 stopnia
-wielomian_2 <- gstat(formula = temp~1, locations = punkty, degree = 2)
+wielomian_2 <- gstat(formula = temp~1, locations = punkty,
+                     degree = 2)
 wielomian_2_pred <- predict(wielomian_2, newdata = siatka)
-spplot(wielomian_2_pred, zcol = "var1.pred", contour = TRUE, main = "Powierzchnia trendu - wielomian drugiego stopnia")
+spplot(wielomian_2_pred, zcol = "var1.pred", contour = TRUE,
+       main = "Powierzchnia trendu - wielomian drugiego
+       stopnia")
 # wielomian 3 stopnia
-wielomian_3 <- gstat(formula = temp~1, locations = punkty, degree = 3)
+wielomian_3 <- gstat(formula = temp~1, locations = punkty,
+                     degree = 3)
 wielomian_3_pred <- predict(wielomian_3, newdata = siatka)
-spplot(wielomian_3_pred, zcol = "var1.pred", contour = TRUE, main = "Powierzchnia trendu - wielomian trzeciego stopnia")
+spplot(wielomian_3_pred, zcol = "var1.pred", contour = TRUE,
+       main = "Powierzchnia trendu - wielomian trzeciego
+       stopnia")
 ```
 
 ### Modele deterministyczne | Funkcje sklejane
@@ -193,7 +208,8 @@ Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**
 ```{r }
 tps <- Tps(coordinates(punkty), punkty$temp)
 siatka$tps_pred <- predict(tps, coordinates(siatka))
-spplot(siatka, "tps_pred", contour = TRUE, main = "Funkcje sklejane")
+spplot(siatka, "tps_pred", contour = TRUE, 
+       main = "Funkcje sklejane")
 ```
 
 ### Modele deterministyczne | Porównanie

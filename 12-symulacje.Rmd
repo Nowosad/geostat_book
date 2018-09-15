@@ -60,14 +60,17 @@ Należy wprowadzić również informacje, że nie korzystamy z danych punktowych
 
 ```{r sym_bezw1, cache=TRUE}
 sym_bezw1 <- krige(formula = z~1, 
-                   model = vgm(psill = 0.025, model = "Exp", range = 100), 
+                   model = vgm(psill = 0.025,
+                               model = "Exp", 
+                               range = 100), 
                    newdata = siatka, 
                    beta = 1,
                    nmax = 30, 
                    locations = NULL, 
                    dummy = TRUE, 
                    nsim = 4)
-spplot(sym_bezw1, main = "Przestrzennie skorelowana powierzchnia \nśrednia=1, \n       sill=0.025, zasięg=100, model wykładniczy")
+spplot(sym_bezw1, main = "Przestrzennie skorelowana powierzchnia
+       \nśrednia=1,\nsill=0.025, zasięg=100, model wykładniczy")
 ```
 
 ```{r sym_bezw2, cache=TRUE}
@@ -79,7 +82,9 @@ sym_bezw2 <- krige(formula = z~1,
                    locations = NULL, 
                    dummy = TRUE, 
                    nsim = 4)
-spplot(sym_bezw2, main = "Przestrzennie skorelowana powierzchnia \nśrednia=1, \n       sill=0.025, zasięg=1500, model wykładniczy")
+spplot(sym_bezw2, main = "Przestrzennie skorelowana powierzchnia
+       \nśrednia=1,\nsill=0.025, zasięg=1500, model
+       wykładniczy")
 ```
 
 <!--
@@ -173,7 +178,9 @@ W efekcie tej operacji liczba kolumn nie ulega zmianie.
 
 ```{r unitsexp}
 # przywrócenie oryginalnej jednostki
-sym_sk@data <- data.frame(apply(sym_sk@data, MARGIN = 2, FUN = exp))
+sym_sk@data <- data.frame(apply(sym_sk@data, 
+                                MARGIN = 2,
+                                FUN = exp))
 ```
 
 Wyliczenie odchylenia standardowego odbywa się poprzez argumenty `MARGIN = 1` oraz `FUN = sd`.
@@ -182,7 +189,9 @@ W efekcie tej operacji otrzymuje się tylko jedną kolumnę.
 
 ```{r unitsexp2}
 # przywrócenie wyliczenie odchylenia standardowego
-sym_sk@data <- data.frame(apply(sym_sk@data, MARGIN = 1, FUN = sd))
+sym_sk@data <- data.frame(apply(sym_sk@data, 
+                                MARGIN = 1, 
+                                FUN = sd))
 ```
 
 Finalnie otrzymujemy mapę odchylenia standardowego symulowanych wartości.
@@ -211,7 +220,8 @@ Jedynie w funkcji `krige()` należy dodać argument mówiący o liczbie symulacj
 ```{r sym_ind, cache=TRUE}
 vario_ind <- variogram(temp_ind~1, locations = punkty)
 plot(vario_ind)
-fitted_ind <- fit.variogram(vario_ind, vgm(model = "Sph", nugget = 0.3))
+fitted_ind <- fit.variogram(vario_ind,
+                            vgm(model = "Sph", nugget = 0.3))
 fitted_ind
 plot(vario_ind, model = fitted_ind)
 sym_ind <- krige(temp_ind~1, 

@@ -190,8 +190,10 @@ Poniższe porównanie krigingu prostego (SK), zwykłego (OK) i z trendem (KZT) w
 W rozdziałach  \@ref(estymacje-wielozmienne) oraz \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych) pokazane będą uzyskane wyniki interpolacji temperatury powietrza korzystając z innych metod krigingu.
 
 ```{r ploty_trzy, echo=FALSE, fig.height=12}
-zmax <- round(max(sk$var1.pred, ok$var1.pred, kzt$var1.pred, na.rm = TRUE), 1) + 0.1
-zmin <- round(min(sk$var1.pred, ok$var1.pred, kzt$var1.pred, na.rm = TRUE), 1) - 0.1
+zmax <- round(max(sk$var1.pred, ok$var1.pred,
+                  kzt$var1.pred, na.rm = TRUE), 1) + 0.1
+zmin <- round(min(sk$var1.pred, ok$var1.pred,
+                  kzt$var1.pred, na.rm = TRUE), 1) - 0.1
 ramp <- seq(from = zmin, to = zmax, by = (zmax - zmin) / 20)
 p1 <- spplot(sk, "var1.pred", at = ramp, main = "SK")
 p2 <- spplot(ok, "var1.pred", at = ramp, main = "OK")

@@ -89,7 +89,8 @@ Podaje się w niej wcześniejszy obiekt `g`, model, oraz argument `fill.all = TR
 Ten ostatni parametr powoduje, że model dodawany jest do wszystkich elementów krossemiwariogramu.
 
 ```{r}
-g_model <- vgm(0.006, model = "Sph", range = 2000, nugget = 0.001)
+g_model <- vgm(0.006, model = "Sph",
+               range = 2000, nugget = 0.001)
 g <- gstat(g, model = g_model, fill.all = TRUE)
 ```
 
@@ -158,8 +159,11 @@ plot(vario_g)
 vario_g_kier <- variogram(g, alpha = c(15, 60, 105, 150))
 plot(vario_g_kier)
 
-g <- gstat(g, model = vgm(0.005, "Sph", 1000, nugget = 0.001, anis = c(15, .5)), fill.all = TRUE)
-g_fit_a <- fit.lmc(vario_g_kier, g, fit.ranges = FALSE, fit.method = 1)
+g <- gstat(g, model = vgm(0.005, "Sph", 1000, 
+                          nugget = 0.001, anis = c(15, .5)),
+           fill.all = TRUE)
+g_fit_a <- fit.lmc(vario_g_kier, g, 
+                   fit.ranges = FALSE, fit.method = 1)
 g_fit_a
 plot(vario_g_kier, g_fit_a)
 

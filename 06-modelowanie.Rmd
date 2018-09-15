@@ -83,7 +83,8 @@ Najlepiej, gdy wybór modelu oparty jest o wiedzę na temat zakładanego procesu
 
 ```{r oko, eval=FALSE}
 library(geoR)
-v_eye <- eyefit(variog(coords = coordinates(punkty), data = punkty$temp))
+v_eye <- eyefit(variog(coords = coordinates(punkty), 
+                       data = punkty$temp))
 ve_fit <- as.vgm.variomodel(v_eye[[1]])
 ```
 
@@ -220,7 +221,8 @@ Zdefiniowanie takiej funkcji odbywa się poprzez dodanie argumentu `nugget` w fu
 
 ```{r }
 vario <- variogram(temp~1, locations = punkty)
-model_zl1 <- vgm(psill = 10, model = "Sph", range = 3000, nugget = 0.5)
+model_zl1 <- vgm(psill = 10, model = "Sph", range = 3000,
+                 nugget = 0.5)
 model_zl1
 plot(vario, model = model_zl1)
 fitted_zl1 <- fit.variogram(vario, model_zl1)
@@ -236,7 +238,10 @@ Na poniższym przykładzie stworzony został model złożony składający się z
 
 ```{r }
 vario <- variogram(temp~1, locations = punkty)
-model_zl2 <- vgm(10, "Gau", 3000, add.to = vgm(4, model = "Gau", range = 500, nugget = 0.5))
+model_zl2 <- vgm(10, "Gau", 3000, add.to = vgm(4, 
+                                               model = "Gau",
+                                               range = 500,
+                                               nugget = 0.5))
 model_zl2
 plot(vario, model = model_zl2)
 fitted_zl2 <- fit.variogram(vario, model_zl2)
@@ -244,7 +249,8 @@ plot(vario, model = fitted_zl2)
 ```
 
 ```{r}
-model_zl3 <- vgm(model = "Gau", add.to = vgm(model = "Gau", nugget = 0.5))
+model_zl3 <- vgm(model = "Gau", add.to = vgm(model = "Gau",
+                                             nugget = 0.5))
 fitted_zl3 <- fit.variogram(vario, model_zl3)
 fitted_zl3
 plot(vario, model = fitted_zl3)
@@ -285,7 +291,10 @@ plot(vario_kier, vario_kier_fit, as.table = TRUE)
 ```
 
 ```{r}
-vario_kier_fit2 <- fit.variogram(vario_kier, vgm(model = "Sph", anis = c(45, 0.4), nugget = 0.5))
+vario_kier_fit2 <- fit.variogram(vario_kier,
+                                 vgm(model = "Sph",
+                                     anis = c(45, 0.4), 
+                                     nugget = 0.5))
 plot(vario_kier, vario_kier_fit2, as.table = TRUE)
 ```
 

@@ -99,8 +99,10 @@ spplot(ik, "var1.var")
 ```{r plotsy2ok, echo=FALSE, fig.height=8}
 library(gridExtra)
 ps.options(encoding = "CP1250")
-p1 <- spplot(ik, "var1.pred", main = "Prawdopodobieństwo Temp > 20")
-p2 <- spplot(ik, "var1.var", main = "Wariancja predykcji IK")
+p1 <- spplot(ik, "var1.pred",
+             main = "Prawdopodobieństwo Temp > 20")
+p2 <- spplot(ik, "var1.var", 
+             main = "Wariancja predykcji IK")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
@@ -112,11 +114,14 @@ Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, pon
 
 ```{r }
 vario_ind20 <- variogram(I(temp < 20)~1, locations = punkty)
-fitted_ind20 <- fit.variogram(vario_ind20, vgm("Sph", nugget = 0.01))
+fitted_ind20 <- fit.variogram(vario_ind20, 
+                              vgm("Sph", nugget = 0.01))
 vario_ind16 <- variogram(I(temp < 16)~1, locations = punkty)
-fitted_ind16 <- fit.variogram(vario_ind16, vgm("Sph", nugget = 0.03))
+fitted_ind16 <- fit.variogram(vario_ind16, 
+                              vgm("Sph", nugget = 0.03))
 vario_ind12 <- variogram(I(temp < 12)~1, locations = punkty)
-fitted_ind12 <- fit.variogram(vario_ind12, vgm("Sph", nugget = 0.03))
+fitted_ind12 <- fit.variogram(vario_ind12, 
+                              vgm("Sph", nugget = 0.03))
 
 ik20 <- krige(I(temp < 20)~1,
               locations = punkty,
