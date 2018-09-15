@@ -291,3 +291,11 @@ plot(vario_kier, vario_kier_fit2, as.table = TRUE)
 
 ## Zadania {#z6}
 
+<!--     Obliczyć i zwizualizować semiwariogram zmiennej VI na podstawie dostosowanych parametrów -->
+<!--     Dopasować "ręcznie" możliwie jak najlepszy model do stworzonego semiwariogramu. W raporcie zamieścić także pośrednie etapy dopasowania modelu -->
+<!--     Wykorzystać funkcję automatycznego dopasowania modelu do utworzonego semiwariogramu -->
+
+<!--     Określić kierunek i zasięg anizotropii dla zmiennej VI -->
+<!--     Obliczyć semiwariogramy kierunkowe dla zmiennej VI -->
+<!--     Dopasować model do semiwariogramów kierunkowych zmiennej VI -->
+

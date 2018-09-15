@@ -297,5 +297,7 @@ mapview(punkty["temp"])
 <!-- http://gaa.org.au/pdf/DeclusterDebias-CCG.pdf -->
 <!-- --> 
 
-## Zadania {#z3}       
+## Zadania {#z3}
 
+<!-- Wykonać mapę pokazującą przestrzenny rozkład opadów w czerwcu (VI) -->
+<!-- + analiza -->

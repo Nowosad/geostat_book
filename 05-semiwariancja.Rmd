@@ -403,3 +403,15 @@ plot(vario_kier)
 ```
 
 ## Zadania {#z5}
+
+
+<!--     Wykorzystując wzór na semiwariancję obliczyć semiwariancję dla wartości sum opadów w czerwcu (VI) pomiędzy 5 losowo wybranymi punktami ze zbioru danych. (Podpowiedź - Wybór losowy punktów: sample(dane$Nr, 5)). -->
+<!--     Przeprowadzić analizę struktury przestrzennej zmiennej VI obejmującą: -->
+<!--         obliczenie i wizualizację semiwariogramu na podstawie parametrów domyślnych, +obliczenie i wizualizacja semiwariogramu na podstawie dostosowanych parametrów. -->
+<!--         określenie wartości efektu nuggetowego, zasięgu oraz wariancji progowej dla poszczególnych semiwariogramów. -->
+
+<!-- W raporcie proszę zamieścić tabelę zawierającą następujące zestawienie: -->
+
+<!--     maksymalny zasięg semiwariogramu oraz szerokość odstępów dla parametrów domyślnych; -->
+<!--     maksymalny zasięg semiwariogramu oraz szerokość odstępów dla parametrów dostosowanych; -->
+<!--     wartości efektu nuggetowego, zasięgu oraz wariancji progowej dla semiwariogramu wykonanego w oparciu o parametry domyslne i dostosowane. -->
