@@ -8,10 +8,13 @@ bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 classoption: a4paper
-cover-image: Rfigs/book_cover.png
+fontsize: 12pt
+monofont: "Source Code Pro"
+monofontoptions: "Scale=0.7"
 description: "Introduction to geostatistics with R (in Polish)."
 url: 'https\://bookdown.org/nowosad/Geostatystyka/'
 github-repo: "nowosad/geostat_book"
+cover-image: Rfigs/book_cover.png
 ---
 
 # Wprowadzenie
