@@ -168,8 +168,8 @@ Przykładowo, gdy pliki nazywają się `granica.dbf`, `granica.prj`, `granica.sh
 
 ```{r}
 library(rgdal)
-granica <- readOGR(dsn = "dane/granica.gpkg")
-plot(granica)
+granica_sp <- readOGR(dsn = "dane/granica.gpkg")
+plot(granica_sp)
 ```
 
 ### Rastry
@@ -182,6 +182,64 @@ Należy w nich jedynie podać ścieżkę do pliku rastrowego.
 library(raster)
 siatka_sp <- readGDAL("dane/siatka.tif")
 plot(siatka_sp)
+```
+
+## Przeglądanie danych przestrzennych
+
+### Struktura obiektu
+
+Podstawowe informacje o obiektach można uzyskać za pomocą funkcji `str()`:
+
+```{r}
+str(punkty_sp)
+```
+
+Obiekty klas `Spatial*` mają pięć elementów (ang. *slots*) rozpoczynających się od symbolu `@`:
+
+- `@data` - tabela atrybutów
+- `@coords.nrs` - numer kolumn zawierających współrzędne
+- `@coords` - współrzędne kolejnych elementów
+- `@bbox` - obwiednia
+- `@proj4string` - definicja układu współrzędnych
+
+### Tabla atrybutów
+
+`@data` jest obiektem klasy `data.frame` zawierającym informacje o kolejnych punktach w tym zbiorze.
+
+```{r}
+df <- punkty_sp@data
+head(df)
+```
+
+### Współrzędne
+
+Element `@coords.nrs` określa numer kolumn zawierających współrzędne w oryginalnym zbiorze danych.
+
+```{r}
+punkty_sp@coords.nrs
+```
+
+Kolejny element, `@coords` definiuje współrzędne kolejnych elementów zadanego obiektu.
+
+```{r}
+xy <- punkty_sp@coords
+head(xy)
+```
+
+### Obwiednia
+
+Element `@bbox` określa zasięg przestrzenny danych w jednostkach mapy.
+
+```{r}
+punkty_sp@bbox
+```
+
+### Układ współrzędnych
+
+`@proj4string` reprezentuje definicję układu współrzędnych.
+
+```{r}
+punkty_sp@proj4string
 ```
 
 ## Eksport danych
@@ -200,7 +258,7 @@ Zapisywanie w bazach danych przestrzennych odbywa się poprzez nazwy zapisywaneg
 
 ```{r zapis_wektora2, eval=FALSE}
 # bazy danych przestrzennych
-writeOGR(granica, dsn = "dane/nowa_granica.gpkg", layer = "granica", driver = "GPKG")
+writeOGR(granica_sp, dsn = "dane/nowa_granica.gpkg", layer = "granica", driver = "GPKG")
 ```
 
 ### Zapisywanie danych rastrowych
