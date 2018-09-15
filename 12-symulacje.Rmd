@@ -7,7 +7,6 @@ Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietó
 library(sp)
 library(gstat)
 library(ggplot2)
-# library(raster)
 library(geostatbook)
 data(punkty)
 data(siatka)
