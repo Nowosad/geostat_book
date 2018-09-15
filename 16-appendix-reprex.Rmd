@@ -1,4 +1,4 @@
-# Powtarzalne przykłady
+# Powtarzalne przykłady {#reprex}
 
 ## Co to?
 
