@@ -1,6 +1,115 @@
-# Dane
+# Dane {#dane}
 
-<!-- opis danych do książki -->
-<!-- opis po kolei wszystkich danych z pakietu oraz z udostępnionych plików -->
-<!-- + wykresy i mapy -->
-<!-- btw przygotuj dane z wyspy wolin do przykładów? -->
+```{r, echo=FALSE}
+library(sp)
+```
+
+
+Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu `geostatbook` (dla kolejnych rozdziałów). 
+Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w tym skrypcie.
+
+- [Archiwum zawierające dane do rozdziału drugiego](https://github.com/Nowosad/geostat_book/blob/master/dane.zip?raw=true)
+- [Dane do kolejnych rozdziałów są zawarte w pakiecie geostatbook:](https://github.com/Nowosad/geostatbook)
+
+```{r instgeobook2, eval=FALSE}
+# install.packages("devtools")
+devtools::install_github("nowosad/geostatbook")
+```
+
+## Zbiory danych w pakiecie **geostatbook**
+
+```{r}
+library(geostatbook)
+```
+
+### `punkty`
+
+```{r}
+data("punkty")
+?punkty
+```
+
+Zbiór danych `punkty` zawiera 252 obserwacje oraz 5 zmiennych dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
+Zmienne:
+
+- srtm - wysokość w metrach n.p.m. pozyskana z numerycznego modelu terenu z misji SRTM
+- clc - uproszczona kategoria pokrycia terenu z bazy Corine Land Cover. 
+1 oznacza tereny rolne, 2 oznacza lasy i ekosystemy seminaturalne, 3 to obszary podmokłe, 4 to obszary wodne
+- temp - temperatura powierzchni ziemi w stopniach Celsjusza 
+- ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference  Vegetation Index*)
+- savi - ang. *Soil Adjusted Vegetation Index*
+
+```{r}
+spplot(punkty)
+```
+
+### `punkty_ndvi`
+
+```{r}
+data("punkty_ndvi")
+?punkty_ndvi
+```
+
+Zbiór danych `punkty_ndvi` zawiera 1011 obserwacji oraz 1 zmienną dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
+Zmienna:
+
+- ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference  Vegetation Index*)
+
+```{r}
+spplot(punkty_ndvi)
+```
+
+### `punkty_pref`
+
+```{r}
+data("punkty_pref")
+?punkty_pref
+```
+
+Zbiór danych `punkty_pref` zawiera 239 obserwacji oraz 1 zmiennych dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
+Są one rozlokowane w sposób preferencyjny.
+Zmienna:
+
+- srtm - wysokość w metrach n.p.m. pozyskana z numerycznego modelu terenu z misji SRTM
+- clc - uproszczona kategoria pokrycia terenu z bazy Corine Land Cover. 
+1 oznacza tereny rolne, 2 oznacza lasy i ekosystemy seminaturalne, 3 to obszary podmokłe, 4 to obszary wodne
+- temp - temperatura powierzchni ziemi w stopniach Celsjusza 
+- ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference  Vegetation Index*)
+- savi - ang. *Soil Adjusted Vegetation Index*
+
+```{r}
+spplot(punkty_pref)
+```
+
+### `granica`
+
+```{r}
+data("granica")
+?granica
+```
+
+Granica Suwalskiego Parku Krajobrazowego.
+
+```{r}
+spplot(granica)
+```
+
+### `siatka`
+
+```{r}
+data("siatka")
+?siatka
+```
+
+Siatka badanego obszaru dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
+Zawiera ona ona 127 wierszy i 96 kolumn oraz 4 zmienne:
+
+- srtm - wysokość w metrach n.p.m. pozyskana z numerycznego modelu terenu z misji SRTM
+- clc - uproszczona kategoria pokrycia terenu z bazy Corine Land Cover. 
+1 oznacza tereny rolne, 2 oznacza lasy i ekosystemy seminaturalne, 3 to obszary podmokłe, 4 to obszary wodne
+- ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference  Vegetation Index*)
+- savi - ang. *Soil Adjusted Vegetation Index*
+
+```{r}
+spplot(siatka)
+```
