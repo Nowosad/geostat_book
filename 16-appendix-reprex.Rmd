@@ -8,9 +8,9 @@ Powtarzalny przykład może służyć pokazaniu poprawnego rozwiązania, wskazan
 
 Powtarzalny przykład powinien składać się przynajmniej z:
 
-- Z małego zbioru danych wystarczający do odtworzenia obliczeń
+- Z małego zbioru danych wystarczającego do odtworzenia obliczeń
 - Krótkiego kodu, który może być uruchomiony na powyższym zbiorze danych
-- Czasem ważne są informacje o używanej wersji R, posiadanym systemie operacyjnym, wersjach używanych pakietów, etc. 
+- Czasem ważne są dodatkowe informacje o używanej wersji R, posiadanym systemie operacyjnym, wersjach używanych pakietów, etc. 
 Można do tego użyć funkcji `sessionInfo()` 
 
 Źródło: [stackoverflow.com](https://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example)
@@ -19,6 +19,7 @@ Można do tego użyć funkcji `sessionInfo()`
 
 Stworzenie powtarzalnego przykładu w R może zostać ułatione poprzez stosowanie pakietu **reprex**. 
 Ten pakiet uruchamia wybraną część kodu, wykonuje kolejne operacje, a następnie zapisuje uzyskany wynik do schowka.
+
 
 Pakiet **reprex** można zainstalować poprzez funkcję `install.packages()`:
 
@@ -49,7 +50,7 @@ reprex({
 })
 ```
 
-Po jego uruchomieniu otrzymujemy wynik zapisany w schowku jako Markdownw oraz w postaci wyświetlonego HTML:
+Po jego uruchomieniu otrzymujemy wynik zapisany w schowku jako Markdown oraz w postaci wyświetlonego HTMLa:
 
 ![](figs/reprex1.png)
 
@@ -69,8 +70,8 @@ reprex({
 ```
 
 Powyższy kod ma dwa problemy - czy jesteś w stanie je wskazać?
-Odpowiedź - ten kod nie jest w pełni samowystarczający - brakuje tam dołączenia pakietu **geostatbook**, który zawiera zbiór danych `punkty`.
-Drugi problem to użyta zmienna do wizualizacji - zmienna `"temperatura"` nie istnieje w zbiorze danych `punkty`. 
+Odpowiedź - ten kod nie jest w pełni samowystarczalny - brakuje tam dołączenia pakietu **geostatbook**, który zawiera zbiór danych `punkty`.
+Drugi problem to użyta zmienna do wizualizacji - `"temperatura"` nie istnieje w zbiorze danych `punkty`. 
 Zamiast niej powinna być użyta poprawna nazwa zmiennej - `temp`.
 Naprawiona wersja tego kodu znajduje się poniżej:
 
@@ -88,6 +89,7 @@ reprex({
 
 ![](figs/reprex3.png)
 
+W efekcie otrzymujemy nie tylko kod użyty do obliczeń, ale wynikową grafikę.
 
 ## Więcej informacji
 
