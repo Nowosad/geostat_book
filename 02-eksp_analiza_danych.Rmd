@@ -30,7 +30,7 @@ Proces ten różni się w zależności od posiadanego zbioru danych, jak i od po
 Warto jednak, aby jednym z pierwszych kroków było przyjrzenie się danym wejściowym. 
 Pozwala na to, między innymi, funkcja `str()`. 
 Przykładowo, dla obiektu klasy `SpatialPointsDataFrame` wyświetla ona szereg ważnych informacji. 
-OMożna tam odczytać, że obiekt `punkty` zawiera pięć elementów (ang. *slots*) rozpoczynających się od symbolu `@`.
+Można tam odczytać, że obiekt `punkty` zawiera pięć elementów (ang. *slots*) rozpoczynających się od symbolu `@`.
 Pierwszy z nich, `@data` jest obiektem klasy `data.frame` zawierającym informacje o kolejnych punktach w tym zbiorze.
 Element `@coords.nrs` określa numer kolumn zawierających współrzędne w oryginalnym zbiorze danych.
 W poniższym przypadku żadna kolumna nie ma takich informacji.
