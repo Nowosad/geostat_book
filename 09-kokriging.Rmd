@@ -1,10 +1,12 @@
 
 # Estymacje wielozmienne {#estymacje-wielozmienne}
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, message=FALSE, warning=FALSE}
-library("gstat")
-library("sp")
-library("geostatbook")
+library(sp)
+library(gstat)
+library(geostatbook)
 data(punkty)
 data(punkty_ndvi)
 data(siatka)
@@ -15,6 +17,7 @@ par(mar = c(rep(0, 4)))
 ```
 
 ## Kokriging 
+
 ### Kokriging (ang. *co-kriging*)
 
 Kokriging pozwala na wykorzystanie dodatkowej zmiennej (ang. *auxiliary variable*), zwanej inaczej kozmienną (ang. *co-variable*), która może być użyta do prognozowania wartości badanej zmiennej w nieopróbowanej lokalizacji.
@@ -38,6 +41,7 @@ Kroskorelogramy
 -->
 
 ## Krossemiwariogramy
+
 ### Krossemiwariogramy
 
 Metoda kokrigingu opiera się nie o semiwariogram, lecz o krossemiwariogramy. Krossemiwariogram jest to wariancja różnicy pomiędzy dwiema zmiennymi w dwóch lokalizacjach.
@@ -58,8 +62,14 @@ Składa się on z obiektu pustego (`NULL`), nazwy pierwszej zmiennej (nazwa moż
 Następnie do pierwszego obiektu `g` dodajemy nowe informacje również poprzez funkcję `gstat()`. Jest to nazwa obiektu (`g`), nazwa drugiej zmiennej, wzór, oraz drugi zbiór punktowy.
 
 ```{r, krosssemi}
-g <- gstat(NULL, id = "SAVI", form = savi~1, data = punkty)
-g <- gstat(g, id = "NDVI", form = ndvi~1, data = punkty_ndvi)
+g <- gstat(NULL, 
+           id = "SAVI", 
+           form = savi~1, 
+           data = punkty)
+g <- gstat(g, 
+           id = "NDVI", 
+           form = ndvi~1, 
+           data = punkty_ndvi)
 g
 ```
 
@@ -71,6 +81,7 @@ plot(v)
 ```
 
 ## Modelowanie krossemiwariogramów
+
 ### Modelowanie krossemiwariogramów
 
 Modelowanie krossemiwariogramów, podobnie jak ich tworzenie, odbywa się używając funkcji `gstat()`. 
@@ -78,7 +89,9 @@ Podaje się w niej wcześniejszy obiekt `g`, model, oraz argument `fill.all = TR
 Ten ostatni parametr powoduje, że model dodawany jest do wszystkich elementów krossemiwariogramu.
 
 ```{r}
-g <- gstat(g, model = vgm(0.006, "Sph", 2000, 0.001), fill.all = TRUE)
+g_model <- vgm(0.006, model = "Sph",
+               range = 2000, nugget = 0.001)
+g <- gstat(g, model = g_model, fill.all = TRUE)
 ```
 
 W przypadku semiwariogramów funkcja `fit.variogram()` służyła dopasowaniu parametrów modelu do semiwariogramu empirycznego. 
@@ -88,7 +101,6 @@ Funkcja `fit.lmc()` oczekuje co najmniej dwóch elementów, krossemiwariogramu o
 W poniższym przykładzie dodatkowo użyto parametru `correct.diagonal = 1.01`, z uwagi na to że analizowane zmienne wykazywały bardzo silną korelację.
 
 ```{r}
-# zmienne są bardzo mocno skorelowane - dlatego użyto argumentu correct.diagonal = 1.01
 g_fit <- fit.lmc(v, g, correct.diagonal = 1.01)
 g_fit
 plot(v, g_fit)
@@ -102,12 +114,13 @@ plot(variogram(g, alpha = c(60, 105, 150, 195)))
 -->   
 
 ## Kokriging 
+
 ### Kokriging 
 
 Posiadając dopasowane modele oraz siatkę można uzyskać wynik używając funkcji `predict()`. 
 
 ```{r kokriging_predict, cache=TRUE}
-ck <- predict(g_fit, siatka)
+ck <- predict(g_fit, newdata = siatka)
 ```
 
 W efekcie otrzymujemy pięć zmiennych:
@@ -128,7 +141,7 @@ spplot(ck, "SAVI.var")
 ```
 
 ```{r kokriging_predicted, echo=FALSE, cache=TRUE, fig.height=8}
-library("gridExtra")
+library(gridExtra)
 p1 <- spplot(ck, "SAVI.pred", main = "Predykcja CK")
 p2 <- spplot(ck, "SAVI.var", main = "Wariancja CK")
 grid.arrange(p1, p2, ncol = 1)
@@ -136,35 +149,38 @@ grid.arrange(p1, p2, ncol = 1)
 
 ```{r kokriging_predict_anizotropia, echo=FALSE, cache=TRUE, eval=FALSE}
 ### Kokriging (anitotropia)
-g <- gstat(NULL, id = "TPZ1999", form = X1999.09.13_TPZ~1, data = punkty_255)
-g <- gstat(g, id = "TPZ2002", form = X2002.08.20_TPZ~1, data = punkty_750)
+g <- gstat(NULL, id = "savi", form = savi~1, data = punkty)
+g <- gstat(g, id = "ndvi", form = ndvi~1, data = punkty_ndvi)
 g
 
 vario_g <- variogram(g, map = TRUE, cutoff = 12000, width = 800)
 plot(vario_g)
 
-vario_g_kier <- variogram(g, alpha = c(60, 105, 150, 195))
+vario_g_kier <- variogram(g, alpha = c(15, 60, 105, 150))
 plot(vario_g_kier)
 
-g <- gstat(g, model = vgm(17, "Sph", 12000, 5, anis = c(60, .25)), fill.all = TRUE)
-g_fit_a <- fit.lmc(vario_g_kier, g, fit.ranges = FALSE, fit.method = 1)
+g <- gstat(g, model = vgm(0.005, "Sph", 1000, 
+                          nugget = 0.001, anis = c(15, .5)),
+           fill.all = TRUE)
+g_fit_a <- fit.lmc(vario_g_kier, g, 
+                   fit.ranges = FALSE, fit.method = 1)
 g_fit_a
 plot(vario_g_kier, g_fit_a)
 
-# ck_a <- predict(g_fit_a, siatka) #notworking
+ck_a <- predict(g_fit_a, siatka)
 
-# summary(ck_a)
+summary(ck_a)
 ```
 
 ```{r plotsyck1a, eval=FALSE, echo=FALSE}
-spplot(ck_a, "TPZ1999.pred")
-spplot(ck_a, "TPZ1999.var")
+spplot(ck_a, "savi.pred")
+spplot(ck_a, "savi.var")
 ```
 
 ```{r plotsyck2a, eval=FALSE, echo=FALSE, fig.height=8}
-library("gridExtra")
-p1 <- spplot(ck_a, "TPZ1999.pred", main = "Predykcja CK - anizotropia")
-p2 <- spplot(ck_a, "TPZ1999.var", main = "Wariancja CK - anizotropia")
+library(gridExtra)
+p1 <- spplot(ck_a, "savi.pred", main = "Predykcja CK - anizotropia")
+p2 <- spplot(ck_a, "savi.var", main = "Wariancja CK - anizotropia")
 grid.arrange(p1, p2, ncol = 2)
 ```
 
@@ -173,3 +189,4 @@ grid.arrange(p1, p2, ncol = 2)
 ## Kokriging na podstawie uproszczonych modeli Markowa I i II
 -->
 
+## Zadania {#z9}

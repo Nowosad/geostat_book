@@ -1,9 +1,12 @@
 
 # Modelowanie matematycznie autokorelacji przestrzennej {#modelowanie-matematycznie-autokorelacji-przestrzennej}
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, message=FALSE, warning=FALSE}
-library("gstat")
-library("geostatbook")
+library(sp)
+library(gstat)
+library(geostatbook)
 data(punkty)
 ```
 
@@ -51,13 +54,15 @@ show.vgms()
 Istnieje możliwość wyświetlenia tylko wybranych modeli podstawowych poprzez argument `models`. 
 
 ```{r }
-show.vgms(models = c("Nug", "Sph", "Gau", "Pow", "Exp"), range = 1.4, max = 2.5)
+show.vgms(models = c("Nug", "Sph", "Gau", "Pow", "Exp"), 
+          range = 1.4, max = 2.5)
 ```
 
 Dodatkowo, można je porównać na jednym wykresie poprzez argument `as.groups = TRUE`.
 
 ```{r }
-show.vgms(models = c("Nug", "Sph", "Gau", "Pow", "Exp"), range = 1.4, max = 2.5, as.groups = TRUE)
+show.vgms(models = c("Nug", "Sph", "Gau", "Pow", "Exp"), 
+          range = 1.4, max = 2.5, as.groups = TRUE)
 ```
 
 ## Metody modelowania
@@ -77,7 +82,9 @@ Najlepiej, gdy wybór modelu oparty jest o wiedzę na temat zakładanego procesu
 ### Metody modelowania  | funkcja `eyefit()`
 
 ```{r oko, eval=FALSE}
-v_eye <- eyefit(variog(as.geodata(punkty, "temp")))
+library(geoR)
+v_eye <- eyefit(variog(coords = coordinates(punkty), 
+                       data = punkty$temp))
 ve_fit <- as.vgm.variomodel(v_eye[[1]])
 ```
 
@@ -87,7 +94,8 @@ knitr::include_graphics("figs/eyefit.png", dpi = 90, auto_pdf = FALSE)
 
 ### Metody modelowania  | funkcja `fit.variogram()`
 
-Funkcja `fit.variogram()` z pakietu **gstat** dopasowuje zasięg oraz semiwariancję progową w oparciu o ustalone "ręcznie" parametry modelu
+Funkcja `fit.variogram()` z pakietu **gstat** dopasowuje zasięg oraz semiwariancję progową w oparciu o ustalone "ręcznie" wejściowe parametry modelu.
+Więcej na temat działania tej funkcji można przeczytać we wpisie na stronie https://www.r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html.
 
 ### Metody modelowania | Liniowy model regionalizacji
 
@@ -101,11 +109,13 @@ W takiej sytuacji konieczne jest spełnienie dwóch warunków:
 
 Do zbudowania modelu semiwariogramu należy wykonać szereg kroków:
 
-1. Stworzyć i wyświetlić semiwariogram empiryczny analizowanej zmiennej z użyciem funkcji `variogram()` oraz `plot()` 
-2. Zdefiniować parametry semiwariogramu, tj. semiwariancja cząstkowa (`psill`), skrócona nazwa używanej funkcji (`model`) oraz jej zasięg (`range`) w funkcji `vgm()`. 
-Uzyskany model można przedstawić w funkcji `plot()` podając nazwę obiektu zawierającego semiwariogram empiryczny oraz obiektu zawierającego model
+1. Stworzyć i wyświetlić semiwariogram empiryczny analizowanej zmiennej z użyciem funkcji `variogram()` oraz `plot()`.
+2. Zdefiniować wejściowe parametry semiwariogramu. 
+W najprostszej sytuacji wystarczy zdefiniować używany model/e poprzez skróconą nazwę używanej funkcji (`model`). 
+Możliwe, ale nie wymagane jest także określenie wejściowej semiwariancji cząstkowej (`psill`) oraz zasięgu modelu (`range`) w funkcji `vgm()`. 
+Uzyskany model można przedstawić w funkcji `plot()` podając nazwę obiektu zawierającego semiwariogram empiryczny oraz obiektu zawierającego model.
 3. Dopasować parametry modelu używając funkcji `fit.variogram()`.
-To dopasowanie można również zwizualizować używając funkcji `plot()`
+To dopasowanie można również zwizualizować używając funkcji `plot()`.
 
 ### Modelowanie izotropowe | Model nuggetowy
 
@@ -115,7 +125,7 @@ Ten typ modelu najczęściej używany jest w modelach złożonych.
 W takich wypadkach służy on do określania, między innymi, błędu pomiarowego czy zmienności na krótkich odstępach.
 
 ```{r}
-vario <- variogram(temp~1, punkty)
+vario <- variogram(temp~1, locations = punkty)
 plot(vario)
 model_nug <- vgm(psill = 10, model = "Nug", range = 0)
 model_nug
@@ -125,6 +135,14 @@ fitted_nug
 plot(vario, model = fitted_nug)
 ```
 
+<!-- przedsaw, omów, podaj wady i zalety -->
+
+```{r}
+model_nug2 <- vgm(model = "Nug")
+fitted_nug2 <- fit.variogram(vario, model_nug2)
+plot(vario, model = fitted_nug2)
+```
+
 ### Modelowanie izotropowe | Model sferyczny
 
 Model sferyczny (`Sph`) jest jednym z najczęściej stosowanych modeli geostatystycznych. 
@@ -132,7 +150,7 @@ Reprezentuje on cechę, której zmienność wartości ma charakter naprzemiennyc
 Średnio te płaty mają średnicę określoną przez zasięg (`range`) modelu.
 
 ```{r }
-vario <- variogram(temp~1, punkty)
+vario <- variogram(temp~1, locations = punkty)
 plot(vario)
 model_sph <- vgm(psill = 10, model = "Sph", range = 3000)
 model_sph
@@ -149,7 +167,7 @@ W jego przypadku, zamiast zasięgu podaje się tzw. zasięg praktyczny.
 Oznacza on odległość na jakiej model osiąga 95% wartości wariancji progowej.
 
 ```{r }
-vario <- variogram(temp~1, punkty)
+vario <- variogram(temp~1, locations = punkty)
 plot(vario)
 model_exp <- vgm(psill = 10, model = "Exp", range = 3000)
 model_exp
@@ -167,7 +185,7 @@ Jest on najczęściej używany do modelowania cech o regularnej i łagodnej zmie
 Model gaussowski z uwagi na swoje cechy zazwyczaj nie powinien być stosowany samodzielnie, lecz jako element modelu złożonego.
 
 ```{r }
-vario <- variogram(temp~1, punkty)
+vario <- variogram(temp~1, locations = punkty)
 plot(vario)
 model_gau <- vgm(psill = 13, model = "Gau", range = 3000)
 model_gau
@@ -184,7 +202,7 @@ Jego wartość rośnie w nieskończoność, dlatego niemożliwe jest określenie
 W przypadku modelu potęgowego, parametr `range` oznacza wykładnik potęgowy.
 
 ```{r }
-vario <- variogram(temp~1, punkty)
+vario <- variogram(temp~1, locations = punkty)
 plot(vario)
 model_pow <- vgm(psill = 0.03, model = "Pow", range = 0.7)
 model_pow
@@ -202,8 +220,9 @@ Najbardziej powszechny model złożony składa się z funkcji nuggetowej (dla od
 Zdefiniowanie takiej funkcji odbywa się poprzez dodanie argumentu `nugget` w funkcji `vgm()`.
 
 ```{r }
-vario <- variogram(temp~1, punkty)
-model_zl1 <- vgm(psill = 10, model = "Sph", range = 3000, nugget = 0.5)
+vario <- variogram(temp~1, locations = punkty)
+model_zl1 <- vgm(psill = 10, model = "Sph", range = 3000,
+                 nugget = 0.5)
 model_zl1
 plot(vario, model = model_zl1)
 fitted_zl1 <- fit.variogram(vario, model_zl1)
@@ -218,12 +237,23 @@ Przyjmuje on kolejny obiekt funkcji `vgm()` i poprzez połączenie tych dwóch o
 Na poniższym przykładzie stworzony został model złożony składający się z modelu nuggetowego oraz dwóch modeli gaussowskich.
 
 ```{r }
-vario <- variogram(temp~1, punkty)
-model_zl2 <- vgm(10, "Gau", 3000, add.to = vgm(4, model = "Gau", range = 500, nugget = 0.5))
+vario <- variogram(temp~1, locations = punkty)
+model_zl2 <- vgm(10, "Gau", 3000, add.to = vgm(4, 
+                                               model = "Gau",
+                                               range = 500,
+                                               nugget = 0.5))
 model_zl2
 plot(vario, model = model_zl2)
 fitted_zl2 <- fit.variogram(vario, model_zl2)
 plot(vario, model = fitted_zl2)
+```
+
+```{r}
+model_zl3 <- vgm(model = "Gau", add.to = vgm(model = "Gau",
+                                             nugget = 0.5))
+fitted_zl3 <- fit.variogram(vario, model_zl3)
+fitted_zl3
+plot(vario, model = fitted_zl3)
 ```
 
 ## Modelowanie anizotropowe
@@ -245,10 +275,36 @@ Na poniższym przykładzie zasięg ustalony dla głównego kierunku wynosi 4000 
 Wartość proporcji anizotropii, `0.4`, w tym wypadku oznacza że dla prostopadłego kierunku zasięg będzie wynosił 1600 metrów (4000 metrów x 0.4).
 
 ```{r }
-vario_map <- variogram(temp~1, punkty, cutoff = 4000, width = 400, map = TRUE)
+vario_map <- variogram(temp~1, 
+                       locations = punkty,
+                       cutoff = 4000,
+                       width = 400, 
+                       map = TRUE)
 plot(vario_map)
-vario_kier <- variogram(temp~1, punkty, alpha = c(45, 90, 135, 180), cutoff = 4000)
+vario_kier <- variogram(temp~1, 
+                        locations = punkty,
+                        alpha = c(45, 90, 135, 180),
+                        cutoff = 4000)
 plot(vario_kier, plot.numbers = TRUE)
 vario_kier_fit <- vgm(psill = 8, model = "Sph", range = 4000, nugget = 0.5, anis = c(45, 0.4))
 plot(vario_kier, vario_kier_fit, as.table = TRUE)
 ```
+
+```{r}
+vario_kier_fit2 <- fit.variogram(vario_kier,
+                                 vgm(model = "Sph",
+                                     anis = c(45, 0.4), 
+                                     nugget = 0.5))
+plot(vario_kier, vario_kier_fit2, as.table = TRUE)
+```
+
+## Zadania {#z6}
+
+<!--     Obliczyć i zwizualizować semiwariogram zmiennej VI na podstawie dostosowanych parametrów -->
+<!--     Dopasować "ręcznie" możliwie jak najlepszy model do stworzonego semiwariogramu. W raporcie zamieścić także pośrednie etapy dopasowania modelu -->
+<!--     Wykorzystać funkcję automatycznego dopasowania modelu do utworzonego semiwariogramu -->
+
+<!--     Określić kierunek i zasięg anizotropii dla zmiennej VI -->
+<!--     Obliczyć semiwariogramy kierunkowe dla zmiennej VI -->
+<!--     Dopasować model do semiwariogramów kierunkowych zmiennej VI -->
+

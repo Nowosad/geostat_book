@@ -1,10 +1,12 @@
 
 # Estymacje jednozmienne {#estymacje-jednozmienne}
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, message=FALSE, warning=FALSE}
-library("gstat")
-library("sp")
-library("geostatbook")
+library(sp)
+library(gstat)
+library(geostatbook)
 data(punkty)
 data(siatka)
 ```
@@ -36,24 +38,33 @@ Istnieje szereg meteod krigingu, w tym:
 - Inne
 
 ## Kriging prosty
+
 ### Kriging prosty (ang. *Simple kriging*)
 
 Kriging prosty zakłada, że średnia jest znana i stała na całym obszarze.
 W poniższym przykładzie po stworzeniu semiwariogramu empritycznego, dopasowano model semiwariogramu składający się z funkcji sferycznej o zasięgu 4000 metrów i wartości nuggetu równej 0,5.
 
 ```{r }
-vario <- variogram(temp~1, punkty)
+vario <- variogram(temp~1, locations = punkty)
 model <- vgm(10, model = "Sph", range = 4000, nugget = 0.5)
 model
-fitted <- fit.variogram(vario, model)
-plot(vario, model = fitted)
+plot(vario, model = model)
+```
+
+```{r}
+# fitted <- fit.variogram(vario, model)
 ```
 
 Następnie nastąpiła estymacja wartości z użyciem metody kriginu prostego. 
 W funkcji `krige()` z pakietu **gstat**, użycie tej metody wymaga ustalenia średniej wartości cechy za pomocą argumentu `beta`. 
 
 ```{r }
-sk <- krige(temp~1, punkty, siatka, model = fitted, beta = 15.32)
+mean(punkty$temp)
+sk <- krige(temp~1, 
+            locations = punkty,
+            newdata = siatka,
+            model = model,
+            beta = 15.9)
 ```
 
 Wynik krigingu prostego, jak i każdy inny uzyskany z użyciem pakietu **gstat**, można podejrzeć używając funkcji `summary()`.
@@ -72,13 +83,14 @@ spplot(sk, "var1.var")
 ```
 
 ```{r plotsy2, echo=FALSE, eval=TRUE, fig.height=8}
-library("gridExtra")
+library(gridExtra)
 p1 <- spplot(sk, "var1.pred", main = "Predykcja SK")
 p2 <- spplot(sk, "var1.var", main = "Wariancja predykcji SK")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
 ## Kriging zwykły 
+
 ### Kriging zwykły (ang. *Ordinary kriging*)
 
 W krigingu zwykłym średnia traktowana jest jako wartość nieznana. 
@@ -89,8 +101,16 @@ Parametry ruchomego okna można określić za pomocą jednego z dwóch argument�
 - `maxdist` -  użyte zostaną jedynie obserwacje w zadanej odległości
 
 ```{r }
-# ok <- krige(temp~1, punkty, siatka, model=fitted, nmax=30)
-ok <- krige(temp~1, punkty, siatka, model = fitted, maxdist = 1500)
+# ok <- krige(temp~1,
+#             locations = punkty,
+#             newdata = siatka, 
+#             model = fitted, 
+#             nmax = 30)
+ok <- krige(temp~1,
+            locations = punkty,
+            newdata = siatka, 
+            model = model, 
+            maxdist = 1500)
 ```
 
 Podobnie jak w przypadku krigingu prostego, można przyjrzeć się wynikom estymacji używając funkcji `summary()` oraz wyświetlić je używając funkcji `spplot()`.
@@ -105,7 +125,7 @@ spplot(ok, "var1.var")
 ```
 
 ```{r plotsy2ok2, echo=FALSE, eval=TRUE, fig.height=8}
-library("gridExtra")
+library(gridExtra)
 p1 <- spplot(ok, "var1.pred", main = "Predykcja OK")
 p2 <- spplot(ok, "var1.var", main = "Wariancja predykcji OK")
 grid.arrange(p1, p2, ncol = 1)
@@ -113,31 +133,35 @@ grid.arrange(p1, p2, ncol = 1)
 
 <!--
 ```{r , include=FALSE, eval=FALSE}
-spplot(ok, "var1.pred", sp.layout = list(punkty, pch = 21, col = "white"))
-spplot(ok, "var1.var", sp.layout = list(punkty, pch = 21, col = "white"))
+spplot(ok, "var1.pred", sp.layout = list(as(punkty, "Spatial"), pch = 21, col = "white"))
+spplot(ok, "var1.var", sp.layout = list(as(punkty, "Spatial"), pch = 21, col = "white"))
 ```
 -->
 
 ## Kriging z trendem
+
 ### Kriging z trendem (ang. *Kriging with a trend*)
 
 Kriging z trendem, określany również jako kriging z wewnętrznym trendem, do estymacji wykorzystuje (oprócz zmienności wartości wraz z odległością) położenie analizowanych punktów.
 Na poniższym przykładzie w funkcji `variogram()` pierwszy z argumentów przyjął postać `temp~x+y`, co oznacza, że uwzględniamy liniowy trend zależny od współrzędnej `x` oraz `y`.
 
 ```{r }
-vario_kzt <- variogram(temp~x + y, data = punkty)
+vario_kzt <- variogram(temp~x + y, locations = punkty)
 plot(vario_kzt)
 ```
 
 Dalszym etapem jest dopasowanie modelu semiwariancji, a następnie wyliczenie estymowanych wartości z użyciem funkcji `krige()`.
-Należy tutaj pamiętać, aby wzór (w przykładzie `temp~x+y`) był taki sam podczas budowania semiwariogramu, jak i interpolacji.
+Należy tutaj pamiętać, aby wzór (w przykładzie `temp~coords.x1 + coords.x2`) był taki sam podczas budowania semiwariogramu, jak i interpolacji.
 
 ```{r}
-model_kzt <- vgm(psill = 5, model = "Sph", range = 2500, nugget = 1)
+model_kzt <- vgm(model = "Sph", nugget = 1)
 fitted_kzt <- fit.variogram(vario_kzt, model_kzt)
 fitted_kzt
 plot(vario_kzt, fitted_kzt)
-kzt <- krige(temp~x + y, punkty, siatka, model = fitted_kzt)
+kzt <- krige(temp~x + y, 
+             locations = punkty, 
+             newdata = siatka, 
+             model = fitted_kzt)
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
@@ -154,7 +178,7 @@ spplot(kzt, "var1.var")
 ```
 
 ```{r plotsy2kzt, echo=FALSE, eval=TRUE, fig.height=8}
-library("gridExtra")
+library(gridExtra)
 p1 <- spplot(kzt, "var1.pred", main = "Predykcja KZT")
 p2 <- spplot(kzt, "var1.var", main = "Wariancja predykcji KZT")
 grid.arrange(p1, p2, ncol = 1)
@@ -166,11 +190,18 @@ Poniższe porównanie krigingu prostego (SK), zwykłego (OK) i z trendem (KZT) w
 W rozdziałach  \@ref(estymacje-wielozmienne) oraz \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych) pokazane będą uzyskane wyniki interpolacji temperatury powietrza korzystając z innych metod krigingu.
 
 ```{r ploty_trzy, echo=FALSE, fig.height=12}
-zmax <- round(max(sk$var1.pred, ok$var1.pred, kzt$var1.pred, na.rm = TRUE), 1) + 0.1
-zmin <- round(min(sk$var1.pred, ok$var1.pred, kzt$var1.pred, na.rm = TRUE), 1) - 0.1
+zmax <- round(max(sk$var1.pred, ok$var1.pred,
+                  kzt$var1.pred, na.rm = TRUE), 1) + 0.1
+zmin <- round(min(sk$var1.pred, ok$var1.pred,
+                  kzt$var1.pred, na.rm = TRUE), 1) - 0.1
 ramp <- seq(from = zmin, to = zmax, by = (zmax - zmin) / 20)
 p1 <- spplot(sk, "var1.pred", at = ramp, main = "SK")
 p2 <- spplot(ok, "var1.pred", at = ramp, main = "OK")
 p3 <- spplot(kzt, "var1.pred", at = ramp, main = "KZT")
 grid.arrange(p1, p2, p3, ncol = 1, padding = unit(0, "line"))
 ```
+
+## Zadania {#z7}
+
+<!--     Stworzyć prostokątną siatkę i wykonać dla niej estymację zmiennej VI metodami SK oraz OK. Wykorzystać modele bezkierunkowe utworzone w poprzednum zadaniu. -->
+<!--     Stworzyć plik zawierający 40 różnych lokalizacji w zasięgu analizowanego obszaru i przeprowadzić kriging SK oraz OK dla tych lokalizacji -->

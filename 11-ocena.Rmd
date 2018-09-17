@@ -3,12 +3,14 @@
 
 <!--[UWAGA POMIESZANY ME Z RESZTĄ!!]-->
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, message=FALSE, warning=FALSE}
-library("gstat")
-library("sp")
-library("ggplot2")
-library("caret")
-library("geostatbook")
+library(sp)
+library(gstat)
+library(caret)
+library(ggplot2)
+library(geostatbook)
 data(punkty)
 data(siatka)
 ```
@@ -18,6 +20,7 @@ par(mar = c(rep(0, 4)))
 ```
 
 ## Statystyki jakości estymacji
+
 ### Statystyki jakości estymacji
 
 W momencie, gdy trzeba określić jakość estymacji lub porównać wyniki pomiędzy estymacjami należy zastosować tzw. statystyki jakości estymacji. 
@@ -27,7 +30,9 @@ Do podstawowych statystyk ocen jakości estymacji należą:
 - Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root mean square error*)
 - Rozkład błędu (np. 5. percentyl, mediana, 95. percentyl)
     
-Idealna estymacja dawałaby brak błędu oraz współczynnik korelacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystąpieniu wartości odstających.
+Idealna estymacja dawałaby brak błędu oraz współczynnik korelacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. 
+<!-- ostrzeżenie o idealnej predykcji -->
+Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystąpieniu wartości odstających.
 
 ### Średni błąd estymacji
 
@@ -74,7 +79,8 @@ test <- punkty[-indeks, ]
 vario <- variogram(temp~1, data = train)
 model <- vgm(10, model = "Sph", range = 4000, nugget = 0.5)
 fitted <- fit.variogram(vario, model)
-test_sk <- krige(temp~1, train, test, model = fitted, beta = 15.324)
+test_sk <- krige(temp~1, train, newdata = test, 
+                 model = fitted, beta = 15.9)
 blad_predykcji_sk <- test_sk$var1.pred - test$temp
 test_sk$blad_predykcji_sk <- blad_predykcji_sk
 test_sk$true <- test$temp
@@ -121,7 +127,9 @@ Następnie korzystając ze stworzonego indeksu, budowane są dwa zbiory danych -
 
 ```{r }
 set.seed(124)
-indeks <- as.vector(createDataPartition(punkty$temp, p = 0.75, list = FALSE))
+indeks <- as.vector(createDataPartition(punkty$temp,
+                                        p = 0.75, 
+                                        list = FALSE))
 indeks
 train <- punkty[indeks, ]
 test <- punkty[-indeks, ]
@@ -130,8 +138,8 @@ test <- punkty[-indeks, ]
 Dalszym krokiem jest stworzenie semiwariogramu empirycznego oraz jego modelowanie w oparciu o zbiór treningowy.
 
 ```{r}
-vario <- variogram(temp~1, data = train)
-model <- vgm(10, model = "Sph", range = 4000, nugget = 0.5)
+vario <- variogram(temp~1, locations = train)
+model <- vgm(model = "Sph", nugget = 0.5)
 fitted <- fit.variogram(vario, model)
 plot(vario, model = fitted)
 ```
@@ -142,7 +150,11 @@ W tym przypadku jednak chcemy porównać wynik estymacji i testowy zbiór punkto
 Dlatego też, zamiast obiektu siatki definiujemy obiekt zawierający zbiór testowy (`test`).
 
 ```{r}
-test_sk <- krige(temp~1, train, test, model = fitted, beta = 15.324)
+test_sk <- krige(temp~1, 
+                 locations = train,
+                 newdata = test,
+                 model = fitted,
+                 beta = 15.9)
 summary(test_sk)
 ```
 
@@ -165,7 +177,11 @@ spplot(test_sk, "blad_predykcji_sk")
 W sytuacji, gdy uzyskany model jest wystarczająco dobry, możemy również uzyskać estymację dla całego obszaru z użyciem funkcji `krige()`, tym razem jednak podając obiekt siatki.
 
 ```{r}
-test_sk <- krige(temp~1, train, siatka, model = fitted, beta = 15.324)
+test_sk <- krige(temp~1,
+                 locations = train,
+                 newdata = siatka,
+                 model = fitted,
+                 beta = 15.9)
 spplot(test_sk, "var1.pred")
 ```
 
@@ -186,10 +202,11 @@ Działają one bardzo podobnie jak funkcje `krige()` oraz `gstat()`, jednak w pr
 
 ```{r loovv, cache=TRUE}
 vario <- variogram(temp~1, data = punkty)
-model <- vgm(10, model = "Sph", range = 4000, nugget = 0.5)
+model <- vgm(model = "Sph", nugget = 0.5)
 fitted <- fit.variogram(vario, model)
 
-cv_sk <- krige.cv(temp~1, punkty, model = fitted, beta = 15.324, verbose = FALSE)
+cv_sk <- krige.cv(temp~1, punkty, model = fitted,
+                  beta = 15.9, verbose = FALSE)
 summary(cv_sk)
 spplot(cv_sk, "residual")
 ```
@@ -197,7 +214,11 @@ spplot(cv_sk, "residual")
 Podobnie jak w walidacji podzbiorem, gdy uzyskany model jest wystarczająco dobry, estymację dla całego obszaru uzyskuje się z użyciem funkcji `krige()`.
 
 ```{r}
-cv_skk <- krige(temp~1, train, siatka, model = fitted, beta = 15.324)
+cv_skk <- krige(temp~1, 
+                locations = train,
+                newdata = siatka, 
+                model = fitted, 
+                beta = 15.9)
 spplot(cv_skk, "var1.pred")
 ```
 
@@ -258,3 +279,5 @@ krige.cv
 # spplot(grid, 'KU_se')
 ```
 -->
+
+## Zadania {#z11}

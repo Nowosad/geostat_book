@@ -10,14 +10,22 @@ bookdown::gitbook:
         <li><a href="./">Geostatystyka w R</a></li>
       after: |
         <li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencja Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a></li>
-        <li><a href="https://nowosad.github.io" target="blank">Jakub Nowosad 2016</a></li>
+        <li><a href="https://nowosad.github.io" target="blank">Jakub Nowosad 2018</a></li>
     edit:
       link: https://github.com/nowosad/geostat_book/edit/master/%s
       text: "Edytuj"
 bookdown::pdf_book:
   includes:
-    in_header: preamble.tex
+    in_header: latex/preamble.tex
+    after_body: latex/after_body.tex
+  keep_tex: yes
+  dev: "cairo_pdf"
   latex_engine: xelatex
   citation_package: natbib
-  keep_tex: FALSE
+  template: null
+  pandoc_args: --top-level-division=chapter
+  toc_depth: 3
+  toc_unnumbered: no
+  toc_appendix: yes
+quote_footer: ["\\VA{", "}{}"]
 bookdown::epub_book: default

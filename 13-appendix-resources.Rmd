@@ -1,6 +1,4 @@
----
-knit: bookdown::preview_chapter
----
+# (APPENDIX) Appendiks {-}
 
 # Źródła wiedzy {#zrodla-wiedzy}
 
@@ -9,7 +7,8 @@ knit: bookdown::preview_chapter
 - [An Introduction to R](http://cran.r-project.org/doc/manuals/R-intro.pdf) - oficjalne wprowadzenie do R
 - [Przewodnik po pakiecie R](http://www.biecek.pl/R/)
 - [Programowanie w języku R](http://rksiazka.rexamine.com/)
-- [Statystyczna analiza danych z wykorzystaniem programu R](http://ksiegarnia.pwn.pl/Statystyczna-analiza-danych-z-wykorzystaniem-programu-R,68603890,p.html) 
+- [Statystyczna analiza danych z wykorzystaniem programu R](http://ksiegarnia.pwn.pl/Statystyczna-analiza-danych-z-wykorzystaniem-programu-R,68603890,p.html)
+- [R for Data Science](http://r4ds.had.co.nz/) i jej polskie tłumaczenie [Język R. Kompletny zestaw narzędzi dla analityków danych](https://helion.pl/ksiazki/jezyk-r-kompletny-zestaw-narzedzi-dla-analitykow-danych-hadley-wickham-garrett-grolemund,jezrko.htm#format/b)
 
 ## Analizy przestrzenne w R
 

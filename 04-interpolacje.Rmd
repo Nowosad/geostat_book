@@ -1,28 +1,120 @@
 
 # Metody interpolacji {#metody-interpolacji}
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, interpolate_inits, message=FALSE, warning=FALSE}
-library("dismo")
-library("raster")
-library("sp")
-library("gstat")
-library("fields")
-library("geostatbook")
-library("deldir")
-library("rgeos")
+library(sp)
+library(rgdal)
+library(gstat)
+library(dismo)
+library(fields)
+library(geostatbook)
 data(punkty)
 data(siatka)
 data(granica)
 ```
 
-Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania. 
+```{r, echo=FALSE}
+par(mar = c(rep(0, 4)))
+```
+
+Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania do stworzenia predykcji przestrzennych. 
 Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne oraz modele statystyczne.
+
+## Tworzenie siatek
+
+W większości przypadków analiz geostatystycznych konieczne jest stworzenie siatki interpolacyjnej (pustego rastra).
+Istnieją dwa podstawowe rodzaje takich siatek - siatki regularne oraz siatki nieregularne.
+
+### Siatki regularne
+
+Siatki regularne mają kształt prostokąta obejmującego cały analizowany obszar. 
+Określenie granic obszaru można wykonać na podstawie zasięgu danych punktowych za pomocą funkcji `bbox()` z pakietu **sp**<!-- lub funkcji `extent()` z pakietu **raster**-->.
+
+```{r}
+bbox(punkty)
+```
+
+```{r, eval=FALSE, echo=FALSE}
+bbox(punkty)
+extent(punkty)
+```
+
+Do stworzenia siatki można użyć funkcji `expand.grid()`.
+Wymaga ona określenia dwóch argumentów - `x` oraz `y` (taka ich nazwa nie jest obowiązkowa). 
+Oba argumenty przyjmują trzy wartości: (i) `from` oznaczający wartość początkową współrzędnej, (ii) `to` określający wartość końcową współrzędnej, oraz (iii) `by` określający rozdzielczość. 
+Przy ustalaniu wartości początkowej i końcowej konieczne jest ich rozszerzenie względem wartości z funkcji `bbox()` lub `extent()`, aby wszystkie analizowane punkty znalazły się na badanym obszarze. 
+
+```{r }
+nowa_siatka <- expand.grid(
+  x = seq(from = 745050, to = 757050, by = 500),
+  y = seq(from = 712650, to = 721650, by = 500)
+)
+```
+
+Utworzony w ten sposób obiekt wymaga określenia współrzędnych (funkcja `coordinates()`), potwierdzenia że dane mają być siatką (funkcja `gridded()`), oraz przypisania układu współrzędnych z obiektu punktowego (funkcja `proj4string()`).
+
+```{r }
+coordinates(nowa_siatka) <- ~x + y
+gridded(nowa_siatka) <- TRUE
+proj4string(nowa_siatka) <- proj4string(punkty)
+plot(nowa_siatka)
+```
+
+Alternatywnie, do stworzenia siatki można wykorzystać funkcję `makegrid()`.
+Tworzy ona nowy obiekt na podstawie istniejącego obiektu punktowego oraz zadanej rozdzielczości. 
+
+```{r}
+nowa_siatka <- makegrid(punkty, cellsize = 500)
+names(nowa_siatka) <- c("x", "y")
+coordinates(nowa_siatka) <- ~x + y
+gridded(nowa_siatka) <- TRUE
+proj4string(nowa_siatka) <- proj4string(punkty)
+plot(nowa_siatka)
+```
+
+### Siatki regularne
+
+Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić za pomocą funkcji `plot()`. 
+W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add`.
+
+```{r }
+plot(nowa_siatka)
+plot(punkty, add = TRUE)
+```
+
+### Siatki nieregularne
+
+Siatki nieregularne mają zazwyczaj kształt wieloboku obejmującego analizowany obszar. 
+Mogą one powstać, np. w oparciu o wcześniej istniejące granice.
+Siatki nieregularne w R mogą być reprezentowane poprzez klasę `SpatialPixelsDataFrame`.
+
+W poniższym przypadku odczytywana jest granica badanego obszaru z pliku GeoPackage.
+Taki obiekt można np. stworzyć za pomocą oprogramowania gisowego takiego jak [QGIS](http://www.qgis.org/pl/site/).
+Następnie tworzony jest nowy obiekt `nowa_siatka_n` poprzez wybranie tylko tych oczek siatki, które znajdują się wewnątrz zadanych granic.
+
+```{r siatkan}
+granica <- readOGR("dane/granica.gpkg")
+nowa_siatka_n <- nowa_siatka[granica]
+```
+
+Wynik przetworzenia można zobaczyć z użyciem funkcji `plot`.
+
+```{r }
+plot(nowa_siatka_n)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+zip("dane.zip", "dane")
+```
 
 ## Modele deterministyczne
 
 Modele deterministyczne charakteryzują się tym, że ich parametry są zazwyczaj ustalane w oparciu o funkcję odległości lub powierzchni. 
 W tych modelach brakuje szacunków na temat oceny błędu modelu.
-Do zalet tych modeli należy szczególnie krótki czas obliczeń. Do modeli deterministycznych należą, między innymi:
+Zaletą tych modeli jest ich prosta oraz krótki czas obliczeń. 
+Do modeli deterministycznych należą, między innymi:
 
 - Metoda diagramów Voronoi'a (ang.  *Voronoi diagram*)
 - Metoda średniej ważonej odległością (ang. *Inverse Distance Weighted - IDW*)
@@ -30,10 +122,6 @@ Do zalet tych modeli należy szczególnie krótki czas obliczeń. Do modeli dete
 - Funkcje sklejane (ang. *Splines*)
 
 <!--http://neondataskills.org/Data-Workshops/ESA15-Going-On-The-Grid-Spatial-Interpolation-Basics/-->
-
-```{r, echo=FALSE}
-par(mar = c(rep(0, 4)))
-```
 
 ### Modele deterministyczne | Voronoi
 
@@ -43,20 +131,39 @@ Wyniki następnie można przyciąć do badanego obszaru z użyciem funkcji `inte
 
 ```{r }
 voronoi_interp <- voronoi(punkty)
-voronoi_interp <- raster::intersect(granica, voronoi_interp)
-spplot(voronoi_interp, "temp", contour = TRUE, main = "Poligony Voronoia")
+plot(voronoi_interp, main = "Poligony Voronoia")
+spplot(voronoi_interp, zcol = "temp", 
+       main = "Poligony Voronoia - temperatura")
 ```
 
 ### Modele deterministyczne | IDW
 
 Metoda średniej ważonej odległością (IDW) wylicza wartość dla każdej komórki na podstawie wartości punktów obokległych ważonych odwrotnością ich odległości. 
-W efekcie, czym punkt jest bardziej oddalony, tym mniejszy jest jego wpływ na interpolowaną wartość. 
+W efekcie, czym bardziej jest punkt oddalony, tym mniejszy jest jego wpływ na interpolowaną wartość. 
 Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (ang. *power*).
 W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`).
 
 ```{r }
-idw_wolin <- idw(temp~1, punkty, siatka, idp = 2)
-spplot(idw_wolin, "var1.pred", contour = TRUE, main = "IDW")
+idw_wolin <- idw(temp~1, locations = punkty,
+                 newdata = siatka, idp = 2)
+spplot(idw_wolin, zcol = "var1.pred", contour = TRUE, 
+       main = "IDW")
+```
+
+```{r, echo=FALSE, warning=FALSE}
+library(tidyr)
+library(ggplot2)
+d = 1:100
+df_idw = data.frame(distance = d, idp0.00 = d^-0, idp0.25 = d^-0.25, idp0.50 = d^-0.5, idp1.00 = d^-1, idp2.00 = d^-2)
+df_idw = gather(df_idw, "key", "value", idp0.00:idp2.00, -distance)
+df_idw$key = extract_numeric(df_idw$key)
+ggplot(df_idw, aes(x = distance, y = value, 
+                   color = as.factor(key), group = key)) +
+        geom_path(size = 2) + 
+        scale_color_brewer(type = "qual", 
+                           name = "Inverse distance\nweighting
+                           power") +
+        labs(x = "Distance", y = "Weight")
 ```
 
 <!--
@@ -71,15 +178,27 @@ Wymaga ona podania trzech argumentów: `formula` określającego naszą analizow
 Następnie funkcja `predict()` przenosi nowe wartości na wcześniej stworzoną siatkę.
 
 ```{r }
-wielomian_1 <- gstat(formula = temp~1, data = punkty, degree = 1)
+# wielomian 1 stopnia
+wielomian_1 <- gstat(formula = temp~1, locations = punkty,
+                     degree = 1)
 wielomian_1_pred <- predict(wielomian_1, newdata = siatka)
-spplot(wielomian_1_pred[1], contour = TRUE, main = "Powierzchnia trendu - wielomian pierwszego stopnia")
-wielomian_2 <- gstat(formula = temp~1, data = punkty, degree = 2)
+spplot(wielomian_1_pred, zcol = "var1.pred", contour = TRUE,
+       main = "Powierzchnia trendu - wielomian pierwszego
+       stopnia")
+# wielomian 2 stopnia
+wielomian_2 <- gstat(formula = temp~1, locations = punkty,
+                     degree = 2)
 wielomian_2_pred <- predict(wielomian_2, newdata = siatka)
-spplot(wielomian_2_pred[1], contour = TRUE, main = "Powierzchnia trendu - wielomian drugiego stopnia")
-wielomian_3 <- gstat(formula = temp~1, data = punkty, degree = 3)
+spplot(wielomian_2_pred, zcol = "var1.pred", contour = TRUE,
+       main = "Powierzchnia trendu - wielomian drugiego
+       stopnia")
+# wielomian 3 stopnia
+wielomian_3 <- gstat(formula = temp~1, locations = punkty,
+                     degree = 3)
 wielomian_3_pred <- predict(wielomian_3, newdata = siatka)
-spplot(wielomian_3_pred[1], contour = TRUE, main = "Powierzchnia trendu - wielomian trzeciego stopnia")
+spplot(wielomian_3_pred, zcol = "var1.pred", contour = TRUE,
+       main = "Powierzchnia trendu - wielomian trzeciego
+       stopnia")
 ```
 
 ### Modele deterministyczne | Funkcje sklejane
@@ -87,19 +206,18 @@ spplot(wielomian_3_pred[1], contour = TRUE, main = "Powierzchnia trendu - wielom
 Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**) dopasowuje krzywą powierzchnię do wartości analizowanych punktów.
 
 ```{r }
-tps <- Tps(coordinates(punkty), punkty@data$temp)
-ras <- raster(siatka)
-spline <- interpolate(ras, tps)
-spline <- mask(spline, ras)
-spplot(spline, contour = TRUE, main = "Funkcje sklejane")
+tps <- Tps(coordinates(punkty), punkty$temp)
+siatka$tps_pred <- predict(tps, coordinates(siatka))
+spplot(siatka, "tps_pred", contour = TRUE, 
+       main = "Funkcje sklejane")
 ```
 
 ### Modele deterministyczne | Porównanie
 
 ```{r echo=FALSE}
-library("gridExtra")
+library(gridExtra)
 p1 <- spplot(wielomian_3_pred[1], main = "Wielomiany")
-p2 <- spplot(spline, main = "Funkcje sklejane")
+p2 <- spplot(siatka, main = "Funkcje sklejane")
 p3 <- spplot(voronoi_interp, "temp", main = "Poligony Voronoia")
 p4 <- spplot(idw_wolin, "var1.pred", main = "IDW")
 grid.arrange(p3, p4, p1, p2)
@@ -108,8 +226,7 @@ grid.arrange(p3, p4, p1, p2)
 ## Modele statystyczne
 
 Modele statystyczne charakteryzują się tym, że ich parametry określane są w oparciu o teorię prawdopodobieństwa.
-Dodatkowo wynik estymacji zawiera także oszacowanie błędu.
-Te metody zazwyczaj wymagają większych zasobów sprzętowych.
+Dodatkowo wynik estymacji zawiera także oszacowanie błędu, jednak te metody zazwyczaj wymagają większych zasobów sprzętowych.
 Do modeli statystycznych należą, między innymi:
 
 - Kriging
@@ -118,3 +235,13 @@ Do modeli statystycznych należą, między innymi:
 - Modele hybrydowe
 
 W kolejnych rozdziałach można znaleźć omówienie kilku podstawowych typów pierwszej z tych metod - krigingu.
+
+## Zadania {#z4}
+
+<!-- 1. Korzystając z danych XX wykonaj interpolację używając: -->
+<!-- - Poligonów Voronoi'a -->
+<!-- - Metody IDW -->
+<!-- - Funkcji wielomianowych -->
+<!-- - Funckji sklejanych -->
+
+<!-- 2. Porównaj uzyskane wyniki poprzez ich wizualizację. -->

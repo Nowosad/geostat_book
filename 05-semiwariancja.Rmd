@@ -1,14 +1,15 @@
 
 # Geostatystyka - prolog {#geostatystyka-prolog}
 
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
 ```{r, message=FALSE, warning=FALSE}
-library("gstat")
-library("sp")
-library("pgirmess")
-library("ggplot2")
-library("raster")
-library("rasterVis")
-library("geostatbook")
+library(sp)
+library(rgeos)
+library(gstat)
+library(pgirmess)
+library(ggplot2)
+library(geostatbook)
 data(punkty)
 data(siatka)
 data(granica)
@@ -31,7 +32,7 @@ Geostatystyka jest to zbiór narzędzi statystycznych uwzględniających w anali
 
 <!--
 ### Geostatystyka a klasyczna statystyka
-- Isnieje informacja o lokalizacji obserwacji
+- Istnieje informacja o lokalizacji obserwacji
 -->
 
 ### Geostatystyka | Funkcje
@@ -45,13 +46,13 @@ Istnieją cztery główne funkcje geostatystyki:
 
 Inaczej mówiąc, celem geostatystyki nie musi być tylko interpolacja (estymacja) przestrzenna, ale również zrozumienie zmienności przestrzennej lub czasowej zjawiska, symulowanie wartości, oraz optymalizacja sieci pomiarowej.
 
-### Geostatystyczna analiza danych
+<!-- ### Geostatystyczna analiza danych -->
 
-Geostatystyczna analiza danych może przyjmować różną postać w zależności od postawionego celu analizy. 
-Poniższa rycina przestawia uproszczoną ścieżkę postępowania geostatystycznego. 
+<!-- Geostatystyczna analiza danych może przyjmować różną postać w zależności od postawionego celu analizy.  -->
+<!-- Poniższa rycina przestawia uproszczoną ścieżkę postępowania geostatystycznego.  -->
 
 ```{r diagram, echo=FALSE, eval=FALSE}
-library("DiagrammeR")
+library(DiagrammeR)
 # library('trelliscope')
 p <- DiagrammeR::mermaid("
                 graph TB;
@@ -63,20 +64,17 @@ p <- DiagrammeR::mermaid("
                 ")
 ```
 
-```{r, echo=FALSE, fig.width=8}
-library("knitr")
-knitr::include_graphics("figs/diag.png")
-```
+<!-- ```{r, echo=FALSE, fig.width=8} -->
+<!-- knitr::include_graphics("figs/diag.png") -->
+<!-- ``` -->
 
-<!--
-### Geostatystyka | Cele
-- Charakterystyka struktury przestrzennej badanego zjawiska
-- Uwzględnienie przestrzennych relacji między zmiennymi
-- Interpolacja wartości
-- Wizualizacja
-- Określenie niepewności danych
-- Stwierdzenie niepewności estymacji
--->
+<!-- ### Geostatystyka | Cele -->
+<!-- - Charakterystyka struktury przestrzennej badanego zjawiska -->
+<!-- - Uwzględnienie przestrzennych relacji między zmiennymi -->
+<!-- - Interpolacja wartości -->
+<!-- - Wizualizacja -->
+<!-- - Określenie niepewności danych -->
+<!-- - Stwierdzenie niepewności estymacji -->
 
 ### Geostatystyka | Podstawowe etapy
 
@@ -124,7 +122,7 @@ Podstawowe symbole w określaniu przestrzennej zmienności to:
 Przestrzenna kowariancja, korelacja i semiwariancja to miary określające przestrzenną zmienność analizowanej cechy.
 
 - Kowariancja i korelacja to miary podobieństwa pomiędzy dwoma zmiennymi
-- Przenosząc to na aspekt przestrzenny, badamy jedną zmienną, ale pomiędzy dwoma punktami odległymi od siebie o pewien dystans (okreslany jako lag)
+- Przenosząc to na aspekt przestrzenny, badamy jedną zmienną, ale pomiędzy dwoma punktami odległymi od siebie o pewien dystans (określany jako lag)
 - W efekcie otrzymujemy miarę podobieństwa pomiędzy wartością głowy i ogona
 - Trzecią miarę charakteryzującą relację między obserwacjami odległymi o kolejne odstępy jest semiwariancja
 - Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji
@@ -132,7 +130,7 @@ Przestrzenna kowariancja, korelacja i semiwariancja to miary określające przes
 - Jednocześnie, dla potrzeb interpretacji relacji, kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
 
 ```{r z_przs0, echo=FALSE}
-hscat(temp~1, punkty, breaks = c(0, 200))
+hscat(temp~1, data = punkty, breaks = c(0, 200))
 ```
 
 ### Wykres rozrzutu z przesunięciem
@@ -144,7 +142,7 @@ W przedziale 3500 do 4000 metrów osiąga jedynie 0,128.
 Pozwala to na stwierdzenie, że cecha `temp` wykazuje zmienność przestrzenną - podobieństwo jej wartości zmniejsza się wraz z odległością.
 
 ```{r z_przs, fig.height=7}
-hscat(temp~1, punkty, breaks = seq(0, 4000, by = 500))
+hscat(temp~1, data = punkty, breaks = seq(0, 4000, by = 500))
 ```
 
 ### Autokowariancja
@@ -153,7 +151,8 @@ Podobną informację jak wykres rozrzutu z przesunięciem daje autokowariancja. 
 Jej wyliczenie jest możliwe z użyciem funkcji `variogram()` z pakietu **gstat**, gdzie definiuje się analizowaną zmienną, zbiór punktowy, oraz ustala się argument `covariogram` na `TRUE`.
 
 ```{r }
-kowario <- variogram(temp~1, punkty, covariogram = TRUE)
+kowario <- variogram(temp~1, locations = punkty,
+                     covariogram = TRUE)
 plot(kowario)
 ```
 
@@ -167,7 +166,10 @@ Na poniższym przykładzie, wartość statystyki I Morana jest wyliczana poprzez
 wsp <- coordinates(punkty)
 kor <- correlog(wsp, punkty$temp, method = "Moran")
 kor <- as.data.frame(kor)
-ggplot(kor, aes(dist.class, coef)) + geom_smooth(linetype = 0) + geom_line() + geom_point(size = 5)
+ggplot(kor, aes(dist.class, coef)) + 
+        geom_smooth(linetype = 0) + 
+        geom_line() + 
+        geom_point(size = 5)
 ```
 
 ### Semiwariancja
@@ -177,8 +179,7 @@ Jest to połowa średniej kwadratu różnicy pomiędzy wartościami badanej zmie
 
 $$ \gamma(h) = \frac{1}{2}E[(z(s) - z(s+h))^2] $$
 
-Przykładowo, aby wyliczyć wartość semiwariancji (`gamma`) pomiędzy dwoma punktami musimy znać wartość pierwszego z nich (w przykładzie jest to ok.
-22,46 stopni Celsjusza) oraz drugiego z nich (ok. 16,04 stopni Celsjusza).
+Przykładowo, aby wyliczyć wartość semiwariancji (`gamma`) pomiędzy dwoma punktami musimy znać wartość pierwszego z nich (w przykładzie jest to ok. 22,46 stopni Celsjusza) oraz drugiego z nich (ok. 16,04 stopni Celsjusza).
 Korzystając z wzoru na semiwariację otrzymujemy wartość równą ok. 20,60.
 Znamy również odległość między punktami (ok. 4576,59 metra), więc możemy w uproszczeniu stwierdzić, że dla tej pary punktów odległych o 4577 metry wartość semiwariancji wynosi około 20,6.
 
@@ -196,7 +197,8 @@ Tę semiwariancję można zaprezentować na wykresie zwanym chmurą semiwariogra
 Do jej wyliczenia służy funkcja `variogram()` z argumentem `cloud = TRUE`.
 
 ```{r }
-vario_cloud <- variogram(temp~1, punkty, cloud = TRUE)
+vario_cloud <- variogram(temp~1, locations = punkty, 
+                         cloud = TRUE)
 plot(vario_cloud)
 ```
 
@@ -205,7 +207,10 @@ Aby zlokalizować te pary punktów, można zastosować funkcję `plot()` z argum
 Po skończonym wyborze należy nacisnąć klawisz Esc.
 
 ```{r chmurkowanie, eval=FALSE}
-vario_cloud_sel <- plot(variogram(temp~1, punkty, cloud = TRUE), digitize = TRUE)
+vario_cloud_sel <- plot(variogram(temp~1,
+                                  locations = punkty,
+                                  cloud = TRUE),
+                        digitize = TRUE)
 ```
 
 ```{r, echo=FALSE, fig.width=6}
@@ -216,7 +221,7 @@ knitr::include_graphics("figs/cloud_sel.png")
 Następnie można wyświetlić wybrane pary punktów z użyciem funkcji `plot()`.
 
 ```{r chmurkowanie2, eval=FALSE}
-plot(vario_cloud_sel, punkty)
+plot(vario_cloud_sel, punkty, "Spatial")
 ```
 
 ```{r, echo=FALSE, fig.width=6}
@@ -240,14 +245,14 @@ W oparciu o semiwariogram empiryczny (czyli oparty na danych) możemy następnie
 - Liczba par obserwacji:
 
 ```{r }
-0.5 * length(punkty) * (length(punkty) - 1)
+0.5 * nrow(punkty) * (nrow(punkty) - 1)
 ```
 
 - Połowa pierwiastka powierzchni:
 
 ```{r }
-pow <- area(granica)
-as.vector(0.5 * sqrt(pow))
+pow <- gArea(granica)
+0.5 * sqrt(pow)
 ```
 
  <!--
@@ -268,7 +273,7 @@ z_kwadrat <- kraw_x ^ 2 + kraw_y ^ 2
 - Powierzchnia zajmowana przez jedną próbkę:
 
 ```{r }
-pow_pr <- area(granica) / length(punkty)
+pow_pr <- gArea(granica) / nrow(punkty)
 pow_pr
 ```
 
@@ -304,7 +309,7 @@ Stworzenie podstawowego semiwariogramu w pakiecie **gstat** odbywa się z użyci
 Należy w niej zdefiniować analizowaną zmienną (w tym przykładzie `temp~1`) oraz zbiór punktowy (`punkty`).
 
 ```{r }
-vario_par <- variogram(temp~1, punkty)
+vario_par <- variogram(temp~1, locations = punkty)
 vario_par
 ```
 
@@ -319,7 +324,8 @@ Maksymalny zasięg semiwariogramu (ang. *cutoff distance*) jest domyślnie wylic
 Można jednak tę wartość zmodyfikować używając argumentu `cutoff`.
 
 ```{r}
-vario_par <- variogram(temp~1, punkty, cutoff = 4000)
+vario_par <- variogram(temp~1, locations = punkty,
+                       cutoff = 4000)
 plot(vario_par)
 ```
 
@@ -327,7 +333,8 @@ Dodatkowo, domyślnie w pakiecie **gstat** odległość między przedziałami (a
 Można to oczywiście zmienić używając zarówno argumentu `cutoff`, jak i argumentu `width` mówiącego o szerokości odstępów.
 
 ```{r }
-vario_par <- variogram(temp~1, punkty, cutoff = 1000, width = 250)
+vario_par <- variogram(temp~1, locations = punkty,
+                       cutoff = 1000, width = 250)
 plot(vario_par)
 ```
 
@@ -377,14 +384,15 @@ Następnie można ją wyświetlić używając funkcji `plot()`.
 Warto w tym wypadku użyć dodatkowego argumentu `threshold`, który powoduje, że niepewna wartość semiwariancji (wyliczona na małej liczbie punktów) nie jest wyświetlana.
 
 ```{r }
-vario_map <- variogram(temp~1, punkty, cutoff = 4000, width = 400, map = TRUE)
+vario_map <- variogram(temp~1, locations = punkty, 
+                       cutoff = 4000, width = 400, map = TRUE)
 plot(vario_map, threshold = 30) # co najmniej 30 par punktów
 ```
 
 Mapie semiwariogramu można również się przyjrzeć interaktywnie używając funkcję `plot3D()` z pakietu **rasterVis**.
 
 ```{r mapa_semi, eval=FALSE, fig.width=6}
-plot3D(raster(vario_map$map), col = rainbow)
+plot3D(raster(vario_map$map), col = terrain.colors)
 ```
 
 ```{r, echo=FALSE}
@@ -398,6 +406,21 @@ Dla argumentu `alpha = c(0, 45, 90, 135)` wybrane cztery główne kierunki to 0,
 Oznacza to, że przykładowo dla kierunku 45 stopni brane pod uwagę będą wszystkie pary punktów pomiędzy 22,5 a 67,5 stopnia.
 
 ```{r }
-vario_kier <- variogram(temp~1, punkty, alpha = c(0, 45, 90, 135))
+vario_kier <- variogram(temp~1, locations = punkty, 
+                        alpha = c(0, 45, 90, 135))
 plot(vario_kier)
 ```
+
+## Zadania {#z5}
+
+
+<!--     Wykorzystując wzór na semiwariancję obliczyć semiwariancję dla wartości sum opadów w czerwcu (VI) pomiędzy 5 losowo wybranymi punktami ze zbioru danych. (Podpowiedź - Wybór losowy punktów: sample(dane$Nr, 5)). -->
+<!--     Przeprowadzić analizę struktury przestrzennej zmiennej VI obejmującą: -->
+<!--         obliczenie i wizualizację semiwariogramu na podstawie parametrów domyślnych, +obliczenie i wizualizacja semiwariogramu na podstawie dostosowanych parametrów. -->
+<!--         określenie wartości efektu nuggetowego, zasięgu oraz wariancji progowej dla poszczególnych semiwariogramów. -->
+
+<!-- W raporcie proszę zamieścić tabelę zawierającą następujące zestawienie: -->
+
+<!--     maksymalny zasięg semiwariogramu oraz szerokość odstępów dla parametrów domyślnych; -->
+<!--     maksymalny zasięg semiwariogramu oraz szerokość odstępów dla parametrów dostosowanych; -->
+<!--     wartości efektu nuggetowego, zasięgu oraz wariancji progowej dla semiwariogramu wykonanego w oparciu o parametry domyslne i dostosowane. -->
