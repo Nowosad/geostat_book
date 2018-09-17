@@ -14,7 +14,7 @@ monofontoptions: "Scale=0.7"
 description: "Introduction to geostatistics with R (in Polish)."
 url: 'https\://bookdown.org/nowosad/Geostatystyka/'
 github-repo: "nowosad/geostat_book"
-cover-image: Rfigs/book_cover.png
+cover-image: Rfigs/book_cover2.png
 ---
 
 # Wprowadzenie
