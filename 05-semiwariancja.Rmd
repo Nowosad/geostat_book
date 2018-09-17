@@ -32,7 +32,7 @@ Geostatystyka jest to zbiór narzędzi statystycznych uwzględniających w anali
 
 <!--
 ### Geostatystyka a klasyczna statystyka
-- Isnieje informacja o lokalizacji obserwacji
+- Istnieje informacja o lokalizacji obserwacji
 -->
 
 ### Geostatystyka | Funkcje
@@ -46,13 +46,13 @@ Istnieją cztery główne funkcje geostatystyki:
 
 Inaczej mówiąc, celem geostatystyki nie musi być tylko interpolacja (estymacja) przestrzenna, ale również zrozumienie zmienności przestrzennej lub czasowej zjawiska, symulowanie wartości, oraz optymalizacja sieci pomiarowej.
 
-### Geostatystyczna analiza danych
+<!-- ### Geostatystyczna analiza danych -->
 
-Geostatystyczna analiza danych może przyjmować różną postać w zależności od postawionego celu analizy. 
-Poniższa rycina przestawia uproszczoną ścieżkę postępowania geostatystycznego. 
+<!-- Geostatystyczna analiza danych może przyjmować różną postać w zależności od postawionego celu analizy.  -->
+<!-- Poniższa rycina przestawia uproszczoną ścieżkę postępowania geostatystycznego.  -->
 
 ```{r diagram, echo=FALSE, eval=FALSE}
-library("DiagrammeR")
+library(DiagrammeR)
 # library('trelliscope')
 p <- DiagrammeR::mermaid("
                 graph TB;
@@ -64,20 +64,17 @@ p <- DiagrammeR::mermaid("
                 ")
 ```
 
-```{r, echo=FALSE, fig.width=8}
-library("knitr")
-knitr::include_graphics("figs/diag.png")
-```
+<!-- ```{r, echo=FALSE, fig.width=8} -->
+<!-- knitr::include_graphics("figs/diag.png") -->
+<!-- ``` -->
 
-<!--
-### Geostatystyka | Cele
-- Charakterystyka struktury przestrzennej badanego zjawiska
-- Uwzględnienie przestrzennych relacji między zmiennymi
-- Interpolacja wartości
-- Wizualizacja
-- Określenie niepewności danych
-- Stwierdzenie niepewności estymacji
--->
+<!-- ### Geostatystyka | Cele -->
+<!-- - Charakterystyka struktury przestrzennej badanego zjawiska -->
+<!-- - Uwzględnienie przestrzennych relacji między zmiennymi -->
+<!-- - Interpolacja wartości -->
+<!-- - Wizualizacja -->
+<!-- - Określenie niepewności danych -->
+<!-- - Stwierdzenie niepewności estymacji -->
 
 ### Geostatystyka | Podstawowe etapy
 
@@ -125,7 +122,7 @@ Podstawowe symbole w określaniu przestrzennej zmienności to:
 Przestrzenna kowariancja, korelacja i semiwariancja to miary określające przestrzenną zmienność analizowanej cechy.
 
 - Kowariancja i korelacja to miary podobieństwa pomiędzy dwoma zmiennymi
-- Przenosząc to na aspekt przestrzenny, badamy jedną zmienną, ale pomiędzy dwoma punktami odległymi od siebie o pewien dystans (okreslany jako lag)
+- Przenosząc to na aspekt przestrzenny, badamy jedną zmienną, ale pomiędzy dwoma punktami odległymi od siebie o pewien dystans (określany jako lag)
 - W efekcie otrzymujemy miarę podobieństwa pomiędzy wartością głowy i ogona
 - Trzecią miarę charakteryzującą relację między obserwacjami odległymi o kolejne odstępy jest semiwariancja
 - Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji

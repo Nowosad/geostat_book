@@ -42,7 +42,7 @@ Zmienne:
 - clc - uproszczona kategoria pokrycia terenu z bazy Corine Land Cover. 
 1 oznacza tereny rolne, 2 oznacza lasy i ekosystemy seminaturalne, 3 to obszary podmokłe, 4 to obszary wodne
 - temp - temperatura powierzchni ziemi w stopniach Celsjusza 
-- ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference  Vegetation Index*)
+- ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference Vegetation Index*)
 - savi - ang. *Soil Adjusted Vegetation Index*
 
 ```{r}
@@ -59,7 +59,7 @@ data("punkty_ndvi")
 Zbiór danych `punkty_ndvi` zawiera 1011 obserwacji oraz 1 zmienną dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
 Zmienna:
 
-- ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference  Vegetation Index*)
+- ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference Vegetation Index*)
 
 ```{r}
 spplot(punkty_ndvi)
@@ -80,7 +80,7 @@ Zmienna:
 - clc - uproszczona kategoria pokrycia terenu z bazy Corine Land Cover. 
 1 oznacza tereny rolne, 2 oznacza lasy i ekosystemy seminaturalne, 3 to obszary podmokłe, 4 to obszary wodne
 - temp - temperatura powierzchni ziemi w stopniach Celsjusza 
-- ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference  Vegetation Index*)
+- ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference Vegetation Index*)
 - savi - ang. *Soil Adjusted Vegetation Index*
 
 ```{r}
@@ -119,3 +119,4 @@ Zawiera ona ona 127 wierszy i 96 kolumn oraz 4 zmienne:
 ```{r}
 spplot(siatka)
 ```
+

@@ -31,7 +31,7 @@ Kriging daje optymalne predykcje, czyli wyznacza najbardziej potencjalnie możli
 Dodatkowo, efektem krigingu jest wygładzony obraz. 
 W konsekwencji wyniki estymacji różnią się od danych pomiarowych. 
 Uzyskiwana jest tylko (aż?) predykcja, a prawdziwa wartość jest niepewna...
-Korzystając z symulacji geostatystycznych nie tworzymy predykcji, ale generujemy równie prawdopodobne możliwości poprzez symulację z rozkładu prawdopodobieństwa (wykorzystując genereator liczb losowych).
+Korzystając z symulacji geostatystycznych nie tworzymy predykcji, ale generujemy równie prawdopodobne możliwości poprzez symulację z rozkładu prawdopodobieństwa (wykorzystując generator liczb losowych).
 
 ### Symulacje geostatystyczne
 
@@ -55,8 +55,9 @@ Istnieją dwa typy symulacji geostatystycznych:
 
 <!--http://santiago.begueria.es/2010/10/generating-spatially-correlated-random-fields-with-r/-->
 Symulacje bezwarunkowe w pakiecie **gstat** tworzy się z wykorzystaniem funkcji `krige()`. 
-Podobnie jak w przypadku estymacji geostatystycznych, należy tutaj podać wzór, model, siatkę, średnią globalną (`beta`), oraz liczbę sąsiednich punktów używanych do symulacji (w przykadzie poniżej `nmax = 30`). 
-Należy wprowadzić również informacje, że nie korzystamy z danych punktowych (`locations = NULL`) oraz że chcemy stworzyć dane sztuczne (`dummy = TRUE`). Ostani argument (`nsim = 4`) informuje o liczbie symulacji do przeprowadzenia.
+Podobnie jak w przypadku estymacji geostatystycznych, należy tutaj podać wzór, model, siatkę, średnią globalną (`beta`), oraz liczbę sąsiednich punktów używanych do symulacji (w przykładzie poniżej `nmax = 30`). 
+Należy wprowadzić również informacje, że nie korzystamy z danych punktowych (`locations = NULL`) oraz że chcemy stworzyć dane sztuczne (`dummy = TRUE`). 
+Ostatni argument (`nsim = 4`) informuje o liczbie symulacji do przeprowadzenia.
 
 ```{r sym_bezw1, cache=TRUE}
 sym_bezw1 <- krige(formula = z~1, 
@@ -172,7 +173,7 @@ sym_sk <- krige(temp_log~1,
 
 Uzyskane wyniki należy przeliczyć do oryginalnej jednostki, a następnie wyliczyć odchylenie standardowe ich wartości.
 Można to zrobić korzystając dwukrotnie z funkcji `apply()`.
-Prywrócenie oryginalnej jednostki odbywa się poprzez argumenty `MARGIN = 2` oraz `FUN = exp`.
+Przywrócenie oryginalnej jednostki odbywa się poprzez argumenty `MARGIN = 2` oraz `FUN = exp`.
 Oznacza on, że funkcja `exp()` będzie wykonana na każdej kolumnie.
 W efekcie tej operacji liczba kolumn nie ulega zmianie.
 

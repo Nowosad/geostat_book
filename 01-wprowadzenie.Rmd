@@ -88,7 +88,7 @@ Więcej o pakiecie **sf** oraz **raster** można przeczytać w [rozdziale drugim
 
 ### Układ współrzędnych prostokątnych płaskich
 
-- Okreslane są w miarach liniowych (np. metrach)
+- Określane są w miarach liniowych (np. metrach)
 - Proporcje między współrzędną X a Y są równe 1:1
 - Wielkość oczka jest stała
 <!-- -->
@@ -96,7 +96,7 @@ Więcej o pakiecie **sf** oraz **raster** można przeczytać w [rozdziale drugim
 ## Import danych
 
 R pozwala na odczytywanie danych przestrzennych z wielu formatów.
-Do najpopularniejszych należą dane tekstowe z plików .csv, dane wektorowe z plików .shp, dane rastrowe z plików w formacie geotiff, oraz bazy danych przestrzennych z plików .gpkg.
+Do najpopularniejszych należą dane tekstowe z plików .csv, dane wektorowe z plików .shp, dane rastrowe z plików w formacie GeoTIFF, oraz bazy danych przestrzennych z plików .gpkg.
 
 ### Format .csv (dane punktowe)
 

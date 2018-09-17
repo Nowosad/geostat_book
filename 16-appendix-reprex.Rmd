@@ -17,7 +17,7 @@ Można do tego użyć funkcji `sessionInfo()`
 
 ## Pakiet **reprex**
 
-Stworzenie powtarzalnego przykładu w R może zostać ułatione poprzez stosowanie pakietu **reprex**. 
+Stworzenie powtarzalnego przykładu w R może zostać ułatwione poprzez stosowanie pakietu **reprex**. 
 Ten pakiet uruchamia wybraną część kodu, wykonuje kolejne operacje, a następnie zapisuje uzyskany wynik do schowka.
 
 
@@ -29,7 +29,7 @@ install.packages("reprex")
 
 Główną funkcją w tym pakiecie jest `reprex()`.
 Funkcję `reprex()` można też użyć poprzez wpisanie kodu wewnątrz tej funkcji lub też poprzez wybranie opcji `Reprex selection` z meny Addins w RStudio.
-Możliwe jest różnieź stworzenie powtarzalnego przykładu na podstawie skryptu R:
+Możliwe jest również stworzenie powtarzalnego przykładu na podstawie skryptu R:
 
 ```{r, eval=FALSE}
 reprex(input = "moj_skrypt.R")
@@ -39,7 +39,7 @@ reprex(input = "moj_skrypt.R")
 
 ### Prosty przykład
 
-Sprawdźmy działanie pakietu **reprex** na prostym przykładzie - tworzymy dwa obiekty `x` i `y`, nadajemy im wartości a następnie mnożnymy je przez siebie:
+Sprawdźmy działanie pakietu **reprex** na prostym przykładzie - tworzymy dwa obiekty `x` i `y`, nadajemy im wartości a następnie mnożymy je przez siebie:
 
 ```{r, eval=FALSE}
 library(reprex)
@@ -57,7 +57,7 @@ Po jego uruchomieniu otrzymujemy wynik zapisany w schowku jako Markdown oraz w p
 ### Złożony przykład
 
 Spróbujmy teraz trochę bardziej skomplikowanego przykładu.
-Naszym celem jest stworznie mapy punktowej temperatury na podstawie obiektu **punkty**.
+Naszym celem jest stworzenie mapy punktowej temperatury na podstawie obiektu **punkty**.
 Powtarzalny przykład może posłużyć do szybkiego określenia problemów z kodem:
 
 ```{r, eval=FALSE}
