@@ -12,6 +12,7 @@ r_packages:
   - rgdal
   - sp
   - rgeos
+  - bookdown
 
 install:
   - R -e "install.packages('devtools')"
