@@ -330,3 +330,4 @@ spplot(siatka_sp, "band3")
 
 <!-- 1. Wczytaj dane z pliku XX, przetwórz je do postaci obiektu przestrzennego, stwórz mapę zmiennej XX, a następnie zapisz obiekt przestrzenny do formatu XX. -->
 <!-- 2. Stwórz powtarzalny przykład (ang. *reproducible example*) w oparciu o stworzony kod używając pakietu **reprex**. -->
+<!-- 2. Zapisz mapę do pliku graficznego. -->
