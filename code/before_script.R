@@ -1,4 +1,8 @@
-library("methods")
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = '\\textwidth')
+library(methods)
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE,
+                      out.width = "\\textwidth",
+                      fig.align = "center",
+                      fig.width = 8,
+                      fig.show = "hold")
 options(scipen = 99 * 99)
-
