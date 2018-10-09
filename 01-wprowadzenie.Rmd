@@ -328,6 +328,7 @@ spplot(siatka_sp, "band3")
 
 ## Zadania {#z1}
 
-<!-- 1. Wczytaj dane z pliku XX, przetwórz je do postaci obiektu przestrzennego, stwórz mapę zmiennej XX, a następnie zapisz obiekt przestrzenny do formatu XX. -->
-<!-- 2. Stwórz powtarzalny przykład (ang. *reproducible example*) w oparciu o stworzony kod używając pakietu **reprex**. -->
-<!-- 2. Zapisz mapę do pliku graficznego. -->
+1. Wczytaj dane z pliku `punkty_ndvi.csv` i przetwórz je do postaci obiektu przestrzennego `ndvi_p`.
+2. Stwórz mapę zmiennej `ndvi` z nowoutworzonego obiektu. (Dodatkowo: zapisz mapę do pliku graficznego `punkty_ndvi.png`).
+3. Zapisz obiekt `ndvi_p` do formatu GeoPackage oraz do formatu Esri Shapefile.
+4. Stwórz powtarzalny przykład (więcej informacji w appendiksie \@ref(reprex)) używając pakiet **reprex** w oparciu o kod stworzony do rozwiązania trzech powyższych zadań.
