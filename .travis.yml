@@ -8,12 +8,6 @@ before_install:
   - sudo apt-get install --yes libproj-dev libgeos-dev libgdal-dev libudunits2-dev
   - chmod +x _build.sh _publish.sh
 
-r_packages:
-  - rgdal
-  - sp
-  - rgeos
-  - bookdown
-
 install:
   - R -e "install.packages('devtools')"
   - R -e "devtools::install_github('nowosad/geostatbook')"
