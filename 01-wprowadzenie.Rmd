@@ -3,6 +3,17 @@
 
 ## Wprowadzenie
 
+### Reprezentacja danych nieprzestrzennych
+    
+- Wektory (ang. *vector*):
+    - liczbowe (ang. *integer*, *numeric*) - `c(1, 2, 3)` i `c(1.21, 3.32, 4.43)`
+    - znakowe (ang. *character*) - `c("jeden", "dwa", "trzy")`
+    - logiczne (ang. *logical*) - `c(TRUE, FALSE)`
+    - czynnikowe (ang. *factor*) - `c("jeden", "dwa", "trzy", "jeden")`
+- Ramki danych (ang. *data.frame*) - to zbiór zmiennych (kolumn) oraz obserwacji (wierszy) zawierających różne typy danych
+- Macierze (ang. *matrix*)
+- Listy (ang. *list*)
+
 ### Pakiety
 
 R zawiera wiele funkcji pozwalających na przetwarzanie, wizualizację i analizowanie danych przestrzennych.
@@ -18,25 +29,16 @@ Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi:
 
 Więcej szczegółów na ten temat pakietów R służących do analizy przestrzennej można znaleźć pod adresem https://cran.r-project.org/web/views/Spatial.html.
 
-### Reprezentacja danych nieprzestrzennych
-    
-- Wektory (ang. *vector*):
-    - liczbowe (ang. *integer*, *numeric*) - `c(1, 2, 3)` i `c(1.21, 3.32, 4.43)`
-    - znakowe (ang. *character*) - `c("jeden", "dwa", "trzy")`
-    - logiczne (ang. *logical*) - `c(TRUE, FALSE)`
-    - czynnikowe (ang. *factor*) - `c("jeden", "dwa", "trzy", "jeden")`
-- Ramki danych (ang. *data.frame*) - to zbiór zmiennych (kolumn) oraz obserwacji (wierszy) zawierających różne typy danych
-- Macierze (ang. *matrix*)
-- Listy (ang. *list*)
-
 ### Reprezentacja danych przestrzennych
 
 Dane przestrzenne mogą być reprezentowane w R poprzez szereg różnych klas obiektów z użyciem różnych pakietów R. 
 Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klas `Spatial*` z pakietu **sp** oraz obiekty klasy `sf` z pakietu **sf**.
 
 Wszystkie obiekty klasy `Spatial*` z pakietu **sp** zawierają tablę atrybutów oraz dwie dodatkowe informacje:
+
     - bounding box (`bbox`) - obwiednia - określa zasięg danych
     - CRS (`proj4string`) - układ współrzędnych
+
 Ten pakiet definiuje klasę obiektów - sposób reprezentacji danych.
 Najczęściej stosowane obiekty klasy `Spatial*` to `SpatialPointsDataFrame`, `SpatialPolygonsDataFrame` oraz `SpatialGridDataFrame`. 
 Ostatnia klasa reprezentuje dane rastrowe.  
@@ -49,34 +51,30 @@ Więcej o pakiecie **sf** oraz **raster** można przeczytać w [rozdziale drugim
 
 ### GDAL/OGR
 
+- Pakiety **rgdal**, **raster** czy **sf** wykorzystują biblioteki GDAL/OGR w R do wczytywania i zapisywania danych przestrzennych
 - http://www.gdal.org/
 - GDAL to biblioteka zawierająca funkcje służące do odczytywania i zapisywania danych w formatach rastrowych
 - OGR to biblioteka służąca to odczytywania i zapisywania danych w formatach wektorowych
-- Pakiety **sf**, **raster** czy **rgdal** wykorzystują biblioteki GDAL/OGR w R do wczytywania i zapisywania danych przestrzennych
 
 ### PROJ
 
+- Pakiety **sp**, **raster**, czy **sf** używają biblioteki PROJ do określania i konwersji układów współrzędnych
 - https://proj4.org/
 - Dane przestrzenne powinny być zawsze powiązane z układem współrzędnych
 - PROJ - to biblioteka pozwalająca na identyfikację oraz konwersję pomiędzy różnymi układami współrzędnych
 - Strona http://www.spatialreference.org/ zawiera bazę danych układów współrzędnych 
+- Układy współrzędnych mogą być opisywane na szereg sposobów, np poprzez:
 
-### EPSG
+    - Reprezentację proj4string - określa ona szereg własności ukladu współrzędnych
+    - Kod EPSG (ang. *European Petroleum Survey Group*) - pozwala on na łatwe identyfikowanie układów współrzędnych.
 
-- Kod EPSG (ang. *European Petroleum Survey Group*) pozwala na łatwe identyfikowanie układów współrzędnych
 - Przykładowo, układ PL 1992 może być określony jako:
 
 `"+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"`
 
 - ...lub też za pomocą kodu EPSG:
-
+    
 `"+init=epsg:2180"`
-
-### GEOS
-
-- http://geos.osgeo.org/
-- GEOS to biblioteka pozwalająca na przetwarzanie obiektów przestrzennych
-- Przykładowe funkcje tej biblioteki to tworzenie buforów, wyliczanie centroidów, określanie relacji topologicznych (np. przecina, zawiera, etc.) i wiele innych
 
 ### Układ geograficzny
 
@@ -92,6 +90,13 @@ Więcej o pakiecie **sf** oraz **raster** można przeczytać w [rozdziale drugim
 - Proporcje między współrzędną X a Y są równe 1:1
 - Wielkość oczka jest stała
 <!-- -->
+
+### GEOS
+
+- Pakiety **rgeos** czy **sf** używają biblioteki GEOS do wykonywania operacji przestrzennych
+- http://geos.osgeo.org/
+- GEOS to biblioteka pozwalająca na przetwarzanie obiektów przestrzennych
+- Przykładowe funkcje tej biblioteki to tworzenie buforów, wyliczanie centroidów, określanie relacji topologicznych (np. przecina, zawiera, etc.) i wiele innych
 
 ## Import danych
 
@@ -251,7 +256,7 @@ W przypadku zapisu danych wektorowych za pomocą funkcji `writeOGR()` konieczne 
 
 ```{r zapis_wektora1, eval=FALSE}
 # formaty wektorowe
-writeOGR(granica, dsn = "dane", layer = "nowa_granica",
+writeOGR(granica_sp, dsn = "dane", layer = "nowa_granica",
          driver = "ESRI Shapefile")
 ```
 
