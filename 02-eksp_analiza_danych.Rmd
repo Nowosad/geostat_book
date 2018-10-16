@@ -242,7 +242,7 @@ summary(aov_test)
 Do wykonania porównań wielokrotnych służy funkcja `TukeyHSD()`.
 Dodatkowo wyniki można wizualizować za pomocą funkcji `plot()`.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE}
 dev.off()
 ```
 
@@ -344,9 +344,23 @@ ggplot(punkty@data, aes(bc_tpz_inv)) + geom_density()
 
 ## Zadania {#z2}
 
-<!-- Wykonać eksploracyjną nieprzestrzenną analizę danych dla zmiennej VI (czerwiec): -->
+Przyjrzyj się danym z obiektu `punkty_pref`.
+Możesz go wczytać używając poniższego kodu:
 
-<!--     Analizę typu rozkładu danych (wykresy, statystyki) -->
-<!--     Identyfikację wartości globalnie odstających -->
-<!--     Czy sumy opadów z czerwca (VI) różnią się istotnie statystycznie pomiędzy regionami klimatycznymi wyznaczonymi przez zmienną Region? -->
+```{r}
+data("punkty_pref")
+```
 
+1. Ile obserwacji i zmiennych jest zawartych w tym obiekcie? 
+Jaka jest jego klasa?
+2. Określ i opisz podstawowe statystyki opisowe zmiennej `ndvi`.
+3. Stwórz histogram obrazujący rozkład tej zmiennej.
+Czym charakteryzuje się ten rozkład?
+4. Jakie jest prawdopodobieństwo przekroczenia wartości `ndvi` 0.4 w tym zbiorze danych?
+5. Określ korelację pomiędzy zmienną `ndvi` a `savi`.
+Czy jest ona istotna statystycznie?
+6. Zbuduj wykres pokazujący zmienność `ndvi` w zależności od klasy pokrycia terenu. 
+Czy istnieje istotna statystycznie różnica w wartościach `ndvi` względem klas pokrycia terenu?
+7. Wypróbuj różne metody tranformacji danych w celu redukcji skośności rozkładu zmiennej `ndvi`.
+Która metoda działa w tym przypadku najlepiej?
+8. Stwórz powtarzalny przykład (więcej informacji w appendiksie \@ref(reprex)) używając pakiet **reprex** w oparciu o kod stworzony do rozwiązania poprzedniego zadania.
