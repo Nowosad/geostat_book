@@ -237,10 +237,14 @@ W kolejnych rozdziałach można znaleźć omówienie kilku podstawowych typów p
 
 ## Zadania {#z4}
 
-<!-- 1. Korzystając z danych XX wykonaj interpolację używając: -->
-<!-- - Poligonów Voronoi'a -->
-<!-- - Metody IDW -->
-<!-- - Funkcji wielomianowych -->
-<!-- - Funckji sklejanych -->
+1. Stwórz siatkę interpolacyjną o rozdzielczości 200 metrów dla obszaru Suwalskiego Parku Krajobrazowego.
+2. Korzystając z danych `punkty` wykonaj interpolację zmiennej `srtm` używając:
+- Poligonów Voronoi'a
+- Metody IDW
+- Funkcji wielomianowych
+- Funkcji sklejanych
+3. Porównaj uzyskane wyniki poprzez ich wizualizację. 
+Czym różnią się powyższe metody?
+4. Wykonaj interpolację zmiennej `temp` metodą IDW sprawdzając różne parametry argumentu `idp`. 
+W jaki sposób wpływa on na uzyskaną interpolację?
 
-<!-- 2. Porównaj uzyskane wyniki poprzez ich wizualizację. -->
