@@ -135,7 +135,7 @@ ggplot(punkty@data, aes(temp)) + geom_density()
 Wykres kwantyl-kwantyl ułatwia interpretację rozkładu danych. 
 
 ```{r }
-ggplot(punkty@data, aes(sample = temp)) + stat_qq()
+ggplot(punkty@data, aes(sample = temp)) + geom_qq()
 ```
 
 Na poniższej rycinie można zobaczyć przykłady najczęściej spotykanych cech rozkładu danych w wykresach kwantyl-kwantyl.
@@ -179,8 +179,8 @@ Z racji unormowania nie jest ona uzależniona od jednostki. Korelację można wy
 Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego obiektu zawierającego zmienne numeryczne.
 
 ```{r }
-ggplot(punkty@data, aes(temp, ndvi)) + geom_point()
 cor(punkty$temp, punkty$ndvi)
+ggplot(punkty@data, aes(temp, ndvi)) + geom_point()
 ```
 
 <!-- ```{r } -->
