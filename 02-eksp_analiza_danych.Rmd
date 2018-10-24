@@ -6,7 +6,6 @@ Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietó
 ```{r, message=FALSE, warning=FALSE}
 library(sp)
 library(ggplot2)
-library(corrplot)
 library(geostatbook)
 data(punkty)
 data(granica)
