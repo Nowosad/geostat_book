@@ -230,7 +230,7 @@ summary(aov_test)
 Do wykonania porównań wielokrotnych służy funkcja `TukeyHSD()`.
 Dodatkowo wyniki można wizualizować za pomocą funkcji `plot()`.
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, include=FALSE}
 dev.off()
 ```
 
