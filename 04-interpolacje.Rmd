@@ -132,6 +132,9 @@ Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi(
 ```{r }
 voronoi_interp <- voronoi(punkty)
 plot(voronoi_interp, main = "Poligony Voronoia")
+```
+
+```{r}
 spplot(voronoi_interp, zcol = "temp", 
        main = "Poligony Voronoia - temperatura")
 ```
@@ -184,6 +187,9 @@ wielomian_1_pred <- predict(wielomian_1, newdata = siatka)
 spplot(wielomian_1_pred, zcol = "var1.pred", contour = TRUE,
        main = "Powierzchnia trendu - wielomian pierwszego
        stopnia")
+```
+
+```{r }
 # wielomian 2 stopnia
 wielomian_2 <- gstat(formula = temp~1, locations = punkty,
                      degree = 2)
@@ -191,6 +197,9 @@ wielomian_2_pred <- predict(wielomian_2, newdata = siatka)
 spplot(wielomian_2_pred, zcol = "var1.pred", contour = TRUE,
        main = "Powierzchnia trendu - wielomian drugiego
        stopnia")
+```
+
+```{r }
 # wielomian 3 stopnia
 wielomian_3 <- gstat(formula = temp~1, locations = punkty,
                      degree = 3)
