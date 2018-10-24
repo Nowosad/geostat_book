@@ -127,7 +127,7 @@ Do modeli deterministycznych należą, między innymi:
 
 Metoda diagramów Voronoi'a polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego punktu. 
 Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi()` z pakietu **dismo**.
-Wyniki następnie można przyciąć do badanego obszaru z użyciem funkcji `intersect()` z pakietu **raster**.
+<!-- Wyniki następnie można przyciąć do badanego obszaru z użyciem funkcji `intersect()` z pakietu **raster**. -->
 
 ```{r }
 voronoi_interp <- voronoi(punkty)
@@ -161,9 +161,8 @@ ggplot(df_idw, aes(x = distance, y = value,
                    color = as.factor(key), group = key)) +
         geom_path(size = 2) + 
         scale_color_brewer(type = "qual", 
-                           name = "Inverse distance\nweighting
-                           power") +
-        labs(x = "Distance", y = "Weight")
+                           name = "idp") +
+        labs(x = "Odległość", y = "Waga")
 ```
 
 <!--
@@ -217,7 +216,7 @@ spplot(siatka, "tps_pred", contour = TRUE,
 ```{r echo=FALSE}
 library(gridExtra)
 p1 <- spplot(wielomian_3_pred[1], main = "Wielomiany")
-p2 <- spplot(siatka, main = "Funkcje sklejane")
+p2 <- spplot(siatka, "tps_pred", main = "Funkcje sklejane")
 p3 <- spplot(voronoi_interp, "temp", main = "Poligony Voronoia")
 p4 <- spplot(idw_wolin, "var1.pred", main = "IDW")
 grid.arrange(p3, p4, p1, p2)
