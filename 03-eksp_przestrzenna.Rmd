@@ -29,10 +29,19 @@ Z tego powodu bardzo cenne jest odpowiednie wykorzystanie informacji z próby.
 
 Eksploracyjna analiza danych przestrzennych w przypadku danych punktowych ma na celu:
 
-- Wgląd w typ próbkowania danych
 - Sprawdzenie poprawności współrzędnych
+- Wgląd w typ próbkowania danych
 - Sprawdzenie poprawności danych, w tym między innymi określenie danych odstających lokalnie
 - Identyfikacja głównych cech struktury przestrzennej zjawiska (np. trend)
+
+## Sprawdzenie poprawności współrzędnych
+
+Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()`.
+
+```{r}
+plot(granica)
+plot(punkty, add = TRUE)
+```
 
 ## Próbkowanie
 
@@ -89,13 +98,6 @@ plot(pref)
 ```
 
 ## Dane lokalnie odstające
-
-Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()`.
-
-```{r}
-plot(granica)
-plot(punkty, add = TRUE)
-```
 
 Dane lokalnie odstające oznaczają nietypowe przestrzennie wartości danej cechy.
 Inaczej mówiąc, może to być niska wartość otoczona wysokimi wartościami lub też wysoka wartość otoczona niskimi wartościami.
