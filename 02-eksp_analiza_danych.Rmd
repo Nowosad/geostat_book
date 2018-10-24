@@ -332,7 +332,7 @@ gridExtra::grid.arrange(p1, p5, p6, ncol = 1)
 Pierwiastkowanie w R może odbyć się za pomocą funkcji `sqrt()`. 
 Odwrócenie tej transformacji odbywa się poprzez podniesienie wartości do potęgi (`^2`).
 
-```{r }
+```{r, eval=FALSE}
 ggplot(punkty@data, aes(temp)) + geom_density()
 punkty$sqrt_tpz <- sqrt(punkty$temp)
 ggplot(punkty@data, aes(sqrt_tpz)) + geom_density()
