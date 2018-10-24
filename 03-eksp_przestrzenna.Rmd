@@ -302,5 +302,5 @@ mapview(punkty["temp"])
 
 ## Zadania {#z3}
 
-<!-- Wykonać mapę pokazującą przestrzenny rozkład opadów w czerwcu (VI) -->
-<!-- + analiza -->
+1. Określ i opisz typ próbkowania danych `punkty`.
+2. Wykonaj mapę pokazującą przestrzenny rozkład wartości NDVI w zbiorze `punkty`. (Dodatkowo: spróbuj użyć do tego pakietu **tmap** - `install.packages("tmap")`).
