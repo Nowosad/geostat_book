@@ -48,18 +48,6 @@ Przykładowo `punkty$temp` pozwala na obejrzenie wartości wybranej zmiennej z t
 str(punkty$temp)
 ```
 
-Z uwagi na to, że zajmujemy się danymi przestrzennymi - warto też się upewnić czy dane zostały poprawnie wczytane i obejmują analizowany obszar.
-Najszybciej można to wykonać z pomocą funkcji `plot()`.
-
-```{r, echo=FALSE}
-par(mar = c(rep(0, 4)))
-```
-
-```{r, message=FALSE, warning=FALSE}
-plot(punkty)
-plot(granica, add = TRUE)
-```
-
 ## Statystyki opisowe
 
 ### Statystyki opisowe
@@ -268,28 +256,47 @@ Centrowanie i skalowanie (standaryzacja):
 
 ### Transformacja danych | Centrowanie
 
-```{r }
+```{r, eval=FALSE}
 ggplot(punkty@data, aes(temp)) + geom_density()
 punkty$temp_center <- punkty$temp - mean(punkty$temp)
 ggplot(punkty@data, aes(temp_center)) + geom_density()
 ```
 
+```{r, eval=TRUE, echo=FALSE}
+p1 <- ggplot(punkty@data, aes(temp)) + geom_density()
+punkty$temp_center <- punkty$temp - mean(punkty$temp)
+p2 <- ggplot(punkty@data, aes(temp_center)) + geom_density()
+gridExtra::grid.arrange(p1, p2, ncol = 1)
+```
+
 ### Transformacja danych | Skalowanie
 
-```{r }
+```{r, eval=FALSE}
 ggplot(punkty@data, aes(temp)) + geom_density()
 punkty$temp_scale <- punkty$temp / sd(punkty$temp)
 ggplot(punkty@data, aes(temp_scale)) + geom_density()
+```
+
+```{r, eval=TRUE, echo=FALSE}
+punkty$temp_scale <- punkty$temp / sd(punkty$temp)
+p3 <- ggplot(punkty@data, aes(temp_scale)) + geom_density()
+gridExtra::grid.arrange(p1, p3, ncol = 1)
 ```
 
 ### Transformacja danych | Standaryzacja
 
 Do standaryzacji (centrowanie i skalowanie) służy funkcja `scale()`.
 
-```{r }
+```{r, eval=FALSE}
 ggplot(punkty@data, aes(temp)) + geom_density()
 punkty$temp_standard <- as.numeric(scale(punkty$temp))
 ggplot(punkty@data, aes(temp_standard)) + geom_density()
+```
+
+```{r, eval=TRUE, echo=FALSE}
+punkty$temp_standard <- as.numeric(scale(punkty$temp))
+p4 <- ggplot(punkty@data, aes(temp_standard)) + geom_density()
+gridExtra::grid.arrange(p1, p4, ncol = 1)
 ```
 
 ### Transformacja danych | Redukcja skośności
@@ -305,12 +312,20 @@ Redukcja skośności:
 Logarytmizacja w R może odbyć się za pomocą funkcji `log()`. 
 Transformację logarytmiczną można odwrócić używając funkcji `exp()`.
 
-```{r }
+```{r, eval = FALSE}
 ggplot(punkty@data, aes(temp)) + geom_density()
 punkty$log_tpz <- log(punkty$temp)
 ggplot(punkty@data, aes(log_tpz)) + geom_density()
 punkty$exp_tpz <- exp(punkty$log_tpz)
 ggplot(punkty@data, aes(exp_tpz)) + geom_density()
+```
+
+```{r, eval=TRUE, echo=FALSE}
+punkty$log_tpz <- log(punkty$temp)
+p5 <- ggplot(punkty@data, aes(log_tpz)) + geom_density()
+punkty$exp_tpz <- exp(punkty$log_tpz)
+p6 <- ggplot(punkty@data, aes(exp_tpz)) + geom_density()
+gridExtra::grid.arrange(p1, p5, p6, ncol = 1)
 ```
 
 ### Transformacja danych | Pierwiastkowanie
@@ -324,6 +339,14 @@ punkty$sqrt_tpz <- sqrt(punkty$temp)
 ggplot(punkty@data, aes(sqrt_tpz)) + geom_density()
 punkty$pow_tpz <- punkty$sqrt_tpz ^ 2
 ggplot(punkty@data, aes(pow_tpz)) + geom_density()
+```
+
+```{r, eval=TRUE, echo=FALSE}
+punkty$sqrt_tpz <- sqrt(punkty$temp)
+p7 <- ggplot(punkty@data, aes(sqrt_tpz)) + geom_density()
+punkty$pow_tpz <- punkty$sqrt_tpz ^ 2
+p8 <- ggplot(punkty@data, aes(pow_tpz)) + geom_density()
+gridExtra::grid.arrange(p1, p7, p8, ncol = 1)
 ```
 
 <!--
