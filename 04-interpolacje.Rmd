@@ -67,8 +67,7 @@ Tworzy ona nowy obiekt na podstawie istniejącego obiektu punktowego oraz zadane
 
 ```{r}
 nowa_siatka <- makegrid(punkty, cellsize = 500)
-names(nowa_siatka) <- c("x", "y")
-coordinates(nowa_siatka) <- ~x + y
+coordinates(nowa_siatka) <- ~x1 + x2
 gridded(nowa_siatka) <- TRUE
 proj4string(nowa_siatka) <- proj4string(punkty)
 plot(nowa_siatka)
