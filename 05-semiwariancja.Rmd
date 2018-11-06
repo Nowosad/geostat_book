@@ -17,6 +17,7 @@ data(granica)
 
 ```{r, echo=FALSE}
 par(mar = c(rep(0, 4)))
+options(scipen = 99 * 99)
 ```
 
 <!--
@@ -112,10 +113,10 @@ Oprócz ograniczeń dotyczących danych wejściowych, istnieją również zało�
 
 Podstawowe symbole w określaniu przestrzennej zmienności to:
 
-- $u$ - wektor współrzędnych
-- $z(u)$ - badana zmienna jako funkcja położenia - inaczej określany jako ogon (ang. *tail*)
+- $s$ - wektor współrzędnych
+- $z(s)$ - badana zmienna jako funkcja położenia - inaczej określany jako ogon (ang. *tail*)
 - $h$ - lag - odstęp pomiędzy dwoma lokalizacjami
-- $z(u+h)$ - wartość badanej zmiennej odległej o odstęp $h$ - inaczej określany jako głowa (ang. *head*)
+- $z(s+h)$ - wartość badanej zmiennej odległej o odstęp $h$ - inaczej określany jako głowa (ang. *head*)
 
 ### Przestrzenna kowariancja, korelacja i semiwariancja
 
@@ -124,14 +125,15 @@ Przestrzenna kowariancja, korelacja i semiwariancja to miary określające przes
 - Kowariancja i korelacja to miary podobieństwa pomiędzy dwoma zmiennymi
 - Przenosząc to na aspekt przestrzenny, badamy jedną zmienną, ale pomiędzy dwoma punktami odległymi od siebie o pewien dystans (określany jako lag)
 - W efekcie otrzymujemy miarę podobieństwa pomiędzy wartością głowy i ogona
-- Trzecią miarę charakteryzującą relację między obserwacjami odległymi o kolejne odstępy jest semiwariancja
-- Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji
-- Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo
-- Jednocześnie, dla potrzeb interpretacji relacji, kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
 
 ```{r z_przs0, echo=FALSE}
 hscat(temp~1, data = punkty, breaks = c(0, 200))
 ```
+
+- Trzecią miarę charakteryzującą relację między obserwacjami odległymi o kolejne odstępy jest semiwariancja
+- Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji
+- Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo
+- Jednocześnie, dla potrzeb interpretacji relacji, kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
 
 ### Wykres rozrzutu z przesunięciem
 
@@ -177,7 +179,7 @@ ggplot(kor, aes(dist.class, coef)) +
 Zmienność przestrzenna analizowanej cechy może być określona za pomocą semiwariancji.
 Jest to połowa średniej kwadratu różnicy pomiędzy wartościami badanej zmiennej w dwóch lokalizacjach odległych o wektor $h$:
 
-$$ \gamma(h) = \frac{1}{2}E[(z(s) - z(s+h))^2] $$
+$$ \gamma(h) = \frac{1}{2}[(z(s) - z(s+h))]^2 $$
 
 Przykładowo, aby wyliczyć wartość semiwariancji (`gamma`) pomiędzy dwoma punktami musimy znać wartość pierwszego z nich (w przykładzie jest to ok. 22,46 stopni Celsjusza) oraz drugiego z nich (ok. 16,04 stopni Celsjusza).
 Korzystając z wzoru na semiwariację otrzymujemy wartość równą ok. 20,60.
@@ -207,10 +209,7 @@ Aby zlokalizować te pary punktów, można zastosować funkcję `plot()` z argum
 Po skończonym wyborze należy nacisnąć klawisz Esc.
 
 ```{r chmurkowanie, eval=FALSE}
-vario_cloud_sel <- plot(variogram(temp~1,
-                                  locations = punkty,
-                                  cloud = TRUE),
-                        digitize = TRUE)
+vario_cloud_sel <- plot(vario_cloud, digitize = TRUE)
 ```
 
 ```{r, echo=FALSE, fig.width=6}
@@ -239,6 +238,11 @@ $$ \hat{\gamma}(h) = \frac{1}{2N(h)}\sum_{i=1}^{N(h)}(z(s_i) - z(s_i+h))^2 $$
 ,gdzie $N(h)$ oznacza liczbę par punktów w odstępie $h$.
 
 W oparciu o semiwariogram empiryczny (czyli oparty na danych) możemy następnie dopasować do niego model/e.
+
+```{r, echo=FALSE}
+vario_par <- variogram(temp~1, locations = punkty)
+plot(vario_par, plot.numbers = FALSE)
+```
 
 ### Semiwariogram | Obliczenia pomocnicze
 
@@ -282,14 +286,6 @@ pow_pr
 ```{r }
 sqrt(pow_pr)
 ```
-
-### Semiwariogram
-
-Semiwariogram składa się z trzech podstawowych elementów. Są to:
-
-- **Nugget** - efekt nuggetowy - pozwala na określenie błędu w danych wejściowych oraz zmienności na dystansie krótszym niż pierwszy odstęp
-- **Sill** - semiwariancja progowa - oznacza wariancję badanej zmiennej
-- **Range** - zasięg - to odległość do której istnieje przestrzenna korelacja
 
 ### Semiwariogram | Rules of thumb
 
@@ -386,18 +382,18 @@ Warto w tym wypadku użyć dodatkowego argumentu `threshold`, który powoduje, �
 ```{r }
 vario_map <- variogram(temp~1, locations = punkty, 
                        cutoff = 4000, width = 400, map = TRUE)
-plot(vario_map, threshold = 30) # co najmniej 30 par punktów
+plot(vario_map, threshold = 30, col.regions = topo.colors(n = 40)) # co najmniej 30 par punktów
 ```
 
-Mapie semiwariogramu można również się przyjrzeć interaktywnie używając funkcję `plot3D()` z pakietu **rasterVis**.
+<!-- Mapie semiwariogramu można również się przyjrzeć interaktywnie używając funkcję `plot3D()` z pakietu **rasterVis**. -->
 
-```{r mapa_semi, eval=FALSE, fig.width=6}
-plot3D(raster(vario_map$map), col = terrain.colors)
-```
+<!-- ```{r mapa_semi, eval=FALSE, fig.width=6} -->
+<!-- plot3D(raster(vario_map$map), col = terrain.colors) -->
+<!-- ``` -->
 
-```{r, echo=FALSE}
-knitr::include_graphics("figs/plot3D.png")
-```
+<!-- ```{r, echo=FALSE} -->
+<!-- knitr::include_graphics("figs/plot3D.png") -->
+<!-- ``` -->
 
 ### Semiwariogramy kierunkowe | Kierunki
 

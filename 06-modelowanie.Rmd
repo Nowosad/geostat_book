@@ -26,6 +26,15 @@ Semiwariogram empiryczny (wyliczony z danych punktowych) jest:
 Estymacje i symulacje przestrzenne wymagają modelu struktury przestrzennej analizowanej cechy, a nie tylko wartości empirycznych.
 Dodatkowo, matematycznie modelowanie wygładza chaotyczne fluktuacje danych empirycznych.
 
+### Model semiwariogramu
+
+Model semiwariogramu składa się zazwyczaj z trzech podstawowych elementów.
+Są to:
+
+- **Nugget** - efekt nuggetowy - pozwala na określenie błędu w danych wejściowych oraz zmienności na dystansie krótszym niż pierwszy odstęp
+- **Sill** - semiwariancja progowa - oznacza wariancję badanej zmiennej
+- **Range** - zasięg - to odległość do której istnieje przestrzenna korelacja
+
 ## Modele podstawowe 
 
 ### Modele podstawowe 
