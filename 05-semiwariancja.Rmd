@@ -409,14 +409,46 @@ plot(vario_kier)
 
 ## Zadania {#z5}
 
+Przyjrzyj się danym z obiektu `punkty_pref`.
+Możesz go wczytać używając poniższego kodu:
 
-<!--     Wykorzystując wzór na semiwariancję obliczyć semiwariancję dla wartości sum opadów w czerwcu (VI) pomiędzy 5 losowo wybranymi punktami ze zbioru danych. (Podpowiedź - Wybór losowy punktów: sample(dane$Nr, 5)). -->
-<!--     Przeprowadzić analizę struktury przestrzennej zmiennej VI obejmującą: -->
-<!--         obliczenie i wizualizację semiwariogramu na podstawie parametrów domyślnych, +obliczenie i wizualizacja semiwariogramu na podstawie dostosowanych parametrów. -->
-<!--         określenie wartości efektu nuggetowego, zasięgu oraz wariancji progowej dla poszczególnych semiwariogramów. -->
+```{r}
+data("punkty_pref")
+```
 
-<!-- W raporcie proszę zamieścić tabelę zawierającą następujące zestawienie: -->
+1. Stwórz wykres rozrzutu z przesunięciem dla zmiennej `srtm` dla odstępów od 0 do 5000 metrów co 625 metry.
+Co można odczytać z otrzymanego wykresu?
+2. Wylicz odległość oraz wartość semiwariancji dla zmiennej `srtm` pomiędzy pierwszym i drugim, pierwszym i trzecim, oraz drugim i trzecim punktem.
+Zwizualizuj te trzy punkty.
+W jaki sposób można zinterpretować otrzymane wyniki wartości semiwariancji?
+```{r, echo=FALSE, eval=FALSE}
+punkty_pref2 <- punkty_pref[c(1, 2, 3), ]
+odl2 <- dist(coordinates(punkty_pref2))
+gamma1 <- 0.5 * (punkty_pref2$srtm[1] - punkty_pref2$srtm[2]) ^ 2
+gamma1
+gamma2 <- 0.5 * (punkty_pref2$srtm[1] - punkty_pref2$srtm[3]) ^ 2
+gamma2
+gamma3 <- 0.5 * (punkty_pref2$srtm[2] - punkty_pref2$srtm[3]) ^ 2
+gamma3
+```
+3. Twórz chmurę semiwariogramu dla zmiennej `temp`.
+W jaki sposób można zaobserwować na niej wartości odstające?
+Co one oznaczają?
+4. Jaka jest liczba par obserwacji, średnia powierzchnia zajmowana przez jedną próbkę (w km^2^) oraz średnia odległość między punktami (w km)?
+5. Stwórz semiwariogram zmiennej `srtm`. 
+Ile par punktów posłużyło do wyliczenia pierwszego odstępu?
+6. Zmodyfikuj powyższy semiwariogram, żeby jego maksymalny zasięg wynosił 3,5 kilometra. 
+7. Stwórz mapę semiwariogramu dla zmiennej `srtm`. 
+Sprawdź różne wartości `cutoff` (od 3 do 5 km) oraz `width` (od 200 do 500 metrów).
+Zmień domyślną paletę kolorów w wizualizacji mapy semiwariogramu. 
+(Dodatkowe: spróbuj do tego celu użyć pakietu **viridisLite**).
+```{r, echo=FALSE, eval=FALSE}
+vario_map <- variogram(srtm~1, locations = punkty_pref, 
+                        cutoff = 4000, width = 400, map = TRUE)
+plot(vario_map, threshold = 30, col.regions = viridisLite::viridis(n = 50))
+```
+8. Co przedstawa stworzona mapa semiwariogramu?
+Czy badane zjawisko wykazuje izotropia czy anizotropia?
+9. Jeżeli mapa semiwariogramu wykazuje anizotropię struktury przestrzennej to w jakim kierunku?
+Stwórz semiwariogramy dla wybranych kierunków.
 
-<!--     maksymalny zasięg semiwariogramu oraz szerokość odstępów dla parametrów domyślnych; -->
-<!--     maksymalny zasięg semiwariogramu oraz szerokość odstępów dla parametrów dostosowanych; -->
-<!--     wartości efektu nuggetowego, zasięgu oraz wariancji progowej dla semiwariogramu wykonanego w oparciu o parametry domyslne i dostosowane. -->
