@@ -115,6 +115,8 @@ Dodatkowo można wykorzystać pakiet **mapview** do interaktywnego określania w
 mapview(punkty["temp"])
 ```
 
+<!-- https://www.youtube.com/watch?v=75IZVZBaLkQ -->
+
 <!-- ## Rozgrupowanie danych -->
 
 <!-- ### Rozgrupowanie danych -->
