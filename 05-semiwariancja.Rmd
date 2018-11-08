@@ -100,16 +100,14 @@ Muszą one:
 4. Być stworzone używając stałej metodyki
 5. Być wystarczająco dokładne
 
-## Przestrzenna kowariancja i korelacja i semiwariancja
-
-### Przestrzenna kowariancja, korelacja i semiwariancja | Założenia
+### Geostatystyka | Badane zjawisko
 
 Oprócz ograniczeń dotyczących danych wejściowych, istnieją również założenia dotyczące analizowanej cechy (analizowanego zjawiska):
 
 1. Przestrzennej ciągłości - przestrzenna korelacja między zmienny w dwóch lokalizacjach zależy tylko od ich odległości (oraz czasem kierunku), lecz nie od tego gdzie są one położone
 2. Stacjonarności - średnia i wariancja są stałe na całym badanym obszarze
 
-### Przestrzenna kowariancja, korelacja i semiwariancja | Symbole
+### Geostatystyka | Podstawowe symbole
 
 Podstawowe symbole w określaniu przestrzennej zmienności to:
 
@@ -118,7 +116,9 @@ Podstawowe symbole w określaniu przestrzennej zmienności to:
 - $h$ - lag - odstęp pomiędzy dwoma lokalizacjami
 - $z(s+h)$ - wartość badanej zmiennej odległej o odstęp $h$ - inaczej określany jako głowa (ang. *head*)
 
-### Przestrzenna kowariancja, korelacja i semiwariancja
+## Przestrzenna kowariancja i korelacja
+
+### Przestrzenna kowariancja, korelacja
 
 Przestrzenna kowariancja, korelacja i semiwariancja to miary określające przestrzenną zmienność analizowanej cechy.
 
@@ -129,11 +129,6 @@ Przestrzenna kowariancja, korelacja i semiwariancja to miary określające przes
 ```{r z_przs0, echo=FALSE}
 hscat(temp~1, data = punkty, breaks = c(0, 200))
 ```
-
-- Trzecią miarę charakteryzującą relację między obserwacjami odległymi o kolejne odstępy jest semiwariancja
-- Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji
-- Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo
-- Jednocześnie, dla potrzeb interpretacji relacji, kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
 
 ### Wykres rozrzutu z przesunięciem
 
@@ -174,7 +169,17 @@ ggplot(kor, aes(dist.class, coef)) +
         geom_point(size = 5)
 ```
 
+
+## Semiwariancja
+
 ### Semiwariancja
+
+- Trzecią miarę charakteryzującą relację między obserwacjami odległymi o kolejne odstępy jest semiwariancja
+- Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji
+- Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo
+- Jednocześnie, dla potrzeb interpretacji relacji, kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
+
+### Semiwariancja | wzór
 
 Zmienność przestrzenna analizowanej cechy może być określona za pomocą semiwariancji.
 Jest to połowa średniej kwadratu różnicy pomiędzy wartościami badanej zmiennej w dwóch lokalizacjach odległych o wektor $h$:
@@ -244,19 +249,41 @@ vario_par <- variogram(temp~1, locations = punkty)
 plot(vario_par, plot.numbers = FALSE)
 ```
 
+### Semiwariogram 
+
+Stworzenie podstawowego semiwariogramu w pakiecie **gstat** odbywa się z użyciem funkcji `variogram()`. 
+Należy w niej zdefiniować analizowaną zmienną (w tym przykładzie `temp~1`) oraz zbiór punktowy (`punkty`).
+
+```{r }
+vario_par <- variogram(temp~1, locations = punkty)
+vario_par
+```
+
+Do wyświetlenia semiwariogramu służy funkcja `plot()`. 
+Można również dodać informację o liczbie par punktów, jaka posłużyła do wyliczenia semiwariancji dla kolejnych odstępów poprzez argument `plot.numbers = TRUE`.
+
+```{r}
+plot(vario_par, plot.numbers = TRUE)
+```
+
+### Semiwariogram | Rules of thumb
+
+Przy ustalaniu parametrów semiwariogramu powinno się stosować do kilku utartych zasad (tzw. *rules of thumb*):
+
+- W każdym odstępie powinno się znaleźć co najmniej 30 par punktów
+- Maksymalny zasięg semiwariogramu (ang. *cutoff distance*) to 1/2 pierwiastka z badanej powierzchni (inne źródła mówią o połowie z przekątnej badanego obszaru/jednej trzeciej)
+- Liczba odstępów powinna nie być mniejsza niż 10
+- Optymalnie maksymalny zasięg semiwariogramu powinien być dłuższy o 10-15% od zasięgu zjawiska
+- Optymalnie odstępy powinny być jak najbliżej siebie i jednocześnie nie być chaotyczne
+- Warto metodą prób i błędów określić optymalne parametry semiwariogramu
+- Należy określić czy zjawisko wykazuje anizotropię przestrzenną
+
 ### Semiwariogram | Obliczenia pomocnicze
 
 - Liczba par obserwacji:
 
 ```{r }
 0.5 * nrow(punkty) * (nrow(punkty) - 1)
-```
-
-- Połowa pierwiastka powierzchni:
-
-```{r }
-pow <- gArea(granica)
-0.5 * sqrt(pow)
 ```
 
  <!--
@@ -287,34 +314,15 @@ pow_pr
 sqrt(pow_pr)
 ```
 
-### Semiwariogram | Rules of thumb
 
-Przy ustalaniu parametrów semiwariogramu powinno się stosować do kilku utartych zasad (tzw. *rules of thumb*):
-
-- W każdym odstępie powinno się znaleźć co najmniej 30 par punktów
-- Maksymalny zasięg semiwariogramu (ang. *cutoff distance*) to 1/2 pierwiastka z badanej powierzchni (inne źródła mówią o połowie z przekątnej badanego obszaru/jednej trzeciej)
-- Liczba odstępów powinna nie być mniejsza niż 10
-- Optymalnie maksymalny zasięg semiwariogramu powinien być dłuższy o 10-15% od zasięgu zjawiska
-- Optymalnie odstępy powinny być jak najbliżej siebie i jednocześnie nie być chaotyczne
-- Warto metodą prób i błędów określić optymalne parametry semiwariogramu
-- Należy określić czy zjawisko wykazuje anizotropię przestrzenną
-
-### Semiwariogram 
-
-Stworzenie podstawowego semiwariogramu w pakiecie **gstat** odbywa się z użyciem funkcji `variogram()`. 
-Należy w niej zdefiniować analizowaną zmienną (w tym przykładzie `temp~1`) oraz zbiór punktowy (`punkty`).
+- Połowa pierwiastka powierzchni:
 
 ```{r }
-vario_par <- variogram(temp~1, locations = punkty)
-vario_par
+pow <- gArea(granica)
+0.5 * sqrt(pow)
 ```
 
-Do wyświetlenia semiwariogramu służy funkcja `plot()`. 
-Można również dodać informację o liczbie par punktów, jaka posłużyła do wyliczenia semiwariancji dla kolejnych odstępów poprzez argument `plot.numbers = TRUE`.
-
-```{r}
-plot(vario_par, plot.numbers = TRUE)
-```
+### Semiwariogram | Modyfikacja
 
 Maksymalny zasięg semiwariogramu (ang. *cutoff distance*) jest domyślnie wyliczany w pakiecie **gstat** jako 1/3 z najdłuższej przekątnej badanego obszaru. 
 Można jednak tę wartość zmodyfikować używając argumentu `cutoff`.
