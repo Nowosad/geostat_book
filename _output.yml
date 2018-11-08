@@ -1,5 +1,5 @@
 bookdown::gitbook:
-  dev: svglite
+  dev: CairoPNG
   css: style.css
   split_bib: false    
   config:
