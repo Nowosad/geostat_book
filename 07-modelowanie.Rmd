@@ -133,11 +133,11 @@ Ten typ modelu najczęściej używany jest w modelach złożonych.
 W takich wypadkach służy on do określania, między innymi, błędu pomiarowego czy zmienności na krótkich odstępach.
 
 ```{r, echo=FALSE}
-nowa_siatka <- makegrid(punkty, cellsize = 500)
+nowa_siatka <- makegrid(punkty, cellsize = 100)
 coordinates(nowa_siatka) <- ~x1 + x2
 gridded(nowa_siatka) <- TRUE
 proj4string(nowa_siatka) <- proj4string(punkty)
-set.seed(1712)
+set.seed(14)
 punkty2 = spsample(nowa_siatka, type = "stratified", n = 50)
 punkty2 = SpatialPointsDataFrame(punkty2, data.frame(values = runif(length(punkty2))))
 ```
