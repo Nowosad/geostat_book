@@ -26,6 +26,14 @@ Semiwariogram empiryczny (wyliczony z danych punktowych) jest:
 Estymacje i symulacje przestrzenne wymagają modelu struktury przestrzennej analizowanej cechy, a nie tylko wartości empirycznych.
 Dodatkowo, matematycznie modelowanie wygładza chaotyczne fluktuacje danych empirycznych.
 
+```{r, echo=FALSE, out.width="50%"}
+vario_kzt <- variogram(temp~x + y, locations = punkty)
+plot(vario_kzt)
+model_kzt <- vgm(model = "Sph", nugget = 1)
+fitted_kzt <- fit.variogram(vario_kzt, model_kzt)
+plot(vario_kzt, fitted_kzt)
+```
+
 ### Model semiwariogramu
 
 Model semiwariogramu składa się zazwyczaj z trzech podstawowych elementów.
@@ -34,6 +42,10 @@ Są to:
 - **Nugget** - efekt nuggetowy - pozwala na określenie błędu w danych wejściowych oraz zmienności na dystansie krótszym niż pierwszy odstęp
 - **Sill** - semiwariancja progowa - oznacza wariancję badanej zmiennej
 - **Range** - zasięg - to odległość do której istnieje przestrzenna korelacja
+
+```{r, echo=FALSE}
+knitr::include_graphics("figs/model_semiwariogramu.png")
+```
 
 ## Modele podstawowe 
 
@@ -88,19 +100,6 @@ Odpowiednie określenie modelu matematycznego często nie jest proste.
 W efekcie automatyczne metody nie zawsze są w stanie dać lepszy wynik od modelowania "ręcznego". 
 Najlepiej, gdy wybór modelu oparty jest o wiedzę na temat zakładanego procesu przestrzennego.
 
-### Funkcja `eyefit()`
-
-```{r oko, eval=FALSE}
-library(geoR)
-v_eye <- eyefit(variog(coords = coordinates(punkty), 
-                       data = punkty$temp))
-ve_fit <- as.vgm.variomodel(v_eye[[1]])
-```
-
-```{r, echo=FALSE}
-knitr::include_graphics("figs/eyefit.png", dpi = 90, auto_pdf = FALSE)
-```
-
 ### Funkcja `fit.variogram()`
 
 Funkcja `fit.variogram()` z pakietu **gstat** dopasowuje zasięg oraz semiwariancję progową w oparciu o ustalone "ręcznie" wejściowe parametry modelu.
@@ -136,9 +135,15 @@ W takich wypadkach służy on do określania, między innymi, błędu pomiaroweg
 ```{r}
 vario <- variogram(temp~1, locations = punkty)
 plot(vario)
+```
+
+```{r}
 model_nug <- vgm(psill = 10, model = "Nug", range = 0)
 model_nug
 plot(vario, model = model_nug)
+```
+
+```{r}
 fitted_nug <- fit.variogram(vario, model_nug)
 fitted_nug
 plot(vario, model = fitted_nug)
@@ -161,9 +166,15 @@ Reprezentuje on cechę, której zmienność wartości ma charakter naprzemiennyc
 ```{r }
 vario <- variogram(temp~1, locations = punkty)
 plot(vario)
+```
+
+```{r }
 model_sph <- vgm(psill = 10, model = "Sph", range = 3000)
 model_sph
 plot(vario, model = model_sph)
+```
+
+```{r }
 fitted_sph <- fit.variogram(vario, model_sph)
 fitted_sph
 plot(vario, model = fitted_sph)
@@ -178,9 +189,15 @@ Oznacza on odległość na jakiej model osiąga 95% wartości wariancji progowej
 ```{r }
 vario <- variogram(temp~1, locations = punkty)
 plot(vario)
+````
+
+```{r }
 model_exp <- vgm(psill = 10, model = "Exp", range = 3000)
 model_exp
 plot(vario, model = model_exp)
+```
+
+```{r }
 fitted_exp <- fit.variogram(vario, model_exp)
 fitted_exp
 plot(vario, model = fitted_exp)
@@ -196,9 +213,15 @@ Model gaussowski z uwagi na swoje cechy zazwyczaj nie powinien być stosowany sa
 ```{r }
 vario <- variogram(temp~1, locations = punkty)
 plot(vario)
+```
+
+```{r }
 model_gau <- vgm(psill = 13, model = "Gau", range = 3000)
 model_gau
 plot(vario, model = model_gau)
+```
+
+```{r }
 fitted_gau <- fit.variogram(vario, model_gau)
 fitted_gau
 plot(vario, model = fitted_gau)
@@ -213,9 +236,15 @@ W przypadku modelu potęgowego, parametr `range` oznacza wykładnik potęgowy.
 ```{r }
 vario <- variogram(temp~1, locations = punkty)
 plot(vario)
+```
+
+```{r }
 model_pow <- vgm(psill = 0.03, model = "Pow", range = 0.7)
 model_pow
 plot(vario, model = model_pow)
+```
+
+```{r }
 fitted_pow <- fit.variogram(vario, model_pow)
 fitted_pow
 plot(vario, model = fitted_pow)
@@ -234,6 +263,9 @@ model_zl1 <- vgm(psill = 10, model = "Sph", range = 3000,
                  nugget = 0.5)
 model_zl1
 plot(vario, model = model_zl1)
+```
+
+```{r }
 fitted_zl1 <- fit.variogram(vario, model_zl1)
 fitted_zl1
 plot(vario, model = fitted_zl1)
@@ -253,6 +285,9 @@ model_zl2 <- vgm(10, "Gau", 3000, add.to = vgm(4,
                                                nugget = 0.5))
 model_zl2
 plot(vario, model = model_zl2)
+```
+
+```{r }
 fitted_zl2 <- fit.variogram(vario, model_zl2)
 plot(vario, model = fitted_zl2)
 ```
@@ -289,12 +324,18 @@ vario_map <- variogram(temp~1,
                        cutoff = 4000,
                        width = 400, 
                        map = TRUE)
-plot(vario_map)
+plot(vario_map, threshold = 30, col.regions = topo.colors(n = 40))
+```
+
+```{r }
 vario_kier <- variogram(temp~1, 
                         locations = punkty,
-                        alpha = c(45, 90, 135, 180),
+                        alpha = c(0, 45, 90, 135),
                         cutoff = 4000)
-plot(vario_kier, plot.numbers = TRUE)
+plot(vario_kier)
+```
+
+```{r }
 vario_kier_fit <- vgm(psill = 8, model = "Sph", range = 4000, nugget = 0.5, anis = c(45, 0.4))
 plot(vario_kier, vario_kier_fit, as.table = TRUE)
 ```
