@@ -133,10 +133,10 @@ Ten typ modelu najczęściej używany jest w modelach złożonych.
 W takich wypadkach służy on do określania, między innymi, błędu pomiarowego czy zmienności na krótkich odstępach.
 
 ```{r, echo=FALSE}
+data("siatka")
 set.seed(1712)
 punkty2 = spsample(siatka, type = "regular", n = 100)
 punkty2 = SpatialPointsDataFrame(punkty2, data.frame(values = runif(length(punkty2))))
-data("siatka")
 ```
 
 ```{r, echo=FALSE}
