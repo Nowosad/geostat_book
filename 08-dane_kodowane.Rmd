@@ -149,4 +149,6 @@ p3 <- spplot(ik12, "var1.pred", main = "Prawdopodobieństwo Temp < 12")
 grid.arrange(p1, p2, p3, ncol = 1)
 ```
 
+<!-- ADD A BINARY MAP! -->
+
 ## Zadania {#z8}
