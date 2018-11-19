@@ -288,7 +288,7 @@ W przypadku modelu potęgowego, parametr `range` oznacza wykładnik potęgowy.
 model_pow <- fit.variogram(vario2, vgm(psill = 0.03, model = "Pow", range = 0.7))
 k_pow <- krige(values~1, 
             locations = punkty2,
-            newdata = siatka,
+            newdata = nowa_siatka,
             model = model_pow,
             debug.level = 0)
 spplot(k_pow[1])
