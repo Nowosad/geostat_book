@@ -133,9 +133,12 @@ Ten typ modelu najczęściej używany jest w modelach złożonych.
 W takich wypadkach służy on do określania, między innymi, błędu pomiarowego czy zmienności na krótkich odstępach.
 
 ```{r, echo=FALSE}
-data("siatka")
+nowa_siatka <- makegrid(punkty, cellsize = 500)
+coordinates(nowa_siatka) <- ~x1 + x2
+gridded(nowa_siatka) <- TRUE
+proj4string(nowa_siatka) <- proj4string(punkty)
 set.seed(1712)
-punkty2 = spsample(siatka, type = "stratified", n = 50)
+punkty2 = spsample(nowa_siatka, type = "stratified", n = 50)
 punkty2 = SpatialPointsDataFrame(punkty2, data.frame(values = runif(length(punkty2))))
 ```
 
@@ -143,7 +146,7 @@ punkty2 = SpatialPointsDataFrame(punkty2, data.frame(values = runif(length(punkt
 model_nug <- vgm(psill = 10, model = "Nug", range = 0)
 k_nug <- krige(values~1, 
             locations = punkty2,
-            newdata = siatka,
+            newdata = nowa_siatka,
             model = model_nug,
             debug.level = 0)
 spplot(k_nug[1])
@@ -185,7 +188,7 @@ vario2 <- variogram(values~1, locations = punkty2)
 model_sph <- fit.variogram(vario2, vgm(psill = 0.08, model = "Sph", range = 2000))
 k_sph <- krige(values~1, 
             locations = punkty2,
-            newdata = siatka,
+            newdata = nowa_siatka,
             model = model_sph,
             debug.level = 0)
 spplot(k_sph[1])
@@ -218,7 +221,7 @@ Oznacza on odległość na jakiej model osiąga 95% wartości wariancji progowej
 model_exp <- fit.variogram(vario2, vgm(psill = 0.08, model = "Exp", range = 2000))
 k_exp <- krige(values~1, 
             locations = punkty2,
-            newdata = siatka,
+            newdata = nowa_siatka,
             model = model_exp,
             debug.level = 0)
 spplot(k_exp[1])
@@ -252,7 +255,7 @@ Model gaussowski z uwagi na swoje cechy zazwyczaj nie powinien być stosowany sa
 model_gau <- vgm(psill = 0.08, model = "Gau", range = 750)
 k_gau <- krige(values~1, 
             locations = punkty2,
-            newdata = siatka,
+            newdata = nowa_siatka,
             model = model_gau,
             debug.level = 0)
 spplot(k_gau[1])
