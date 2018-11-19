@@ -38,7 +38,7 @@ Wady:
 - Potencjalnie trudne do modelowania semiwariogramy (szczególnie skrajnych przedziałów)
 - Czasochłonność/pracochłonność
     
-## Kriging danych kodowanych | Przykłady
+## Przykłady krigingu danych kodowanych
 
 ### Binaryzacja danych
 
@@ -60,7 +60,7 @@ Można wykorzystać wiedzę zewnętrzną (np. toksyczne stężenie analizowanej 
 ggplot(punkty@data, aes(temp)) + stat_ecdf()
 ```
 
-### Kriging danych kodowanych (ang. *Indicator kriging*) | Modelowanie
+### Modelowanie
 
 Tworzenie i modelowanie semiwariogramu empirycznego w krigingu danych kodowanych wygląda tak samo jak, np. w przypadku krigingu zwykłego.
 Korzystając z funkcji `variogram()` tworzony jest semiwariogram empiryczny, używając `vgm()` tworzony jest model "ręczny", który następnie jest dopasowywany z użyciem funkcji `fit.variogram()`.
@@ -77,7 +77,7 @@ fitted_ind
 plot(vario_ind, model = fitted_ind)
 ```
 
-### Kriging danych kodowanych (ang. *Indicator kriging*) | Interpolacja
+### Interpolacja
 
 Ostatnim etapem jest stworzenie interpolacji geostatystycznej z pomocą funkcji `krige`.
 Wymaga ona czterech argumentów - wzoru (`temp_ind~1`), zbioru punktowego (`punkty`), siatki do interpolacji (`siatka`) oraz modelu (`fitted_ind`).
@@ -106,7 +106,7 @@ p2 <- spplot(ik, "var1.var",
 grid.arrange(p1, p2, ncol = 1)
 ```
 
-### Kriging danych kodowanych (ang. *Indicator kriging*)
+### Alternatywne użycie funkcji
 
 Alternatywnie, zamiast tworzenia nowej zmiennej (takiej jak `temp_ind`), można wykorzystać funkcję `I`.
 Z jej użyciem można definiować przyjęte progi bezpośrednio do funkcji `variogram` i `krige`. 

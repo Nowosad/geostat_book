@@ -21,7 +21,7 @@ par(mar = c(rep(0, 4)))
 
 ## Statystyki jakości estymacji
 
-### Statystyki jakości estymacji
+### Podstawowe statystyki
 
 W momencie, gdy trzeba określić jakość estymacji lub porównać wyniki pomiędzy estymacjami należy zastosować tzw. statystyki jakości estymacji. 
 Do podstawowych statystyk ocen jakości estymacji należą:
@@ -62,7 +62,7 @@ RMSE <- sqrt(mean((obserwowane - estymacja) ^ 2))
 
 Optymalnie wartość pierwiastka średniego błędu kwadratowego powinna być jak najmniejsza.
 
-### Statystyki jakości estymacji | Mapa
+### Mapa
 
 Do oceny przestrzennej jakości predykcji można również zastosować mapę przestawiającą błędy predykcji (błędy estymacji).
 Wyliczenie błędów estymacji odbywa się poprzez odjęcie od predykcji wartości obserwowanej.
@@ -87,7 +87,7 @@ test_sk$true <- test$temp
 spplot(test_sk, "blad_predykcji_sk", main = "Błąd predykcji", colorkey = TRUE)
 ```
 
-### Statystyki jakości estymacji | Histogram
+### Histogram
 
 Błąd predykcji można również przedstawić na wykresach, między innymi, na histogramie.
 
@@ -95,7 +95,7 @@ Błąd predykcji można również przedstawić na wykresach, między innymi, na 
 ggplot(as.data.frame(test_sk), aes(blad_predykcji_sk)) + geom_histogram() + xlab("Błąd predykcji") + ylab("Liczebność")
 ```
 
-### Statystyki jakości estymacji | Wykres rozrzutu
+### Wykres rozrzutu
 
 Do porównania pomiędzy wartością estymowaną a obserwowaną może również posłużyć wykres rozrzutu.
 
@@ -103,7 +103,7 @@ Do porównania pomiędzy wartością estymowaną a obserwowaną może również 
 ggplot(as.data.frame(test_sk), aes(var1.pred, true)) + geom_point() + xlab("Predykcja") + ylab("Zmierzona wartość")
 ```
 
-## Walidacja wyników estymacji
+## Jakość wyników estymacji
 
 ### Walidacja wyników estymacji
 

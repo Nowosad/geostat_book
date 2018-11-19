@@ -28,7 +28,7 @@ Najczęściej kokriging jest stosowany w sytuacji, gdy zmienna dodatkowa jest ł
 W efekcie, uzyskany zbiór danych zawiera informacje o badanej zmiennej oraz gęściej opróbowane informacje o zmiennej dodatkowej.
 Jeżeli informacje o zmiennej dodatkowej są znane dla całego obszaru wówczas bardziej odpowiednią techniką będzie kriging z zewnętrznym trendem (KED).
 
-### Kokriging | Wybór dodatkowej zmiennej
+### Wybór dodatkowej zmiennej
 
 Wybór zmiennej dodatkowej może opierać się na dwóch kryteriach:
 
@@ -42,10 +42,11 @@ Kroskorelogramy
 
 ## Krossemiwariogramy
 
-### Krossemiwariogramy
+### Krossemiwariogramy (ang. **crossvariogram**)
 
-Metoda kokrigingu opiera się nie o semiwariogram, lecz o krossemiwariogramy. Krossemiwariogram jest to wariancja różnicy pomiędzy dwiema zmiennymi w dwóch lokalizacjach.
-Wyliczając krossemiwariogram otrzymujemy empiryczne semiwariogramy dla dwóch badanych zmiennych oraz kroswariogram dla kombinacji dwóch zmiennych.
+Metoda kokrigingu opiera się nie o semiwariogram, lecz o krossemiwariogramy. 
+Krossemiwariogram jest to wariancja różnicy pomiędzy dwiema zmiennymi w dwóch lokalizacjach.
+Wyliczając krossemiwariogram otrzymujemy empiryczne semiwariogramy dla dwóch badanych zmiennych oraz krosswariogram dla kombinacji dwóch zmiennych.
 
 W poniższym przykładzie istnieją dwie zmienne, `savi` ze zbioru `punkty` pomierzona w 250 lokalizacjach oraz `ndvi` ze zbioru `punkty_ndvi` pomierzona w 997 punktach.
 
@@ -82,8 +83,6 @@ plot(v)
 
 ## Modelowanie krossemiwariogramów
 
-### Modelowanie krossemiwariogramów
-
 Modelowanie krossemiwariogramów, podobnie jak ich tworzenie, odbywa się używając funkcji `gstat()`. 
 Podaje się w niej wcześniejszy obiekt `g`, model, oraz argument `fill.all = TRUE`. 
 Ten ostatni parametr powoduje, że model dodawany jest do wszystkich elementów krossemiwariogramu.
@@ -114,8 +113,6 @@ plot(variogram(g, alpha = c(60, 105, 150, 195)))
 -->   
 
 ## Kokriging 
-
-### Kokriging 
 
 Posiadając dopasowane modele oraz siatkę można uzyskać wynik używając funkcji `predict()`. 
 

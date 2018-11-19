@@ -22,7 +22,7 @@ Jej ogólne cele obejmują:
 
 ## Dane
 
-### Dane 
+### Struktura danych 
 
 Nie istnieje jedyna, optymalna ścieżka eksploracji danych. 
 Proces ten różni się w zależności od posiadanego zbioru danych, jak i od postawionego pytania.
@@ -49,7 +49,7 @@ str(punkty$temp)
 
 ## Statystyki opisowe
 
-### Statystyki opisowe
+### Podsumowanie numeryczne
 
 Podstawową funkcją w R służącą wyliczaniu podstawowych statystyk jest `summary()`. 
 Dla zmiennych numerycznych wyświetla ona wartość minimalną, pierwszy kwartyl, medianę, średnią, trzeci kwartyl, oraz wartość maksymalną. 
@@ -58,7 +58,7 @@ Dla zmiennych numerycznych wyświetla ona wartość minimalną, pierwszy kwartyl
 summary(punkty)
 ```
 
-### Statystyki opisowe | średnia i mediana
+### Średnia i mediana
 
 Do określenia wartości przeciętnej zmiennych najczęściej stosuje się medianę i średnią.
 
@@ -77,7 +77,7 @@ Po co używać średniej?
 - Gdy rozkład danych jest symetryczny
 - (Jednak) często warto podawać obie miary
   
-### Statystyki opisowe | minimum i maksimum
+### Minimum i maksimum
 
 Minimalna i maksymalna wartość zmiennej służy do określenia ekstremów w zbiorze danych, jak i sprawdzenia zakresu wartości.
 
@@ -86,7 +86,7 @@ min(punkty$temp, na.rm = TRUE)
 max(punkty$temp, na.rm = TRUE)
 ```
 
-### Statystyki opisowe | odchylenie standardowe
+### Odchylenie standardowe
 
 Dodatkowo, często używaną statystyką jest odchylenie standardowe.
 Wartość ta określa w jak mocno wartości zmiennej odstają od średniej.
@@ -240,12 +240,12 @@ plot(tukey, las = 1)
 
 ## Transformacje danych
 
-### Transformacje danych
+### Cel transformacji danych
 
 Transformacja danych może mieć na celu ułatwienie porównywania różnych zmiennych, zniwelowanie skośności rozkładu lub też zmniejszenie wpływu danych odstających.
 W efekcie transformacja danych ułatwia przeprowadzenie analiz (geo-)statystycznych i polepsza wyniki prognoz z modeli.
 
-### Transformacja danych | Standaryzacja
+### Cechy standaryzacji
 
 Centrowanie i skalowanie (standaryzacja):
 
@@ -253,7 +253,7 @@ Centrowanie i skalowanie (standaryzacja):
 - Skalowanie danych - dzielenie każdej wartości predyktora przez jego odchylenie standardowe
 - Wadą tego podejścia jest główne zmniejszenie interpretowalności pojedynczych wartości
 
-### Transformacja danych | Centrowanie
+### Centrowanie
 
 ```{r, eval=FALSE}
 ggplot(punkty@data, aes(temp)) + geom_density()
@@ -268,7 +268,7 @@ p2 <- ggplot(punkty@data, aes(temp_center)) + geom_density()
 gridExtra::grid.arrange(p1, p2, ncol = 1)
 ```
 
-### Transformacja danych | Skalowanie
+### Skalowanie
 
 ```{r, eval=FALSE}
 ggplot(punkty@data, aes(temp)) + geom_density()
@@ -282,7 +282,7 @@ p3 <- ggplot(punkty@data, aes(temp_scale)) + geom_density()
 gridExtra::grid.arrange(p1, p3, ncol = 1)
 ```
 
-### Transformacja danych | Standaryzacja
+### Standaryzacja
 
 Do standaryzacji (centrowanie i skalowanie) służy funkcja `scale()`.
 
@@ -298,7 +298,7 @@ p4 <- ggplot(punkty@data, aes(temp_standard)) + geom_density()
 gridExtra::grid.arrange(p1, p4, ncol = 1)
 ```
 
-### Transformacja danych | Redukcja skośności
+### Redukcja skośności
 
 Redukcja skośności:
 
@@ -306,7 +306,7 @@ Redukcja skośności:
 - Pierwiastkowanie
 - Inne    
 
-### Transformacja danych | Logarytmizacja
+### Logarytmizacja
 
 Logarytmizacja w R może odbyć się za pomocą funkcji `log()`. 
 Transformację logarytmiczną można odwrócić używając funkcji `exp()`.
@@ -327,7 +327,7 @@ p6 <- ggplot(punkty@data, aes(exp_tpz)) + geom_density()
 gridExtra::grid.arrange(p1, p5, p6, ncol = 1)
 ```
 
-### Transformacja danych | Pierwiastkowanie
+### Pierwiastkowanie
 
 Pierwiastkowanie w R może odbyć się za pomocą funkcji `sqrt()`. 
 Odwrócenie tej transformacji odbywa się poprzez podniesienie wartości do potęgi (`^2`).

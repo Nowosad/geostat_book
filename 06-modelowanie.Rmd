@@ -16,7 +16,7 @@ par(mar = c(rep(0, 4)))
 
 ## Modelowanie matematycznie autokorelacji przestrzennej
 
-### Modelowanie matematycznie autokorelacji przestrzennej
+### Modelowanie struktury przestrzennej
 
 Semiwariogram empiryczny (wyliczony z danych punktowych) jest:
 
@@ -37,7 +37,7 @@ Są to:
 
 ## Modele podstawowe 
 
-### Modele podstawowe 
+### Typy modeli podstawowych
 
 Pakiet `gstat` zawiera 20 podstawowych modeli geostatystycznych, w tym najczęściej używane takie jak:
 
@@ -76,7 +76,7 @@ show.vgms(models = c("Nug", "Sph", "Gau", "Pow", "Exp"),
 
 ## Metody modelowania
 
-### Metody modelowania
+### Rodzaje metod modelowania
 
 Istnieją trzy najczęściej spotykane metody modelowania geostatystycznego:
 
@@ -88,7 +88,7 @@ Odpowiednie określenie modelu matematycznego często nie jest proste.
 W efekcie automatyczne metody nie zawsze są w stanie dać lepszy wynik od modelowania "ręcznego". 
 Najlepiej, gdy wybór modelu oparty jest o wiedzę na temat zakładanego procesu przestrzennego.
 
-### Metody modelowania  | funkcja `eyefit()`
+### Funkcja `eyefit()`
 
 ```{r oko, eval=FALSE}
 library(geoR)
@@ -101,12 +101,12 @@ ve_fit <- as.vgm.variomodel(v_eye[[1]])
 knitr::include_graphics("figs/eyefit.png", dpi = 90, auto_pdf = FALSE)
 ```
 
-### Metody modelowania  | funkcja `fit.variogram()`
+### Funkcja `fit.variogram()`
 
 Funkcja `fit.variogram()` z pakietu **gstat** dopasowuje zasięg oraz semiwariancję progową w oparciu o ustalone "ręcznie" wejściowe parametry modelu.
 Więcej na temat działania tej funkcji można przeczytać we wpisie na stronie https://www.r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html.
 
-### Metody modelowania | Liniowy model regionalizacji
+### Liniowy model regionalizacji
 
 W przypadku, gdy analizowane zjawisko jest złożone, odwzorowanie kształtu semiwariogramu empirycznego wymaga połączenia dwóch lub większej liczby modeli podstawowych. 
 W takiej sytuacji konieczne jest spełnienie dwóch warunków:
@@ -126,7 +126,7 @@ Uzyskany model można przedstawić w funkcji `plot()` podając nazwę obiektu za
 3. Dopasować parametry modelu używając funkcji `fit.variogram()`.
 To dopasowanie można również zwizualizować używając funkcji `plot()`.
 
-### Modelowanie izotropowe | Model nuggetowy
+### Model nuggetowy
 
 Model nuggetowy (`Nug`) określa sytuację, w której analizowana zmienna nie wykazuje autokorelacji. 
 Inaczej mówiąc, niepodobieństwo jej wartości nie wzrasta wraz z odległością.
@@ -152,7 +152,7 @@ fitted_nug2 <- fit.variogram(vario, model_nug2)
 plot(vario, model = fitted_nug2)
 ```
 
-### Modelowanie izotropowe | Model sferyczny
+### Model sferyczny
 
 Model sferyczny (`Sph`) jest jednym z najczęściej stosowanych modeli geostatystycznych. 
 Reprezentuje on cechę, której zmienność wartości ma charakter naprzemiennych płatów niskich i wysokich wartości.
@@ -169,7 +169,7 @@ fitted_sph
 plot(vario, model = fitted_sph)
 ```
 
-### Modelowanie izotropowe | Model wykładniczy
+### Model wykładniczy
 
 Model wykładniczy (`Exp`) również jest jednym z najczęściej używanych w geostatystyce. Od modelu sferycznego różni go szczególnie to, że nie ma on skończonego zasięgu.
 W jego przypadku, zamiast zasięgu podaje się tzw. zasięg praktyczny.
@@ -186,7 +186,7 @@ fitted_exp
 plot(vario, model = fitted_exp)
 ```
 
-### Modelowanie izotropowe | Model gaussowski
+### Model gaussowski
 
 Model gaussowski (`Gau`) również posiada zasięg praktyczny definiowany jako 95% wartości wariancji progowej. 
 Jego cechą charakterystyczną jest paraboliczny kształt na początkowym odcinku. 
@@ -204,7 +204,7 @@ fitted_gau
 plot(vario, model = fitted_gau)
 ```
 
-### Modelowanie izotropowe | Model potęgowy
+### Model potęgowy
 
 Model potęgowy (`Pow`) to przykład tzw. modelu nieograniczonego.
 Jego wartość rośnie w nieskończoność, dlatego niemożliwe jest określenie jego zasięgu. 
@@ -221,7 +221,7 @@ fitted_pow
 plot(vario, model = fitted_pow)
 ```
 
-### Modelowanie izotropowe | Modele złożone I
+### Modele złożone I
 
 Najczęściej pojedynczy model nie jest w stanie odwzorować dokładnie zmienności przestrzennej analizowanej cechy.
 W takich sytuacjach konieczne jest połączenie dwóch lub więcej modeli podstawowych. 
@@ -239,7 +239,7 @@ fitted_zl1
 plot(vario, model = fitted_zl1)
 ```
 
-### Modelowanie izotropowe | Modele złożone II
+### Modele złożone II
 
 Bardziej złożone modele można tworzyć z pomocą argumentu `add.to`.
 Przyjmuje on kolejny obiekt funkcji `vgm()` i poprzez połączenie tych dwóch obiektów otrzymuje model złożony. 

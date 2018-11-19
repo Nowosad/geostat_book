@@ -25,15 +25,13 @@ par(mar = c(rep(0, 4)))
 
 ## Symulacje geostatystyczne
 
-### Symulacje geostatystyczne
-
 Kriging daje optymalne predykcje, czyli wyznacza najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji. 
 Dodatkowo, efektem krigingu jest wygładzony obraz. 
 W konsekwencji wyniki estymacji różnią się od danych pomiarowych. 
 Uzyskiwana jest tylko (aż?) predykcja, a prawdziwa wartość jest niepewna...
 Korzystając z symulacji geostatystycznych nie tworzymy predykcji, ale generujemy równie prawdopodobne możliwości poprzez symulację z rozkładu prawdopodobieństwa (wykorzystując generator liczb losowych).
 
-### Symulacje geostatystyczne
+### Właściwości
 
 Właściwości symulacji geostatystycznych: 
 
@@ -44,14 +42,12 @@ Właściwości symulacji geostatystycznych:
 
 ## Typy symulacji
 
-### Typy symulacji
-
 Istnieją dwa typy symulacji geostatystycznych:
 
 - Symulacje bezwarunkowe (ang. *Unconditional Simulations*) - wykorzystujące semiwariogram, żeby włączyć informację przestrzenną, ale wartości ze zmierzonych punktów nie są w niej wykorzystywane
 - Symulacje warunkowe (ang. *Conditional Simulations*) - opiera się ona o średnią wartość, strukturę kowariancji oraz obserwowane wartości
 
-## Symulacje bezwarunkowe
+### Symulacje bezwarunkowe
 
 <!--http://santiago.begueria.es/2010/10/generating-spatially-correlated-random-fields-with-r/-->
 Symulacje bezwarunkowe w pakiecie **gstat** tworzy się z wykorzystaniem funkcji `krige()`. 
@@ -98,11 +94,9 @@ sym_bezw4 <- predict(sym_bezw_model4, newdata=siatka, nsim=4)
 spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=500, model wykładniczy \ntrend na osi x = 0.02, trend na osi y = 0.005")
 -->
 
-## Symulacje warunkowe
+### Symulacje warunkowe
 
-### Sekwencyjna symulacja gaussowska (ang. *Sequential Gaussian simulation*)
-
-Jednym z podstawowych typów symulacji warunkowych jest sekwencyjna symulacja gaussowska. 
+Jednym z podstawowych typów symulacji warunkowych jest sekwencyjna symulacja gaussowska (ang. *Sequential Gaussian simulation*). 
 Polega ona na:
 
 1. Wybraniu lokalizacji nie posiadającej zmierzonej wartości badanej zmiennej

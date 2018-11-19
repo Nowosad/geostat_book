@@ -73,7 +73,7 @@ proj4string(nowa_siatka) <- proj4string(punkty)
 plot(nowa_siatka)
 ```
 
-### Siatki regularne
+### Siatki regularne - wizualizacja
 
 Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić za pomocą funkcji `plot()`. 
 W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add`.
@@ -122,7 +122,7 @@ Do modeli deterministycznych należą, między innymi:
 
 <!--http://neondataskills.org/Data-Workshops/ESA15-Going-On-The-Grid-Spatial-Interpolation-Basics/-->
 
-### Modele deterministyczne | Voronoi
+### Voronoi
 
 Metoda diagramów Voronoi'a polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego punktu. 
 Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi()` z pakietu **dismo**.
@@ -138,7 +138,7 @@ spplot(voronoi_interp, zcol = "temp",
        main = "Poligony Voronoia - temperatura")
 ```
 
-### Modele deterministyczne | IDW
+### IDW
 
 Metoda średniej ważonej odległością (IDW) wylicza wartość dla każdej komórki na podstawie wartości punktów obokległych ważonych odwrotnością ich odległości. 
 W efekcie, czym bardziej jest punkt oddalony, tym mniejszy jest jego wpływ na interpolowaną wartość. 
@@ -172,7 +172,7 @@ dodaj wykresy idw
 https://rpubs.com/DonalOLeary/80504
 -->
 
-### Modele deterministyczne | Funkcje wielomianowe
+### Funkcje wielomianowe
 
 Stosowanie funkcji wielomianowych w R może odbyć się z wykorzystaniem funkcji `gstat()` z pakietu **gstat**.
 Wymaga ona podania trzech argumentów: `formula` określającego naszą analizowaną cechę (`temp~1` mówi, że chcemy interpolować wartość temperatury zależnej od samej siebie), `data` określający analizowany zbiór danych, oraz `degree` określającą stopień wielomianu.
@@ -208,7 +208,7 @@ spplot(wielomian_3_pred, zcol = "var1.pred", contour = TRUE,
        stopnia")
 ```
 
-### Modele deterministyczne | Funkcje sklejane
+### Funkcje sklejane
 
 Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**) dopasowuje krzywą powierzchnię do wartości analizowanych punktów.
 
@@ -219,7 +219,7 @@ spplot(siatka, "tps_pred", contour = TRUE,
        main = "Funkcje sklejane")
 ```
 
-### Modele deterministyczne | Porównanie
+### Porównanie modeli deterministycznych
 
 ```{r echo=FALSE}
 library(gridExtra)
