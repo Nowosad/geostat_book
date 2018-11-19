@@ -132,6 +132,23 @@ Inaczej mówiąc, niepodobieństwo jej wartości nie wzrasta wraz z odległości
 Ten typ modelu najczęściej używany jest w modelach złożonych.
 W takich wypadkach służy on do określania, między innymi, błędu pomiarowego czy zmienności na krótkich odstępach.
 
+```{r, echo=FALSE}
+set.seed(1712)
+punkty2 = spsample(siatka, type = "regular", n = 100)
+punkty2 = SpatialPointsDataFrame(punkty2, data.frame(values = runif(length(punkty2))))
+data("siatka")
+```
+
+```{r, echo=FALSE}
+model_nug <- vgm(psill = 10, model = "Nug", range = 0)
+k_nug <- krige(values~1, 
+            locations = punkty2,
+            newdata = siatka,
+            model = model_nug,
+            debug.level = 0)
+spplot(k_nug[1])
+```
+
 ```{r}
 vario <- variogram(temp~1, locations = punkty)
 plot(vario)
@@ -163,6 +180,16 @@ Model sferyczny (`Sph`) jest jednym z najczęściej stosowanych modeli geostatys
 Reprezentuje on cechę, której zmienność wartości ma charakter naprzemiennych płatów niskich i wysokich wartości.
 Średnio te płaty mają średnicę określoną przez zasięg (`range`) modelu.
 
+```{r, echo=FALSE}
+model_sph <- fit.variogram(vario, vgm(psill = 10, model = "Sph", range = 3000))
+k_sph <- krige(values~1, 
+            locations = punkty2,
+            newdata = siatka,
+            model = model_sph,
+            debug.level = 0)
+spplot(k_sph[1])
+```
+
 ```{r }
 vario <- variogram(temp~1, locations = punkty)
 plot(vario)
@@ -186,10 +213,20 @@ Model wykładniczy (`Exp`) również jest jednym z najczęściej używanych w ge
 W jego przypadku, zamiast zasięgu podaje się tzw. zasięg praktyczny.
 Oznacza on odległość na jakiej model osiąga 95% wartości wariancji progowej.
 
+```{r, echo=FALSE}
+model_exp <- fit.variogram(vario, vgm(psill = 10, model = "Exp", range = 3000))
+k_exp <- krige(values~1, 
+            locations = punkty2,
+            newdata = siatka,
+            model = model_exp,
+            debug.level = 0)
+spplot(k_exp[1])
+```
+
 ```{r }
 vario <- variogram(temp~1, locations = punkty)
 plot(vario)
-````
+```
 
 ```{r }
 model_exp <- vgm(psill = 10, model = "Exp", range = 3000)
@@ -209,6 +246,16 @@ Model gaussowski (`Gau`) również posiada zasięg praktyczny definiowany jako 9
 Jego cechą charakterystyczną jest paraboliczny kształt na początkowym odcinku. 
 Jest on najczęściej używany do modelowania cech o regularnej i łagodnej zmienności przestrzennej. 
 Model gaussowski z uwagi na swoje cechy zazwyczaj nie powinien być stosowany samodzielnie, lecz jako element modelu złożonego.
+
+```{r, echo=FALSE}
+model_gau <- fit.variogram(vario, vgm(psill = 13, model = "Gau", range = 3000))
+k_gau <- krige(values~1, 
+            locations = punkty2,
+            newdata = siatka,
+            model = model_gau,
+            debug.level = 0)
+spplot(k_gau[1])
+```
 
 ```{r }
 vario <- variogram(temp~1, locations = punkty)
@@ -232,6 +279,16 @@ plot(vario, model = fitted_gau)
 Model potęgowy (`Pow`) to przykład tzw. modelu nieograniczonego.
 Jego wartość rośnie w nieskończoność, dlatego niemożliwe jest określenie jego zasięgu. 
 W przypadku modelu potęgowego, parametr `range` oznacza wykładnik potęgowy.
+
+```{r, echo=FALSE}
+model_pow <- fit.variogram(vario, vgm(psill = 0.03, model = "Pow", range = 0.7))
+k_pow <- krige(values~1, 
+            locations = punkty2,
+            newdata = siatka,
+            model = model_pow,
+            debug.level = 0)
+spplot(k_pow[1])
+```
 
 ```{r }
 vario <- variogram(temp~1, locations = punkty)
@@ -310,6 +367,10 @@ Uwzględnienie anizotropii wymaga zamiany parametru zasięgu na trzy inne parame
 - Kąt określający dominujący kierunek
 - Proporcję anizotropii, czyli relację pomiędzy zasięgiem w dominującym kierunku a zasięgiem w przeciwległym kierunku
 
+```{r, echo=FALSE}
+knitr::include_graphics("figs/mapa_semiwariogramu.png")
+```
+
 W pakiecie **gstat** odbywa się to poprzez dodanie argumentu `alpha` do funkcji `variogram()`. 
 Należy w niej zdefiniować analizowane kierunki, które zostały określone na podstawie mapy semiwariogramu. 
 Następnie w funkcji `vgm()` należy podać nowy argument `anis`.
@@ -348,13 +409,18 @@ vario_kier_fit2 <- fit.variogram(vario_kier,
 plot(vario_kier, vario_kier_fit2, as.table = TRUE)
 ```
 
-## Zadania {#z6}
+## Zadania {#z7}
 
-<!--     Obliczyć i zwizualizować semiwariogram zmiennej VI na podstawie dostosowanych parametrów -->
-<!--     Dopasować "ręcznie" możliwie jak najlepszy model do stworzonego semiwariogramu. W raporcie zamieścić także pośrednie etapy dopasowania modelu -->
-<!--     Wykorzystać funkcję automatycznego dopasowania modelu do utworzonego semiwariogramu -->
+Przyjrzyj się danym z obiektu `punkty_pref`. Możesz go wczytać używając poniższego kodu:
 
-<!--     Określić kierunek i zasięg anizotropii dla zmiennej VI -->
-<!--     Obliczyć semiwariogramy kierunkowe dla zmiennej VI -->
-<!--     Dopasować model do semiwariogramów kierunkowych zmiennej VI -->
+```{r}
+data("punkty_pref")
+```
 
+1. Zbuduj modele semiwariogramu zmiennej `srtm` używając modelu sferycznego używając zarówno ręcznie ustalonych parametrów oraz funkcji `fit.variogram()`.
+Porównaj graficznie uzyskane modele.
+2. Zbuduj modele semiwariogramu zmiennej `srtm` używając modelu nuggetowego, sferycznego, wykładniczego, gausowskiego i potęgowego.
+Porównaj graficznie uzyskane modele.
+3. Stwórz złożony model semiwariogramu zmiennej `srtm` używając modelu nuggetowego i sferycznego.
+4. W oparciu o mapę semiwariogramu, zbuduj semiwariogramy kierunkowe zmiennej `srtm` dla kierunków wykazujących anizotropię przestrzenną.
+Następnie zbuduj modele semiwariogramu dla uzyskanych semiwariogramów kierunkowych.
