@@ -17,7 +17,7 @@ par(mar = c(rep(0, 4)))
 
 ## Kriging
 
-### Kriging | Interpolacja geostatystyczna
+### Interpolacja geostatystyczna
 
 Kriging (interpolacja geostatystyczna) to grupa metod estymacji zaproponowana w latach 50. przez Daniela Krige.
 Główna zasada mówi, że prognoza w danej lokalizacji jest kombinacją obokległych obserwacji. 
