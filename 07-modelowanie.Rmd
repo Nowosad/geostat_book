@@ -135,7 +135,7 @@ W takich wypadkach służy on do określania, między innymi, błędu pomiaroweg
 ```{r, echo=FALSE}
 data("siatka")
 set.seed(1712)
-punkty2 = spsample(siatka, type = "regular", n = 100)
+punkty2 = spsample(siatka, type = "stratified", n = 50)
 punkty2 = SpatialPointsDataFrame(punkty2, data.frame(values = runif(length(punkty2))))
 ```
 
@@ -181,7 +181,8 @@ Reprezentuje on cechę, której zmienność wartości ma charakter naprzemiennyc
 Średnio te płaty mają średnicę określoną przez zasięg (`range`) modelu.
 
 ```{r, echo=FALSE}
-model_sph <- fit.variogram(vario, vgm(psill = 10, model = "Sph", range = 3000))
+vario2 <- variogram(values~1, locations = punkty2)
+model_sph <- fit.variogram(vario2, vgm(psill = 0.08, model = "Sph", range = 2000))
 k_sph <- krige(values~1, 
             locations = punkty2,
             newdata = siatka,
@@ -214,7 +215,7 @@ W jego przypadku, zamiast zasięgu podaje się tzw. zasięg praktyczny.
 Oznacza on odległość na jakiej model osiąga 95% wartości wariancji progowej.
 
 ```{r, echo=FALSE}
-model_exp <- fit.variogram(vario, vgm(psill = 10, model = "Exp", range = 3000))
+model_exp <- fit.variogram(vario2, vgm(psill = 0.08, model = "Exp", range = 2000))
 k_exp <- krige(values~1, 
             locations = punkty2,
             newdata = siatka,
@@ -248,7 +249,7 @@ Jest on najczęściej używany do modelowania cech o regularnej i łagodnej zmie
 Model gaussowski z uwagi na swoje cechy zazwyczaj nie powinien być stosowany samodzielnie, lecz jako element modelu złożonego.
 
 ```{r, echo=FALSE}
-model_gau <- fit.variogram(vario, vgm(psill = 13, model = "Gau", range = 3000))
+model_gau <- vgm(psill = 0.08, model = "Gau", range = 750)
 k_gau <- krige(values~1, 
             locations = punkty2,
             newdata = siatka,
@@ -281,7 +282,7 @@ Jego wartość rośnie w nieskończoność, dlatego niemożliwe jest określenie
 W przypadku modelu potęgowego, parametr `range` oznacza wykładnik potęgowy.
 
 ```{r, echo=FALSE}
-model_pow <- fit.variogram(vario, vgm(psill = 0.03, model = "Pow", range = 0.7))
+model_pow <- fit.variogram(vario2, vgm(psill = 0.03, model = "Pow", range = 0.7))
 k_pow <- krige(values~1, 
             locations = punkty2,
             newdata = siatka,
