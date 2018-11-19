@@ -1,5 +1,5 @@
 
-# Geostatystyka - prolog {#geostatystyka-prolog}
+# Miary relacji przestrzennych {#geostatystyka-prolog}
 
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
