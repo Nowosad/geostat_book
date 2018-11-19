@@ -217,4 +217,4 @@ p2 <- spplot(uk2, "var1.var", main = "Wariancja predykcji KED")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
-## Zadania {#z10}
+## Zadania {#z11}

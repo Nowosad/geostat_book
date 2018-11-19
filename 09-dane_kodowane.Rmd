@@ -151,4 +151,4 @@ grid.arrange(p1, p2, p3, ncol = 1)
 
 <!-- ADD A BINARY MAP! -->
 
-## Zadania {#z8}
+## Zadania {#z9}

@@ -415,7 +415,7 @@ vario_kier <- variogram(temp~1, locations = punkty,
 plot(vario_kier)
 ```
 
-## Zadania {#z5}
+## Zadania {#z6}
 
 Przyjrzyj się danym z obiektu `punkty_pref`.
 Możesz go wczytać używając poniższego kodu:

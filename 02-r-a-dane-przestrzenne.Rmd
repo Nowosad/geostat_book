@@ -331,7 +331,7 @@ plot(siatka_sp)
 spplot(siatka_sp, "band3")
 ```
 
-## Zadania {#z1}
+## Zadania {#z2}
 
 1. Wczytaj dane z pliku `punkty_ndvi.csv` i przetwórz je do postaci obiektu przestrzennego `ndvi_p`.
 2. Stwórz mapę zmiennej `ndvi` z nowoutworzonego obiektu. (Dodatkowo: zapisz mapę do pliku graficznego `punkty_ndvi.png`).

@@ -302,7 +302,7 @@ mapview(punkty["temp"])
 <!-- http://gaa.org.au/pdf/DeclusterDebias-CCG.pdf -->
 <!-- --> 
 
-## Zadania {#z3}
+## Zadania {#z4}
 
 1. Określ i opisz typ próbkowania danych `punkty`.
 2. Wykonaj mapę pokazującą przestrzenny rozkład wartości NDVI w zbiorze `punkty`. (Dodatkowo: spróbuj użyć do tego pakietu **tmap** - `install.packages("tmap")`).

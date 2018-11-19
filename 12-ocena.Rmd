@@ -280,4 +280,4 @@ krige.cv
 ```
 -->
 
-## Zadania {#z11}
+## Zadania {#z12}

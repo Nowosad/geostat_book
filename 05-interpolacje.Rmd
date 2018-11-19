@@ -243,7 +243,7 @@ Do modeli statystycznych należą, między innymi:
 
 W kolejnych rozdziałach można znaleźć omówienie kilku podstawowych typów pierwszej z tych metod - krigingu.
 
-## Zadania {#z4}
+## Zadania {#z5}
 
 1. Stwórz siatkę interpolacyjną o rozdzielczości 200 metrów dla obszaru Suwalskiego Parku Krajobrazowego.
 2. Korzystając z danych `punkty` wykonaj interpolację zmiennej `srtm` używając:

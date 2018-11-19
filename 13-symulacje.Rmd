@@ -239,7 +239,7 @@ spplot(sym_ind, main = "Symulacje warunkowe")
 łączenie sis - wiele symulacji
 -->
 
-## Zadania {#z12}
+## Zadania {#z13}
 
 <!-- 1. Symulacja bezwarunkowa -->
 <!-- 2. Symulacja warunkowa -->

@@ -186,4 +186,4 @@ grid.arrange(p1, p2, ncol = 2)
 ## Kokriging na podstawie uproszczonych modeli Markowa I i II
 -->
 
-## Zadania {#z9}
+## Zadania {#z10}

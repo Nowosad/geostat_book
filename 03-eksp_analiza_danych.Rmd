@@ -364,7 +364,7 @@ ggplot(punkty@data, aes(bc_tpz_inv)) + geom_density()
 
 -->
 
-## Zadania {#z2}
+## Zadania {#z3}
 
 Przyjrzyj się danym z obiektu `punkty_pref`.
 Możesz go wczytać używając poniższego kodu:

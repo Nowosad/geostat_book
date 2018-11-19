@@ -201,7 +201,7 @@ p3 <- spplot(kzt, "var1.pred", at = ramp, main = "KZT")
 grid.arrange(p1, p2, p3, ncol = 1, padding = unit(0, "line"))
 ```
 
-## Zadania {#z7}
+## Zadania {#z8}
 
 <!--     Stworzyć prostokątną siatkę i wykonać dla niej estymację zmiennej VI metodami SK oraz OK. Wykorzystać modele bezkierunkowe utworzone w poprzednum zadaniu. -->
 <!--     Stworzyć plik zawierający 40 różnych lokalizacji w zasięgu analizowanego obszaru i przeprowadzić kriging SK oraz OK dla tych lokalizacji -->
