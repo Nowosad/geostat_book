@@ -1,338 +1,136 @@
+# Wprowadzenie
 
-# R a dane przestrzenne {#r-a-dane-przestrzenne}
+## Geostatystyczna analiza danych
 
-## Wprowadzenie
+> Geostatystyka to gałąź statystyki skupiająca się na przestrzennych lub czasoprzestrzennych zbiorach danych
 
-### Reprezentacja danych nieprzestrzennych
-    
-- Wektory (ang. *vector*):
-    - liczbowe (ang. *integer*, *numeric*) - `c(1, 2, 3)` i `c(1.21, 3.32, 4.43)`
-    - znakowe (ang. *character*) - `c("jeden", "dwa", "trzy")`
-    - logiczne (ang. *logical*) - `c(TRUE, FALSE)`
-    - czynnikowe (ang. *factor*) - `c("jeden", "dwa", "trzy", "jeden")`
-- Ramki danych (ang. *data.frame*) - to zbiór zmiennych (kolumn) oraz obserwacji (wierszy) zawierających różne typy danych
-- Macierze (ang. *matrix*)
-- Listy (ang. *list*)
+Geostatystyka jest stosowana obecnie w wielu dyscyplinach, jakich jak geologia naftowa, oceanografia, geochemia, logistyka, leśnictwo, gleboznawstwo, hydrologia, meteorologia, czy epidemiologia.
 
-### Pakiety
+Geostatystyczna analiza danych może przyjmować różną postać w zależności od postawionego celu analizy.
+Poniższa rycina przestawia uproszczoną ścieżkę postępowania geostatystycznego.
 
-R zawiera wiele funkcji pozwalających na przetwarzanie, wizualizację i analizowanie danych przestrzennych.
-Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi:
-
-<!-- uzupełnij -->
-
-- GIS - **sf**, **raster**, **sp**, **rgdal**, **rgeos**
-- Geostatystyka - **gstat**, **geoR**, **geoRglm**
-
-<!-- - GIS - **sp**, **rgdal**, **raster**, **rasterVis**, **rgeos**, **maptools**, **GeoXp**, **deldir**, **pgirmess**, **spatstat** -->
-<!-- - Geostatystyka - **gstat**, **geoR**, **geoRglm**, **fields**, **spBayes**, **RandomFields**, **vardiag** -->
-
-Więcej szczegółów na ten temat pakietów R służących do analizy przestrzennej można znaleźć pod adresem https://cran.r-project.org/web/views/Spatial.html.
-
-### Reprezentacja danych przestrzennych
-
-Dane przestrzenne mogą być reprezentowane w R poprzez szereg różnych klas obiektów z użyciem różnych pakietów R. 
-Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klas `Spatial*` z pakietu **sp** oraz obiekty klasy `sf` z pakietu **sf**.
-
-Wszystkie obiekty klasy `Spatial*` z pakietu **sp** zawierają tablę atrybutów oraz dwie dodatkowe informacje:
-
-    - bounding box (`bbox`) - obwiednia - określa zasięg danych
-    - CRS (`proj4string`) - układ współrzędnych
-
-Ten pakiet definiuje klasę obiektów - sposób reprezentacji danych.
-Najczęściej stosowane obiekty klasy `Spatial*` to `SpatialPointsDataFrame`, `SpatialPolygonsDataFrame` oraz `SpatialGridDataFrame`. 
-Ostatnia klasa reprezentuje dane rastrowe.  
-Dodatkowo ten pakiet współpracuje z pakietami **rgdal** służącym do wczytywania i zapisywania danych oraz **rgeos** służącym do przetwarzania danych przestrzennych.
-W oparciu o pakiet **sp** powstało kilkaset dodatkowych pakietów R do analizy danych przestrzennych.
-
-Dane rastrowe są reprezentowane między innymi poprzez klasę `SpatialGridDataFrame` z pakietu **sp** oraz obiekty klasy `Raster*` z pakietu **raster**, tj. `RasterLayer`, `RasterStack`, `RasterBrick`.
-
-Więcej o pakiecie **sf** oraz **raster** można przeczytać w [rozdziale drugim](https://geocompr.robinlovelace.net/spatial-class.html) Geocomputation with R.
-
-### GDAL/OGR
-
-- Pakiety **rgdal**, **raster** czy **sf** wykorzystują biblioteki GDAL/OGR w R do wczytywania i zapisywania danych przestrzennych
-- http://www.gdal.org/
-- GDAL to biblioteka zawierająca funkcje służące do odczytywania i zapisywania danych w formatach rastrowych
-- OGR to biblioteka służąca to odczytywania i zapisywania danych w formatach wektorowych
-
-### PROJ
-
-- Pakiety **sp**, **raster**, czy **sf** używają biblioteki PROJ do określania i konwersji układów współrzędnych
-- https://proj4.org/
-- Dane przestrzenne powinny być zawsze powiązane z układem współrzędnych
-- PROJ - to biblioteka pozwalająca na identyfikację oraz konwersję pomiędzy różnymi układami współrzędnych
-- Strona http://www.spatialreference.org/ zawiera bazę danych układów współrzędnych 
-- Układy współrzędnych mogą być opisywane na szereg sposobów, np poprzez:
-
-    - Reprezentację proj4string - określa ona szereg własności ukladu współrzędnych
-    - Kod EPSG (ang. *European Petroleum Survey Group*) - pozwala on na łatwe identyfikowanie układów współrzędnych.
-
-- Przykładowo, układ PL 1992 może być określony jako:
-
-`"+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"`
-
-- ...lub też za pomocą kodu EPSG:
-    
-`"+init=epsg:2180"`
-
-### Układ geograficzny
-
-- Proporcje pomiędzy współrzędną oznaczającą długość geograficzną (X) a oznaczającą szerokość geograficzną (Y) nie są równe 1:1
-- Wielkość oczka siatki jest zmienna 
-- Nie pozwala to na proste określanie odległości czy powierzchni
-- Jednostka mapy jest abstrakcyjna
-- Powyższe cechy układów geograficznych powodują, że do większości algorytmów w geostatystyce wykorzystywane są układy współrzędnych prostokątnych płaskich
-
-### Układ współrzędnych prostokątnych płaskich
-
-- Określane są w miarach liniowych (np. metrach)
-- Proporcje między współrzędną X a Y są równe 1:1
-- Wielkość oczka jest stała
-<!-- -->
-
-### GEOS
-
-- Pakiety **rgeos** czy **sf** używają biblioteki GEOS do wykonywania operacji przestrzennych
-- http://geos.osgeo.org/
-- GEOS to biblioteka pozwalająca na przetwarzanie obiektów przestrzennych
-- Przykładowe funkcje tej biblioteki to tworzenie buforów, wyliczanie centroidów, określanie relacji topologicznych (np. przecina, zawiera, etc.) i wiele innych
-
-## Import danych
-
-R pozwala na odczytywanie danych przestrzennych z wielu formatów.
-Do najpopularniejszych należą dane tekstowe z plików .csv, dane wektorowe z plików .shp, dane rastrowe z plików w formacie GeoTIFF, oraz bazy danych przestrzennych z plików .gpkg.
-
-### Format .csv (dane punktowe)
-
-Dane z plików tekstowych (np. .csv) można odczytać za pomocą uogólnionej funkcji `read.table()` lub też funkcji szczegółowych - `read.csv()` lub `read.csv2()`.
-
-```{r}
-punkty_sp <- read.csv("dane/punkty.csv")
+```{r, echo=FALSE, fig.width=8}
+knitr::include_graphics("figs/diag.png")
 ```
 
-```{r}
-head(punkty_sp)
-```
+Punktem wyjścia analizy geostatystycznej jest posiadanie danych przestrzennych opisujących badane zjawisko, np. w **postaci punktowej**:
 
-Po wczytaniu za pomocą funkcji `read.csv()`, nowy obiekt (np. `punkty_sp`) jest reprezentowany za pomocą klasy nieprzestrzennej `data.frame`. 
-Aby obiekt został przetworzony do klasy przestrzennej, konieczne jest nadanie mu współrzędnych.
-W tym wypadku współrzędne znajdowały się w kolumnach `x` oraz `y`. 
-Nadanie układu współrzędnych odbywa się poprzez funkcję `coordinates()`.
-
-```{r, message=FALSE}
+```{r, echo=FALSE}
 library(sp)
-coordinates(punkty_sp) <- ~x + y
-summary(punkty_sp)
+library(geostatbook)
+library(gstat)
+data("punkty")
+data("granica")
+data("siatka")
+granica_plot <- list("sp.polygons", granica)
+spplot(punkty["temp"], sp.layout = list(granica_plot))
 ```
 
-Ważne, ale nie wymagane, jest także dodanie informacji o układzie przestrzennym danych za pomocą funkcji `proj4string()`. 
+Na ich podstawie chcemy zrozumieć zmienność przestrzenną analizowanej cechy.
+Do tego może nam posłużyć wykres nazywany **semiwariogramem**:
 
-```{r}
-proj4string(punkty_sp) <- "+init=epsg:2180"
-summary(punkty_sp)
+```{r, echo=FALSE}
+var <- variogram(temp~1, data = punkty)
+plot(var)
 ```
 
-Proste wyświetlenie uzyskanych danych klasy przestrzennej, np. `SpatialPointsDataFrame`, można uzyskać za pomocą funkcji `plot()`.
+Opisuje on przestrzenną zmienność badanej cechy i za jego pomocą możemy stwierdzić jak szybko to zjawisko zmienia się w przestrzeni.
+Dodatkowo za pomocą **mapy semiwariogramu** możliwe jest stwierdzenie czy istnieją jakieś kierunki w których ta cecha zmienia się zmienia bardziej dynamicznie, a w których ta zmiana jest wolniejsza:
 
-```{r}
-plot(punkty_sp)
+```{r, echo=FALSE}
+var_map <- variogram(temp~1, data = punkty, 
+                       cutoff = 4000, width = 400, map = TRUE)
+plot(var_map, threshold = 30, col.regions = topo.colors(n = 40))
 ```
 
-<!--
-### Usuwanie punktów zawierających braki wartości
+Następnie korzystając z wiedzy uzyskanej z semiwariogramu i mapy semiwariogramu, jesteśmy w stanie stworzyć **model semiwariogramu**:
 
-```{r }
-sp_na_omit <- function(x, margin=1) {
-  if (!inherits(x, "SpatialPointsDataFrame") & !inherits(x, "SpatialPolygonsDataFrame")) {
-    stop("MUST BE sp SpatialPointsDataFrame OR SpatialPolygonsDataFrame CLASS OBJECT")
-  }
-  na.index <- unique(as.data.frame(which(is.na(x@data), arr.ind = TRUE))[, margin])
-  if (margin == 1) {
-    cat("DELETING ROWS: ", na.index, "\n")
-    return(x[-na.index, ])
-  }
-  if (margin == 2) {
-    cat("DELETING COLUMNS: ", na.index, "\n")
-    return(x[, -na.index])
-  }
-}
-# wolin_lato_los2 <- sp_na_omit(wolin_lato_los)
-# summary(wolin_lato_los2)
-```
--->
-
-### Dane poligonowe (formaty gisowe)
-
-Dane wektorowe (np. shapefile) można odczytać za pomocą funkcji `readOGR()` z pakietu **rgdal**. 
-Dla danych w formacie shapefile, przyjmuje ona co najmniej dwa argumenty - `dsn` oraz `layer`. 
-Argument `dsn` określa folder, w którym znajdują się dane. 
-W przypadku, gdy dane znajdują się w folderze roboczym należy ten argument określić za pomocą znaku kropki (`"."`). 
-Argument `layer` wymaga podania nazwy pliku bez jego rozszerzenia.
-Przykładowo, gdy pliki nazywają się `granica.dbf`, `granica.prj`, `granica.shp`, oraz `granica.shx` - konieczne jest podanie w argumencie `layer` jedynie nazwy `granica`.
-
-```{r}
-library(rgdal)
-granica_sp <- readOGR(dsn = "dane/granica.gpkg")
-plot(granica_sp)
+```{r, echo=FALSE}
+fitted_sph <- fit.variogram(var, vgm(model = "Sph", nugget = 1))
+plot(var, model = fitted_sph)
 ```
 
-### Rastry
+Pozwala on zarówno na lepszy opis zmienności zjawiska, jak również służy do tworzenia **predykcji** czy też **symulacji**.
+Predykcja tworzy najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji:
 
-Istnieje kilka sposobów odczytu danych rastrowych w R. 
-Do najpopularniejszych należą funkcje `readGDAL()` z pakietu `rgdal` oraz `raster()` z pakietu **raster**.
-Należy w nich jedynie podać ścieżkę do pliku rastrowego.
-
-```{r}
-library(raster)
-siatka_sp <- readGDAL("dane/siatka.tif")
-plot(siatka_sp)
+```{r, echo=FALSE, message=FALSE}
+sk <- krige(temp~1, 
+            locations = punkty,
+            newdata = siatka,
+            model = fitted_sph,
+            beta = 15.9)
+spplot(sk, "var1.pred", main = "Predykcja")
+spplot(sk, "var1.var", main = "Wariancja predykcji")
 ```
 
-## Przeglądanie danych przestrzennych
+Rolą symulacji jest natomiast generowanie równie prawdopodobne możliwości rozkładu badanej cechy:
 
-### Struktura obiektu
-
-Podstawowe informacje o obiektach można uzyskać za pomocą funkcji `str()`:
-
-```{r}
-str(punkty_sp)
+```{r, echo=FALSE, message=FALSE}
+sym_ok <- krige(temp~1, 
+                locations = punkty,
+                newdata = siatka, 
+                model = fitted_sph,
+                nmax = 30, 
+                nsim = 4)
+spplot(sym_ok)
 ```
 
-Obiekty klas `Spatial*` mają pięć elementów (ang. *slots*) rozpoczynających się od symbolu `@`:
+Każdy z powyższych elementów geostatystycznej analizy danych zostanie rozwinięty w dalszych rozdziałach tego skryptu.
 
-- `@data` - tabela atrybutów
-- `@coords.nrs` - numer kolumn zawierających współrzędne
-- `@coords` - współrzędne kolejnych elementów
-- `@bbox` - obwiednia
-- `@proj4string` - definicja układu współrzędnych
+<!-- po co to - prosta analiza bez kodu -->
+<!-- http://dmowska-zajecia.home.amu.edu.pl/data/uploads/geostatystyka/materialy/1_wprowadzenie.html -->
 
-### Tabla atrybutów
+## Wymagania wstępne
 
-`@data` jest obiektem klasy `data.frame` zawierającym informacje o kolejnych punktach w tym zbiorze.
+### Oprogramowanie
 
-```{r}
-df <- punkty_sp@data
-head(df)
+Do odtworzenia przykładów użytych w poniższym skrypcie wystarczy podstawowa znajomość R. 
+Aby zainstalować R oraz RStudio można skorzystać z poniższych odnośników:
+
+- [R](https://www.r-project.org/) - https://cloud.r-project.org/
+- [RStudio](https://www.rstudio.com/) - https://www.rstudio.com/products/rstudio/download/
+
+Dodatkowo, użyte zostały poniższe pakiety R [@R-caret;@R-corrplot;@R-dismo;@R-fields;@R-ggplot2;@R-gridExtra;@R-gstat;@R-mapview;@R-pgirmess;@R-rgdal;@R-rgeos;@R-sp].
+
+```{r pakietsy}
+pakiety <- c(
+  "caret", "corrplot", "dismo", "fields", "ggplot2", "gridExtra",
+  "gstat", "mapview", "pgirmess", "rgdal", "rgeos", "sp"
+)
 ```
 
-### Współrzędne
-
-Element `@coords.nrs` określa numer kolumn zawierających współrzędne w oryginalnym zbiorze danych.
-
-```{r}
-punkty_sp@coords.nrs
+```{r pakiertbib, echo=FALSE}
+knitr::write_bib(c(pakiety, "bookdown", "knitr", "rmarkdown", "geostatbook", "base"), "packages.bib", width = 60)
 ```
 
-Kolejny element, `@coords` definiuje współrzędne kolejnych elementów zadanego obiektu.
+Pakiety R używane w tym skrypcie można zainstalować poprzez funkcję `install.packages()`:
 
-```{r}
-xy <- punkty_sp@coords
-head(xy)
+```{r pakiety_inst, eval=FALSE}
+install.packages(pakiety)
 ```
 
-### Obwiednia
+Lub też za pomocą pakietu `geostatbook` [@R-geostatbook], który automatycznie zainstaluje wszystkie wymagane pakiety:
 
-Element `@bbox` określa zasięg przestrzenny danych w jednostkach mapy.
-
-```{r}
-punkty_sp@bbox
+```{r instgeobook, eval=FALSE}
+install.packages("devtools")
+devtools::install_github("nowosad/geostatbook")
 ```
 
-### Układ współrzędnych
-
-`@proj4string` reprezentuje definicję układu współrzędnych.
-
-```{r}
-punkty_sp@proj4string
+```{r sessoninfo, echo=FALSE, eval=FALSE}
+devtools::session_info(pakiety)
 ```
 
-## Eksport danych
+### Dane
 
-### Zapisywanie danych wektorowych
+Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu `geostatbook` (dla kolejnych rozdziałów). 
+Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w skrypcie.
 
-R pozwala również na zapisywanie danych przestrzennych. 
-W przypadku zapisu danych wektorowych za pomocą funkcji `writeOGR()` konieczne jest podanie nazwy zapisywanego obiektu (np. `granica`), folderu w którym chcemy zapisać plik (np. `dane`), nazwę zapisywanych plików bez rozszerzenia (np. `nowa_granica`), oraz sterownik - w przypadku danych shapefile jest to `ESRI Shapefile`.
+- [Archiwum zawierające dane do rozdziału drugiego](https://github.com/Nowosad/geostat_book/blob/master/dane.zip?raw=true)
+- [Dane do kolejnych rozdziałów są zawarte w pakiecie geostatbook:](https://github.com/Nowosad/geostatbook)
 
-```{r zapis_wektora1, eval=FALSE}
-# formaty wektorowe
-writeOGR(granica_sp, dsn = "dane", layer = "nowa_granica",
-         driver = "ESRI Shapefile")
+```{r instgeobook2, eval=FALSE}
+# install.packages("devtools")
+devtools::install_github("nowosad/geostatbook")
 ```
 
-Zapisywanie w bazach danych przestrzennych odbywa się poprzez nazwy zapisywanego obiektu (np. `granica`), ścieżki do zapisywanego pliku (np. `dane/nowa_granica.gpkg`), nazwę dla nowoutworzonej warstwy (np. `granica`), oraz sterownik - w przypadku danych GeoPackage jest to `GPKG`.
-
-```{r zapis_wektora2, eval=FALSE}
-# bazy danych przestrzennych
-writeOGR(granica_sp, dsn = "dane/nowa_granica.gpkg",
-         layer = "granica", driver = "GPKG")
-```
-
-### Zapisywanie danych rastrowych
-
-Funkcja `writeGDAL()` pozwala na zapisywanie danych rastrowych.
-Wymaga ona podania dwóch argumentów - nazwy zapisywanego obiektu (np. `siatka_sp`) oraz ścieżki i nazwy nowego pliku wraz z rozszerzeniem (np. `dane/nowy_siatka.tif`).
-
-```{r zapis_rastra, eval=FALSE}
-writeGDAL(siatka_sp, fname = "dane/nowy_siatka.tif")
-```
-
-Możliwe jest także użycie szeregu dodatkowych argumentów, np.:
-- `type` - określającego typ danych wyjściowych 
-- `options` - pozwalającego na użycie dodatkowych opcji sterownika, np. użycie kompresji danych
-
-## Wizualizacja danych 2D
-
-Do wizualizacji danych przestrzennych w R służy co najmniej kilkanaście różnych pakietów. 
-Poniżej pokazane są przykłady kilku najprostszych funkcji - `plot()` oraz `spplot()` z pakietu `sp` oraz `levelplot()` z pakietu `rasterVis`.
-Więcej o wizualizacji danych przestrzennych można przeczytać w rozdziale [Making maps with R](https://geocompr.robinlovelace.net/adv-map.html) książki Geocomputation with R.
-
-### Dane punktowe
-
-Funkcja `plot()` idealnie nadaje się do szybkiego przyjrzenia się, np. rodzajowi próbkowania danych.
-
-```{r}
-plot(punkty_sp)
-```
-
-Funkcja `spplot()` w prosty sposób pozwala na obejrzenie rozkładu wartości wybranej zmiennej. 
-Należy w niej podać nazwę obiektu oraz nazwę wyświetlanej zmiennej. 
-Poniżej można zobaczyć przykłady dla zmiennych `temp` oraz `srtm`.
-
-```{r }
-spplot(punkty_sp, "temp")
-```
-
-```{r }
-spplot(punkty_sp, "srtm")
-```
-
-### Dane punktowe - kategorie
-
-Nie zawsze dane mają postać ciągłych wartości - bywają one również określeniami różnych klas. 
-W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci kategorycznej (`as.factor()`).
-Następnie można je wyświetlić za pomocą funkcji `spplot()`.
-
-```{r }
-punkty_sp@data$clc <- as.factor(punkty_sp@data$clc)
-spplot(punkty_sp, "clc")
-```
-
-### Rastry
-
-Wyświetlanie danych w formacie rastrowym może odbyć się z użyciem funkcji `plot()` lub `spplot()`.
-Pierwsza z nich wymaga zdefiniowania obiektu do wizualizacji i domyślnie wyświetla pierwszą warstwę obiektu.
-Druga z nich domyślnie wyświetla wszystkie dostępne warstwy lub też pojedynczą warstwę poprzez podanie jej nazwy:
-
-```{r, message=FALSE, warning=FALSE}
-# pierwsza zmienna
-plot(siatka_sp)
-# wybrana zmienna
-spplot(siatka_sp, "band3")
-```
-
-## Zadania {#z1}
-
-1. Wczytaj dane z pliku `punkty_ndvi.csv` i przetwórz je do postaci obiektu przestrzennego `ndvi_p`.
-2. Stwórz mapę zmiennej `ndvi` z nowoutworzonego obiektu. (Dodatkowo: zapisz mapę do pliku graficznego `punkty_ndvi.png`).
-3. Zapisz obiekt `ndvi_p` do formatu GeoPackage oraz do formatu Esri Shapefile.
+Aby ułatwić korzystanie ze skryptu, rozdziały od \@ref(eksploracja-analiza-danych-nieprzestrzennych) do \@ref(symulacje) rozpoczynają się od wczytania wymaganych pakietów oraz zbiorów danych.
