@@ -51,40 +51,63 @@ knitr::include_graphics("figs/diag.png")
 Punktem wyjścia analizy geostatystycznej jest posiadanie danych przestrzennych opisujących badane zjawisko, np. w **postaci punktowej**:
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figs/punkty.png")
+library(sp)
+library(geostatbook)
+library(gstat)
+data("punkty")
+data("granica")
+data("siatka")
+granica_plot <- list("sp.polygons", granica)
+spplot(punkty["temp"], sp.layout = list(granica_plot))
 ```
 
 Na ich podstawie chcemy zrozumieć zmienność przestrzenną analizowanej cechy.
 Do tego może nam posłużyć wykres nazywany **semiwariogramem**:
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figs/semiwariogram.png")
+var <- variogram(temp~1, data = punkty)
+plot(var)
 ```
 
 Opisuje on przestrzenną zmienność badanej cechy i za jego pomocą możemy stwierdzić jak szybko to zjawisko zmienia się w przestrzeni.
 Dodatkowo za pomocą **mapy semiwariogramu** możliwe jest stwierdzenie czy istnieją jakieś kierunki w których ta cecha zmienia się zmienia bardziej dynamicznie, a w których ta zmiana jest wolniejsza:
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figs/mapa.png")
+var_map <- variogram(temp~1, data = punkty, 
+                       cutoff = 4000, width = 400, map = TRUE)
+plot(var_map, threshold = 30, col.regions = topo.colors(n = 40))
 ```
 
 Następnie korzystając z wiedzy uzyskanej z semiwariogramu i mapy semiwariogramu, jesteśmy w stanie stworzyć **model semiwariogramu**:
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figs/model.png")
+fitted_sph <- fit.variogram(var, vgm(model = "Sph", nugget = 1))
+plot(var, model = fitted_sph)
 ```
 
 Pozwala on zarówno na lepszy opis zmienności zjawiska, jak również służy do tworzenia **predykcji** czy też **symulacji**.
 Predykcja tworzy najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji:
 
-```{r, echo=FALSE}
-knitr::include_graphics("figs/predykcja.png")
+```{r, echo=FALSE, message=FALSE}
+sk <- krige(temp~1, 
+            locations = punkty,
+            newdata = siatka,
+            model = fitted_sph,
+            beta = 15.9)
+spplot(sk, "var1.pred", main = "Predykcja")
+spplot(sk, "var1.var", main = "Wariancja predykcji")
 ```
 
 Rolą symulacji jest natomiast generowanie równie prawdopodobne możliwości rozkładu badanej cechy:
 
-```{r, echo=FALSE}
-knitr::include_graphics("figs/symulacja.png")
+```{r, echo=FALSE, message=FALSE}
+sym_ok <- krige(temp~1, 
+                locations = punkty,
+                newdata = siatka, 
+                model = fitted_sph,
+                nmax = 30, 
+                nsim = 4)
+spplot(sym_ok)
 ```
 
 Każdy z powyższych elementów geostatystycznej analizy danych zostanie rozwinięty w dalszych rozdziałach tego skryptu.
