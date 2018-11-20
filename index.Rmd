@@ -23,7 +23,7 @@ is_online = curl::has_internet()
 
 `r if (knitr:::is_html_output()) '# O skrypcie {-}'`
 
-```{r fig.align='center', echo=is_online}
+```{r fig.align='center', eval=is_online, echo=FALSE, out.height=300}
 knitr::include_graphics("Rfigs/book_cover2.png")
 ```
 
