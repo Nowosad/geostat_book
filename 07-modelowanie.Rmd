@@ -1,5 +1,5 @@
 
-# Modelowanie matematycznie autokorelacji przestrzennej {#modelowanie-matematycznie-autokorelacji-przestrzennej}
+# Modelowanie autokorelacji przestrzennej {#modelowanie-matematycznie-autokorelacji-przestrzennej}
 
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
@@ -26,11 +26,11 @@ Semiwariogram empiryczny (wyliczony z danych punktowych) jest:
 Estymacje i symulacje przestrzenne wymagają modelu struktury przestrzennej analizowanej cechy, a nie tylko wartości empirycznych.
 Dodatkowo, matematycznie modelowanie wygładza chaotyczne fluktuacje danych empirycznych.
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="40%"}
 vario_kzt <- variogram(temp~x + y, locations = punkty)
-plot(vario_kzt)
 model_kzt <- vgm(model = "Sph", nugget = 1)
 fitted_kzt <- fit.variogram(vario_kzt, model_kzt)
+plot(vario_kzt)
 plot(vario_kzt, fitted_kzt)
 ```
 
@@ -125,13 +125,6 @@ Uzyskany model można przedstawić w funkcji `plot()` podając nazwę obiektu za
 3. Dopasować parametry modelu używając funkcji `fit.variogram()`.
 To dopasowanie można również zwizualizować używając funkcji `plot()`.
 
-### Model nuggetowy
-
-Model nuggetowy (`Nug`) określa sytuację, w której analizowana zmienna nie wykazuje autokorelacji. 
-Inaczej mówiąc, niepodobieństwo jej wartości nie wzrasta wraz z odległością.
-Ten typ modelu najczęściej używany jest w modelach złożonych.
-W takich wypadkach służy on do określania, między innymi, błędu pomiarowego czy zmienności na krótkich odstępach.
-
 ```{r, echo=FALSE}
 nowa_siatka <- makegrid(punkty, cellsize = 100)
 coordinates(nowa_siatka) <- ~x1 + x2
@@ -140,41 +133,6 @@ proj4string(nowa_siatka) <- proj4string(punkty)
 set.seed(14)
 punkty2 = spsample(nowa_siatka, type = "stratified", n = 50)
 punkty2 = SpatialPointsDataFrame(punkty2, data.frame(values = runif(length(punkty2))))
-```
-
-```{r, echo=FALSE}
-model_nug <- vgm(psill = 10, model = "Nug", range = 0)
-k_nug <- krige(values~1, 
-            locations = punkty2,
-            newdata = nowa_siatka,
-            model = model_nug,
-            debug.level = 0)
-spplot(k_nug[1])
-```
-
-```{r}
-vario <- variogram(temp~1, locations = punkty)
-plot(vario)
-```
-
-```{r}
-model_nug <- vgm(psill = 10, model = "Nug", range = 0)
-model_nug
-plot(vario, model = model_nug)
-```
-
-```{r}
-fitted_nug <- fit.variogram(vario, model_nug)
-fitted_nug
-plot(vario, model = fitted_nug)
-```
-
-<!-- przedsaw, omów, podaj wady i zalety -->
-
-```{r}
-model_nug2 <- vgm(model = "Nug")
-fitted_nug2 <- fit.variogram(vario, model_nug2)
-plot(vario, model = fitted_nug2)
 ```
 
 ### Model sferyczny
@@ -209,6 +167,14 @@ plot(vario, model = model_sph)
 fitted_sph <- fit.variogram(vario, model_sph)
 fitted_sph
 plot(vario, model = fitted_sph)
+```
+
+<!-- przedsaw, omów, podaj wady i zalety -->
+
+```{r}
+model_sph2 <- vgm(model = "Sph")
+fitted_sph2 <- fit.variogram(vario, model_sph2)
+plot(vario, model = fitted_sph2)
 ```
 
 ### Model wykładniczy
@@ -310,6 +276,13 @@ fitted_pow <- fit.variogram(vario, model_pow)
 fitted_pow
 plot(vario, model = fitted_pow)
 ```
+
+### Model nuggetowy
+
+Model nuggetowy (`Nug`) określa sytuację, w której analizowana zmienna nie wykazuje autokorelacji. 
+Inaczej mówiąc, niepodobieństwo jej wartości nie wzrasta wraz z odległością.
+Model nuggetowy nie powinien być używany samodzielnie - w większości zastosowań jest on elementem modelu złożonego. 
+Służy on do określania, między innymi, błędu pomiarowego czy zmienności na krótkich odstępach.
 
 ### Modele złożone I
 
