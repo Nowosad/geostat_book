@@ -150,7 +150,7 @@ k_sph <- krige(values~1,
                newdata = nowa_siatka,
                model = model_sph,
                debug.level = 0)
-spplot(k_sph[1])
+spplot(k_sph[1], at = seq(0, 1, by = 0.05))
 ```
 
 ```{r }
@@ -192,7 +192,7 @@ k_exp <- krige(values~1,
                newdata = nowa_siatka,
                model = model_exp,
                debug.level = 0)
-spplot(k_exp[1])
+spplot(k_exp[1], at = seq(0, 1, by = 0.05))
 ```
 
 ```{r }
@@ -227,7 +227,7 @@ k_gau <- krige(values~1,
                newdata = nowa_siatka,
                model = model_gau,
                debug.level = 0)
-spplot(k_gau[1])
+spplot(k_gau[1], at = seq(0, 1, by = 0.05))
 ```
 
 ```{r }
@@ -262,7 +262,7 @@ k_pow <- krige(values~1,
                newdata = nowa_siatka,
                model = model_pow,
                debug.level = 0)
-spplot(k_pow[1])
+spplot(k_pow[1], at = seq(0, 1, by = 0.05))
 ```
 
 ```{r }
