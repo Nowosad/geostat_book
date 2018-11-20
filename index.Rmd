@@ -24,7 +24,7 @@ is_online = curl::has_internet()
 `r if (knitr:::is_html_output()) '# O skrypcie {-}'`
 
 ```{r fig.align='center', eval=is_online, echo=FALSE, out.height=300}
-knitr::include_graphics("Rfigs/book_cover2.png")
+knitr::include_graphics("Rfigs/book_cover2.png", dpi = NA)
 ```
 
 Masz przed sobą skrypt zawierający materiały do ćwiczeń z geostatystyki.
