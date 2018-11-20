@@ -144,11 +144,12 @@ Reprezentuje on cechę, której zmienność wartości ma charakter naprzemiennyc
 ```{r, echo=FALSE}
 vario2 <- variogram(values~1, locations = punkty2)
 model_sph <- fit.variogram(vario2, vgm(psill = 0.08, model = "Sph", range = 2000))
+# plot(vario2, model_sph)
 k_sph <- krige(values~1, 
-            locations = punkty2,
-            newdata = nowa_siatka,
-            model = model_sph,
-            debug.level = 0)
+               locations = punkty2,
+               newdata = nowa_siatka,
+               model = model_sph,
+               debug.level = 0)
 spplot(k_sph[1])
 ```
 
@@ -184,12 +185,13 @@ W jego przypadku, zamiast zasięgu podaje się tzw. zasięg praktyczny.
 Oznacza on odległość na jakiej model osiąga 95% wartości wariancji progowej.
 
 ```{r, echo=FALSE}
-model_exp <- fit.variogram(vario2, vgm(psill = 0.08, model = "Exp", range = 2000))
+model_exp <- fit.variogram(vario2, vgm(psill = 0.14, model = "Exp", range = 2200))
+# plot(vario2, model_exp)
 k_exp <- krige(values~1, 
-            locations = punkty2,
-            newdata = nowa_siatka,
-            model = model_exp,
-            debug.level = 0)
+               locations = punkty2,
+               newdata = nowa_siatka,
+               model = model_exp,
+               debug.level = 0)
 spplot(k_exp[1])
 ```
 
@@ -218,12 +220,13 @@ Jest on najczęściej używany do modelowania cech o regularnej i łagodnej zmie
 Model gaussowski z uwagi na swoje cechy zazwyczaj nie powinien być stosowany samodzielnie, lecz jako element modelu złożonego.
 
 ```{r, echo=FALSE}
-model_gau <- vgm(psill = 0.08, model = "Gau", range = 750)
+model_gau <- vgm(psill = 0.10, model = "Gau", range = 1000)
+# plot(vario2, model_gau)
 k_gau <- krige(values~1, 
-            locations = punkty2,
-            newdata = nowa_siatka,
-            model = model_gau,
-            debug.level = 0)
+               locations = punkty2,
+               newdata = nowa_siatka,
+               model = model_gau,
+               debug.level = 0)
 spplot(k_gau[1])
 ```
 
@@ -251,12 +254,14 @@ Jego wartość rośnie w nieskończoność, dlatego niemożliwe jest określenie
 W przypadku modelu potęgowego, parametr `range` oznacza wykładnik potęgowy.
 
 ```{r, echo=FALSE}
-model_pow <- fit.variogram(vario2, vgm(psill = 0.03, model = "Pow", range = 0.7))
+model_pow <- fit.variogram(vario2, vgm(psill = 0.3, model = "Pow", range = 0.1))
+model_pow <- vgm(psill = 0.02, model = "Pow", range = 0.14)
+# plot(vario2, model_pow)
 k_pow <- krige(values~1, 
-            locations = punkty2,
-            newdata = nowa_siatka,
-            model = model_pow,
-            debug.level = 0)
+               locations = punkty2,
+               newdata = nowa_siatka,
+               model = model_pow,
+               debug.level = 0)
 spplot(k_pow[1])
 ```
 
@@ -275,6 +280,16 @@ plot(vario, model = model_pow)
 fitted_pow <- fit.variogram(vario, model_pow)
 fitted_pow
 plot(vario, model = fitted_pow)
+```
+
+### Porównanie modeli
+
+```{r}
+library(gridExtra)
+grid.arrange(spplot(k_sph[1], main = "Model sferyczny", at = seq(0, 1, by = 0.05)), 
+             spplot(k_exp[1], main = "Model wykładniczny", at = seq(0, 1, by = 0.05)), 
+             spplot(k_gau[1], main = "Model gaussowski", at = seq(0, 1, by = 0.05)), 
+             spplot(k_pow[1], main = "Model potęgowy", at = seq(0, 1, by = 0.05)))
 ```
 
 ### Model nuggetowy
