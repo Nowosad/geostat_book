@@ -26,12 +26,12 @@ Semiwariogram empiryczny (wyliczony z danych punktowych) jest:
 Estymacje i symulacje przestrzenne wymagają modelu struktury przestrzennej analizowanej cechy, a nie tylko wartości empirycznych.
 Dodatkowo, matematycznie modelowanie wygładza chaotyczne fluktuacje danych empirycznych.
 
-```{r, echo=FALSE, out.width="40%"}
+```{r, echo=FALSE}
+library(gridExtra)
 vario_kzt <- variogram(temp~x + y, locations = punkty)
 model_kzt <- vgm(model = "Sph", nugget = 1)
 fitted_kzt <- fit.variogram(vario_kzt, model_kzt)
-plot(vario_kzt)
-plot(vario_kzt, fitted_kzt)
+grid.arrange(plot(vario_kzt), plot(vario_kzt, fitted_kzt))
 ```
 
 ### Model semiwariogramu
@@ -46,6 +46,13 @@ Są to:
 ```{r, echo=FALSE}
 knitr::include_graphics("figs/model_semiwariogramu.png")
 ```
+
+### Model nuggetowy
+
+Model nuggetowy określa sytuację, w której analizowana zmienna nie wykazuje autokorelacji. 
+Inaczej mówiąc, niepodobieństwo jej wartości nie wzrasta wraz z odległością.
+Model nuggetowy nie powinien być używany samodzielnie - w większości zastosowań jest on elementem modelu złożonego. 
+Służy on do określania, między innymi, błędu pomiarowego czy zmienności na krótkich odstępach.
 
 ## Modele podstawowe 
 
@@ -75,14 +82,14 @@ show.vgms()
 Istnieje możliwość wyświetlenia tylko wybranych modeli podstawowych poprzez argument `models`. 
 
 ```{r }
-show.vgms(models = c("Nug", "Sph", "Gau", "Pow", "Exp"), 
+show.vgms(models = c("Sph", "Gau", "Pow", "Exp"), 
           range = 1.4, max = 2.5)
 ```
 
 Dodatkowo, można je porównać na jednym wykresie poprzez argument `as.groups = TRUE`.
 
 ```{r }
-show.vgms(models = c("Nug", "Sph", "Gau", "Pow", "Exp"), 
+show.vgms(models = c("Sph", "Gau", "Pow", "Exp"), 
           range = 1.4, max = 2.5, as.groups = TRUE)
 ```
 
@@ -105,13 +112,13 @@ Najlepiej, gdy wybór modelu oparty jest o wiedzę na temat zakładanego procesu
 Funkcja `fit.variogram()` z pakietu **gstat** dopasowuje zasięg oraz semiwariancję progową w oparciu o ustalone "ręcznie" wejściowe parametry modelu.
 Więcej na temat działania tej funkcji można przeczytać we wpisie na stronie https://www.r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html.
 
-### Liniowy model regionalizacji
+<!-- ### Liniowy model regionalizacji -->
 
-W przypadku, gdy analizowane zjawisko jest złożone, odwzorowanie kształtu semiwariogramu empirycznego wymaga połączenia dwóch lub większej liczby modeli podstawowych. 
-W takiej sytuacji konieczne jest spełnienie dwóch warunków:
+<!-- W przypadku, gdy analizowane zjawisko jest złożone, odwzorowanie kształtu semiwariogramu empirycznego wymaga połączenia dwóch lub większej liczby modeli podstawowych.  -->
+<!-- W takiej sytuacji konieczne jest spełnienie dwóch warunków: -->
 
-- Wszystkie zastosowane modele muszą być dopuszczalne (`vgm()`)
-- Wariancja progowa każdego podstawowego modelu musi być dodatnia
+<!-- - Wszystkie zastosowane modele muszą być dopuszczalne (`vgm()`) -->
+<!-- - Wariancja progowa każdego podstawowego modelu musi być dodatnia -->
 
 ## Modelowanie izotropowe
 
@@ -150,7 +157,7 @@ k_sph <- krige(values~1,
                newdata = nowa_siatka,
                model = model_sph,
                debug.level = 0)
-spplot(k_sph[1], at = seq(0, 1, by = 0.05))
+spplot(k_sph[1], at = seq(-0.05, 1.05, by = 0.05))
 ```
 
 ```{r }
@@ -192,7 +199,7 @@ k_exp <- krige(values~1,
                newdata = nowa_siatka,
                model = model_exp,
                debug.level = 0)
-spplot(k_exp[1], at = seq(0, 1, by = 0.05))
+spplot(k_exp[1], at = seq(-0.05, 1.05, by = 0.05))
 ```
 
 ```{r }
@@ -227,7 +234,7 @@ k_gau <- krige(values~1,
                newdata = nowa_siatka,
                model = model_gau,
                debug.level = 0)
-spplot(k_gau[1], at = seq(0, 1, by = 0.05))
+spplot(k_gau[1], at = seq(-0.05, 1.05, by = 0.05))
 ```
 
 ```{r }
@@ -262,7 +269,7 @@ k_pow <- krige(values~1,
                newdata = nowa_siatka,
                model = model_pow,
                debug.level = 0)
-spplot(k_pow[1], at = seq(0, 1, by = 0.05))
+spplot(k_pow[1], at = seq(-0.05, 1.05, by = 0.05))
 ```
 
 ```{r }
@@ -284,20 +291,13 @@ plot(vario, model = fitted_pow)
 
 ### Porównanie modeli
 
-```{r}
+```{r, echo=FALSE}
 library(gridExtra)
-grid.arrange(spplot(k_sph[1], main = "Model sferyczny", at = seq(0, 1, by = 0.05)), 
-             spplot(k_exp[1], main = "Model wykładniczny", at = seq(0, 1, by = 0.05)), 
-             spplot(k_gau[1], main = "Model gaussowski", at = seq(0, 1, by = 0.05)), 
-             spplot(k_pow[1], main = "Model potęgowy", at = seq(0, 1, by = 0.05)))
+grid.arrange(spplot(k_sph[1], main = "Model sferyczny", at = seq(-0.05, 1.05, by = 0.05)), 
+             spplot(k_exp[1], main = "Model wykładniczny", at = seq(-0.05, 1.05, by = 0.05)), 
+             spplot(k_gau[1], main = "Model gaussowski", at = seq(-0.05, 1.05, by = 0.05)), 
+             spplot(k_pow[1], main = "Model potęgowy", at = seq(-0.05, 1.05, by = 0.05)))
 ```
-
-### Model nuggetowy
-
-Model nuggetowy (`Nug`) określa sytuację, w której analizowana zmienna nie wykazuje autokorelacji. 
-Inaczej mówiąc, niepodobieństwo jej wartości nie wzrasta wraz z odległością.
-Model nuggetowy nie powinien być używany samodzielnie - w większości zastosowań jest on elementem modelu złożonego. 
-Służy on do określania, między innymi, błędu pomiarowego czy zmienności na krótkich odstępach.
 
 ### Modele złożone I
 
@@ -355,9 +355,9 @@ plot(vario, model = fitted_zl3)
 
 Uwzględnienie anizotropii wymaga zamiany parametru zasięgu na trzy inne parametry:
 
-- Zasięg w dominującym kierunku
 - Kąt określający dominujący kierunek
-- Proporcję anizotropii, czyli relację pomiędzy zasięgiem w dominującym kierunku a zasięgiem w przeciwległym kierunku
+- Zasięg w dominującym kierunku
+- Proporcję anizotropii, czyli relację pomiędzy zasięgiem w przeciwległym kierunku do zasięgu w dominującym kierunku
 
 ```{r, echo=FALSE}
 knitr::include_graphics("figs/mapa_semiwariogramu.png")
@@ -367,7 +367,7 @@ W pakiecie **gstat** odbywa się to poprzez dodanie argumentu `alpha` do funkcji
 Należy w niej zdefiniować analizowane kierunki, które zostały określone na podstawie mapy semiwariogramu. 
 Następnie w funkcji `vgm()` należy podać nowy argument `anis`.
 Przyjmuje on dwie wartości. Pierwsza z nich (`45` w przykładzie poniżej) oznacza dominujący kierunek anizotropii, druga zaś (`0.4`) mówi o tzw. proporcji anizotropii.
-Proporcja anizotropii jest to relacja pomiędzy zmiennością na głównym kierunku a kierunku prostopadłym.
+Proporcja anizotropii jest to relacja pomiędzy zmiennością na kierunku prostopadłym a głównym kierunku.
 Na poniższym przykładzie zasięg ustalony dla głównego kierunku wynosi 4000 metrów.
 Wartość proporcji anizotropii, `0.4`, w tym wypadku oznacza że dla prostopadłego kierunku zasięg będzie wynosił 1600 metrów (4000 metrów x 0.4).
 
