@@ -1,8 +1,6 @@
 
 # Ocena jakości estymacji {#ocena-jakosci-estymacji}
 
-<!--[UWAGA POMIESZANY ME Z RESZTĄ!!]-->
-
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
 ```{r, message=FALSE, warning=FALSE}

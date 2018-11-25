@@ -203,5 +203,29 @@ grid.arrange(p1, p2, p3, ncol = 1, padding = unit(0, "line"))
 
 ## Zadania {#z8}
 
-<!--     Stworzyć prostokątną siatkę i wykonać dla niej estymację zmiennej VI metodami SK oraz OK. Wykorzystać modele bezkierunkowe utworzone w poprzednum zadaniu. -->
-<!--     Stworzyć plik zawierający 40 różnych lokalizacji w zasięgu analizowanego obszaru i przeprowadzić kriging SK oraz OK dla tych lokalizacji -->
+Zadania w tym rozdziale są oparte o dane z obiektu `punkty_pref`.
+Możesz go wczytać używając poniższego kodu:
+
+```{r}
+data("punkty_pref")
+```
+
+Na jego podstawie stwórz trzy obiekty - `punkty_pref1` zawierający wszystkie punkty, `punkty_pref2` zawierający losowe 100 punktów, oraz `punkty_pref3` zawierający losowe 30 punktów.
+
+```{r}
+set.seed(2018-11-25)
+punkty_pref1 <- punkty_pref
+punkty_pref2 <- punkty_pref[sample(nrow(punkty_pref), 100), ]
+punkty_pref3 <- punkty_pref[sample(nrow(punkty_pref), 30), ]
+```
+
+1. Zbuduj optymalne modele semiwariogramu zmiennej `srtm` dla trzech zbiorów danych - `punkty_pref1`, `punkty_pref2`, `punkty_pref3`.
+Porównaj graficznie uzyskane modele.
+2. W oparciu o uzyskane modele stwórz estymacje zmiennej `srtm` dla trzech zbiorów danych - `punkty_pref1`, `punkty_pref2`, `punkty_pref3` używając krigingu prostego.
+Porównaj graficznie zarówno mapy estymacji jak i mapy wariancji. 
+Opisz zaobserwowane różnice.
+3. W oparciu o uzyskane modele stwórz estymacje zmiennej `srtm` dla zbioru danych `punkty_pref3` używając krigingu zwykłego.
+Sprawdź jak wygląda wynik estymacji uwzględniając (i) 10 najbliższych obserwacji, (ii) 30 najbliższych obserwacji, (iii) obserwacje w odległości do 2 km.
+4. Używając krigingu z trendem, stwórz optymalne modele zmiennej `srtm` dla dwóch zbiorów danych - `punkty_pref1` oraz `punkty_pref3`.
+5. Porównaj graficznie zarówno mapy estymacji jak i mapy wariancji dla krigingu prostego, zwykłego oraz z trendem dla danych `punkty_pref3`. 
+Jakie można zauważyć podobieństwa a jakie różnice?
