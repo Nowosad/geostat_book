@@ -416,3 +416,5 @@ Porównaj graficznie uzyskane modele.
 3. Stwórz złożony model semiwariogramu zmiennej `srtm` używając modelu nuggetowego i sferycznego.
 4. W oparciu o mapę semiwariogramu, zbuduj semiwariogramy kierunkowe zmiennej `srtm` dla kierunków wykazujących anizotropię przestrzenną.
 Następnie zbuduj modele semiwariogramu dla uzyskanych semiwariogramów kierunkowych.
+5. (Dodatkowe) Spróbuj użyć jednego z modeli podstawowych, który nie był opisywany w tym rozdziale. 
+Czym ten wybrany model się charakteryzuje?
