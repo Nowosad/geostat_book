@@ -75,13 +75,13 @@ $$ R^2 = 1 - \frac{\sum_{i=1}^{n} (\hat v_i - v_i)^2}{\sum_{i=1}^{n} (v_i - \ove
 
 R^2 można też wyliczyć w R.
 
-```{r}
+```{r, eval=FALSE}
 R2 <- 1 - sum((estymacja - obserwowane) ^ 2) / sum((obserwowane - mean(obserwowane)) ^ 2)
 ```
 
 lub
 
-```{r}
+```{r, eval=FALSE}
 R2 <- cor(obserwowane, estymacja) ^ 2
 ```
 
