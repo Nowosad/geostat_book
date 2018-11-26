@@ -26,11 +26,10 @@ Do podstawowych statystyk ocen jakości estymacji należą:
 
 - Średni błąd predykcji (MPE, ang. *mean prediction error*)
 - Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root mean square error*)
-- Współczynnik determinacji (R^2, ang. **coefficient of determination**)
+- Współczynnik determinacji (R^2, ang. *coefficient of determination*)
     
 Idealna estymacja dawałaby brak błędu oraz współczynnik determinacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. 
 Należy jednak zdawać sobie sprawę, że dane wejściowe są obarczone błędem/niepewnością, dlatego też w praktyce idealna estymacja nie jest osiągana.
-<!-- ostrzeżenie o idealnej predykcji -->
 Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystąpieniu wartości odstających.
 
 ### Średni błąd estymacji
