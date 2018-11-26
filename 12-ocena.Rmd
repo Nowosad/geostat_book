@@ -66,8 +66,6 @@ Optymalnie wartość pierwiastka średniego błędu kwadratowego powinna być ja
 
 Współczynnik determinacji (R^2) jest możliwy do wyliczenia poprzez wzór:
 
-$$ R^2 = \frac{\sum_{i=1}^{n} (\hat v_t - \overline{v})^2}{\sum_{i=1}^{n} (v_t - \overline{v})^2} $$
-
 $$ R^2 = 1 - \frac{\sum_{i=1}^{n} (\hat v_i - v_i)^2}{\sum_{i=1}^{n} (v_i - \overline{v_i})^2} $$
 
 , gdzie $v_i$ to wartość obserwowana, $\hat{v}_i$ to wartość estymowana, a $\overline{v}$ średnia arytmetyczna wartości obserwowanych.
