@@ -18,6 +18,14 @@ par(mar = c(rep(0, 4)))
 W wielu przypadkach, oprócz konkretnych pomiarów, istnieje również informacja na temat zmienności innych cech na analizowanym obszarze. 
 W sytuacji, gdy dodatkowe zmienne są skorelowane ze zmienną analizowaną można wykorzystać jedną z metod krigingu wykorzystującą dane uzupełniające, tj. kriging stratyfikowany, prosty kriging ze zmiennymi średnimi lokalnymi, czy kriging uniwersalny.
 
+```{r, echo=FALSE}
+library(gridExtra)
+ip1 <- spplot(siatka["clc"], main = "clc")
+ip2 <- spplot(siatka["srtm"], main = "srtm")
+ip3 <- spplot(siatka["ndvi"], main = "ndvi")
+grid.arrange(ip1, ip2, ip3, ncol = 3)
+```
+
 ## Kriging stratyfikowany
 
 ### Kriging stratyfikowany (ang. *Kriging within strata*)
@@ -38,17 +46,17 @@ Kriging stratyfikowany polega na niezależnym tworzeniu i modelowaniu semiwariog
 
 ```{r }
 vario_kws1 <- variogram(temp~1, punkty[punkty$clc == 1, ])
-plot(vario_kws1)
+# plot(vario_kws1)
 fitted_kws1 <- fit.variogram(vario_kws1, vgm(model = "Sph", nugget = 0.5))
 plot(vario_kws1, fitted_kws1)
 
 vario_kws2 <- variogram(temp~1, punkty[punkty$clc == 2, ])
-plot(vario_kws2)
+# plot(vario_kws2)
 fitted_kws2 <- fit.variogram(vario_kws2, vgm(model = "Gau", nugget = 0.1))
 plot(vario_kws2, fitted_kws2)
 
 vario_kws4 <- variogram(temp~1, punkty[punkty$clc == 4, ])
-plot(vario_kws4)
+# plot(vario_kws4)
 fitted_kws4 <- fit.variogram(vario_kws4, vgm(model = "Nug"))
 plot(vario_kws4, fitted_kws4)
 ```
@@ -57,7 +65,7 @@ Następnie dla każdego obszaru przeprowadzona jest niezależna estymacja warto�
 Należy jedynie wcześniej zadbać, by w siatce nie było elementów `NA` dotyczących zmiennych jakościowych. 
 W przykładzie tworzona jest nowa siatka (`siatka2`) nie zawierająca braków wartości dla zmiennej `clc`.
 
-```{r}
+```{r, message=FALSE}
 siatka2 <- siatka[!is.na(siatka$clc), ]
 kws1 <- krige(temp~1, 
               location = punkty[punkty$clc == 1, ], 
@@ -105,12 +113,13 @@ grid.arrange(p1, p2, ncol = 1)
 ### Prosty kriging ze zmiennymi średnimi lokalnymi (LVM) (ang. *Simple kriging with varying local means*)
 
 Prosty kriging ze zmiennymi średnimi lokalnymi zamiast znanej (stałej) stacjonarnej średniej wykorzystuje zmienne średnie lokalne uzyskane na podstawie innej informacji. 
+
 Lokalna średnia może być uzyskana za pomocą wyliczenia regresji liniowej pomiędzy zmienną badaną a zmienną dodatkową. 
 W takiej sytuacji konieczne jest użycie funkcji `lm()`.
 W poniższym przykładzie budowany jest model liniowy relacji pomiędzy temperaturą powietrza (`temp`), a wysokością nad poziomem morza (`srtm`).
 
 ```{r }
-coef <- lm(temp~srtm, punkty)$coef
+coef <- lm(temp~ndvi, punkty)$coef
 coef
 ```
 
@@ -160,8 +169,8 @@ W pierwszym przykładzie, kriging uniwersalny służy stworzeniu semiwariogramu,
 ```{r }
 punkty$clc <- as.factor(punkty$clc)
 vario_uk1 <- variogram(temp~clc, location = punkty)
-vario_uk1
-plot(vario_uk1)
+# vario_uk1
+# plot(vario_uk1)
 model_uk1 <- vgm(model = "Sph", nugget = 1)
 vario_fit_uk1 <- fit.variogram(vario_uk1, model = model_uk1)
 vario_fit_uk1
@@ -184,8 +193,8 @@ spplot(uk1, "var1.var")
 
 ```{r plotsy4uk1, echo=FALSE, fig.height=8}
 library(gridExtra)
-p1 <- spplot(uk1, "var1.pred", main = "Predykcja KED")
-p2 <- spplot(uk1, "var1.var", main = "Wariancja predykcji KED")
+p1 <- spplot(uk1, "var1.pred", main = "Predykcja KU")
+p2 <- spplot(uk1, "var1.var", main = "Wariancja predykcji KU")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
@@ -193,8 +202,8 @@ W kolejnym przykładzie zastosowane są już dwie zmienne uzupełniające - wart
 
 ```{r }
 vario_uk2 <- variogram(temp~ndvi + srtm, location = punkty)
-vario_uk2
-plot(vario_uk2)
+# vario_uk2
+# plot(vario_uk2)
 model <- vgm(model = "Sph", nugget = 1)
 vario_fit_uk2 <- fit.variogram(vario_uk2, model = model)
 vario_fit_uk2
@@ -205,15 +214,15 @@ uk2 <- krige(temp~ndvi + srtm,
              model = vario_fit_uk2)
 ```
 
-```{r plotsy3ked, eval=FALSE}
+```{r plotsy3KU, eval=FALSE}
 spplot(uk2, "var1.pred")
 spplot(uk2, "var1.var")
 ```
 
-```{r plotsy4ked, echo=FALSE, fig.height=8}
+```{r plotsy4KU, echo=FALSE, fig.height=8}
 library(gridExtra)
-p1 <- spplot(uk2, "var1.pred", main = "Predykcja KED")
-p2 <- spplot(uk2, "var1.var", main = "Wariancja predykcji KED")
+p1 <- spplot(uk2, "var1.pred", main = "Predykcja KU")
+p2 <- spplot(uk2, "var1.var", main = "Wariancja predykcji KU")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
