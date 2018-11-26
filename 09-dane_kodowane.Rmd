@@ -147,7 +147,7 @@ Alternatywnie, zamiast tworzenia nowej zmiennej (takiej jak `temp_ind`), można 
 Z jej użyciem można definiować przyjęte progi bezpośrednio do funkcji `variogram` i `krige`. 
 Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopni Celsjusza.
 
-```{r }
+```{r, message=FALSE}
 vario_ind20 <- variogram(I(temp < 20)~1, locations = punkty)
 fitted_ind20 <- fit.variogram(vario_ind20, 
                               vgm("Sph", nugget = 0.01))
@@ -187,3 +187,14 @@ grid.arrange(p1i, p2i, p3i, ncol = 1)
 <!-- ADD A BINARY MAP! -->
 
 ## Zadania {#z9}
+
+1. Używając obiekt `punkty` stwórz nowe zmienne określające czy zmienna NDVI ma wartość:
+    - poniżej 0.1 <!-- barren rock, sand, snow, water -->
+    - pomiędzy 0.1 a 0.2 <!-- sparse vegetation such as shrubs and grasslands or senescing crops -->
+    - powyżej 0.2 <!--  dense vegetation -->
+Poczytaj na temat tego wskaźnika. 
+Co mogą oznaczać powyższe przedziały?
+2. Korzystając z trzech powyższych przedziałów stwórz mapy prawdopodobieństwa.
+W jaki sposób można zinterpretować trzy uzyskane mapy?
+3. Używając wybranego progu prawdopodobieństwa, stwórz trzy mapy binarne.
+4. (Dodatkowe) połącz trzy mapy binarne w jedną mapę pokazującą uproszczone pokrycie terenu.
