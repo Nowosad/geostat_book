@@ -106,40 +106,39 @@ p2 <- spplot(ik, "var1.var",
 grid.arrange(p1, p2, ncol = 1)
 ```
 
-<!-- ### Określenie wartości progowej -->
+### Tworzenie mapy binarnej
 
+Mapy przestawiające prawdopodobieństwo można też przetworzyć do postaci map binarnych poprzez użycie wybranej wartości progowej.
+Rozkład wartości prawdopodobieństwa jest możliwy do zobaczenia, np. używając histogramu:
 
+```{r}
+ggplot(ik@data, aes(var1.pred)) + geom_histogram()
+```
 
-<!-- ```{r} -->
-<!-- ggplot(ik@data, aes(var1.pred)) + geom_histogram() -->
-<!-- ``` -->
+Następnie można stworzyć nową zmienną binarną w oparciu o wartości predykcji.
+Poniższy kod tworzy dwie nowe zmienne - `prog1`, gdzie wartość progowa została ustalona na 0.1 oraz `prog2` z wartością progową 0.75.
 
-<!-- ```{r} -->
-<!-- ggplot(ik@data, aes(var1.pred)) + stat_ecdf() -->
-<!-- ``` -->
+```{r}
+ik$prog1 <- ik$var1.pred > 0.1
+ik$prog2 <- ik$var1.pred > 0.75
+```
 
-<!-- ```{r} -->
-<!-- ik$prog1 <- ik$var1.pred > 0.1 -->
-<!-- ``` -->
+W wyniku otrzymuje się binarne mapy, dla których stwierdza się obszary powyżej lub poniższej zadanego prawdopodobieństwa.
 
-<!-- ```{r} -->
-<!-- ik$prog2 <- ik$var1.pred > 0.75 -->
-<!-- ``` -->
+```{r plotsy2ik1, eval=FALSE}
+spplot(ik, "prog1")
+spplot(ik, "prog2")
+```
 
-<!-- ```{r plotsy2ik1, eval=FALSE} -->
-<!-- spplot(ik, "prog1") -->
-<!-- spplot(ik, "prog2") -->
-<!-- ``` -->
-
-<!-- ```{r plotsy2ik2, echo=FALSE, fig.height=8} -->
-<!-- library(gridExtra) -->
-<!-- ps.options(encoding = "CP1250") -->
-<!-- p1p <- spplot(ik, "prog1", -->
-<!--              main = "") -->
-<!-- p2p <- spplot(ik, "prog2",  -->
-<!--              main = "") -->
-<!-- grid.arrange(p1p, p2p, ncol = 1) -->
-<!-- ``` -->
+```{r plotsy2ik2, echo=FALSE, fig.height=8}
+library(gridExtra)
+ps.options(encoding = "CP1250")
+p1p <- spplot(ik, "prog1",
+             main = "")
+p2p <- spplot(ik, "prog2",
+             main = "")
+grid.arrange(p1p, p2p, ncol = 1)
+```
 
 ### Alternatywne użycie funkcji
 
@@ -184,14 +183,13 @@ p3i <- spplot(ik12, "var1.pred", main = "Prawdopodobieństwo Temp < 12")
 grid.arrange(p1i, p2i, p3i, ncol = 1)
 ```
 
-<!-- ADD A BINARY MAP! -->
-
 ## Zadania {#z9}
 
 1. Używając obiekt `punkty` stwórz nowe zmienne określające czy zmienna NDVI ma wartość:
     - poniżej 0.1 <!-- barren rock, sand, snow, water -->
     - pomiędzy 0.1 a 0.2 <!-- sparse vegetation such as shrubs and grasslands or senescing crops -->
     - powyżej 0.2 <!--  dense vegetation -->
+
 Poczytaj na temat tego wskaźnika. 
 Co mogą oznaczać powyższe przedziały?
 2. Korzystając z trzech powyższych przedziałów stwórz mapy prawdopodobieństwa.
