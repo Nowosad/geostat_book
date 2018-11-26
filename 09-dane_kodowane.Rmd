@@ -106,6 +106,41 @@ p2 <- spplot(ik, "var1.var",
 grid.arrange(p1, p2, ncol = 1)
 ```
 
+### Określenie wartości progowej
+
+
+
+```{r}
+ggplot(ik@data, aes(var1.pred)) + geom_histogram()
+```
+
+```{r}
+ggplot(ik@data, aes(var1.pred)) + stat_ecdf()
+```
+
+```{r}
+ik$prog1 <- ik$var1.pred > 0.1
+```
+
+```{r}
+ik$prog2 <- ik$var1.pred > 0.75
+```
+
+```{r plotsy2ik1, eval=FALSE}
+spplot(ik, "prog1")
+spplot(ik, "prog2")
+```
+
+```{r plotsy2ik2, echo=FALSE, fig.height=8}
+library(gridExtra)
+ps.options(encoding = "CP1250")
+p1p <- spplot(ik, "prog1",
+             main = "")
+p2p <- spplot(ik, "prog2", 
+             main = "")
+grid.arrange(p1p, p2p, ncol = 1)
+```
+
 ### Alternatywne użycie funkcji
 
 Alternatywnie, zamiast tworzenia nowej zmiennej (takiej jak `temp_ind`), można wykorzystać funkcję `I`.
@@ -143,10 +178,10 @@ ik12 <- krige(I(temp < 12)~1,
 ```{r ploty_trzyik, echo=FALSE, fig.height=12}
 library(gridExtra)
 ps.options(encoding = "CP1250")
-p1 <- spplot(ik20, "var1.pred", main = "Prawdopodobieństwo Temp < 20")
-p2 <- spplot(ik16, "var1.pred", main = "Prawdopodobieństwo Temp < 16")
-p3 <- spplot(ik12, "var1.pred", main = "Prawdopodobieństwo Temp < 12")
-grid.arrange(p1, p2, p3, ncol = 1)
+p1i <- spplot(ik20, "var1.pred", main = "Prawdopodobieństwo Temp < 20")
+p2i <- spplot(ik16, "var1.pred", main = "Prawdopodobieństwo Temp < 16")
+p3i <- spplot(ik12, "var1.pred", main = "Prawdopodobieństwo Temp < 12")
+grid.arrange(p1i, p2i, p3i, ncol = 1)
 ```
 
 <!-- ADD A BINARY MAP! -->
