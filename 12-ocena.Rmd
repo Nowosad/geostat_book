@@ -26,9 +26,10 @@ Do podstawowych statystyk ocen jakości estymacji należą:
 
 - Średni błąd predykcji (MPE, ang. *mean prediction error*)
 - Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root mean square error*)
-- Rozkład błędu (np. 5. percentyl, mediana, 95. percentyl)
+- Współczynnik determinacji (R^2, ang. **coefficient of determination**)
     
-Idealna estymacja dawałaby brak błędu oraz współczynnik korelacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. 
+Idealna estymacja dawałaby brak błędu oraz współczynnik determinacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. 
+Należy jednak zdawać sobie sprawę, że dane wejściowe są obarczone błędem/niepewnością, dlatego też w praktyce idealna estymacja nie jest osiągana.
 <!-- ostrzeżenie o idealnej predykcji -->
 Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystąpieniu wartości odstających.
 
@@ -36,12 +37,13 @@ Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystąpieniu wart
 
 Średni błąd estymacji (MPE) można wyliczyć korzystając z poniższego wzoru:
 
-$$ MPE=\frac{\sum_{i=1}^{n}(\hat{v}_i-v_i)}{n} $$  
+$$ MPE=\frac{\sum_{i=1}^{n}(v_i - \hat{v}_i)}{n} $$  
+, gdzie $v_i$ to wartość obserwowana a $\hat{v}_i$ to wartość estymowana.
 
-, lub używając funkcji `mean()` w R.
+Średni błąd estymacji można też wyliczyć używając funkcji `mean()` w R.
 
 ```{r, eval=FALSE}
-MPE <- mean(estymacja - obserwowane)
+MPE <- mean(obserwowane - estymacja)
 ```
 
 Optymalnie wartość średniego błędu estymacji powinna być jak najbliżej 0.
@@ -51,14 +53,39 @@ Optymalnie wartość średniego błędu estymacji powinna być jak najbliżej 0.
 Pierwiastek średniego błędu kwadratowego (RMSE) jest możliwy do wyliczenia poprzez wzór:
 
 $$ RMSE=\sqrt{\frac{\sum_{i=1}^{n}(v_i-\hat{v}_i)^2}{n}} $$     
+, gdzie $v_i$ to wartość obserwowana a $\hat{v}_i$ to wartość estymowana.
 
-, jak i proste obliczenie w R.
+RMSE można też wyliczyć w R.
 
 ```{r, eval=FALSE}
 RMSE <- sqrt(mean((obserwowane - estymacja) ^ 2))
 ```
 
 Optymalnie wartość pierwiastka średniego błędu kwadratowego powinna być jak najmniejsza.
+
+### Współczynnik determinacji
+
+Współczynnik determinacji (R^2) jest możliwy do wyliczenia poprzez wzór:
+
+$$ R^2 = \frac{\sum_{i=1}^{n} (\hat v_t - \overline{v})^2}{\sum_{i=1}^{n} (v_t - \overline{v})^2} $$
+
+$$ R^2 = 1 - \frac{\sum_{i=1}^{n} (\hat v_i - v_i)^2}{\sum_{i=1}^{n} (v_i - \overline{v_i})^2} $$
+
+, gdzie $v_i$ to wartość obserwowana, $\hat{v}_i$ to wartość estymowana, a $\overline{v}$ średnia arytmetyczna wartości obserwowanych.
+
+R^2 można też wyliczyć w R.
+
+```{r}
+R2 <- 1 - sum((estymacja - obserwowane) ^ 2) / sum((obserwowane - mean(obserwowane)) ^ 2)
+```
+
+lub
+
+```{r}
+R2 <- cor(obserwowane, estymacja) ^ 2
+```
+
+Współczynnik determinacji przyjmuje wartości od 0 do 1, gdzie model jest lepszy im wartość tego współczynnika jest bliższa jedności.
 
 ## Wizualizacja jakości estymacji
 
@@ -68,7 +95,7 @@ Do oceny przestrzennej jakości predykcji można również zastosować mapę prz
 Wyliczenie błędów estymacji odbywa się poprzez odjęcie od predykcji wartości obserwowanej.
 
 ```{r, eval=FALSE}
-blad_predykcji <- estymacja - obserwowane
+blad_predykcji <- obserwowane - estymacja
 ```
 
 ```{r mapa, echo=FALSE, message=FALSE, }
@@ -81,10 +108,12 @@ model <- vgm(10, model = "Sph", range = 4000, nugget = 0.5)
 fitted <- fit.variogram(vario, model)
 test_sk <- krige(temp~1, train, newdata = test, 
                  model = fitted, beta = 15.9, debug.level = 0)
-blad_predykcji_sk <- test_sk$var1.pred - test$temp
+blad_predykcji_sk <- test$temp - test_sk$var1.pred
 test_sk$blad_predykcji_sk <- blad_predykcji_sk
 test_sk$true <- test$temp
-spplot(test_sk, "blad_predykcji_sk", main = "Błąd predykcji", colorkey = TRUE)
+
+cuts <- c(-5, -3, -1, 1, 3, 5)
+spplot(test_sk, "blad_predykcji_sk", main = "Błąd predykcji", cuts = cuts)
 ```
 
 ### Histogram
@@ -92,7 +121,9 @@ spplot(test_sk, "blad_predykcji_sk", main = "Błąd predykcji", colorkey = TRUE)
 Błąd predykcji można również przedstawić na wykresach, między innymi, na histogramie.
 
 ```{r hist, echo=FALSE}
-ggplot(as.data.frame(test_sk), aes(blad_predykcji_sk)) + geom_histogram() + xlab("Błąd predykcji") + ylab("Liczebność")
+ggplot(as.data.frame(test_sk), aes(blad_predykcji_sk)) +
+    geom_histogram() + xlab("Błąd predykcji") + 
+    ylab("Liczebność")
 ```
 
 ### Wykres rozrzutu
@@ -100,7 +131,10 @@ ggplot(as.data.frame(test_sk), aes(blad_predykcji_sk)) + geom_histogram() + xlab
 Do porównania pomiędzy wartością estymowaną a obserwowaną może również posłużyć wykres rozrzutu.
 
 ```{r point, echo=FALSE}
-ggplot(as.data.frame(test_sk), aes(var1.pred, true)) + geom_point() + xlab("Predykcja") + ylab("Zmierzona wartość")
+ggplot(as.data.frame(test_sk), aes(var1.pred, true)) +
+    geom_point() +
+    xlab("Predykcja") +
+    ylab("Zmierzona wartość")
 ```
 
 ## Jakość wyników estymacji
@@ -161,17 +195,31 @@ summary(test_sk)
 Uzyskane w ten sposób wyniki możemy określić używając statystyk jakości estymacji lub też wykresów.
 
 ```{r}
-blad_predykcji_sk <- test_sk$var1.pred - test$temp
+blad_predykcji_sk <- test$temp - test_sk$var1.pred
 summary(blad_predykcji_sk)
 
-MPE <- mean(test_sk$var1.pred - test$temp)
+MPE <- mean(test$temp - test_sk$var1.pred)
 MPE
 
 RMSE <- sqrt(mean((test$temp - test_sk$var1.pred) ^ 2))
 RMSE
 
+R2 <- cor(test$temp, test_sk$var1.pred) ^ 2
+R2
+
 test_sk$blad_predykcji_sk <- blad_predykcji_sk
-spplot(test_sk, "blad_predykcji_sk")
+spplot(test_sk, "blad_predykcji_sk", cuts = c(-5, -3, -1, 1, 3, 5))
+
+ggplot(as.data.frame(test_sk), aes(blad_predykcji_sk)) +
+    geom_histogram() + 
+    xlab("Błąd predykcji") + 
+    ylab("Liczebność")
+
+test_sk$true <- test$temp
+ggplot(as.data.frame(test_sk), aes(var1.pred, true)) +
+    geom_point() +
+    xlab("Predykcja") +
+    ylab("Zmierzona wartość")
 ```
 
 W sytuacji, gdy uzyskany model jest wystarczająco dobry, możemy również uzyskać estymację dla całego obszaru z użyciem funkcji `krige()`, tym razem jednak podając obiekt siatki.
@@ -205,10 +253,39 @@ vario <- variogram(temp~1, data = punkty)
 model <- vgm(model = "Sph", nugget = 0.5)
 fitted <- fit.variogram(vario, model)
 
-cv_sk <- krige.cv(temp~1, punkty, model = fitted,
-                  beta = 15.9, verbose = FALSE)
+cv_sk <- krige.cv(temp ~ 1,
+                  locations = punkty,
+                  model = fitted,
+                  beta = 15.9,
+                  verbose = FALSE)
 summary(cv_sk)
-spplot(cv_sk, "residual")
+```
+
+Uzyskane w ten sposób wyniki możemy określić używając statystyk jakości estymacji lub też wykresów.
+
+```{r}
+summary(cv_sk$residual)
+
+MPE <- mean(cv_sk$residual)
+MPE
+
+RMSE <- sqrt(mean((cv_sk$residual) ^ 2))
+RMSE
+
+R2 <- cor(cv_sk$observed, cv_sk$var1.pred) ^ 2
+R2
+
+spplot(cv_sk, "residual", cuts = c(-10, -5, -3, -1, 1, 3, 5, 10))
+
+ggplot(as.data.frame(cv_sk), aes(residual)) +
+    geom_histogram() + 
+    xlab("Błąd predykcji") + 
+    ylab("Liczebność")
+
+ggplot(as.data.frame(cv_sk), aes(var1.pred, observed)) +
+    geom_point() +
+    xlab("Predykcja") +
+    ylab("Zmierzona wartość")
 ```
 
 Podobnie jak w walidacji podzbiorem, gdy uzyskany model jest wystarczająco dobry, estymację dla całego obszaru uzyskuje się z użyciem funkcji `krige()`.
