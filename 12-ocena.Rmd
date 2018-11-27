@@ -366,3 +366,4 @@ Dlaczego?
 4. Porównaj uzyskane modele używając krosswalidacji. 
 Jak wygląda rozkład reszt z uzyskanych estymacji?
 Który model można uznać za najlepszy oglądając rozkłady reszt?
+<!-- jedno zadanie użwajace wcześniej używanych technik estymacji -->
