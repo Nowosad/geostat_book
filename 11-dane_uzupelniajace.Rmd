@@ -227,3 +227,18 @@ grid.arrange(p1, p2, ncol = 1)
 ```
 
 ## Zadania {#z11}
+
+Zadania w tym rozdziale są oparte o dane z obiektu `punkty`.
+
+```{r}
+data("punkty")
+```
+
+1. Używając krigingu stratifikowanego, stwórz optymalne modele zmiennej `ndvi` dla trzech typów pokrycia terenu (zmienna `clc`). Bazując na stworzonych modelach, stwórz estymacje zmiennej `ndvi` dla trzech typów pokrycia terenu.
+Połącz uzyskane estymacje w jedną mapę.
+2. Zastosuj prosty kriging ze zmiennymi średnimi lokalnymi do stworzenia estymacji zmiennej `ndvi` używając jej relacji ze zmienną `savi`.
+3. Stwórz estymację krigingu uniwersalnego dla zmiennej `ndvi` używając jej relacji ze zmienną `savi`.
+4. Stwórz estymację krigingu uniwersalnego dla zmiennej `ndvi` używając jej relacji ze zmiennymi `clc`, `srtm`, `temp` i `savi`.
+5. Porównaj graficznie cztery powyższe estymacje. 
+Opisz podobieństwa i różnice.
+
