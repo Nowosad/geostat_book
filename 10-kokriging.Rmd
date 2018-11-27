@@ -187,3 +187,27 @@ grid.arrange(p1, p2, ncol = 2)
 -->
 
 ## Zadania {#z10}
+
+Zadania w tym rozdziale są oparte o dane z `meuse` z pakietu **sp**.
+
+```{r}
+library(sp)
+data("meuse")
+coordinates(meuse) = ~x + y
+```
+
+Na jego podstawie wydziel dwa obiekty - `meuse155` zawierający tylko zmienną `lead` dla 155 punktów, oraz `meuse60` zawierający tylko zmienną `copper` dla 60 punktów.
+
+```{r}
+meuse155 <- meuse["lead"]
+meuse60 <- meuse[sample(nrow(meuse), 60), "copper"]
+```
+
+1. Stwórz siatkę interpolacyjną o rozdzielczości 100 jednostek dla obszaru, w którym znajdują się punkty `meuse`.
+2. Zbuduj optymalne modele semiwariogramu zmiennej `lead` dla obiektu `meuse155` oraz zmiennej `copper` dla obiektu `meuse60`.
+Porównaj graficznie uzyskane modele.
+3. Korzystając z obiektów `meuse155` oraz `meuse60` stwórz krossemiwariogram.
+4. Zbuduj ręczny model uzyskanego krossemiwariogramu.
+Następnie stwórz model automatyczny.
+Porównaj uzyskane wyniki.
+5. Stwórz estymację zmiennej `copper` w nowoutworzonej siatce korzystając z kokrigingu.
