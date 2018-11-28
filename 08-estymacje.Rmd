@@ -60,11 +60,14 @@ W funkcji `krige()` z pakietu **gstat**, użycie tej metody wymaga ustalenia śr
 
 ```{r }
 mean(punkty$temp)
+```
+
+```{r}
 sk <- krige(temp~1, 
             locations = punkty,
             newdata = siatka,
             model = model,
-            beta = 15.9)
+            beta = 16)
 ```
 
 Wynik krigingu prostego, jak i każdy inny uzyskany z użyciem pakietu **gstat**, można podejrzeć używając funkcji `summary()`.
@@ -104,7 +107,7 @@ Parametry ruchomego okna można określić za pomocą jednego z dwóch argument�
 # ok <- krige(temp~1,
 #             locations = punkty,
 #             newdata = siatka, 
-#             model = fitted, 
+#             model = model, 
 #             nmax = 30)
 ok <- krige(temp~1,
             locations = punkty,
@@ -151,21 +154,20 @@ plot(vario_kzt)
 ```
 
 Dalszym etapem jest dopasowanie modelu semiwariancji, a następnie wyliczenie estymowanych wartości z użyciem funkcji `krige()`.
-Należy tutaj pamiętać, aby wzór (w przykładzie `temp~coords.x1 + coords.x2`) był taki sam podczas budowania semiwariogramu, jak i interpolacji.
+Należy tutaj pamiętać, aby wzór (w przykładzie `temp~x + y`) był taki sam podczas budowania semiwariogramu, jak i interpolacji.
 
 ```{r}
 model_kzt <- vgm(model = "Sph", nugget = 1)
 fitted_kzt <- fit.variogram(vario_kzt, model_kzt)
 fitted_kzt
 plot(vario_kzt, fitted_kzt)
+```
+
+```{r}
 kzt <- krige(temp~x + y, 
              locations = punkty, 
              newdata = siatka, 
              model = fitted_kzt)
-```
-
-```{r, echo=FALSE, eval=FALSE}
-# punkty@data <- cbind(punkty@data, as.data.frame(coordinates(punkty)))
 ```
 
 ```{r}
