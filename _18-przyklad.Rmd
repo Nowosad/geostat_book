@@ -1,1 +1,162 @@
 # Przykład analizy geostatystycznej {#przyklad}
+
+1. Stwórz sztuczne dane - symulacja
+
+```{r, echo=FALSE, eval=FALSE}
+library(sp)
+library(gstat)
+
+# tworzenie siatki
+moja_siatka = expand.grid(
+  X.1 = seq(from = 345050, to = 357050, by = 100),
+  X.2 = seq(from = 312650, to = 321650, by = 100)
+)
+coordinates(moja_siatka) <- ~X.1 + X.2
+gridded(moja_siatka) <- TRUE
+plot(moja_siatka)
+
+# tworzenie symulacji
+moj_model_sym = vgm(
+        psill = 141,
+        model = "Sph",
+        range = 2000,
+        nugget = 2
+)
+
+set.seed(007)
+moja_symulacja = krige(formula = z~1, 
+                   model = moj_model_sym, 
+                   newdata = moja_siatka, 
+                   beta = 1,
+                   nmax = 50, 
+                   locations = NULL, 
+                   dummy = TRUE, 
+                   nsim = 4)
+
+# spplot(moja_symulacja)
+
+# stworzenie punktów
+moje_punkty_geom = spsample(moja_siatka, 190, type = "random")
+# plot(moje_punkty)
+
+# przygotowanie wartości dla punktów
+moje_wartosci = over(moje_punkty_geom, moja_symulacja)[1]
+moje_wartosci = (moje_wartosci + 21) / 13
+names(moje_wartosci) = "tavg"
+
+# dodanie wartości dla punktów
+moje_punkty = SpatialPointsDataFrame(moje_punkty_geom, data = moje_wartosci)
+# spplot(moje_punkty)
+
+# dodanie błędnych wartości
+moje_punkty[72, ] = -3.46265074
+moje_punkty[60, ] = 9.1581557
+
+# zapisz do pliku
+```
+
+```{r, echo=FALSE, eval=FALSE}
+# wczytanie pliku
+
+summary(moje_punkty)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+library(ggplot2)
+ggplot(moje_punkty@data, aes(tavg)) + geom_histogram()
+ggplot(moje_punkty@data, aes(sample = tavg)) + geom_qq()
+ggplot(moje_punkty@data, aes(tavg)) + stat_ecdf()
+```
+
+```{r, echo=FALSE, eval=FALSE}
+spplot(moje_punkty)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+library(mapview)
+mapview(moje_punkty)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+moje_punkty[moje_punkty$tavg == max(moje_punkty$tavg), ]
+```
+
+```{r, echo=FALSE, eval=FALSE}
+moje_punkty[moje_punkty$tavg == min(moje_punkty$tavg), ]
+```
+
+```{r, echo=FALSE, eval=FALSE}
+moje_punkty[moje_punkty$tavg == max(moje_punkty$tavg), ] = NA
+moje_punkty[moje_punkty$tavg == min(moje_punkty$tavg), ] = NA
+moje_punkty = moje_punkty[!is.na(moje_punkty$tavg), ]
+```
+
+```{r, echo=FALSE, eval=FALSE}
+library(ggplot2)
+ggplot(moje_punkty@data, aes(tavg)) + geom_histogram()
+ggplot(moje_punkty@data, aes(sample = tavg)) + geom_qq()
+ggplot(moje_punkty@data, aes(tavg)) + stat_ecdf()
+```
+
+```{r, echo=FALSE, eval=FALSE}
+spplot(moje_punkty)
+```
+
+```{r}
+moja_chmura = variogram(tavg~1, moje_punkty, cloud = TRUE)
+plot(moja_chmura)
+```
+
+```{r}
+moj_semiwar = variogram(tavg~1, moje_punkty)
+plot(moj_semiwar)
+```
+
+```{r}
+moja_mapa <- variogram(tavg~1, 
+                       locations = moje_punkty,
+                       cutoff = 4500,
+                       width = 850, 
+                       map = TRUE)
+plot(moja_mapa, threshold = 30, col.regions = topo.colors(n = 40))
+```
+
+
+```{r}
+moj_model = vgm(psill = 1.2,
+        model = "Sph",
+        range = 2000,
+        nugget = 0.05)
+plot(moj_semiwar, moj_model)
+```
+
+```{r}
+moj_semiwar2 <- variogram(tavg~X.1 + X.2, locations = moje_punkty)
+plot(moj_semiwar2)
+```
+
+```{r}
+moj_model2 <- vgm(model = "Sph", nugget = 0.1)
+moj_model3 <- fit.variogram(moj_semiwar2, moj_model2)
+moj_model3
+plot(moj_semiwar2, moj_model3)
+```
+
+```{r}
+# stwórz siatkę
+```
+
+```{r}
+moja_estymacja <- krige(tavg~X.1 + X.2, 
+             locations = moje_punkty, 
+             newdata = moja_siatka, 
+             model = moj_model3)
+spplot(moja_estymacja[1])
+spplot(moja_estymacja[2])
+```
+
+
+```{r}
+# ocena jakości estymacji
+```
+
