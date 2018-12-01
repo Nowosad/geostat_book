@@ -246,11 +246,13 @@ Wykonaj trzy symulacje bezwarunkowe
     - modelu nugetowego o wartości 1 razem z modelem sferycznym o semiwariancji cząstkowej 15 i zasięgu 7000
     - modelu sferycznego o semiwariancji cząstkowej 5 i zasięgu 7000
     - modelu sferycznego o semiwariancji cząstkowej 15 i zasięgu 1000
+
 Porównaj graficznie uzyskane wyniki i opisz je.
 3. Zbuduj po trzy symulacje bezwarunkowe w tej siatce korzystając z:
     - modelu potęgowego o semiwariancji cząstkowej 0.03 i zasięgu 0.3
     - modelu potęgowego o semiwariancji cząstkowej 0.03 i zasięgu 0.6
     - modelu potęgowego o semiwariancji cząstkowej 0.03 i zasięgu 0.9
+
 Porównaj graficznie uzyskane wyniki i opisz je.
 4. Stwórz optymalny model semiwariogramu zmiennej `temp` z obiektu `punkty`.
 Następnie korzystając z wybranej metody krigingowej, poznanej w poprzednich rozdziałach, wykonaj estymację zmiennej `temp`.
