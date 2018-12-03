@@ -103,17 +103,17 @@ pakiety <- c(
 knitr::write_bib(c(pakiety, "bookdown", "knitr", "rmarkdown", "geostatbook", "base"), "packages.bib", width = 60)
 ```
 
-Pakiety R używane w tym skrypcie można zainstalować poprzez funkcję `install.packages()`:
-
-```{r pakiety_inst, eval=FALSE}
-install.packages(pakiety)
-```
-
-Lub też za pomocą pakietu `geostatbook` [@R-geostatbook], który automatycznie zainstaluje wszystkie wymagane pakiety:
+Pakiety R używane w tym skrypcie można zainstalować za pomocą pakietu `geostatbook` [@R-geostatbook], który automatycznie pobierze wszystkie wymagane pakiety:
 
 ```{r instgeobook, eval=FALSE}
 install.packages("devtools")
 devtools::install_github("nowosad/geostatbook")
+```
+
+Lub też poprzez funkcję `install.packages()`:
+
+```{r pakiety_inst, eval=FALSE}
+install.packages(pakiety)
 ```
 
 ```{r sessoninfo, echo=FALSE, eval=FALSE}
