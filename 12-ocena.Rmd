@@ -24,9 +24,9 @@ par(mar = c(rep(0, 4)))
 W momencie, gdy trzeba określić jakość estymacji lub porównać wyniki pomiędzy estymacjami należy zastosować tzw. statystyki jakości estymacji. 
 Do podstawowych statystyk ocen jakości estymacji należą:
 
-- Średni błąd predykcji (MPE, ang. *mean prediction error*)
+- Średni błąd estymacji (MPE, ang. *mean prediction error*)
 - Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root mean square error*)
-- Współczynnik determinacji (R^2, ang. *coefficient of determination*)
+- Współczynnik determinacji (R^2^, ang. *coefficient of determination*)
     
 Idealna estymacja dawałaby brak błędu oraz współczynnik determinacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. 
 Należy jednak zdawać sobie sprawę, że dane wejściowe są obarczone błędem/niepewnością, dlatego też w praktyce idealna estymacja nie jest osiągana.
@@ -104,22 +104,22 @@ vario <- variogram(temp~1, data = train)
 model <- vgm(10, model = "Sph", range = 4000, nugget = 0.5)
 fitted <- fit.variogram(vario, model)
 test_sk <- krige(temp~1, train, newdata = test, 
-                 model = fitted, beta = 15.9, debug.level = 0)
-blad_predykcji_sk <- test$temp - test_sk$var1.pred
-test_sk$blad_predykcji_sk <- blad_predykcji_sk
+                 model = fitted, beta = 16, debug.level = 0)
+blad_estymacji_sk <- test$temp - test_sk$var1.pred
+test_sk$blad_estymacji_sk <- blad_estymacji_sk
 test_sk$true <- test$temp
 
 cuts <- c(-5, -3, -1, 1, 3, 5)
-spplot(test_sk, "blad_predykcji_sk", main = "Błąd predykcji", cuts = cuts)
+spplot(test_sk, "blad_estymacji_sk", main = "Błąd estymacji", cuts = cuts)
 ```
 
 ### Histogram
 
-Błąd predykcji można również przedstawić na wykresach, między innymi, na histogramie.
+Błąd estymacji można również przedstawić na wykresach, między innymi, na histogramie.
 
 ```{r hist, echo=FALSE}
-ggplot(as.data.frame(test_sk), aes(blad_predykcji_sk)) +
-    geom_histogram() + xlab("Błąd predykcji") + 
+ggplot(as.data.frame(test_sk), aes(blad_estymacji_sk)) +
+    geom_histogram() + xlab("Błąd estymacji") + 
     ylab("Liczebność")
 ```
 
@@ -131,7 +131,7 @@ Do porównania pomiędzy wartością estymowaną a obserwowaną może również 
 ggplot(as.data.frame(test_sk), aes(var1.pred, true)) +
     geom_point() +
     xlab("Predykcja") +
-    ylab("Zmierzona wartość")
+    ylab("Obserwacja")
 ```
 
 ## Jakość wyników estymacji
@@ -185,15 +185,15 @@ test_sk <- krige(temp~1,
                  locations = train,
                  newdata = test,
                  model = fitted,
-                 beta = 15.9)
+                 beta = 16)
 summary(test_sk)
 ```
 
 Uzyskane w ten sposób wyniki możemy określić używając statystyk jakości estymacji lub też wykresów.
 
 ```{r}
-blad_predykcji_sk <- test$temp - test_sk$var1.pred
-summary(blad_predykcji_sk)
+blad_estymacji_sk <- test$temp - test_sk$var1.pred
+summary(blad_estymacji_sk)
 
 MPE <- mean(test$temp - test_sk$var1.pred)
 MPE
@@ -204,19 +204,19 @@ RMSE
 R2 <- cor(test$temp, test_sk$var1.pred) ^ 2
 R2
 
-test_sk$blad_predykcji_sk <- blad_predykcji_sk
-spplot(test_sk, "blad_predykcji_sk", cuts = c(-5, -3, -1, 1, 3, 5))
+test_sk$blad_estymacji_sk <- blad_estymacji_sk
+spplot(test_sk, "blad_estymacji_sk", cuts = c(-5, -3, -1, 1, 3, 5))
 
-ggplot(as.data.frame(test_sk), aes(blad_predykcji_sk)) +
+ggplot(as.data.frame(test_sk), aes(blad_estymacji_sk)) +
     geom_histogram() + 
-    xlab("Błąd predykcji") + 
+    xlab("Błąd estymacji") + 
     ylab("Liczebność")
 
 test_sk$true <- test$temp
 ggplot(as.data.frame(test_sk), aes(var1.pred, true)) +
     geom_point() +
     xlab("Predykcja") +
-    ylab("Zmierzona wartość")
+    ylab("Obserwacja")
 ```
 
 W sytuacji, gdy uzyskany model jest wystarczająco dobry, możemy również uzyskać estymację dla całego obszaru z użyciem funkcji `krige()`, tym razem jednak podając obiekt siatki.
@@ -226,7 +226,7 @@ test_sk <- krige(temp~1,
                  locations = train,
                  newdata = siatka,
                  model = fitted,
-                 beta = 15.9)
+                 beta = 16)
 spplot(test_sk, "var1.pred")
 ```
 
@@ -245,7 +245,7 @@ Procedura kroswalidacji LOO (ang. *leave-one-out cross-validation*) składa się
 W pakiecie **gstat**, kroswalidacja LOO jest dostępna w funkcjach `krige.cv()` oraz `gstat.cv()`. 
 Działają one bardzo podobnie jak funkcje `krige()` oraz `gstat()`, jednak w przeciwieństwie do nich nie wymagają podania obiektu siatki.
 
-```{r loovv, cache=TRUE}
+```{r loovv, eval=FALSE}
 vario <- variogram(temp~1, data = punkty)
 model <- vgm(model = "Sph", nugget = 0.5)
 fitted <- fit.variogram(vario, model)
@@ -253,7 +253,19 @@ fitted <- fit.variogram(vario, model)
 cv_sk <- krige.cv(temp ~ 1,
                   locations = punkty,
                   model = fitted,
-                  beta = 15.9,
+                  beta = 16)
+summary(cv_sk)
+```
+
+```{r trueloovv, echo=FALSE, cache=TRUE}
+vario <- variogram(temp~1, data = punkty)
+model <- vgm(model = "Sph", nugget = 0.5)
+fitted <- fit.variogram(vario, model)
+
+cv_sk <- krige.cv(temp ~ 1,
+                  locations = punkty,
+                  model = fitted,
+                  beta = 16,
                   verbose = FALSE)
 summary(cv_sk)
 ```
@@ -276,13 +288,13 @@ spplot(cv_sk, "residual", cuts = c(-10, -5, -3, -1, 1, 3, 5, 10))
 
 ggplot(as.data.frame(cv_sk), aes(residual)) +
     geom_histogram() + 
-    xlab("Błąd predykcji") + 
+    xlab("Błąd estymacji") + 
     ylab("Liczebność")
 
 ggplot(as.data.frame(cv_sk), aes(var1.pred, observed)) +
     geom_point() +
     xlab("Predykcja") +
-    ylab("Zmierzona wartość")
+    ylab("Obserwacja")
 ```
 
 Podobnie jak w walidacji podzbiorem, gdy uzyskany model jest wystarczająco dobry, estymację dla całego obszaru uzyskuje się z użyciem funkcji `krige()`.
@@ -292,7 +304,7 @@ cv_skk <- krige(temp~1,
                 locations = train,
                 newdata = siatka, 
                 model = fitted, 
-                beta = 15.9)
+                beta = 16)
 spplot(cv_skk, "var1.pred")
 ```
 
