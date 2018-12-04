@@ -1,0 +1,240 @@
+# Przykład analizy geostatystycznej {#przyklad}
+
+```{r, echo=FALSE, eval=FALSE}
+library(sp)
+library(gstat)
+
+# tworzenie siatki
+moja_siatka = expand.grid(
+  X.1 = seq(from = 345050, to = 357050, by = 100),
+  X.2 = seq(from = 312650, to = 321650, by = 100)
+)
+coordinates(moja_siatka) <- ~X.1 + X.2
+gridded(moja_siatka) <- TRUE
+plot(moja_siatka)
+
+# tworzenie symulacji
+moj_model_sym = vgm(
+        psill = 141,
+        model = "Sph",
+        range = 2000,
+        nugget = 2
+)
+
+set.seed(007)
+moja_symulacja = krige(formula = z~1, 
+                   model = moj_model_sym, 
+                   newdata = moja_siatka, 
+                   beta = 1,
+                   nmax = 50, 
+                   locations = NULL, 
+                   dummy = TRUE, 
+                   nsim = 4)
+
+# spplot(moja_symulacja)
+
+# stworzenie punktów
+moje_punkty_geom = spsample(moja_siatka, 190, type = "random")
+# plot(moje_punkty)
+
+# przygotowanie wartości dla punktów
+moje_wartosci = over(moje_punkty_geom, moja_symulacja)[1]
+moje_wartosci = (moje_wartosci + 21) / 13
+names(moje_wartosci) = "tavg"
+
+# dodanie wartości dla punktów
+moje_punkty = SpatialPointsDataFrame(moje_punkty_geom, data = moje_wartosci)
+# spplot(moje_punkty)
+
+# dodanie błędnych wartości
+moje_punkty[72, ] = -3.46265074
+moje_punkty[60, ] = 9.1581557
+
+# zapisz do pliku
+rgdal::writeOGR(moje_punkty, "dane/moje_punkty.gpkg", layer = "moje_punkty",
+                driver = "GPKG")
+```
+
+## Analiza geostatystyczna
+
+Analiza geostatystyczna jest złożonym procesem, często wymagającym sprawdzenia jakości danych i ich korekcji oraz wypróbowania wielu możliwości modelowania.
+Poniższy suplement skupia się na pokazaniu przykładu uproszczonej analizy geostatystycznej, w której głównym celem jest estymacja średniej wartości temperatury.
+
+## Przygotowanie danych
+
+Pierwszym krokiem analizy geostatystycznej jest załadowanie pakietów, które zostaną użyte.
+Oczywiście, brakujące pakiety można załadować także w trakcie analizy geostatystycznej.
+
+```{r}
+library(sp)
+library(rgdal)
+library(gstat)
+library(ggplot2)
+```
+
+Kolejnym krokiem jest wczytanie danych oraz sprawdzenie ich jakości.
+
+```{r}
+moje_punkty <- readOGR("dane/moje_punkty.gpkg")
+summary(moje_punkty)
+```
+
+Obiekt `moje_punkty` zawiera tylko jedną zmienną `tavg`, która ma być użyta do stworzenia estymacji.
+Warto zwizualizować rozkład wartości tej zmiennej w postaci histogramu oraz mapy:
+
+```{r}
+ggplot(moje_punkty@data, aes(tavg)) + geom_histogram()
+spplot(moje_punkty)
+```
+
+Można w ten sposób zauważyć, że występują co najmniej dwie wartości odstające.
+
+```{r}
+moje_punkty@data[moje_punkty$tavg == max(moje_punkty$tavg), ]
+moje_punkty@data[moje_punkty$tavg == min(moje_punkty$tavg), ]
+```
+
+Jedna z nich ma wartość ok. -3.5 °C i jest znacznie niższa od pozostałych, druga natomiast jest znacznie wyższa od pozostałych i ma wartość ok. 9.2 °C.
+Należy w tym momencie zastanowić się czy te wartości odstające są prawidłowymi wartościami, czy też są one błędne. 
+W tej sytuacji, nie posiadając zewnętrznej informacji, bezpieczniej jest usunąć te dwa pomiary.
+Można to zrobić wyszukując id punktów za pomocą pakietu **mapview**.
+
+```{r, echo=FALSE, eval=FALSE}
+library(mapview)
+mapview(moje_punkty)
+```
+
+Teraz id punktów można użyć do ich wybrania i zastąpienia potencjalnie błędnych wartości wartościami `NA`.
+
+```{r}
+# usunięcie wartości według id
+moje_punkty@data[60, "tavg"] = NA
+moje_punkty@data[72, "tavg"] = NA
+```
+
+```{r, eval=FALSE, echo=FALSE}
+# lub usunięcie wartości według wartości maksymalnej/minimalnej
+moje_punkty@data[moje_punkty$tavg %in% max(moje_punkty$tavg, na.rm = TRUE), "tavg"] = NA
+moje_punkty@data[moje_punkty$tavg %in% min(moje_punkty$tavg, na.rm = TRUE), "tavg"] = NA
+```
+
+Te punkty nadal istnieją jednak w obiekcie `moje_punkty`.
+Można je usunąć korzystając z funkcji `is.na` oraz indeksowania:
+
+```{r}
+moje_punkty = moje_punkty[!is.na(moje_punkty$tavg), ]
+```
+
+Po tej zmianie powinno się po raz kolejny obejrzeć dokładnie dane w celu stwierdzenia, czy problem został naprawiony i czy nie występują dodatkowe sytuacje problemowe.
+
+```{r}
+ggplot(moje_punkty@data, aes(tavg)) + geom_histogram()
+spplot(moje_punkty)
+```
+
+Można dodatkowo stworzyć chmurę semiwariogramu w celu wyszukania potencjalnych wartości lokalnie odstających.
+
+```{r}
+moja_chmura = variogram(tavg~1, moje_punkty, cloud = TRUE)
+plot(moja_chmura)
+```
+
+## Tworzenie modeli semiwariogramów
+
+Posiadając już poprawne dane można sprawdzić czy badane zjawisko wykazuje anizotropię przestrzenną poprzez stworzenie mapy semiwariogramu.
+
+```{r}
+moja_mapa <- variogram(tavg~1, 
+                       locations = moje_punkty,
+                       cutoff = 4500,
+                       width = 850, 
+                       map = TRUE)
+plot(moja_mapa, threshold = 30, col.regions = topo.colors(n = 40))
+```
+
+Uzyskana mapa nie pozwala na jednoznaczne stwierdzenie kierunkowej zmienności podobieństwa badanej cechy, w związku z tym można skupić się na modelowaniu izotropowym.
+Kolejnym etapem jest stworzenie semiwariogramu oraz jego modelowanie.
+Optymalnie tworzonych jest więcej niż model semiwariogramu, co pozwala na porównanie uzyskanych wyników i wybór lepszego modelu.
+Do tego przykładu zostały stworzone dwa modele semiwariogramu.
+Pierwszy z nich używa tylko zmiennej `tavg` oraz modelu ręcznego o wybranych parametrach.
+
+```{r}
+moj_semiwar = variogram(tavg~1, moje_punkty)
+plot(moj_semiwar)
+```
+
+```{r}
+moj_model <- vgm(psill = 0.65,
+        model = "Sph",
+        range = 2000,
+        nugget = 0.15)
+plot(moj_semiwar, moj_model)
+```
+
+Drugi model, oprócz zmiennej `tavg`, używa też wartości współrzędnych oraz modelu o parametrach zmodyfikowanych przez funkcję `fit.variogram()`.
+
+```{r}
+moj_semiwar2 <- variogram(tavg~coords.x1 + coords.x2, locations = moje_punkty)
+plot(moj_semiwar2)
+```
+
+```{r}
+moj_model2 <- vgm(model = "Sph", nugget = 0.1)
+moj_model2 <- fit.variogram(moj_semiwar2, moj_model2)
+moj_model2
+plot(moj_semiwar2, moj_model2)
+```
+
+## Ocena jakości semiwariancji
+
+Aby porównać oba modele należy przyjąć metodę walidacji oraz współczynnik jakości estymacji.
+W tym przykładzie użyto kroswalidacji metodą LOO (funkcja `krige.cv`) oraz pierwiastek średniego błędu kwadratowego (RMSE) jako miary jakości.
+
+```{r}
+ocena1 <- krige.cv(tavg~1, 
+                   locations = moje_punkty,
+                   model = moj_model, 
+                   beta = 30)
+RMSE1 <- sqrt(mean((ocena1$residual) ^ 2))
+```
+
+```{r}
+ocena2 <- krige.cv(tavg~coords.x1 + coords.x2, 
+                   locations = moje_punkty,
+                   model = moj_model2)
+RMSE2 <- sqrt(mean((ocena2$residual) ^ 2))
+```
+
+Porównanie dwóch wartości RMSE pozwala zdecydowanie stwierdzić, że drugi model charakteryzuje się lepszą jakością estymacji.
+
+```{r}
+RMSE1
+RMSE2
+```
+
+## Stworzenie siatki
+
+Przedostatnim krokiem jest utworzenie siatki do estymacji.
+
+```{r}
+moja_siatka = expand.grid(
+  coords.x1 = seq(from = 345050, to = 357050, by = 100),
+  coords.x2 = seq(from = 312650, to = 321650, by = 100)
+)
+coordinates(moja_siatka) <- ~coords.x1 + coords.x2
+gridded(moja_siatka) <- TRUE
+plot(moja_siatka)
+```
+
+## Stworzenie estymacji
+
+Następnie nowoutworzona siatka może posłuzyć do stworzenia estymacji.
+
+```{r}
+moja_estymacja <- krige(tavg~coords.x1 + coords.x2, 
+             locations = moje_punkty, 
+             newdata = moja_siatka, 
+             model = moj_model2)
+spplot(moja_estymacja[1])
+spplot(moja_estymacja[2])
+```
