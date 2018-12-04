@@ -1,7 +1,5 @@
 # Przykład analizy geostatystycznej {#przyklad}
 
-1. Stwórz sztuczne dane - symulacja
-
 ```{r, echo=FALSE, eval=FALSE}
 library(sp)
 library(gstat)
@@ -53,22 +51,38 @@ moje_punkty[72, ] = -3.46265074
 moje_punkty[60, ] = 9.1581557
 
 # zapisz do pliku
+rgdal::writeOGR(moje_punkty, "dane/moje_punkty.gpkg", layer = "moje_punkty",
+                driver = "GPKG")
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-# wczytanie pliku
+## Analiza geostatystyczna
 
+
+## Załadowanie odpowiednich pakietów
+
+```{r}
+library(sp)
+library(rgdal)
+library(gstat)
+library(ggplot2)
+```
+
+## Wczytanie danych
+
+```{r}
+moje_punkty <- readOGR("dane/moje_punkty.gpkg")
 summary(moje_punkty)
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-library(ggplot2)
+## Eksploracyjna analiza danych
+
+```{r}
 ggplot(moje_punkty@data, aes(tavg)) + geom_histogram()
 ggplot(moje_punkty@data, aes(sample = tavg)) + geom_qq()
 ggplot(moje_punkty@data, aes(tavg)) + stat_ecdf()
 ```
 
-```{r, echo=FALSE, eval=FALSE}
+```{r}
 spplot(moje_punkty)
 ```
 
@@ -77,28 +91,27 @@ library(mapview)
 mapview(moje_punkty)
 ```
 
-```{r, echo=FALSE, eval=FALSE}
+```{r}
 moje_punkty[moje_punkty$tavg == max(moje_punkty$tavg), ]
 ```
 
-```{r, echo=FALSE, eval=FALSE}
+```{r}
 moje_punkty[moje_punkty$tavg == min(moje_punkty$tavg), ]
 ```
 
-```{r, echo=FALSE, eval=FALSE}
+```{r}
 moje_punkty[moje_punkty$tavg == max(moje_punkty$tavg), ] = NA
 moje_punkty[moje_punkty$tavg == min(moje_punkty$tavg), ] = NA
 moje_punkty = moje_punkty[!is.na(moje_punkty$tavg), ]
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-library(ggplot2)
+```{r}
 ggplot(moje_punkty@data, aes(tavg)) + geom_histogram()
 ggplot(moje_punkty@data, aes(sample = tavg)) + geom_qq()
 ggplot(moje_punkty@data, aes(tavg)) + stat_ecdf()
 ```
 
-```{r, echo=FALSE, eval=FALSE}
+```{r}
 spplot(moje_punkty)
 ```
 
@@ -106,6 +119,8 @@ spplot(moje_punkty)
 moja_chmura = variogram(tavg~1, moje_punkty, cloud = TRUE)
 plot(moja_chmura)
 ```
+
+## Tworzenie modeli semiwariogramów
 
 ```{r}
 moj_semiwar = variogram(tavg~1, moje_punkty)
@@ -121,12 +136,11 @@ moja_mapa <- variogram(tavg~1,
 plot(moja_mapa, threshold = 30, col.regions = topo.colors(n = 40))
 ```
 
-
 ```{r}
-moj_model = vgm(psill = 1.2,
+moj_model <- vgm(psill = 0.65,
         model = "Sph",
         range = 2000,
-        nugget = 0.05)
+        nugget = 0.15)
 plot(moj_semiwar, moj_model)
 ```
 
@@ -137,26 +151,49 @@ plot(moj_semiwar2)
 
 ```{r}
 moj_model2 <- vgm(model = "Sph", nugget = 0.1)
-moj_model3 <- fit.variogram(moj_semiwar2, moj_model2)
-moj_model3
-plot(moj_semiwar2, moj_model3)
+moj_model2 <- fit.variogram(moj_semiwar2, moj_model2)
+moj_model2
+plot(moj_semiwar2, moj_model2)
+```
+
+## Ocena jakości semiwariancji
+
+```{r}
+ocena1 <- krige.cv(tavg~1, 
+                   locations = moje_punkty,
+                   model = moj_model, 
+                   beta = 30)
+RMSE1 <- sqrt(mean((ocena1$residual) ^ 2))
 ```
 
 ```{r}
-# stwórz siatkę
+ocena2 <- krige.cv(tavg~X.1 + X.2, 
+                   locations = moje_punkty,
+                   model = moj_model2)
+RMSE2 <- sqrt(mean((ocena2$residual) ^ 2))
 ```
+
+## Stworzenie siatki
+
+```{r}
+moja_siatka = expand.grid(
+  X.1 = seq(from = 345050, to = 357050, by = 100),
+  X.2 = seq(from = 312650, to = 321650, by = 100)
+)
+coordinates(moja_siatka) <- ~X.1 + X.2
+gridded(moja_siatka) <- TRUE
+plot(moja_siatka)
+```
+
+## Stworzenie estymacji
 
 ```{r}
 moja_estymacja <- krige(tavg~X.1 + X.2, 
              locations = moje_punkty, 
              newdata = moja_siatka, 
-             model = moj_model3)
+             model = moj_model2)
 spplot(moja_estymacja[1])
 spplot(moja_estymacja[2])
 ```
 
-
-```{r}
-# ocena jakości estymacji
-```
 
