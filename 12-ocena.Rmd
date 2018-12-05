@@ -17,6 +17,55 @@ data(siatka)
 par(mar = c(rep(0, 4)))
 ```
 
+## Wizualizacja jakości estymacji
+
+### Mapa
+
+Wyliczenie błędów estymacji odbywa się poprzez odjęcie od estymacja wartości obserwowanej.
+
+```{r, eval=FALSE}
+blad_predykcji <- obserwowane - estymacja
+```
+
+```{r mapa, echo=FALSE, message=FALSE, }
+set.seed(124)
+indeks <- as.vector(createDataPartition(punkty$temp, p = 0.75, list = FALSE))
+train <- punkty[indeks, ]
+test <- punkty[-indeks, ]
+vario <- variogram(temp~1, data = train)
+model <- vgm(10, model = "Sph", range = 4000, nugget = 0.5)
+fitted <- fit.variogram(vario, model)
+test_sk <- krige(temp~1, train, newdata = test, 
+                 model = fitted, beta = 16, debug.level = 0)
+blad_estymacji_sk <- test$temp - test_sk$var1.pred
+test_sk$blad_estymacji_sk <- blad_estymacji_sk
+test_sk$true <- test$temp
+
+cuts <- c(-5, -3, -1, 1, 3, 5)
+spplot(test_sk, "blad_estymacji_sk", main = "Błąd estymacji", cuts = cuts)
+```
+
+### Histogram
+
+Błąd estymacji można również przedstawić na wykresach, między innymi, na histogramie.
+
+```{r hist, echo=FALSE}
+ggplot(as.data.frame(test_sk), aes(blad_estymacji_sk)) +
+    geom_histogram() + xlab("Błąd estymacji") + 
+    ylab("Liczebność")
+```
+
+### Wykres rozrzutu
+
+Do porównania pomiędzy wartością estymowaną a obserwowaną może również posłużyć wykres rozrzutu.
+
+```{r point, echo=FALSE}
+ggplot(as.data.frame(test_sk), aes(var1.pred, true)) +
+    geom_point() +
+    xlab("Estymacja") +
+    ylab("Obserwacja")
+```
+
 ## Statystyki jakości estymacji
 
 ### Podstawowe statystyki
@@ -83,56 +132,6 @@ R2 <- cor(obserwowane, estymacja) ^ 2
 ```
 
 Współczynnik determinacji przyjmuje wartości od 0 do 1, gdzie model jest lepszy im wartość tego współczynnika jest bliższa jedności.
-
-## Wizualizacja jakości estymacji
-
-### Mapa
-
-Do oceny przestrzennej jakości predykcji można również zastosować mapę przestawiającą błędy predykcji (błędy estymacji).
-Wyliczenie błędów estymacji odbywa się poprzez odjęcie od predykcji wartości obserwowanej.
-
-```{r, eval=FALSE}
-blad_predykcji <- obserwowane - estymacja
-```
-
-```{r mapa, echo=FALSE, message=FALSE, }
-set.seed(124)
-indeks <- as.vector(createDataPartition(punkty$temp, p = 0.75, list = FALSE))
-train <- punkty[indeks, ]
-test <- punkty[-indeks, ]
-vario <- variogram(temp~1, data = train)
-model <- vgm(10, model = "Sph", range = 4000, nugget = 0.5)
-fitted <- fit.variogram(vario, model)
-test_sk <- krige(temp~1, train, newdata = test, 
-                 model = fitted, beta = 16, debug.level = 0)
-blad_estymacji_sk <- test$temp - test_sk$var1.pred
-test_sk$blad_estymacji_sk <- blad_estymacji_sk
-test_sk$true <- test$temp
-
-cuts <- c(-5, -3, -1, 1, 3, 5)
-spplot(test_sk, "blad_estymacji_sk", main = "Błąd estymacji", cuts = cuts)
-```
-
-### Histogram
-
-Błąd estymacji można również przedstawić na wykresach, między innymi, na histogramie.
-
-```{r hist, echo=FALSE}
-ggplot(as.data.frame(test_sk), aes(blad_estymacji_sk)) +
-    geom_histogram() + xlab("Błąd estymacji") + 
-    ylab("Liczebność")
-```
-
-### Wykres rozrzutu
-
-Do porównania pomiędzy wartością estymowaną a obserwowaną może również posłużyć wykres rozrzutu.
-
-```{r point, echo=FALSE}
-ggplot(as.data.frame(test_sk), aes(var1.pred, true)) +
-    geom_point() +
-    xlab("Predykcja") +
-    ylab("Obserwacja")
-```
 
 ## Jakość wyników estymacji
 
@@ -215,7 +214,7 @@ ggplot(as.data.frame(test_sk), aes(blad_estymacji_sk)) +
 test_sk$true <- test$temp
 ggplot(as.data.frame(test_sk), aes(var1.pred, true)) +
     geom_point() +
-    xlab("Predykcja") +
+    xlab("Estymacja") +
     ylab("Obserwacja")
 ```
 
@@ -238,7 +237,7 @@ Procedura kroswalidacji LOO (ang. *leave-one-out cross-validation*) składa się
 1. Zbudowanie matematycznego modelu z dostępnych obserwacji
 2. Dla każdej znanej obserwacji następuje:
     - Usunięcie jej ze zbioru danych
-    - Użycie modelu do wykonania predykcji w miejscu tej obserwacji
+    - Użycie modelu do wykonania estymacji w miejscu tej obserwacji
     - Wyliczenie reszty (ang. *residual*), czyli różnicy pomiędzy znaną wartością a estymacją
 3. Podsumowanie otrzymanych wyników
     
@@ -293,7 +292,7 @@ ggplot(as.data.frame(cv_sk), aes(residual)) +
 
 ggplot(as.data.frame(cv_sk), aes(var1.pred, observed)) +
     geom_point() +
-    xlab("Predykcja") +
+    xlab("Estymacja") +
     ylab("Obserwacja")
 ```
 
