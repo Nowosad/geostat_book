@@ -50,8 +50,8 @@ fitted_sph <- fit.variogram(var, vgm(model = "Sph", nugget = 1))
 plot(var, model = fitted_sph)
 ```
 
-Pozwala on zarówno na lepszy opis zmienności zjawiska, jak również służy do tworzenia **predykcji** czy też **symulacji**.
-Predykcja tworzy najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji:
+Pozwala on zarówno na lepszy opis zmienności zjawiska, jak również służy do tworzenia **estymacji** czy też **symulacji**.
+Estymacja tworzy najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji:
 
 ```{r, echo=FALSE, message=FALSE}
 sk <- krige(temp~1, 
@@ -59,8 +59,8 @@ sk <- krige(temp~1,
             newdata = siatka,
             model = fitted_sph,
             beta = 15.9)
-spplot(sk, "var1.pred", main = "Predykcja")
-spplot(sk, "var1.var", main = "Wariancja predykcji")
+spplot(sk, "var1.pred", main = "Estymacja")
+spplot(sk, "var1.var", main = "Wariancja estymacji")
 ```
 
 Rolą symulacji jest natomiast generowanie równie prawdopodobne możliwości rozkładu badanej cechy:

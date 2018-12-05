@@ -139,8 +139,8 @@ spplot(ck, "SAVI.var")
 
 ```{r kokriging_predicted, echo=FALSE, cache=TRUE, fig.height=8}
 library(gridExtra)
-p1 <- spplot(ck, "SAVI.pred", main = "Predykcja CK")
-p2 <- spplot(ck, "SAVI.var", main = "Wariancja CK")
+p1 <- spplot(ck, "SAVI.pred", main = "Estymacja CK")
+p2 <- spplot(ck, "SAVI.var", main = "Wariancja estymacji CK")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
@@ -176,8 +176,8 @@ spplot(ck_a, "savi.var")
 
 ```{r plotsyck2a, eval=FALSE, echo=FALSE, fig.height=8}
 library(gridExtra)
-p1 <- spplot(ck_a, "savi.pred", main = "Predykcja CK - anizotropia")
-p2 <- spplot(ck_a, "savi.var", main = "Wariancja CK - anizotropia")
+p1 <- spplot(ck_a, "savi.pred", main = "Estymacja CK - anizotropia")
+p2 <- spplot(ck_a, "savi.var", main = "Wariancja estymacji CK - anizotropia")
 grid.arrange(p1, p2, ncol = 2)
 ```
 

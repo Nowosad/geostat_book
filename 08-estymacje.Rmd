@@ -87,8 +87,8 @@ spplot(sk, "var1.var")
 
 ```{r plotsy2, echo=FALSE, eval=TRUE, fig.height=8}
 library(gridExtra)
-p1 <- spplot(sk, "var1.pred", main = "Predykcja SK")
-p2 <- spplot(sk, "var1.var", main = "Wariancja predykcji SK")
+p1 <- spplot(sk, "var1.pred", main = "Estymacja SK")
+p2 <- spplot(sk, "var1.var", main = "Wariancja estymacja SK")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
@@ -129,8 +129,8 @@ spplot(ok, "var1.var")
 
 ```{r plotsy2ok2, echo=FALSE, eval=TRUE, fig.height=8}
 library(gridExtra)
-p1 <- spplot(ok, "var1.pred", main = "Predykcja OK")
-p2 <- spplot(ok, "var1.var", main = "Wariancja predykcji OK")
+p1 <- spplot(ok, "var1.pred", main = "Estymacja OK")
+p2 <- spplot(ok, "var1.var", main = "Wariancja estymacja OK")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
@@ -181,8 +181,8 @@ spplot(kzt, "var1.var")
 
 ```{r plotsy2kzt, echo=FALSE, eval=TRUE, fig.height=8}
 library(gridExtra)
-p1 <- spplot(kzt, "var1.pred", main = "Predykcja KZT")
-p2 <- spplot(kzt, "var1.var", main = "Wariancja predykcji KZT")
+p1 <- spplot(kzt, "var1.pred", main = "Estymacja KZT")
+p2 <- spplot(kzt, "var1.var", main = "Wariancja estymacja KZT")
 grid.arrange(p1, p2, ncol = 1)
 ```
 

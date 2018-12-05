@@ -19,7 +19,7 @@ data(granica)
 par(mar = c(rep(0, 4)))
 ```
 
-Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania do stworzenia predykcji przestrzennych. 
+Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania do stworzenia estymacji przestrzennych. 
 Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne oraz modele statystyczne.
 
 ## Tworzenie siatek

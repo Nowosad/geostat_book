@@ -1,5 +1,5 @@
 
-# Wykorzystanie do estymacji danych uzupełniających {#wykorzystanie-do-estymacji-danych-uzupeniajacych}
+# Estymacje używające danych uzupełniających {#wykorzystanie-do-estymacji-danych-uzupeniajacych}
 
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
@@ -49,12 +49,16 @@ vario_kws1 <- variogram(temp~1, punkty[punkty$clc == 1, ])
 # plot(vario_kws1)
 fitted_kws1 <- fit.variogram(vario_kws1, vgm(model = "Sph", nugget = 0.5))
 plot(vario_kws1, fitted_kws1)
+```
 
+```{r }
 vario_kws2 <- variogram(temp~1, punkty[punkty$clc == 2, ])
 # plot(vario_kws2)
 fitted_kws2 <- fit.variogram(vario_kws2, vgm(model = "Gau", nugget = 0.1))
 plot(vario_kws2, fitted_kws2)
+```
 
+```{r }
 vario_kws4 <- variogram(temp~1, punkty[punkty$clc == 4, ])
 # plot(vario_kws4)
 fitted_kws4 <- fit.variogram(vario_kws4, vgm(model = "Nug"))
@@ -72,11 +76,17 @@ kws1 <- krige(temp~1,
               newdata = siatka2[na.omit(siatka2$clc == 1), ], 
               model = fitted_kws1)
 spplot(kws1, "var1.pred")
+```
+
+```{r, message=FALSE}
 kws2 <- krige(temp~1,
               location = punkty[punkty$clc == 2, ],
               newdata = siatka2[na.omit(siatka2$clc == 2), ], 
               model = fitted_kws2)
 spplot(kws2, "var1.pred")
+```
+
+```{r, message=FALSE}
 kws4 <- krige(temp~1, 
               location = punkty[punkty$clc == 4, ], 
               newdata = siatka2[na.omit(siatka2$clc == 4), ], 
@@ -97,14 +107,14 @@ kws <- as(kws, "SpatialPixelsDataFrame")
 Uzyskane w ten sposób wyniki znacząco różnią się od estymacji krigingem prostym czy zwykłym, wykazując odrębność zmienności w poszczególnych kategoriach pokrycia/użytkowania terenu.
 
 ```{r plotsykws1, eval=FALSE}
-spplot(kws, "var1.pred", sp.layout = punkty)
-spplot(kws, "var1.var", sp.layout = punkty)
+spplot(kws, "var1.pred")
+spplot(kws, "var1.var")
 ```
 
 ```{r plotsykws2, echo=FALSE, fig.height=8}
 library(gridExtra)
-p1 <- spplot(kws, "var1.pred", main = "Predykcja KWS")
-p2 <- spplot(kws, "var1.var", main = "Wariancja predykcji KWS")
+p1 <- spplot(kws, "var1.pred", main = "Estymacja KWS")
+p2 <- spplot(kws, "var1.var", main = "Wariancja estymacja KWS")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
@@ -119,7 +129,7 @@ W takiej sytuacji konieczne jest użycie funkcji `lm()`.
 W poniższym przykładzie budowany jest model liniowy relacji pomiędzy temperaturą powietrza (`temp`), a wysokością nad poziomem morza (`srtm`).
 
 ```{r }
-coef <- lm(temp~ndvi, punkty)$coef
+coef <- lm(temp~srtm, punkty)$coef
 coef
 ```
 
@@ -152,8 +162,8 @@ spplot(sk_lvm, "var1.var")
 
 ```{r plotsylvm2, echo=FALSE, fig.height=8}
 library(gridExtra)
-p1 <- spplot(sk_lvm, "var1.pred", main = "Predykcja SK LVM")
-p2 <- spplot(sk_lvm, "var1.var", main = "Wariancja predykcji SK LVM")
+p1 <- spplot(sk_lvm, "var1.pred", main = "Estymacja SK LVM")
+p2 <- spplot(sk_lvm, "var1.var", main = "Wariancja estymacja SK LVM")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
@@ -180,6 +190,9 @@ plot(vario_uk1, vario_fit_uk1)
 ```{r }
 siatka$clc <- as.factor(siatka$clc)
 spplot(siatka, "clc")
+```
+
+```{r }
 uk1 <- krige(temp~clc, 
              locations = punkty,
              newdata = siatka, 
@@ -193,8 +206,8 @@ spplot(uk1, "var1.var")
 
 ```{r plotsy4uk1, echo=FALSE, fig.height=8}
 library(gridExtra)
-p1 <- spplot(uk1, "var1.pred", main = "Predykcja KU")
-p2 <- spplot(uk1, "var1.var", main = "Wariancja predykcji KU")
+p1 <- spplot(uk1, "var1.pred", main = "Estymacja KU")
+p2 <- spplot(uk1, "var1.var", main = "Wariancja estymacja KU")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
@@ -208,6 +221,9 @@ model <- vgm(model = "Sph", nugget = 1)
 vario_fit_uk2 <- fit.variogram(vario_uk2, model = model)
 vario_fit_uk2
 plot(vario_uk2, vario_fit_uk2)
+```
+
+```{r }
 uk2 <- krige(temp~ndvi + srtm,
              locations = punkty, 
              newdata = siatka,
@@ -221,8 +237,8 @@ spplot(uk2, "var1.var")
 
 ```{r plotsy4KU, echo=FALSE, fig.height=8}
 library(gridExtra)
-p1 <- spplot(uk2, "var1.pred", main = "Predykcja KU")
-p2 <- spplot(uk2, "var1.var", main = "Wariancja predykcji KU")
+p1 <- spplot(uk2, "var1.pred", main = "Estymacja KU")
+p2 <- spplot(uk2, "var1.var", main = "Wariancja estymacja KU")
 grid.arrange(p1, p2, ncol = 1)
 ```
 

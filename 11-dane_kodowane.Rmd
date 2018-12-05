@@ -89,7 +89,7 @@ ik <- krige(temp_ind~1,
             model = fitted_ind)
 ```
 
-W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopni Celsjusza) oraz uzyskaną wariancję predykcji.
+W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopni Celsjusza) oraz uzyskaną wariancję estymacji.
 
 ```{r plotsy1ok, eval=FALSE}
 spplot(ik, "var1.pred")
@@ -102,7 +102,7 @@ ps.options(encoding = "CP1250")
 p1 <- spplot(ik, "var1.pred",
              main = "Prawdopodobieństwo Temp > 20")
 p2 <- spplot(ik, "var1.var", 
-             main = "Wariancja predykcji IK")
+             main = "Wariancja estymacji IK")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
@@ -115,7 +115,7 @@ Rozkład wartości prawdopodobieństwa jest możliwy do zobaczenia, np. używaj�
 ggplot(ik@data, aes(var1.pred)) + geom_histogram()
 ```
 
-Następnie można stworzyć nową zmienną binarną w oparciu o wartości predykcji.
+Następnie można stworzyć nową zmienną binarną w oparciu o wartości estymacji.
 Poniższy kod tworzy dwie nowe zmienne - `prog1`, gdzie wartość progowa została ustalona na 0.1 oraz `prog2` z wartością progową 0.75.
 
 ```{r}

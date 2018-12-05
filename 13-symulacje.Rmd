@@ -25,11 +25,11 @@ par(mar = c(rep(0, 4)))
 
 ## Symulacje geostatystyczne
 
-Kriging daje optymalne predykcje, czyli wyznacza najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji. 
+Kriging daje optymalne estymacje, czyli wyznacza najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji. 
 Dodatkowo, efektem krigingu jest wygładzony obraz. 
 W konsekwencji wyniki estymacji różnią się od danych pomiarowych. 
-Uzyskiwana jest tylko (aż?) predykcja, a prawdziwa wartość jest niepewna...
-Korzystając z symulacji geostatystycznych nie tworzymy predykcji, ale generujemy równie prawdopodobne możliwości poprzez symulację z rozkładu prawdopodobieństwa (wykorzystując generator liczb losowych).
+Uzyskiwana jest tylko (aż?) estymacja, a prawdziwa wartość jest niepewna...
+Korzystając z symulacji geostatystycznych nie tworzymy estymacji, ale generujemy równie prawdopodobne możliwości poprzez symulację z rozkładu prawdopodobieństwa (wykorzystując generator liczb losowych).
 
 ### Właściwości
 
@@ -38,7 +38,7 @@ Właściwości symulacji geostatystycznych:
 - Efekt symulacji ma bardziej realistyczny przestrzenny wzór (ang. *pattern*) niż kriging, którego efektem jest wygładzona reprezentacja rzeczywistości
 - Każda z symulowanych map jest równie prawdopodobna
 - Symulacje pozwalają na przedstawianie niepewności interpolacji
-- Jednocześnie - kriging jest znacznie lepszy, gdy naszym celem jest jak najdokładniejsza predykcja
+- Jednocześnie - kriging jest znacznie lepszy, gdy naszym celem jest jak najdokładniejsza estymacja
 
 ### Typy symulacji
 
