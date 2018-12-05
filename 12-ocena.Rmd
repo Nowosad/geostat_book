@@ -29,14 +29,18 @@ blad_predykcji <- obserwowane - estymacja
 ```
 
 ```{r mapa, echo=FALSE, message=FALSE, }
-vario <- variogram(temp~1, data = punkty)
+set.seed(124)
+indeks <- as.vector(createDataPartition(punkty$temp, p = 0.75, list = FALSE))
+train <- punkty[indeks, ]
+test <- punkty[-indeks, ]
+vario <- variogram(temp~1, data = train)
 model <- vgm(10, model = "Sph", range = 4000, nugget = 0.5)
 fitted <- fit.variogram(vario, model)
-test_sk <- krige(temp~1, punkty, newdata = punkty, 
+test_sk <- krige(temp~1, train, newdata = test, 
                  model = fitted, beta = 16, debug.level = 0)
-blad_estymacji_sk <- punkty$temp - test_sk$var1.pred
+blad_estymacji_sk <- test$temp - test_sk$var1.pred
 test_sk$blad_estymacji_sk <- blad_estymacji_sk
-test_sk$true <- punkty$temp
+test_sk$true <- test$temp
 
 cuts <- c(-5, -3, -1, 1, 3, 5)
 spplot(test_sk, "blad_estymacji_sk", main = "Błąd estymacji", cuts = cuts)
