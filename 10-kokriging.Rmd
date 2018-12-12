@@ -91,6 +91,7 @@ Ten ostatni parametr powoduje, że model dodawany jest do wszystkich elementów 
 g_model <- vgm(0.006, model = "Sph",
                range = 2000, nugget = 0.001)
 g <- gstat(g, model = g_model, fill.all = TRUE)
+g
 ```
 
 W przypadku semiwariogramów funkcja `fit.variogram()` służyła dopasowaniu parametrów modelu do semiwariogramu empirycznego. 
