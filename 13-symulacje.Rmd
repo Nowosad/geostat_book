@@ -62,7 +62,7 @@ sym_bezw1 <- krige(formula = z~1,
                                range = 100), 
                    newdata = siatka, 
                    beta = 1,
-                   nmax = 30, 
+                   nmax = 30,
                    locations = NULL, 
                    dummy = TRUE, 
                    nsim = 4)
@@ -131,6 +131,9 @@ vario <- variogram(temp_log~1, locations = punkty)
 model <- vgm(model = "Sph", nugget = 0.005)
 fitted <- fit.variogram(vario, model)
 plot(vario, model = fitted)
+```
+
+```{r sym_ok, cache=TRUE}
 sym_ok <- krige(temp_log~1, 
                 locations = punkty,
                 newdata = siatka, 
@@ -160,7 +163,6 @@ sym_sk <- krige(temp_log~1,
                 location = punkty, 
                 newdata = siatka, 
                 model = fitted, 
-                beta = 2.7, 
                 nsim = 100, 
                 nmax = 30)
 ```
@@ -210,13 +212,16 @@ summary(punkty$temp_ind)
 W tej metodzie kolejne etapy przypominają przeprowadzenie krigingu danych kodowanych. 
 Jedynie w funkcji `krige()` należy dodać argument mówiący o liczbie symulacji do przeprowadzenia (`nsim`).
 
-```{r sym_ind, cache=TRUE}
+```{r}
 vario_ind <- variogram(temp_ind~1, locations = punkty)
 # plot(vario_ind)
 fitted_ind <- fit.variogram(vario_ind,
                             vgm(model = "Sph", nugget = 0.3))
 fitted_ind
 plot(vario_ind, model = fitted_ind)
+```
+
+```{r sym_ind, cache=TRUE}
 sym_ind <- krige(temp_ind~1, 
                  locations = punkty, 
                  newdata = siatka, 
