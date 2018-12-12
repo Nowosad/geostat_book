@@ -97,11 +97,7 @@ spplot(kws4, "var1.pred")
 Ostatnim etapem jest połączenie cząstkowych wyników w jeden obiekt klasy `SpatialPixelsDataFrame`.
 
 ```{r}
-kws <- rbind(as.data.frame(kws1),
-             as.data.frame(kws2), 
-             as.data.frame(kws4))
-coordinates(kws) <- ~x + y
-kws <- as(kws, "SpatialPixelsDataFrame")
+kws <- rbind(kws1, kws2, kws4)
 ```
 
 Uzyskane w ten sposób wyniki znacząco różnią się od estymacji krigingem prostym czy zwykłym, wykazując odrębność zmienności w poszczególnych kategoriach pokrycia/użytkowania terenu.
