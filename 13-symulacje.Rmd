@@ -126,7 +126,7 @@ shapiro.test(punkty$temp_log)
 
 Dalsze etapy przypominają przeprowadzenie estymacji statystycznej, jedynym wyjątkiem jest dodanie argumentu mówiącego o liczbie symulacji do przeprowadzenia (`nsim` w funkcji `krige()`).
 
-```{r sym_ok, cache=TRUE}
+```{r}
 vario <- variogram(temp_log~1, locations = punkty)
 model <- vgm(model = "Sph", nugget = 0.005)
 fitted <- fit.variogram(vario, model)
