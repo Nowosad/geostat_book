@@ -228,7 +228,7 @@ plot(moja_siatka)
 
 ## Stworzenie estymacji
 
-Następnie nowoutworzona siatka może posłuzyć do stworzenia estymacji.
+Następnie nowo utworzona siatka może posłużyć do stworzenia estymacji.
 
 ```{r}
 moja_estymacja <- krige(tavg~coords.x1 + coords.x2, 
