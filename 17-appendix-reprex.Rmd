@@ -99,3 +99,4 @@ W efekcie otrzymujemy nie tylko kod użyty do obliczeń, ale wynikową grafikę.
 - [Magic reprex](https://www.njtierney.com/post/2017/01/11/magic-reprex/)
 - [reprex: help me help you!](https://speakerdeck.com/jennybc/reprex-help-me-help-you)
 - [Get help!](https://www.tidyverse.org/help/#reprex)
+

@@ -268,3 +268,4 @@ Jakie można zaobserwować podobieństwa a jakie różnice?
 Wykonaj estymację metodą krigingu danych kodowanych. 
 Następnie używając tego samego modelu, wykonaj cztery symulacje warunkowe (symulacje danych kodowanych).
 Jakie wartości progowe prawdobodobieństwa przypominają uzyskane symulacje?
+
