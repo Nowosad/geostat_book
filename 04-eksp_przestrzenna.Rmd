@@ -88,7 +88,7 @@ plot(strat)
 
 ### Typ próbowania | Preferencyjny
 
-W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbkowane niż inne.
+W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbowane niż inne.
 
 ```{r }
 set.seed(425)
