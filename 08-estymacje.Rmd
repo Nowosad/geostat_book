@@ -42,7 +42,7 @@ Istnieje szereg meteod krigingu, w tym:
 ### Kriging prosty (ang. *Simple kriging*)
 
 Kriging prosty zakłada, że średnia jest znana i stała na całym obszarze.
-W poniższym przykładzie po stworzeniu semiwariogramu empritycznego, dopasowano model semiwariogramu składający się z funkcji sferycznej o zasięgu 4000 metrów i wartości nuggetu równej 0,5.
+W poniższym przykładzie po stworzeniu semiwariogramu empirycznego, dopasowano model semiwariogramu składający się z funkcji sferycznej o zasięgu 4000 metrów i wartości nuggetu równej 0,5.
 
 ```{r }
 vario <- variogram(temp~1, locations = punkty)
