@@ -211,4 +211,5 @@ Porównaj graficznie uzyskane modele.
 4. Zbuduj ręczny model uzyskanego krossemiwariogramu.
 Następnie stwórz model automatyczny.
 Porównaj uzyskane wyniki.
-5. Stwórz estymację zmiennej `copper` w nowoutworzonej siatce korzystając z kokrigingu.
+5. Stwórz estymację zmiennej `copper` w nowo utworzonej siatce korzystając z kokrigingu.
+
