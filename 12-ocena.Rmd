@@ -378,14 +378,15 @@ krige.cv
 
 ## Zadania {#z12}
 
-1. Wydziel obiekt `punkty` w taki sposób aby 70% danych należało zbióru treningowy, a 30 % danych do zbioru testowego.
+1. Wydziel obiekt `punkty` w taki sposób aby 70% danych należało zbioru treningowy, a 30 % danych do zbioru testowego.
 Zwizualizuj oba nowe zbiory danych.
 2. Stwórz optymalne modele zmiennej `temp` ze zbioru treningowego używając krigingu zwykłego, kokrigingu oraz krigingu uniwersalnego.
 3. Wykonaj estymacje korzystając z powyższych modeli.
 Porównaj uzyskane estymacje korzystając ze statystyk jakości estymacji oraz wizualizacji jakości estymacji i używając zbioru testowego. 
 Który ze stworzonych modeli można uznać za najlepszy?
 Dlaczego?
-4. Porównaj uzyskane modele używając krosswalidacji. 
+4. Porównaj uzyskane modele używając kroswalidacji. 
 Jak wygląda rozkład reszt z uzyskanych estymacji?
 Który model można uznać za najlepszy oglądając rozkłady reszt?
-<!-- jedno zadanie użwajace wcześniej używanych technik estymacji -->
+<!-- jedno zadanie używające wcześniej używanych technik estymacji -->
+
