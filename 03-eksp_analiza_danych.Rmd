@@ -160,7 +160,7 @@ Wybór odpowiedniej metody porównania zmiennych zależy od szeregu cech, międz
 Kowariancja jest nieunormowaną miarą zależności liniowej pomiędzy dwiema zmiennymi. 
 Kowariancja dwóch zmiennych $x$ i $y$ pokazuje jak dwie zmienne są ze sobą liniowo powiązane.
 Dodatnia kowariancja wskazuje na pozytywną relację liniową pomiędzy zmiennymi, podczas gdy ujemna kowariancja świadczy o odwrotnej sytuacji.
-Jeżeli zmienne nie są ze sobą liniowo powiązane, wartość kowariacji jest bliska zeru. 
+Jeżeli zmienne nie są ze sobą liniowo powiązane, wartość kowariancji jest bliska zeru. 
 Inaczej mówiąc, kowariancja stanowi miarę wspólnej zmienności dwóch zmiennych.
 Wielkość samej kowariancji uzależniona jest od przyjętej skali zmiennej (jednostki).
 Inne wyniku uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wysokości terenu w metrach i temperatury w stopniach Celsjusza a inne dla wysokości terenu w metrach i temperatury w stopniach Fahrenheita. 
@@ -203,7 +203,7 @@ cor.test(punkty$temp, punkty$ndvi)
 ### Wykres pudełkowy
 
 Wykres pudełkowy obrazuje pięć podstawowych statystyk opisowych oraz wartości odstające. 
-Pudełko to zakres międzykwantylowy (IQR), a linie oznaczają najbardziej ekstremalne wartości, ale nie odstające.
+Pudełko to zakres międzykwartylowy (IQR), a linie oznaczają najbardziej ekstremalne wartości, ale nie odstające.
 Górna z nich to 1,5\*IQR ponad krawędź pudełka, dolna to 1,5\*IQR poniżej wartości dolnej krawędzi pudełka. 
 Linia środkowa to mediana.  
 
@@ -383,6 +383,6 @@ Czym charakteryzuje się ten rozkład?
 Czy jest ona istotna statystycznie?
 6. Zbuduj wykres pokazujący zmienność `ndvi` w zależności od klasy pokrycia terenu. 
 Czy istnieje istotna statystycznie różnica w wartościach `ndvi` względem klas pokrycia terenu?
-7. Wypróbuj różne metody tranformacji danych w celu redukcji skośności rozkładu zmiennej `ndvi`.
+7. Wypróbuj różne metody transformacji danych w celu redukcji skośności rozkładu zmiennej `ndvi`.
 Która metoda działa w tym przypadku najlepiej?
 8. Stwórz powtarzalny przykład (więcej informacji w appendiksie \@ref(reprex)) używając pakiet **reprex** w oparciu o kod stworzony do rozwiązania poprzedniego zadania.
