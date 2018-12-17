@@ -101,7 +101,7 @@ Istnieją trzy najczęściej spotykane metody modelowania geostatystycznego:
 
 - Ustawianie "ręczne" parametrów modelu, np. funkcja `vgm()` z pakietu **gstat**
 - Ustawianie "wizualne" parametrów modelu, np. funkcja `eyefit()` z pakietu **geoR**
-- Automatyczny wybór parametrów na podstawie różnych kryterów statystycznych, np. funkcja `fit.variogram()` z pakietu **gstat()**, `variofit()` z pakietu **geoR**, `autofitVariogram()` z pakietu **automap**
+- Automatyczny wybór parametrów na podstawie różnych kryteriów statystycznych, np. funkcja `fit.variogram()` z pakietu **gstat()**, `variofit()` z pakietu **geoR**, `autofitVariogram()` z pakietu **automap**
 
 Odpowiednie określenie modelu matematycznego często nie jest proste.
 W efekcie automatyczne metody nie zawsze są w stanie dać lepszy wynik od modelowania "ręcznego". 
