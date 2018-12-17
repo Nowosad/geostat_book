@@ -338,4 +338,4 @@ spplot(siatka_sp, "band3")
 
 1. Wczytaj dane z pliku `punkty_ndvi.csv` i przetwórz je do postaci obiektu przestrzennego `ndvi_p`.
 2. Stwórz mapę zmiennej `ndvi` z nowo utworzonego obiektu. (Dodatkowo: zapisz mapę do pliku graficznego `punkty_ndvi.png`).
-3. Zapisz obiekt `ndvi_p` do formatu GeoPackage oraz do formatu Esri Shapefile.
+3. Zapisz obiekt `ndvi_p` do formatu GeoPackage oraz do formatu ESRI Shapefile.
