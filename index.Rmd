@@ -41,10 +41,9 @@ Aktualna wersja skryptu znajduje się pod adresem https://bookdown.org/nowosad/G
 
 Zachęcam do zgłaszania wszelkich uwag, błędów, pomysłów oraz komentarzy na adres mailowy nowosad.jakub@gmail.com.
 
+## Wymagania wstępne {-}
 
-## Wymagania wstępne
-
-### Oprogramowanie
+### Oprogramowanie {-}
 
 Do odtworzenia przykładów użytych w poniższym skrypcie wystarczy podstawowa znajomość R. 
 Aby zainstalować R oraz RStudio można skorzystać z poniższych odnośników:
@@ -82,7 +81,7 @@ install.packages(pakiety)
 devtools::session_info(pakiety)
 ```
 
-### Dane
+### Dane {-}
 
 Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu `geostatbook` (dla kolejnych rozdziałów). 
 Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w skrypcie.
