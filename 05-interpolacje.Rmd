@@ -90,7 +90,7 @@ Mogą one powstać, np. w oparciu o wcześniej istniejące granice.
 Siatki nieregularne w R mogą być reprezentowane poprzez klasę `SpatialPixelsDataFrame`.
 
 W poniższym przypadku odczytywana jest granica badanego obszaru z pliku GeoPackage.
-Taki obiekt można np. stworzyć za pomocą oprogramowania gisowego takiego jak [QGIS](http://www.qgis.org/pl/site/).
+Taki obiekt można np. stworzyć za pomocą oprogramowania GISowego takiego jak [QGIS](http://www.qgis.org/pl/site/).
 Następnie tworzony jest nowy obiekt `nowa_siatka_n` poprzez wybranie tylko tych oczek siatki, które znajdują się wewnątrz zadanych granic.
 
 ```{r siatkan}
@@ -238,7 +238,7 @@ Do modeli statystycznych należą, między innymi:
 
 - Kriging
 - Modele regresyjne
-- Modele bayesowe
+- Modele bayesowskie
 - Modele hybrydowe
 
 W kolejnych rozdziałach można znaleźć omówienie kilku podstawowych typów pierwszej z tych metod - krigingu.
