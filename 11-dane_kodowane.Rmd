@@ -185,10 +185,16 @@ grid.arrange(p1i, p2i, p3i, ncol = 1)
 
 ## Zadania {#z9}
 
-1. Używając obiekt `punkty` stwórz nowe zmienne określające czy zmienna `ndvi` <!-- barren rock, sand, snow, water --><!-- sparse vegetation such as shrubs and grasslands or senescing crops --><!--  dense vegetation --> ma wartość:
-    * poniżej 0.1 
-    * pomiędzy 0.1 a 0.2 
-    * powyżej 0.2 
+Zadania w tym rozdziale są oparte o dane z obiektu `punkty_ndvi`.
+
+```{r}
+data(punkty_ndvi)
+```
+
+1. Używając obiektu `punkty_ndvi` stwórz nowe zmienne określające czy zmienna `ndvi` <!-- barren rock, sand, snow, water --><!-- sparse vegetation such as shrubs and grasslands or senescing crops --><!--  dense vegetation --> ma wartość:
+    * poniżej 0.3
+    * pomiędzy 0.3 a 0.5
+    * powyżej 0.5
 Poczytaj na temat tego wskaźnika. 
 Co mogą oznaczać powyższe przedziały?
 2. Korzystając z trzech powyższych przedziałów stwórz mapy prawdopodobieństwa.
