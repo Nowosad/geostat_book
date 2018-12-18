@@ -406,7 +406,7 @@ plot(vario_kier, vario_kier_fit2, as.table = TRUE)
 Przyjrzyj się danym z obiektu `punkty_pref`. Możesz go wczytać używając poniższego kodu:
 
 ```{r}
-data("punkty_pref")
+data(punkty_pref)
 ```
 
 1. Zbuduj modele semiwariogramu zmiennej `srtm` używając modelu sferycznego używając zarówno ręcznie ustalonych parametrów oraz funkcji `fit.variogram()`.

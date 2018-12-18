@@ -209,7 +209,7 @@ Zadania w tym rozdziale są oparte o dane z obiektu `punkty_pref`.
 Możesz go wczytać używając poniższego kodu:
 
 ```{r}
-data("punkty_pref")
+data(punkty_pref)
 ```
 
 Na jego podstawie stwórz trzy obiekty - `punkty_pref1` zawierający wszystkie punkty, `punkty_pref2` zawierający losowe 100 punktów, oraz `punkty_pref3` zawierający losowe 30 punktów.

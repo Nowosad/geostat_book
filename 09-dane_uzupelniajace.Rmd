@@ -243,7 +243,7 @@ grid.arrange(p1, p2, ncol = 1)
 Zadania w tym rozdziale są oparte o dane z obiektu `punkty`.
 
 ```{r}
-data("punkty")
+data(punkty)
 ```
 
 1. Używając krigingu stratyfikowanego, stwórz optymalne modele zmiennej `ndvi` dla trzech typów pokrycia terenu (zmienna `clc`). Bazując na stworzonych modelach, stwórz estymacje zmiennej `ndvi` dla trzech typów pokrycia terenu.
