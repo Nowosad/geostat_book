@@ -12,7 +12,7 @@ geometry: "top=1.6cm, bottom=2cm, left=2cm, right=2cm"
 monofont: "Source Code Pro"
 monofontoptions: "Scale=0.6"
 graphics: yes
-description: "Introduction to geostatistics with R (in Polish)."
+description: "Introduction to geostatistics with R (in Polish). Skrypt ma na celu wprowadzenie do analiz przestrzennych (GIS) używająć języka programowania R, a następnie zastosowanie uzyskanej wiedzy do wykonania estymacji oraz symulacji geostatystycznych."
 url: 'https\://bookdown.org/nowosad/Geostatystyka/'
 github-repo: "nowosad/geostat_book"
 cover-image: "Rfigs/book_cover2.png"
