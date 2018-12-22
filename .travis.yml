@@ -1,5 +1,6 @@
 language: r
 cache: packages
+latex: false
 dist: trusty
 sudo: required
 before_install:
@@ -10,6 +11,8 @@ before_install:
 
 install:
   - R -e "install.packages('devtools')"
+  - R -e "install.packages('tinytex')"
+  - R -e "tinytex::install_tinytex()"
   - R -e "devtools::install_github('nowosad/geostatbook')"
 
 script:
