@@ -28,5 +28,5 @@ bookdown::pdf_book:
   toc_depth: 3
   toc_unnumbered: no
   toc_appendix: yes
-quote_footer: ["\\VA{", "}{}"]
+  quote_footer: ["\\VA{", "}{}"]
 bookdown::epub_book: default
