@@ -2,15 +2,16 @@
 title: "Geostatystyka w R"
 author: "Jakub Nowosad"
 date: "`r Sys.Date()`"
-documentclass: book
 site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-classoption: a4paper
-fontsize: 12pt
+documentclass: scrbook
+classoption: "paper=6in:9in,pagesize=pdftex,headinclude=on,footinclude=on,10pt"
+geometry: "top=1.6cm, bottom=2cm, left=2cm, right=2cm"
 monofont: "Source Code Pro"
-monofontoptions: "Scale=0.7"
+monofontoptions: "Scale=0.6"
+graphics: yes
 description: "Introduction to geostatistics with R (in Polish)."
 url: 'https\://bookdown.org/nowosad/Geostatystyka/'
 github-repo: "nowosad/geostat_book"
@@ -19,11 +20,12 @@ cover-image: "Rfigs/book_cover2.png"
 
 ```{r, echo=FALSE}
 is_online = curl::has_internet()
+is_html = knitr::is_html_output()
 ```
 
-`r if (knitr:::is_html_output()) '# O skrypcie {-}'`
+# O skrypcie {-}
 
-```{r fig.align='center', eval=is_online, echo=FALSE, out.width='30%'}
+```{r fig.align='center', eval=is_html, echo=FALSE, out.width='30%'}
 knitr::include_graphics("Rfigs/book_cover2.png", dpi = NA)
 ```
 
@@ -38,6 +40,11 @@ Appendiks \@ref(przyklad) pokazuje uproszczony przykład analizy geostatystyczne
 Wszystkie zaprezentowane metody i analizy zawierają również kod w języku R.
 Skrypt został stworzony w R [@R-base] z wykorzystaniem pakietów `bookdown` [@R-bookdown], `rmarkdown` [@R-rmarkdown], `knitr` [@R-knitr] oraz programu [Pandoc](http://pandoc.org/). 
 Aktualna wersja skryptu znajduje się pod adresem https://bookdown.org/nowosad/Geostatystyka/. 
+
+Jeżeli używasz skryptu, zacytuj go jako:
+
+- Nowosad, J., (2019). Geostatystyka w R. Online:
+https://bookdown.org/nowosad/Geostatystyka/
 
 Zachęcam do zgłaszania wszelkich uwag, błędów, pomysłów oraz komentarzy na adres mailowy nowosad.jakub@gmail.com.
 
@@ -96,7 +103,6 @@ devtools::install_github("nowosad/geostatbook")
 ```
 
 Aby ułatwić korzystanie ze skryptu, rozdziały od \@ref(eksploracja-analiza-danych-nieprzestrzennych) do \@ref(symulacje) rozpoczynają się od wczytania wymaganych pakietów oraz zbiorów danych.
-
 
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
