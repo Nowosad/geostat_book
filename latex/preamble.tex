@@ -4,3 +4,14 @@
 \usepackage{amsmath} % if desired
 \usepackage{unicode-math}
 \setmathfont{latinmodern-math.otf}
+
+% creates links in pdf
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+% Place links in parens
+\renewcommand{\href}[2]{#2 (\url{#1})}
+% Use auto ref for internal links
+\let\oldhyperlink=\hyperlink
+\renewcommand{\hyperlink}[2]{\autoref{#1}}
+\let\oldhref\href
+\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
