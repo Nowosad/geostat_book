@@ -159,7 +159,8 @@ Do tego przykładu zostały stworzone dwa modele semiwariogramu.
 Pierwszy z nich używa tylko zmiennej `tavg` oraz modelu ręcznego o wybranych parametrach.
 
 ```{r}
-moj_semiwar = variogram(tavg~1, moje_punkty)
+moj_semiwar = variogram(tavg~1, 
+                        locations = moje_punkty)
 plot(moj_semiwar)
 ```
 
@@ -174,7 +175,8 @@ plot(moj_semiwar, moj_model)
 Drugi model, oprócz zmiennej `tavg`, używa też wartości współrzędnych oraz modelu o parametrach zmodyfikowanych przez funkcję `fit.variogram()`.
 
 ```{r}
-moj_semiwar2 <- variogram(tavg~coords.x1 + coords.x2, locations = moje_punkty)
+moj_semiwar2 <- variogram(tavg~coords.x1 + coords.x2,
+                          locations = moje_punkty)
 plot(moj_semiwar2)
 ```
 

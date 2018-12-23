@@ -18,11 +18,12 @@ par(mar = c(rep(0, 4)))
 W wielu przypadkach, oprócz konkretnych pomiarów, istnieje również informacja na temat zmienności innych cech na analizowanym obszarze. 
 W sytuacji, gdy dodatkowe zmienne są skorelowane ze zmienną analizowaną można wykorzystać jedną z metod krigingu wykorzystującą dane uzupełniające, tj. kriging stratyfikowany, prosty kriging ze zmiennymi średnimi lokalnymi, czy kriging uniwersalny.
 
-```{r, echo=FALSE, fig.asp=0.2}
+```{r, echo=FALSE, fig.asp=0.25}
 library(gridExtra)
-ip1 <- spplot(siatka["clc"], main = "clc")
-ip2 <- spplot(siatka["srtm"], main = "srtm")
-ip3 <- spplot(siatka["ndvi"], main = "ndvi")
+siatka$clc <- as.factor(siatka$clc)
+ip1 <- spplot(siatka["clc"], main = "clc", colorkey = list(space = "bottom"))
+ip2 <- spplot(siatka["srtm"], main = "srtm", colorkey = list(space = "bottom"))
+ip3 <- spplot(siatka["ndvi"], main = "ndvi", colorkey = list(space = "bottom"))
 grid.arrange(ip1, ip2, ip3, ncol = 3)
 ```
 

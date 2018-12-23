@@ -156,7 +156,9 @@ fitted_ind16 <- fit.variogram(vario_ind16,
 vario_ind12 <- variogram(I(temp < 12)~1, locations = punkty)
 fitted_ind12 <- fit.variogram(vario_ind12, 
                               vgm("Sph", nugget = 0.03))
+```
 
+```{r, message=FALSE}
 ik20 <- krige(I(temp < 20)~1,
               locations = punkty,
               newdata = siatka,

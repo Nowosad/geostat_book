@@ -4,24 +4,24 @@
 
 ## Podstawy R
 
-- [An Introduction to R](http://cran.r-project.org/doc/manuals/R-intro.pdf) - http://cran.r-project.org/doc/manuals/R-intro.pdf - oficjalne wprowadzenie do R
-- [Przewodnik po pakiecie R](http://www.biecek.pl/R/) - http://www.biecek.pl/R/
-- [Programowanie w języku R](http://rksiazka.rexamine.com/) - http://rksiazka.rexamine.com/
-- [Hands-On Programming with R](https://rstudio-education.github.io/hopr/) - https://rstudio-education.github.io/hopr/
-- [R for Data Science](http://r4ds.had.co.nz/) - http://r4ds.had.co.nz/ - i jej polskie tłumaczenie [Język R. Kompletny zestaw narzędzi dla analityków danych](https://helion.pl/ksiazki/jezyk-r-kompletny-zestaw-narzedzi-dla-analitykow-danych-hadley-wickham-garrett-grolemund,jezrko.htm#format/b) - https://helion.pl/ksiazki/jezyk-r-kompletny-zestaw-narzedzi-dla-analitykow-danych-hadley-wickham-garrett-grolemund,jezrko.htm#format/b
+- [An Introduction to R](http://cran.r-project.org/doc/manuals/R-intro.pdf) - oficjalne wprowadzenie do R
+- [Przewodnik po pakiecie R](http://www.biecek.pl/R/)
+- [Programowanie w języku R](http://rksiazka.rexamine.com/)
+- [Hands-On Programming with R](https://rstudio-education.github.io/hopr/)
+- [R for Data Science](http://r4ds.had.co.nz/) i jej polskie tłumaczenie [Język R. Kompletny zestaw narzędzi dla analityków danych](https://helion.pl/ksiazki/jezyk-r-kompletny-zestaw-narzedzi-dla-analitykow-danych-hadley-wickham-garrett-grolemund,jezrko.htm#format/b)
 
 ## Analizy przestrzenne w R
 
-- [Geocomputation with R](http://robinlovelace.net/geocompr/) - http://robinlovelace.net/geocompr/
-- [Applied Spatial Dala Analysis with R](http://www.asdar-book.org/) - http://www.asdar-book.org/
-- [CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html) - https://cran.r-project.org/web/views/Spatial.html
+- [Geocomputation with R](http://robinlovelace.net/geocompr/)
+- [Applied Spatial Dala Analysis with R](http://www.asdar-book.org/)
+- [CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html)
 
 ## Geostatystyka
 
-- [Praktyczny poradnik - jak szybko zrozumieć i wykorzystać geostatystykę w pracy badawczej](http://www.geoinfo.amu.edu.pl/staff/astach/www_geostat/programy/A_Stach_%20poradnik_geostatystyki.pdf) - http://www.geoinfo.amu.edu.pl/staff/astach/www_geostat/programy/A_Stach_%20poradnik_geostatystyki.pdf
-- [A Practical Guide to Geostatistical Mapping](http://spatial-analyst.net/book/system/files/Hengl_2009_GEOSTATe2c1w.pdf) - http://spatial-analyst.net/book/system/files/Hengl_2009_GEOSTATe2c1w.pdf
-- [gstat user's manual](http://www.gstat.org/gstat.pdf) - http://www.gstat.org/gstat.pdf
-- [Applied Geostatistics](https://books.google.pl/books?id=vC2dcXFLI3YC) - https://books.google.pl/books?id=vC2dcXFLI3YC
-- [Statistics for spatial data](https://books.google.pl/books?id=4SdRAAAAMAAJ) - https://books.google.pl/books?id=4SdRAAAAMAAJ
-- [Geostatistics for Natural Resources Evaluation](http://www.oupcanada.com/catalog/9780195115383.html) - http://www.oupcanada.com/catalog/9780195115383.html
-- [Geostatistics for Environmental Scientists](http://eu.wiley.com/WileyCDA/WileyTitle/productCd-0470028580.html) - http://eu.wiley.com/WileyCDA/WileyTitle/productCd-0470028580.html
+- [Praktyczny poradnik - jak szybko zrozumieć i wykorzystać geostatystykę w pracy badawczej](http://www.geoinfo.amu.edu.pl/staff/astach/www_geostat/programy/A_Stach_%20poradnik_geostatystyki.pdf)
+- [A Practical Guide to Geostatistical Mapping](http://spatial-analyst.net/book/system/files/Hengl_2009_GEOSTATe2c1w.pdf)
+- [gstat user's manual](http://www.gstat.org/gstat.pdf)
+- [Applied Geostatistics](https://books.google.pl/books?id=vC2dcXFLI3YC)
+- [Statistics for spatial data](https://books.google.pl/books?id=4SdRAAAAMAAJ)
+- [Geostatistics for Natural Resources Evaluation](http://www.oupcanada.com/catalog/9780195115383.html)
+- [Geostatistics for Environmental Scientists](http://eu.wiley.com/WileyCDA/WileyTitle/productCd-0470028580.html)

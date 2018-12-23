@@ -240,7 +240,7 @@ Inaczej mówiąc, dla kolejnych odstępów (lagów) wartość semiwariancji jest
 
 $$ \hat{\gamma}(h) = \frac{1}{2N(h)}\sum_{i=1}^{N(h)}(z(s_i) - z(s_i+h))^2 $$
 
-,gdzie $N(h)$ oznacza liczbę par punktów w odstępie $h$.
+, gdzie $N(h)$ oznacza liczbę par punktów w odstępie $h$.
 
 W oparciu o semiwariogram empiryczny (czyli oparty na danych) możemy następnie dopasować do niego model/e.
 
@@ -390,7 +390,8 @@ Warto w tym wypadku użyć dodatkowego argumentu `threshold`, który powoduje, �
 ```{r }
 vario_map <- variogram(temp~1, locations = punkty, 
                        cutoff = 4000, width = 400, map = TRUE)
-plot(vario_map, threshold = 30, col.regions = topo.colors(n = 40)) # co najmniej 30 par punktów
+plot(vario_map, threshold = 30,
+     col.regions = topo.colors(n = 40)) # co najmniej 30 par punktów
 ```
 
 <!-- Mapie semiwariogramu można również się przyjrzeć interaktywnie używając funkcję `plot3D()` z pakietu **rasterVis**. -->
