@@ -1,7 +1,6 @@
 .Rproj.user
 .Rhistory
 .RData
-release
-.maker
-.remake
-data-raw
+# bookdown files (they should be in the gh-pages branch)
+_book/
+_bookdown_files/
