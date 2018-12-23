@@ -46,7 +46,7 @@ Jeżeli używasz skryptu, zacytuj go jako:
 - Nowosad, J., (2019). Geostatystyka w R. Online:
 https://bookdown.org/nowosad/Geostatystyka/
 
-Zachęcam do zgłaszania wszelkich uwag, błędów, pomysłów oraz komentarzy na adres mailowy nowosad.jakub@gmail.com.
+Zachęcam do zgłaszania wszelkich uwag, błędów, pomysłów oraz komentarzy na stronie https://github.com/Nowosad/geostat_book/issues.
 
 ## Wymagania wstępne {-}
 
