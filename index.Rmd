@@ -58,17 +58,17 @@ Aby zainstalować R oraz RStudio można skorzystać z poniższych odnośników:
 - [R](https://www.r-project.org/) - https://cloud.r-project.org/
 - [RStudio](https://www.rstudio.com/) - https://www.rstudio.com/products/rstudio/download/
 
-Dodatkowo, użyte zostały poniższe pakiety R [@R-caret;@R-corrplot;@R-dismo;@R-fields;@R-ggplot2;@R-gridExtra;@R-gstat;@R-mapview;@R-pgirmess;@R-rgdal;@R-rgeos;@R-sp].
+Dodatkowo, użyte zostały poniższe pakiety R [@R-caret;@R-dismo;@R-fields;@R-ggplot2;@R-gridExtra;@R-gstat;@R-mapview;@R-pgirmess;@R-rgdal;@R-rgeos;@R-sp].
 
 ```{r pakietsy}
 pakiety <- c(
-  "caret", "corrplot", "dismo", "fields", "ggplot2", "gridExtra",
+  "caret", "dismo", "fields", "ggplot2", "gridExtra",
   "gstat", "mapview", "pgirmess", "rgdal", "rgeos", "sp"
 )
 ```
 
 ```{r pakiertbib, echo=FALSE}
-knitr::write_bib(c(pakiety, "bookdown", "knitr", "rmarkdown", 
+knitr::write_bib(c(pakiety[-1], "bookdown", "knitr", "rmarkdown", 
                    "geostatbook", "base"), "packages.bib", width = 60)
 ```
 
