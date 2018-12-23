@@ -15,3 +15,6 @@
 \renewcommand{\hyperlink}[2]{\autoref{#1}}
 \let\oldhref\href
 \renewcommand{\href}[2]{#2\footnote{\url{#1}}}
+
+% adds bibliography to the toc
+\usepackage[nottoc,notlot,notlof]{tocbibind}
