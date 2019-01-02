@@ -23,6 +23,13 @@ par(mar = c(rep(0, 4)))
   przetwarzanie (postprocesing) wyników symulacji
 -->  
 
+```{r, echo=TRUE, eval=TRUE}
+library(sf)
+library(stars)
+punkty = st_as_sf(punkty)
+siatka = st_as_stars(siatka)
+```
+
 ## Symulacje geostatystyczne
 
 Kriging daje optymalne estymacje, czyli wyznacza najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji. 
@@ -66,8 +73,10 @@ sym_bezw1 <- krige(formula = z~1,
                    locations = NULL, 
                    dummy = TRUE, 
                    nsim = 4)
-spplot(sym_bezw1, main = "Przestrzennie skorelowana powierzchnia
-       \nśrednia=1,\nsill=0.025, zasięg=100, model wykładniczy")
+
+# plot(sym_bezw1[][1:3])
+# spplot(as(sym_bezw1, "Spatial"), main = "Przestrzennie skorelowana powierzchnia
+#        \nśrednia=1,\nsill=0.025, zasięg=100, model wykładniczy")
 ```
 
 ```{r sym_bezw2, cache=TRUE}
@@ -79,9 +88,9 @@ sym_bezw2 <- krige(formula = z~1,
                    locations = NULL, 
                    dummy = TRUE, 
                    nsim = 4)
-spplot(sym_bezw2, main = "Przestrzennie skorelowana powierzchnia
-       \nśrednia=1,\nsill=0.025, zasięg=1500, model
-       wykładniczy")
+# spplot(sym_bezw2, main = "Przestrzennie skorelowana powierzchnia
+#        \nśrednia=1,\nsill=0.025, zasięg=1500, model
+#        wykładniczy")
 ```
 
 <!--
@@ -110,8 +119,8 @@ Można to sprawdzić poprzez wizualizacje danych (histogram, wykres kwantyl-kwan
 Zmienna `temp` nie ma rozkładu zbliżonego do normalnego.
 
 ```{r}
-ggplot(punkty@data, aes(temp)) + geom_histogram()
-ggplot(punkty@data, aes(sample = temp)) + stat_qq()
+ggplot(punkty, aes(temp)) + geom_histogram()
+ggplot(punkty, aes(sample = temp)) + stat_qq()
 shapiro.test(punkty$temp)
 ```
 
@@ -119,8 +128,8 @@ Na potrzeby symulacji zmienna `temp` została zlogarytmizowna.
 
 ```{r}
 punkty$temp_log <- log(punkty$temp)
-ggplot(punkty@data, aes(temp_log)) + geom_histogram()
-ggplot(punkty@data, aes(sample = temp_log)) + stat_qq()
+ggplot(punkty, aes(temp_log)) + geom_histogram()
+ggplot(punkty, aes(sample = temp_log)) + stat_qq()
 shapiro.test(punkty$temp_log)
 ```
 
@@ -143,16 +152,16 @@ sym_ok <- krige(temp_log~1,
 ```
 
 ```{r}
-spplot(sym_ok)
+plot(sym_ok)
 ```
 
 Wyniki symulacji można przetworzyć do pierwotnej jednostki z użyciem funkcji wykładniczej (`exp`).
 
 ```{r}
-summary(sym_ok)
-sym_ok@data <- as.data.frame(apply(sym_ok@data, 2, exp))
-summary(sym_ok)
-spplot(sym_ok)
+# sym_ok
+# sym_ok@data <- as.data.frame(apply(sym_ok@data, 2, exp))
+# sym_ok
+# plot(sym_ok)
 ```
 
 Symulacje geostatystyczne pozwalają również na przedstawianie niepewności interpolacji. 
@@ -175,9 +184,9 @@ W efekcie tej operacji liczba kolumn nie ulega zmianie.
 
 ```{r unitsexp}
 # przywrócenie oryginalnej jednostki
-sym_sk@data <- data.frame(apply(sym_sk@data, 
-                                MARGIN = 2,
-                                FUN = exp))
+# sym_sk@data <- data.frame(apply(sym_sk@data, 
+#                                 MARGIN = 2,
+#                                 FUN = exp))
 ```
 
 Wyliczenie odchylenia standardowego odbywa się poprzez argumenty `MARGIN = 1` oraz `FUN = sd`.
@@ -186,16 +195,16 @@ W efekcie tej operacji otrzymuje się tylko jedną kolumnę.
 
 ```{r unitsexp2}
 # przywrócenie wyliczenie odchylenia standardowego
-sym_sk@data <- data.frame(apply(sym_sk@data, 
-                                MARGIN = 1, 
-                                FUN = sd))
+# sym_sk@data <- data.frame(apply(sym_sk@data, 
+#                                 MARGIN = 1, 
+#                                 FUN = sd))
 ```
 
 Finalnie otrzymujemy mapę odchylenia standardowego symulowanych wartości.
 Można na niej odczytać obszary o najpewniejszych (najmniej zmiennych) wartościach (niebieski kolor) oraz obszary o największej zmienności cechy (kolor żółty).
 
 ```{r}
-spplot(sym_sk)
+plot(sym_sk)
 ```
 
 ## Sekwencyjna symulacja danych kodowanych
@@ -235,7 +244,7 @@ Wynik symulacji danych kodowanych znacząco różni się od wyniku krigingu dany
 W przeciwieństwie do tej drugiej metody, w rezultacie symulacji nie otrzymujemy prawdopodobieństwa zajścia danej klasy, ale konkretne wartości `1` lub `0`.
 
 ```{r}
-spplot(sym_ind, main = "Symulacje warunkowe")
+plot(sym_ind, main = "Symulacje warunkowe")
 ```
 
 <!--
