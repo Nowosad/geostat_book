@@ -17,6 +17,13 @@ data(siatka)
 par(mar = c(rep(0, 4)))
 ```
 
+```{r, echo=TRUE, eval=TRUE}
+library(sf)
+library(stars)
+punkty = st_as_sf(punkty)
+siatka = st_as_stars(siatka)
+```
+
 ## Wizualizacja jakości estymacji
 
 ### Mapa
@@ -43,7 +50,7 @@ test_sk$blad_estymacji_sk <- blad_estymacji_sk
 test_sk$true <- test$temp
 
 cuts <- c(-5, -3, -1, 1, 3, 5)
-spplot(test_sk, "blad_estymacji_sk", main = "Błąd estymacji", cuts = cuts)
+plot(test_sk["blad_estymacji_sk"], main = "Błąd estymacji", breaks = cuts)
 ```
 
 ### Histogram
@@ -51,7 +58,7 @@ spplot(test_sk, "blad_estymacji_sk", main = "Błąd estymacji", cuts = cuts)
 Błąd estymacji można również przedstawić na wykresach, między innymi, na histogramie.
 
 ```{r hist, echo=FALSE}
-ggplot(as.data.frame(test_sk), aes(blad_estymacji_sk)) +
+ggplot(test_sk, aes(blad_estymacji_sk)) +
     geom_histogram() + xlab("Błąd estymacji") + 
     ylab("Liczebność")
 ```
@@ -61,7 +68,7 @@ ggplot(as.data.frame(test_sk), aes(blad_estymacji_sk)) +
 Do porównania pomiędzy wartością estymowaną a obserwowaną może również posłużyć wykres rozrzutu.
 
 ```{r point, echo=FALSE}
-ggplot(as.data.frame(test_sk), aes(var1.pred, true)) +
+ggplot(test_sk, aes(var1.pred, true)) +
     geom_point() +
     xlab("Estymacja") +
     ylab("Obserwacja")
@@ -208,11 +215,11 @@ R2
 
 ```{r}
 test_sk$blad_estymacji_sk <- blad_estymacji_sk
-spplot(test_sk, "blad_estymacji_sk", cuts = c(-5, -3, -1, 1, 3, 5))
+plot(test_sk["blad_estymacji_sk"], breaks = c(-5, -3, -1, 1, 3, 5))
 ```
 
 ```{r}
-ggplot(as.data.frame(test_sk), aes(blad_estymacji_sk)) +
+ggplot(test_sk, aes(blad_estymacji_sk)) +
     geom_histogram() + 
     xlab("Błąd estymacji") + 
     ylab("Liczebność")
@@ -220,7 +227,7 @@ ggplot(as.data.frame(test_sk), aes(blad_estymacji_sk)) +
 
 ```{r}
 test_sk$true <- test$temp
-ggplot(as.data.frame(test_sk), aes(var1.pred, true)) +
+ggplot(test_sk, aes(var1.pred, true)) +
     geom_point() +
     xlab("Estymacja") +
     ylab("Obserwacja")
@@ -234,7 +241,7 @@ test_sk <- krige(temp~1,
                  newdata = siatka,
                  model = fitted,
                  beta = 16)
-spplot(test_sk, "var1.pred")
+plot(test_sk["var1.pred"])
 ```
 
 ### Kroswalidacja
@@ -295,14 +302,14 @@ spplot(cv_sk, "residual", cuts = c(-10, -5, -3, -1, 1, 3, 5, 10))
 ```
 
 ```{r}
-ggplot(as.data.frame(cv_sk), aes(residual)) +
+ggplot(cv_sk, aes(residual)) +
     geom_histogram() + 
     xlab("Błąd estymacji") + 
     ylab("Liczebność")
 ```
 
 ```{r}
-ggplot(as.data.frame(cv_sk), aes(var1.pred, observed)) +
+ggplot(cv_sk, aes(var1.pred, observed)) +
     geom_point() +
     xlab("Estymacja") +
     ylab("Obserwacja")
@@ -316,7 +323,7 @@ cv_skk <- krige(temp~1,
                 newdata = siatka, 
                 model = fitted, 
                 beta = 16)
-spplot(cv_skk, "var1.pred")
+plot(cv_skk["var1.pred"])
 ```
 
 <!-- 
