@@ -15,6 +15,14 @@ data(siatka)
 par(mar = c(rep(0, 4)))
 ```
 
+```{r, echo=FALSE, eval=FALSE}
+library(sf)
+library(stars)
+punkty = st_as_sf(punkty)
+granica = st_as_sf(granica)
+siatka = st_as_stars(siatka)
+```
+
 W wielu przypadkach, oprócz konkretnych pomiarów, istnieje również informacja na temat zmienności innych cech na analizowanym obszarze. 
 W sytuacji, gdy dodatkowe zmienne są skorelowane ze zmienną analizowaną można wykorzystać jedną z metod krigingu wykorzystującą dane uzupełniające, tj. kriging stratyfikowany, prosty kriging ze zmiennymi średnimi lokalnymi, czy kriging uniwersalny.
 
@@ -71,7 +79,7 @@ Należy jedynie wcześniej zadbać, by w siatce nie było elementów `NA` dotycz
 W przykładzie tworzona jest nowa siatka (`siatka2`) nie zawierająca braków wartości dla zmiennej `clc`.
 
 ```{r, message=FALSE}
-siatka2 <- siatka[!is.na(siatka$clc), ]
+siatka2 <- dplyr::filter(siatka, clc == 1)
 kws1 <- krige(temp~1, 
               location = punkty[punkty$clc == 1, ], 
               newdata = siatka2[na.omit(siatka2$clc == 1), ], 

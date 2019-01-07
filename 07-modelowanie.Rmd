@@ -14,6 +14,14 @@ data(punkty)
 par(mar = c(rep(0, 4)))
 ```
 
+```{r, echo=FALSE, eval=FALSE}
+library(sf)
+library(stars)
+punkty = st_as_sf(punkty)
+granica = st_as_sf(granica)
+siatka = st_as_stars(siatka)
+```
+
 ## Modelowanie matematycznie autokorelacji przestrzennej
 
 ### Modelowanie struktury przestrzennej
@@ -28,6 +36,8 @@ Dodatkowo, matematycznie modelowanie wygładza chaotyczne fluktuacje danych empi
 
 ```{r, echo=FALSE}
 library(gridExtra)
+punkty$x = st_coordinates(punkty)[,1]
+punkty$y = st_coordinates(punkty)[,2]
 vario_kzt <- variogram(temp~x + y, locations = punkty)
 model_kzt <- vgm(model = "Sph", nugget = 1)
 fitted_kzt <- fit.variogram(vario_kzt, model_kzt)
