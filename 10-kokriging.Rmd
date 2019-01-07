@@ -16,6 +16,14 @@ data(siatka)
 par(mar = c(rep(0, 4)))
 ```
 
+```{r, echo=FALSE, eval=FALSE}
+library(sf)
+library(stars)
+punkty = st_as_sf(punkty)
+punkty_ndvi = st_as_sf(punkty_ndvi)
+siatka = st_as_stars(siatka)
+```
+
 ## Kokriging 
 
 ### Kokriging (ang. *co-kriging*)
@@ -51,11 +59,11 @@ Wyliczając krossemiwariogram otrzymujemy empiryczne semiwariogramy dla dwóch b
 W poniższym przykładzie istnieją dwie zmienne, `savi` ze zbioru `punkty` pomierzona w 250 lokalizacjach oraz `ndvi` ze zbioru `punkty_ndvi` pomierzona w 997 punktach.
 
 ```{r}
-spplot(punkty, "savi")
+plot(punkty["savi"])
 ```
 
 ```{r}
-spplot(punkty_ndvi, "ndvi")
+plot(punkty_ndvi["ndvi"])
 ```
 
 Tworzenie krossemiwariogramów odbywa się z użyciem funkcji `gstat()`. Na początku definiujemy pierwszy obiekt `g`. 
