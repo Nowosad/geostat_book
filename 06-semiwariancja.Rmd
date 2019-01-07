@@ -228,7 +228,7 @@ knitr::include_graphics("figs/cloud_sel.png")
 Następnie można wyświetlić wybrane pary punktów z użyciem funkcji `plot()`.
 
 ```{r chmurkowanie2, eval=FALSE}
-plot(vario_cloud_sel, punkty, "Spatial")
+plot(vario_cloud_sel, punkty)
 ```
 
 ```{r, echo=FALSE, fig.width=6}
