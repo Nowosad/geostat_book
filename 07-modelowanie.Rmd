@@ -18,8 +18,6 @@ par(mar = c(rep(0, 4)))
 library(sf)
 library(stars)
 punkty = st_as_sf(punkty)
-granica = st_as_sf(granica)
-siatka = st_as_stars(siatka)
 ```
 
 ## Modelowanie matematycznie autokorelacji przestrzennej

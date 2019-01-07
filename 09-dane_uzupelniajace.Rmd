@@ -19,7 +19,6 @@ par(mar = c(rep(0, 4)))
 library(sf)
 library(stars)
 punkty = st_as_sf(punkty)
-granica = st_as_sf(granica)
 siatka = st_as_stars(siatka)
 ```
 
@@ -48,7 +47,7 @@ Przyjmuje ono jedno z trzech wartości. `1` oznacza obszary rolnicze, `2` oznacz
 
 ```{r }
 siatka$clc <- as.factor(siatka$clc)
-spplot(siatka, "clc")
+plot(siatka["clc"])
 ```
 
 Kriging stratyfikowany polega na niezależnym tworzeniu i modelowaniu semiwariogramów dla każdej z kategorii.
