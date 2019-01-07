@@ -15,6 +15,13 @@ data(granica)
 par(mar = c(rep(0, 4)))
 ```
 
+```{r, echo=FALSE, eval=FALSE}
+library(sf)
+library(stars)
+punkty = st_as_sf(punkty)
+granica = st_as_sf(granica)
+```
+
 ## Mapy 
 
 ### Podstawowe terminy | Kontekst przestrzenny
@@ -39,8 +46,8 @@ Eksploracyjna analiza danych przestrzennych w przypadku danych punktowych ma na 
 Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()`.
 
 ```{r}
-plot(granica)
-plot(punkty, add = TRUE)
+plot(st_geometry(granica))
+plot(st_geometry(punkty), add = TRUE)
 ```
 
 ## Próbkowanie
@@ -61,7 +68,7 @@ W regularnym typie próbkowania, kolejne punkty rozłożone są równomiernie na
 
 ```{r }
 set.seed(225)
-regularny <- spsample(granica, 150, type = "regular")
+regularny <- st_sample(granica, 150, type = "regular")
 plot(regularny)
 ```
 
@@ -72,7 +79,7 @@ Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych.
 
 ```{r }
 set.seed(301)
-losowy <- spsample(granica, 150, type = "random")
+losowy <- st_sample(granica, 150, type = "random")
 plot(losowy)
 ```
 
@@ -82,7 +89,7 @@ Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obsza
 
 ```{r }
 set.seed(125)
-strat <- spsample(granica, 150, type = "stratified")
+strat <- st_sample(granica, 150, type = "stratified")
 plot(strat)
 ```
 
@@ -92,7 +99,7 @@ W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (
 
 ```{r }
 set.seed(425)
-pref <- spsample(granica, 150, type = "clustered",
+pref <- st_sample(granica, 150, type = "clustered",
                  nclusters = 30)
 plot(pref)
 ```
@@ -106,7 +113,8 @@ Przyjrzenie się wartościom analizowanej cechy można wykonać z użyciem funkc
 Na poniższym przykładzie wyświetlona jest zmienna `temp` oznaczająca średnią temperaturę dobową.
 
 ```{r }
-spplot(punkty, "temp", sp.layout = granica)
+plot(punkty["temp"], reset = FALSE)
+plot(st_geometry(granica), add = TRUE)
 ```
 
 Dodatkowo można wykorzystać pakiet **mapview** do interaktywnego określania wartości oraz numeru punktu (numer wiersza w tabeli atrybutów).
