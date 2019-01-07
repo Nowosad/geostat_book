@@ -11,6 +11,13 @@ data(punkty)
 data(granica)
 ```
 
+```{r, echo=FALSE, eval=FALSE}
+library(sf)
+library(stars)
+punkty = st_as_sf(punkty)
+granica = st_as_sf(granica)
+```
+
 ## Cele eksploracyjnej analizy danych
 
 Zazwyczaj przed przystąpieniem do analiz (geo-)statystycznych koniecznie jest wykonanie eksploracyjnej analizy danych nieprzestrzennych. 
@@ -28,13 +35,7 @@ Nie istnieje jedyna, optymalna ścieżka eksploracji danych.
 Proces ten różni się w zależności od posiadanego zbioru danych, jak i od postawionego pytania.
 Warto jednak, aby jednym z pierwszych kroków było przyjrzenie się danym wejściowym. 
 Pozwala na to, między innymi, funkcja `str()`. 
-Przykładowo, dla obiektu klasy `SpatialPointsDataFrame` wyświetla ona szereg ważnych informacji. 
-Można tam odczytać, że obiekt `punkty` zawiera pięć elementów (ang. *slots*) rozpoczynających się od symbolu `@`.
-Pierwszy z nich, `@data` jest obiektem klasy `data.frame` zawierającym informacje o kolejnych punktach w tym zbiorze.
-Element `@coords.nrs` określa numer kolumn zawierających współrzędne w oryginalnym zbiorze danych.
-W poniższym przypadku żadna kolumna nie ma takich informacji.
-Kolejny element, `@coords` definiuje współrzędne kolejnych punktów w obiekcie `punkty`.
-Ostatnie dwa elementy, `@bbox` i `@proj4string` określają kolejno zasięg przestrzenny danych oraz definicję ich układu współrzędnych.
+Przykładowo, dla obiektu klasy `sf` wyświetla ona szereg ważnych informacji. 
 
 ```{r}
 str(punkty)
@@ -111,14 +112,12 @@ sd(punkty$temp, na.rm = TRUE)
 Histogram należy do typów wykresów najczęściej używanych w eksploracyjnej analizie danych.
 
 ```{r }
-ggplot(punkty@data, aes(temp)) + geom_histogram()
+ggplot(punkty, aes(temp)) + geom_histogram()
 ```
 
-- Stworzony przez Karla Pearsona
-- Jest graficzną reprezentacją rozkładu danych
-- Wartości danych są łączone w przedziały (na osi poziomej) a na osi pionowej jest ukazana liczba punktów (obserwacji) w każdym przedziale
-- Różny dobór przedziałów może dawać inną informację
-- W pakiecie **ggplot2**, domyślnie przedział jest ustalany poprzez podzielenie zakresu wartości przez 30
+Został on stworzony przez Karla Pearsona i jest graficzną reprezentacją rozkładu danych.
+Wartości danych są łączone w przedziały (na osi poziomej) a na osi pionowej jest ukazana liczba punktów (obserwacji) w każdym przedziale.
+Co ważne, różny dobór przedziałów może dawać inną informację - w pakiecie **ggplot2**, domyślnie przedział jest ustalany poprzez podzielenie zakresu wartości przez 30.
 
 ### Estymator jądrowy gęstości (ang. *kernel density estimation*)
 
@@ -126,7 +125,7 @@ Podobną funkcję do histogramu spełnia estymator jądrowy gęstości.
 Przypomina on wygładzony wykres histogramu i również służy graficznej reprezentacji rozkładu danych.
 
 ```{r }
-ggplot(punkty@data, aes(temp)) + geom_density()
+ggplot(punkty, aes(temp)) + geom_density()
 ```
 
 ### Wykres kwantyl-kwantyl (ang.*quantile-quantile*)
@@ -134,7 +133,7 @@ ggplot(punkty@data, aes(temp)) + geom_density()
 Wykres kwantyl-kwantyl ułatwia interpretację rozkładu danych. 
 
 ```{r }
-ggplot(punkty@data, aes(sample = temp)) + geom_qq()
+ggplot(punkty, aes(sample = temp)) + geom_qq()
 ```
 
 Na poniższej rycinie można zobaczyć przykłady najczęściej spotykanych cech rozkładu danych w wykresach kwantyl-kwantyl.
@@ -148,7 +147,7 @@ knitr::include_graphics("figs/qq_plot_explained.png")
 Dystrybuanta (ang. *cumulative distribution function* - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości.
 
 ```{r }
-ggplot(punkty@data, aes(temp)) + stat_ecdf()
+ggplot(punkty, aes(temp)) + stat_ecdf()
 ```
 
 ## Porównanie zmiennych
@@ -179,12 +178,8 @@ Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego ob
 
 ```{r }
 cor(punkty$temp, punkty$ndvi)
-ggplot(punkty@data, aes(temp, ndvi)) + geom_point()
+ggplot(punkty, aes(temp, ndvi)) + geom_point()
 ```
-
-<!-- ```{r } -->
-<!-- cor(punkty[c(1, 3:5)]) -->
-<!-- ``` -->
 
 Dodatkowo funkcja `cor.test()` służy do testowania istotności korelacji.
 Za pomocą argumentu `method` można również wybrać jedną z trzech dostępnych miar korelacji.
@@ -192,13 +187,6 @@ Za pomocą argumentu `method` można również wybrać jedną z trzech dostępny
 ```{r }
 cor.test(punkty$temp, punkty$ndvi)
 ```
-
-<!-- W przypadku posiadania co najmniej kilku par zmiennych, można również skorzystać z funkcji `corrplot()` z pakietu **corrplot**. -->
-<!-- Wyświetla ona wykres pokazujący wartości korelacji pomiędzy kolejnymi zmiennymi. -->
-
-<!-- ```{r } -->
-<!-- corrplot(cor(punkty@data[c(1, 3:5)])) -->
-<!-- ``` -->
 
 ### Wykres pudełkowy
 
@@ -209,7 +197,7 @@ Linia środkowa to mediana.
 
 ```{r }
 punkty$clc <- as.factor(punkty$clc)
-ggplot(punkty@data, aes(x = clc, y = temp)) + geom_boxplot()
+ggplot(punkty, aes(x = clc, y = temp)) + geom_boxplot()
 ```
 
 ### Testowanie istotności różnić średniej pomiędzy grupami
@@ -256,29 +244,29 @@ Centrowanie i skalowanie (standaryzacja):
 ### Centrowanie
 
 ```{r, eval=FALSE}
-ggplot(punkty@data, aes(temp)) + geom_density()
+ggplot(punkty, aes(temp)) + geom_density()
 punkty$temp_center <- punkty$temp - mean(punkty$temp)
-ggplot(punkty@data, aes(temp_center)) + geom_density()
+ggplot(punkty, aes(temp_center)) + geom_density()
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
-p1 <- ggplot(punkty@data, aes(temp)) + geom_density()
+p1 <- ggplot(punkty, aes(temp)) + geom_density()
 punkty$temp_center <- punkty$temp - mean(punkty$temp)
-p2 <- ggplot(punkty@data, aes(temp_center)) + geom_density()
+p2 <- ggplot(punkty, aes(temp_center)) + geom_density()
 gridExtra::grid.arrange(p1, p2, ncol = 1)
 ```
 
 ### Skalowanie
 
 ```{r, eval=FALSE}
-ggplot(punkty@data, aes(temp)) + geom_density()
+ggplot(punkty, aes(temp)) + geom_density()
 punkty$temp_scale <- punkty$temp / sd(punkty$temp)
-ggplot(punkty@data, aes(temp_scale)) + geom_density()
+ggplot(punkty, aes(temp_scale)) + geom_density()
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
 punkty$temp_scale <- punkty$temp / sd(punkty$temp)
-p3 <- ggplot(punkty@data, aes(temp_scale)) + geom_density()
+p3 <- ggplot(punkty, aes(temp_scale)) + geom_density()
 gridExtra::grid.arrange(p1, p3, ncol = 1)
 ```
 
@@ -287,14 +275,14 @@ gridExtra::grid.arrange(p1, p3, ncol = 1)
 Do standaryzacji (centrowanie i skalowanie) służy funkcja `scale()`.
 
 ```{r, eval=FALSE}
-ggplot(punkty@data, aes(temp)) + geom_density()
+ggplot(punkty, aes(temp)) + geom_density()
 punkty$temp_standard <- as.numeric(scale(punkty$temp))
-ggplot(punkty@data, aes(temp_standard)) + geom_density()
+ggplot(punkty, aes(temp_standard)) + geom_density()
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
 punkty$temp_standard <- as.numeric(scale(punkty$temp))
-p4 <- ggplot(punkty@data, aes(temp_standard)) + geom_density()
+p4 <- ggplot(punkty, aes(temp_standard)) + geom_density()
 gridExtra::grid.arrange(p1, p4, ncol = 1)
 ```
 
@@ -312,18 +300,18 @@ Logarytmizacja w R może odbyć się za pomocą funkcji `log()`.
 Transformację logarytmiczną można odwrócić używając funkcji `exp()`.
 
 ```{r, eval = FALSE}
-ggplot(punkty@data, aes(temp)) + geom_density()
+ggplot(punkty, aes(temp)) + geom_density()
 punkty$log_tpz <- log(punkty$temp)
-ggplot(punkty@data, aes(log_tpz)) + geom_density()
+ggplot(punkty, aes(log_tpz)) + geom_density()
 punkty$exp_tpz <- exp(punkty$log_tpz)
-ggplot(punkty@data, aes(exp_tpz)) + geom_density()
+ggplot(punkty, aes(exp_tpz)) + geom_density()
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
 punkty$log_tpz <- log(punkty$temp)
-p5 <- ggplot(punkty@data, aes(log_tpz)) + geom_density()
+p5 <- ggplot(punkty, aes(log_tpz)) + geom_density()
 punkty$exp_tpz <- exp(punkty$log_tpz)
-p6 <- ggplot(punkty@data, aes(exp_tpz)) + geom_density()
+p6 <- ggplot(punkty, aes(exp_tpz)) + geom_density()
 gridExtra::grid.arrange(p1, p5, p6, ncol = 1)
 ```
 
@@ -333,18 +321,18 @@ Pierwiastkowanie w R może odbyć się za pomocą funkcji `sqrt()`.
 Odwrócenie tej transformacji odbywa się poprzez podniesienie wartości do potęgi (`^2`).
 
 ```{r, eval=FALSE}
-ggplot(punkty@data, aes(temp)) + geom_density()
+ggplot(punkty, aes(temp)) + geom_density()
 punkty$sqrt_tpz <- sqrt(punkty$temp)
-ggplot(punkty@data, aes(sqrt_tpz)) + geom_density()
+ggplot(punkty, aes(sqrt_tpz)) + geom_density()
 punkty$pow_tpz <- punkty$sqrt_tpz ^ 2
-ggplot(punkty@data, aes(pow_tpz)) + geom_density()
+ggplot(punkty, aes(pow_tpz)) + geom_density()
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
 punkty$sqrt_tpz <- sqrt(punkty$temp)
-p7 <- ggplot(punkty@data, aes(sqrt_tpz)) + geom_density()
+p7 <- ggplot(punkty, aes(sqrt_tpz)) + geom_density()
 punkty$pow_tpz <- punkty$sqrt_tpz ^ 2
-p8 <- ggplot(punkty@data, aes(pow_tpz)) + geom_density()
+p8 <- ggplot(punkty, aes(pow_tpz)) + geom_density()
 gridExtra::grid.arrange(p1, p7, p8, ncol = 1)
 ```
 
@@ -352,7 +340,7 @@ gridExtra::grid.arrange(p1, p7, p8, ncol = 1)
 Transformacja danych | Rodzina transformacji Boxa Coxa
 
 ```{r , eval=FALSE}
-ggplot(punkty@data, aes(temp)) + geom_density()
+ggplot(punkty, aes(temp)) + geom_density()
 transformacja <- BoxCoxTrans(punkty$temp)
 transformacja
 punkty$bc_tpz <- predict(transformacja, punkty$temp)
