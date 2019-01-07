@@ -20,6 +20,14 @@ par(mar = c(rep(0, 4)))
 options(scipen = 99 * 99)
 ```
 
+```{r, echo=FALSE, eval=FALSE}
+library(sf)
+library(stars)
+punkty = st_as_sf(punkty)
+granica = st_as_sf(granica)
+siatka = st_as_stars(siatka)
+```
+
 <!--
 http://www.inside-r.org/packages/cran/raster/docs/interpolate
 ![](fig_skrypt/m_feat.png)
@@ -160,15 +168,10 @@ Jej wykres (autokorelogram) pokazuje wartość jednej z miar autokorelacji (np. 
 Na poniższym przykładzie, wartość statystyki I Morana jest wyliczana poprzez funkcję `correlog()` z pakietu **pgirmess**.
  
 ```{r }
-wsp <- coordinates(punkty)
+wsp <- st_coordinates(punkty)
 kor <- correlog(wsp, punkty$temp, method = "Moran")
-kor <- as.data.frame(kor)
-ggplot(kor, aes(dist.class, coef)) + 
-        geom_smooth(linetype = 0) + 
-        geom_line() + 
-        geom_point(size = 5)
+plot(kor)
 ```
-
 
 ## Semiwariancja
 
@@ -191,7 +194,7 @@ Korzystając z wzoru na semiwariację otrzymujemy wartość równą ok. 20,60.
 Znamy również odległość między punktami (ok. 4576,59 metra), więc możemy w uproszczeniu stwierdzić, że dla tej pary punktów odległych o 4577 metry wartość semiwariancji wynosi około 20,6.
 
 ```{r }
-odl <- dist(coordinates(punkty)[c(1, 2), ])
+odl <- st_distance(punkty[c(1, 2), ])[2]
 gamma <- 0.5 * (punkty$temp[1] - punkty$temp[2]) ^ 2
 gamma
 ```
@@ -304,7 +307,7 @@ z_kwadrat <- kraw_x ^ 2 + kraw_y ^ 2
 - Powierzchnia zajmowana przez jedną próbkę:
 
 ```{r }
-pow_pr <- gArea(granica) / nrow(punkty)
+pow_pr <- st_area(granica) / nrow(punkty)
 pow_pr
 ```
 
@@ -314,11 +317,10 @@ pow_pr
 sqrt(pow_pr)
 ```
 
-
 - Połowa pierwiastka powierzchni:
 
 ```{r }
-pow <- gArea(granica)
+pow <- st_area(granica)
 0.5 * sqrt(pow)
 ```
 
@@ -425,6 +427,10 @@ Możesz go wczytać używając poniższego kodu:
 data(punkty_pref)
 ```
 
+```{r, echo=FALSE}
+punkty_pref = st_as_sf(punkty_pref)
+```
+
 1. Stwórz wykres rozrzutu z przesunięciem dla zmiennej `srtm` dla odstępów od 0 do 5000 metrów co 625 metry.
 Co można odczytać z otrzymanego wykresu?
 2. Wylicz odległość oraz wartość semiwariancji dla zmiennej `srtm` pomiędzy pierwszym i drugim, pierwszym i trzecim, oraz drugim i trzecim punktem.
@@ -432,7 +438,7 @@ Zwizualizuj te trzy punkty.
 W jaki sposób można zinterpretować otrzymane wyniki wartości semiwariancji?
 ```{r, echo=FALSE, eval=FALSE}
 punkty_pref2 <- punkty_pref[c(1, 2, 3), ]
-odl2 <- dist(coordinates(punkty_pref2))
+odl2 <- dist(st_coordinates(punkty_pref2))
 gamma1 <- 0.5 * (punkty_pref2$srtm[1] - punkty_pref2$srtm[2]) ^ 2
 gamma1
 gamma2 <- 0.5 * (punkty_pref2$srtm[1] - punkty_pref2$srtm[3]) ^ 2
@@ -460,4 +466,3 @@ plot(vario_map, threshold = 30, col.regions = viridisLite::viridis(n = 50))
 Czy badane zjawisko wykazuje izotropia czy anizotropia?
 9. Jeżeli mapa semiwariogramu wykazuje anizotropię struktury przestrzennej to w jakim kierunku?
 Stwórz semiwariogramy dla wybranych kierunków.
-
