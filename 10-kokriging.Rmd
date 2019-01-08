@@ -138,19 +138,19 @@ W efekcie otrzymujemy pięć zmiennych:
 5. `cov.SAVI.NDVI` - kowariancje zmiennych `savi` oraz `ndvi`
 
 ```{r}
-summary(ck)
+ck
 ```
 
 ```{r plotsyck1, eval=FALSE}
-spplot(ck, "SAVI.pred")
-spplot(ck, "SAVI.var")
+plot(ck["SAVI.pred"])
+plot(ck["SAVI.var"])
 ```
 
 ```{r kokriging_predicted, echo=FALSE, cache=TRUE, fig.height=8}
-library(gridExtra)
-p1 <- spplot(ck, "SAVI.pred", main = "Estymacja CK")
-p2 <- spplot(ck, "SAVI.var", main = "Wariancja estymacji CK")
-grid.arrange(p1, p2, ncol = 1)
+# library(gridExtra)
+# p1 <- spplot(ck, "SAVI.pred", main = "Estymacja CK")
+# p2 <- spplot(ck, "SAVI.var", main = "Wariancja estymacji CK")
+# grid.arrange(p1, p2, ncol = 1)
 ```
 
 ```{r kokriging_predict_anizotropia, echo=FALSE, cache=TRUE, eval=FALSE}
