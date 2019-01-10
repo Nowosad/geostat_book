@@ -214,6 +214,22 @@ Funkcja `st_crs()` wyświetla definicję układu współrzędnych.
 st_crs(dane_punktowe_sf)
 ```
 
+## Interakcja raster-vector
+
+### Wydobywanie wartości z rastra
+
+<!-- redo -->
+
+### Łączenie rastrów
+
+<!-- redo -->
+
+```{r}
+# r1 <- read_stars("/home/jn/Tmp/dane/elev.tif")
+# r2 <- read_stars("/home/jn/Tmp/dane/precip.tif")
+# r3 <- c(r1, r2)
+```
+
 ## Eksport danych
 
 ### Zapisywanie danych wektorowych
