@@ -22,8 +22,19 @@ library(gstat)
 data("punkty")
 data("granica")
 data("siatka")
-granica_plot <- list("sp.polygons", granica)
-spplot(punkty["temp"], sp.layout = list(granica_plot))
+```
+
+```{r, echo=FALSE, eval=FALSE}
+library(sf)
+library(stars)
+punkty = st_as_sf(punkty)
+granica = st_as_sf(granica)
+siatka = st_as_stars(siatka)
+```
+
+```{r, echo=FALSE}
+plot(punkty["temp"], reset = FALSE, main = NA)
+plot(st_geometry(granica), add = TRUE)
 ```
 
 Na ich podstawie chcemy zrozumieć zmienność przestrzenną analizowanej cechy.
@@ -58,9 +69,9 @@ sk <- krige(temp~1,
             locations = punkty,
             newdata = siatka,
             model = fitted_sph,
-            beta = 15.9)
-spplot(sk, "var1.pred", main = "Estymacja")
-spplot(sk, "var1.var", main = "Wariancja estymacji")
+            beta = 16)
+plot(sk["var1.pred"], main = "Estymacja")
+plot(sk["var1.var"], main = "Wariancja estymacji")
 ```
 
 Rolą symulacji jest natomiast generowanie równie prawdopodobne możliwości rozkładu badanej cechy:
@@ -72,7 +83,7 @@ sym_ok <- krige(temp~1,
                 model = fitted_sph,
                 nmax = 30, 
                 nsim = 4)
-spplot(sym_ok)
+# plot(sym_ok)
 ```
 
 Każdy z powyższych elementów geostatystycznej analizy danych zostanie rozwinięty w dalszych rozdziałach tego skryptu.
