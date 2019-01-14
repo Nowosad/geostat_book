@@ -28,6 +28,7 @@ W sytuacji, gdy dodatkowe zmienne są skorelowane ze zmienną analizowaną możn
 ```{r, echo=FALSE, fig.asp=0.25}
 library(gridExtra)
 siatka$clc <- as.factor(siatka$clc)
+plot(siatka["clc"])
 ip1 <- spplot(siatka["clc"], main = "clc", colorkey = list(space = "bottom"))
 ip2 <- spplot(siatka["srtm"], main = "srtm", colorkey = list(space = "bottom"))
 ip3 <- spplot(siatka["ndvi"], main = "ndvi", colorkey = list(space = "bottom"))
@@ -156,12 +157,12 @@ sk_lvm <- krige(temp~srtm,
                 newdata = siatka, 
                 model = fitted_sim, 
                 beta = coef)
-summary(sk_lvm)
+sk_lvm
 ```
 
 ```{r plotsylvm1, eval=FALSE}
-spplot(sk_lvm, "var1.pred")
-spplot(sk_lvm, "var1.var")
+plot(sk_lvm["var1.pred"])
+plot(sk_lvm["var1.var"])
 ```
 
 ```{r plotsylvm2, echo=FALSE, fig.height=8}
@@ -204,15 +205,15 @@ uk1 <- krige(temp~clc,
 ```
 
 ```{r plotsy3uk1, eval=FALSE}
-spplot(uk1, "var1.pred")
-spplot(uk1, "var1.var")
+plot(uk1["var1.pred"])
+plot(uk1["var1.var"])
 ```
 
 ```{r plotsy4uk1, echo=FALSE, fig.height=8}
-library(gridExtra)
-p1 <- spplot(uk1, "var1.pred", main = "Estymacja KU")
-p2 <- spplot(uk1, "var1.var", main = "Wariancja estymacja KU")
-grid.arrange(p1, p2, ncol = 1)
+# library(gridExtra)
+# p1 <- spplot(uk1, "var1.pred", main = "Estymacja KU")
+# p2 <- spplot(uk1, "var1.var", main = "Wariancja estymacja KU")
+# grid.arrange(p1, p2, ncol = 1)
 ```
 
 W kolejnym przykładzie zastosowane są już dwie zmienne uzupełniające - wartość wskaźnika wegetacji (`ndvi`) oraz wysokość nad poziomem morza (`srtm`). 
@@ -235,8 +236,8 @@ uk2 <- krige(temp~ndvi + srtm,
 ```
 
 ```{r plotsy3KU, eval=FALSE}
-spplot(uk2, "var1.pred")
-spplot(uk2, "var1.var")
+plot(uk2["var1.pred"])
+plot(uk2["var1.var"])
 ```
 
 ```{r plotsy4KU, echo=FALSE, fig.height=8}

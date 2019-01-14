@@ -298,7 +298,7 @@ R2
 ```
 
 ```{r}
-spplot(cv_sk, "residual", cuts = c(-10, -5, -3, -1, 1, 3, 5, 10))
+plot(cv_sk["residual"], breaks = c(-10, -5, -3, -1, 1, 3, 5, 10))
 ```
 
 ```{r}

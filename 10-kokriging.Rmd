@@ -175,19 +175,19 @@ plot(vario_g_kier, g_fit_a)
 
 ck_a <- predict(g_fit_a, siatka)
 
-summary(ck_a)
+ck_a
 ```
 
 ```{r plotsyck1a, eval=FALSE, echo=FALSE}
-spplot(ck_a, "savi.pred")
-spplot(ck_a, "savi.var")
+plot(ck_a["savi.pred"])
+plot(ck_a["savi.var"])
 ```
 
 ```{r plotsyck2a, eval=FALSE, echo=FALSE, fig.height=8}
-library(gridExtra)
-p1 <- spplot(ck_a, "savi.pred", main = "Estymacja CK - anizotropia")
-p2 <- spplot(ck_a, "savi.var", main = "Wariancja estymacji CK - anizotropia")
-grid.arrange(p1, p2, ncol = 2)
+# library(gridExtra)
+# p1 <- spplot(ck_a, "savi.pred", main = "Estymacja CK - anizotropia")
+# p2 <- spplot(ck_a, "savi.var", main = "Wariancja estymacji CK - anizotropia")
+# grid.arrange(p1, p2, ncol = 2)
 ```
 
 <!--   

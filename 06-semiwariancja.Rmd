@@ -166,7 +166,11 @@ plot(kowario)
 Kolejną miarą przestrzennego podobieństwa jest autokorelacja.
 Jej wykres (autokorelogram) pokazuje wartość jednej z miar autokorelacji (np. I Morana lub C Geary'ego) w stosunku do odległości.
 Na poniższym przykładzie, wartość statystyki I Morana jest wyliczana poprzez funkcję `correlog()` z pakietu **pgirmess**.
- 
+
+```{r, echo=FALSE, message=FALSE}
+dev.off()
+```
+
 ```{r }
 wsp <- st_coordinates(punkty)
 kor <- correlog(wsp, punkty$temp, method = "Moran")

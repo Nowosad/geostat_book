@@ -83,21 +83,21 @@ Szczególnie ważne są dwie, nowe zmienne - `var1.pred` oraz `var1.var`.
 Pierwsza z nich oznacza wartość estymowaną dla każdego oczka siatki, druga zaś mówi o wariancji estymacji. 
 
 ```{r}
-summary(sk)
+sk
 ```
 
 Obie uzyskane zmienne można wyświetlić z użyciem funkcji `spplot()`.
 
 ```{r plotsy1, eval=FALSE}
-spplot(sk, "var1.pred")
-spplot(sk, "var1.var")
+plot(sk["var1.pred"])
+plot(sk["var1.var"])
 ```
 
 ```{r plotsy2, echo=FALSE, eval=TRUE, fig.height=8}
-library(gridExtra)
-p1 <- spplot(sk, "var1.pred", main = "Estymacja SK")
-p2 <- spplot(sk, "var1.var", main = "Wariancja estymacja SK")
-grid.arrange(p1, p2, ncol = 1)
+# library(gridExtra)
+# p1 <- spplot(sk, "var1.pred", main = "Estymacja SK")
+# p2 <- spplot(sk, "var1.var", main = "Wariancja estymacja SK")
+# grid.arrange(p1, p2, ncol = 1)
 ```
 
 ## Kriging zwykły 
@@ -127,19 +127,19 @@ ok <- krige(temp~1,
 Podobnie jak w przypadku krigingu prostego, można przyjrzeć się wynikom estymacji używając funkcji `summary()` oraz wyświetlić je używając funkcji `spplot()`.
 
 ```{r}
-summary(ok)
+ok
 ```
 
 ```{r plotsy1ok2, eval=FALSE}
-spplot(ok, "var1.pred")
-spplot(ok, "var1.var")
+plot(ok["var1.pred"])
+plot(ok["var1.var"])
 ```
 
 ```{r plotsy2ok2, echo=FALSE, eval=TRUE, fig.height=8}
-library(gridExtra)
-p1 <- spplot(ok, "var1.pred", main = "Estymacja OK")
-p2 <- spplot(ok, "var1.var", main = "Wariancja estymacja OK")
-grid.arrange(p1, p2, ncol = 1)
+# library(gridExtra)
+# p1 <- spplot(ok, "var1.pred", main = "Estymacja OK")
+# p2 <- spplot(ok, "var1.var", main = "Wariancja estymacja OK")
+# grid.arrange(p1, p2, ncol = 1)
 ```
 
 <!--
@@ -183,15 +183,15 @@ summary(kzt)
 ```
 
 ```{r plotsy1kzt, eval=FALSE}
-spplot(kzt, "var1.pred")
-spplot(kzt, "var1.var")
+plot(kzt["var1.pred"])
+plot(kzt["var1.var"])
 ```
 
 ```{r plotsy2kzt, echo=FALSE, eval=TRUE, fig.height=8}
-library(gridExtra)
-p1 <- spplot(kzt, "var1.pred", main = "Estymacja KZT")
-p2 <- spplot(kzt, "var1.var", main = "Wariancja estymacja KZT")
-grid.arrange(p1, p2, ncol = 1)
+# library(gridExtra)
+# p1 <- spplot(kzt, "var1.pred", main = "Estymacja KZT")
+# p2 <- spplot(kzt, "var1.var", main = "Wariancja estymacja KZT")
+# grid.arrange(p1, p2, ncol = 1)
 ```
 
 ## Porównanie wyników SK, OK i KZT
@@ -200,15 +200,15 @@ Poniższe porównanie krigingu prostego (SK), zwykłego (OK) i z trendem (KZT) w
 W rozdziałach  \@ref(estymacje-wielozmienne) oraz \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych) pokazane będą uzyskane wyniki interpolacji temperatury powietrza korzystając z innych metod krigingu.
 
 ```{r ploty_trzy, echo=FALSE, fig.height=12}
-zmax <- round(max(sk$var1.pred, ok$var1.pred,
-                  kzt$var1.pred, na.rm = TRUE), 1) + 0.1
-zmin <- round(min(sk$var1.pred, ok$var1.pred,
-                  kzt$var1.pred, na.rm = TRUE), 1) - 0.1
-ramp <- seq(from = zmin, to = zmax, by = (zmax - zmin) / 20)
-p1 <- spplot(sk, "var1.pred", at = ramp, main = "SK")
-p2 <- spplot(ok, "var1.pred", at = ramp, main = "OK")
-p3 <- spplot(kzt, "var1.pred", at = ramp, main = "KZT")
-grid.arrange(p1, p2, p3, ncol = 1, padding = unit(0, "line"))
+# zmax <- round(max(sk$var1.pred, ok$var1.pred,
+#                   kzt$var1.pred, na.rm = TRUE), 1) + 0.1
+# zmin <- round(min(sk$var1.pred, ok$var1.pred,
+#                   kzt$var1.pred, na.rm = TRUE), 1) - 0.1
+# ramp <- seq(from = zmin, to = zmax, by = (zmax - zmin) / 20)
+# p1 <- spplot(sk, "var1.pred", at = ramp, main = "SK")
+# p2 <- spplot(ok, "var1.pred", at = ramp, main = "OK")
+# p3 <- spplot(kzt, "var1.pred", at = ramp, main = "KZT")
+# grid.arrange(p1, p2, p3, ncol = 1, padding = unit(0, "line"))
 ```
 
 ## Zadania {#z8}

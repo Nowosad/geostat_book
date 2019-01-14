@@ -161,6 +161,10 @@ Należy w niej jedynie podać ścieżkę do pliku rastrowego.
 library(stars)
 siatka_stars <- read_stars("dane/siatka.tif")
 plot(siatka_stars)
+
+library(raster)
+r = raster("dane/siatka.tif")
+r
 ```
 
 ## Przeglądanie danych przestrzennych
@@ -312,7 +316,7 @@ Aby wyświetlić tylko jedną zmienną należy ją zadeklarować poprzez indekso
 
 ```{r}
 # wybrana zmienna
-plot(siatka_stars[, , , 3])
+plot(siatka_stars[1, , , 5])
 ```
 
 ## Zadania {#z2}
