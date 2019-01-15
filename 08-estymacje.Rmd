@@ -94,10 +94,9 @@ plot(sk["var1.var"])
 ```
 
 ```{r plotsy2, echo=FALSE, eval=TRUE, fig.height=8}
-# library(gridExtra)
-# p1 <- spplot(sk, "var1.pred", main = "Estymacja SK")
-# p2 <- spplot(sk, "var1.var", main = "Wariancja estymacja SK")
-# grid.arrange(p1, p2, ncol = 1)
+par(mfrow = c(1, 2))
+plot(sk["var1.pred"], key.pos = NULL, reset = FALSE, main = "Estymacja SK")
+plot(sk["var1.var"], key.pos = NULL, main = "Wariancja estymacji SK")
 ```
 
 ## Kriging zwykły 
@@ -136,25 +135,28 @@ plot(ok["var1.var"])
 ```
 
 ```{r plotsy2ok2, echo=FALSE, eval=TRUE, fig.height=8}
-# library(gridExtra)
-# p1 <- spplot(ok, "var1.pred", main = "Estymacja OK")
-# p2 <- spplot(ok, "var1.var", main = "Wariancja estymacja OK")
-# grid.arrange(p1, p2, ncol = 1)
+par(mfrow = c(1, 2))
+plot(ok["var1.pred"], key.pos = NULL, reset = FALSE, main = "Estymacja OK")
+plot(ok["var1.var"], key.pos = NULL, main = "Wariancja estymacji OK")
 ```
-
-<!--
-```{r , include=FALSE, eval=FALSE}
-spplot(ok, "var1.pred", sp.layout = list(as(punkty, "Spatial"), pch = 21, col = "white"))
-spplot(ok, "var1.var", sp.layout = list(as(punkty, "Spatial"), pch = 21, col = "white"))
-```
--->
 
 ## Kriging z trendem
 
 ### Kriging z trendem (ang. *Kriging with a trend*)
 
 Kriging z trendem, określany również jako kriging z wewnętrznym trendem, do estymacji wykorzystuje (oprócz zmienności wartości wraz z odległością) położenie analizowanych punktów.
-Na poniższym przykładzie w funkcji `variogram()` pierwszy z argumentów przyjął postać `temp~x+y`, co oznacza, że uwzględniamy liniowy trend zależny od współrzędnej `x` oraz `y`.
+W pierwszym kroku konieczne jest dodanie współrzęnych do używanego obiektu, jak też i do używanej siatki.
+
+```{r}
+# dodanie współrzędnych do punktów
+punkty$x = st_coordinates(punkty)[, 1]
+punkty$y = st_coordinates(punkty)[, 2]
+# dodanie współrzędnych do siatki
+siatka$x = st_coordinates(siatka)[, 1]
+siatka$y = st_coordinates(siatka)[, 2]
+```
+
+Następnie pierwszy z argumentów w funkcji `variogram()` musi przyjąć postać `temp~x+y`, co oznacza, że uwzględniamy liniowy trend zależny od współrzędnej `x` oraz `y`.
 
 ```{r }
 vario_kzt <- variogram(temp~x + y, locations = punkty)
@@ -162,7 +164,7 @@ plot(vario_kzt)
 ```
 
 Dalszym etapem jest dopasowanie modelu semiwariancji, a następnie wyliczenie estymowanych wartości z użyciem funkcji `krige()`.
-Należy tutaj pamiętać, aby wzór (w przykładzie `temp~x + y`) był taki sam podczas budowania semiwariogramu, jak i interpolacji.
+Należy tutaj pamiętać, aby wzór (w przykładzie `temp~x + y`) był taki sam podczas budowania semiwariogramu, jak i estymacji.
 
 ```{r}
 model_kzt <- vgm(model = "Sph", nugget = 1)
@@ -188,10 +190,9 @@ plot(kzt["var1.var"])
 ```
 
 ```{r plotsy2kzt, echo=FALSE, eval=TRUE, fig.height=8}
-# library(gridExtra)
-# p1 <- spplot(kzt, "var1.pred", main = "Estymacja KZT")
-# p2 <- spplot(kzt, "var1.var", main = "Wariancja estymacja KZT")
-# grid.arrange(p1, p2, ncol = 1)
+par(mfrow = c(1, 2))
+plot(kzt["var1.pred"], key.pos = NULL, reset = FALSE, main = "Estymacja KZT")
+plot(kzt["var1.var"], key.pos = NULL, main = "Wariancja estymacji KZT")
 ```
 
 ## Porównanie wyników SK, OK i KZT
