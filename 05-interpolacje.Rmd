@@ -226,7 +226,7 @@ library(gridExtra)
 p1 <- spplot(wielomian_3_pred[1], main = "Wielomiany")
 p2 <- spplot(siatka, "tps_pred", main = "Funkcje sklejane")
 p3 <- spplot(voronoi_interp, "temp", main = "Poligony Voronoia")
-p4 <- spplot(idw_wolin, "var1.pred", main = "IDW")
+p4 <- spplot(idw_interp, "var1.pred", main = "IDW")
 grid.arrange(p3, p4, p1, p2)
 ```
 
