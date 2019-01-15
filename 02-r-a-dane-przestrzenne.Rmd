@@ -161,10 +161,6 @@ Należy w niej jedynie podać ścieżkę do pliku rastrowego.
 library(stars)
 siatka_stars <- read_stars("dane/siatka.tif")
 plot(siatka_stars)
-
-library(raster)
-r = raster("dane/siatka.tif")
-r
 ```
 
 ## Przeglądanie danych przestrzennych
@@ -222,7 +218,7 @@ st_crs(dane_punktowe_sf)
 
 ### Wydobywanie wartości z rastra
 
-<!-- redo -->
+<!-- do -->
 
 ### Łączenie rastrów
 
@@ -312,11 +308,19 @@ plot(siatka_stars)
 ```
 
 Aby wyświetlić tylko jedną zmienną należy ją zadeklarować poprzez indeksowanie.
-<!-- Opiera się to o cztery indeksy -  `[, indeksy kolumn, , ]`,  -->
+Opiera się to o kilka indeksów, np. dla obiektu `siatka_stars` są to `[indeks atrybutu, indeksy kolumn, indeksy wierszy, indeksy kanału]`.
+Przykładowo indeks `[1, , , 4]` pozwala na wyświetlenie kanału czwartego z pierwszego atrybutu.
 
 ```{r}
-# wybrana zmienna
-plot(siatka_stars[1, , , 5])
+# wybrany kanał
+plot(siatka_stars[1, , , 4])
+```
+
+Indeksowanie pozwala też na wyświetlenie fragmentu danych rastrowych.
+Na przykład, indeks `[1, 2:50, 1:20, ]` pozwala na wyświetlenie wszystkich warstw, ale tylko dla kolumn od 20 do 50 i wierszy od 1 do 20.
+```{r}
+# wybrany zasięg przestrzenny
+plot(siatka_stars[1, 20:50, 1:20, ])
 ```
 
 ## Zadania {#z2}
