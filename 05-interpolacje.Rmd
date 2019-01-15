@@ -146,9 +146,9 @@ Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (ang. *p
 W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`).
 
 ```{r }
-idw_wolin <- idw(temp~1, locations = punkty,
+idw_interp <- idw(temp~1, locations = punkty,
                  newdata = siatka, idp = 2)
-spplot(idw_wolin, zcol = "var1.pred", contour = TRUE, 
+spplot(idw_interp, zcol = "var1.pred", contour = TRUE, 
        main = "IDW")
 ```
 
