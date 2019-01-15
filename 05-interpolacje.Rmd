@@ -19,6 +19,14 @@ data(granica)
 par(mar = c(rep(0, 4)))
 ```
 
+```{r, echo=FALSE, eval=FALSE}
+library(sf)
+library(stars)
+punkty = st_as_sf(punkty)
+granica = st_as_sf(granica)
+siatka = st_as_stars(siatka)
+```
+
 Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania do stworzenia estymacji przestrzennych. 
 Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne oraz modele statystyczne.
 
@@ -33,11 +41,11 @@ Siatki regularne mają kształt prostokąta obejmującego cały analizowany obsz
 Określenie granic obszaru można wykonać na podstawie zasięgu danych punktowych za pomocą funkcji `bbox()` z pakietu **sp**<!-- lub funkcji `extent()` z pakietu **raster**-->.
 
 ```{r}
-bbox(punkty)
+st_bbox(punkty)
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
-bbox(punkty)
+st_bbox(punkty)
 extent(punkty)
 ```
 
@@ -56,6 +64,9 @@ nowa_siatka <- expand.grid(
 Utworzony w ten sposób obiekt wymaga określenia współrzędnych (funkcja `coordinates()`), potwierdzenia że dane mają być siatką (funkcja `gridded()`), oraz przypisania układu współrzędnych z obiektu punktowego (funkcja `proj4string()`).
 
 ```{r }
+nowa_siatka <- stars::st_as_stars(st_bbox(punkty), nx = 25, ny = 19)
+plot(nowa_siatka)
+
 coordinates(nowa_siatka) <- ~x + y
 gridded(nowa_siatka) <- TRUE
 proj4string(nowa_siatka) <- proj4string(punkty)
@@ -79,8 +90,8 @@ Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają m
 W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add`.
 
 ```{r }
-plot(nowa_siatka)
-plot(punkty, add = TRUE)
+plot(nowa_siatka, reset = FALSE)
+plot(st_geometry(punkty["temp"]), add = TRUE)
 ```
 
 ### Siatki nieregularne
@@ -129,12 +140,14 @@ Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi(
 <!-- Wyniki następnie można przyciąć do badanego obszaru z użyciem funkcji `intersect()` z pakietu **raster**. -->
 
 ```{r }
-voronoi_interp <- voronoi(punkty)
+voronoi_interp <- voronoi(st_coordinates(punkty))
 plot(voronoi_interp, main = "Poligony Voronoia")
+# https://github.com/r-spatial/sf/issues/824
+voronoi_interp <- st_voronoi(punkty, st_as_sfc(st_bbox(punkty)))
 ```
 
 ```{r}
-spplot(voronoi_interp, zcol = "temp", 
+plot(voronoi_interp["temp"], 
        main = "Poligony Voronoia - temperatura")
 ```
 
@@ -146,10 +159,9 @@ Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (ang. *p
 W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`).
 
 ```{r }
-idw_wolin <- idw(temp~1, locations = punkty,
+idw_interp <- idw(temp~1, locations = punkty,
                  newdata = siatka, idp = 2)
-spplot(idw_wolin, zcol = "var1.pred", contour = TRUE, 
-       main = "IDW")
+plot(idw_interp["var1.pred"], main = "IDW")
 ```
 
 ```{r, echo=FALSE, warning=FALSE}
@@ -183,7 +195,7 @@ Następnie funkcja `predict()` przenosi nowe wartości na wcześniej stworzoną 
 wielomian_1 <- gstat(formula = temp~1, locations = punkty,
                      degree = 1)
 wielomian_1_pred <- predict(wielomian_1, newdata = siatka)
-spplot(wielomian_1_pred, zcol = "var1.pred", contour = TRUE,
+plot(wielomian_1_pred["var1.pred"], 
        main = "Powierzchnia trendu - wielomian pierwszego
        stopnia")
 ```
@@ -193,7 +205,7 @@ spplot(wielomian_1_pred, zcol = "var1.pred", contour = TRUE,
 wielomian_2 <- gstat(formula = temp~1, locations = punkty,
                      degree = 2)
 wielomian_2_pred <- predict(wielomian_2, newdata = siatka)
-spplot(wielomian_2_pred, zcol = "var1.pred", contour = TRUE,
+plot(wielomian_2_pred["var1.pred"],
        main = "Powierzchnia trendu - wielomian drugiego
        stopnia")
 ```
@@ -203,7 +215,7 @@ spplot(wielomian_2_pred, zcol = "var1.pred", contour = TRUE,
 wielomian_3 <- gstat(formula = temp~1, locations = punkty,
                      degree = 3)
 wielomian_3_pred <- predict(wielomian_3, newdata = siatka)
-spplot(wielomian_3_pred, zcol = "var1.pred", contour = TRUE,
+plot(wielomian_3_pred["var1.pred"],
        main = "Powierzchnia trendu - wielomian trzeciego
        stopnia")
 ```
@@ -213,9 +225,9 @@ spplot(wielomian_3_pred, zcol = "var1.pred", contour = TRUE,
 Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**) dopasowuje krzywą powierzchnię do wartości analizowanych punktów.
 
 ```{r }
-tps <- Tps(coordinates(punkty), punkty$temp)
-siatka$tps_pred <- predict(tps, coordinates(siatka))
-spplot(siatka, "tps_pred", contour = TRUE, 
+tps <- Tps(st_coordinates(punkty), punkty$temp)
+siatka$tps_pred <- predict(tps, st_coordinates(siatka))
+plot(siatka["tps_pred"], 
        main = "Funkcje sklejane")
 ```
 
