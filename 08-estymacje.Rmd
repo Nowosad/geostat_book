@@ -38,11 +38,11 @@ Istnieje szereg meteod krigingu, w tym:
 - Kriging prosty (ang. *Simple kriging*)
 - Kriging zwykły (ang. *Ordinary kriging*)
 - Kriging z trendem (ang. *Kriging with a trend*)
-- Kriging danych kodowanych (ang. *Indicator kriging*)
 - Kriging stratyfikowany (ang. *Kriging within strata* – KWS)
 - Kriging prosty ze zmiennymi średnimi lokalnymi (ang. *Simple kriging with varying local means* - SKlm)
 - Kriging z zewnętrznym trendem/Uniwersalny kriging (ang.*Kriging with an external trend/Universal kriging*)
 - Kokriging (ang. *Co-kriging*)
+- Kriging danych kodowanych (ang. *Indicator kriging*)
 - Inne
 
 ## Kriging prosty
