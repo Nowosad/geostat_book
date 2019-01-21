@@ -245,24 +245,18 @@ spplot(sym_ind, main = "Symulacje warunkowe")
 ## Zadania {#z13}
 
 1.  Stwórz nową siatkę dla obszaru o zasięgu x od 0 do 40000 i zasięgu y od 0 do 30000 oraz rozdzielczości 250. 
-Wykonaj trzy symulacje bezwarunkowe 
 2.  Zbuduj po trzy symulacje bezwarunkowe w tej siatce korzystając z:
     -   modelu sferycznego o semiwariancji cząstkowej 15 i zasięgu 7000
     -   modelu nugetowego o wartości 1 razem z modelem sferycznym o semiwariancji cząstkowej 15 i zasięgu 7000
     -   modelu sferycznego o semiwariancji cząstkowej 5 i zasięgu 7000
-    - modelu sferycznego o semiwariancji cząstkowej 15 i zasięgu 1000
+    -   modelu sferycznego o semiwariancji cząstkowej 15 i zasięgu 1000
 3.  Porównaj graficznie uzyskane powyżej wyniki i opisz je.
-4.  Zbuduj po trzy symulacje bezwarunkowe w tej siatce korzystając z:
-    -   modelu potęgowego o semiwariancji cząstkowej 0.03 i zasięgu 0.3
-    -   modelu potęgowego o semiwariancji cząstkowej 0.03 i zasięgu 0.6
-    -   modelu potęgowego o semiwariancji cząstkowej 0.03 i zasięgu 0.9
-5. Porównaj graficznie uzyskane powyżej wyniki i opisz je.
-6.  Stwórz optymalny model semiwariogramu zmiennej `temp` z obiektu `punkty`.
+4.  Stwórz optymalny model semiwariogramu zmiennej `temp` z obiektu `punkty`.
 Następnie korzystając z wybranej metody krigingowej, poznanej w poprzednich rozdziałach, wykonaj estymację zmiennej `temp`.
-7.  Wykonaj cztery symulacje warunkowe używając optymalnego modelu semiwariancji stworzonego w poprzednim zadaniu. 
+5.  Wykonaj cztery symulacje warunkowe używając optymalnego modelu semiwariancji stworzonego w poprzednim zadaniu. 
 Porównaj uzyskaną estymację geostatystyczną z symulacjami geostatystycznymi. 
 Jakie można zaobserwować podobieństwa a jakie różnice?
-8.  Zbuduj optymalny model semiwariogramu empirycznego określający prawdopodobieństwo wystąpienia wartości `ndvi`  poniżej 0.1 dla zbioru `punkty`. 
+6.  Zbuduj optymalny model semiwariogramu empirycznego określający prawdopodobieństwo wystąpienia wartości `ndvi`  poniżej 0.1 dla zbioru `punkty`. 
 Wykonaj estymację metodą krigingu danych kodowanych. 
 Następnie używając tego samego modelu, wykonaj cztery symulacje warunkowe (symulacje danych kodowanych).
 Jakie wartości progowe prawdobodobieństwa przypominają uzyskane symulacje?
