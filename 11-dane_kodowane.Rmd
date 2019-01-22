@@ -84,7 +84,7 @@ fitted_ind
 plot(vario_ind, model = fitted_ind)
 ```
 
-### Interpolacja
+### Estymacja
 
 Ostatnim etapem jest stworzenie interpolacji geostatystycznej z pomocą funkcji `krige`.
 Wymaga ona czterech argumentów - wzoru (`temp_ind~1`), zbioru punktowego (`punkty`), siatki do interpolacji (`siatka`) oraz modelu (`fitted_ind`).
@@ -207,9 +207,9 @@ data(punkty_ndvi)
     * poniżej 0.3
     * pomiędzy 0.3 a 0.5
     * powyżej 0.5
-Poczytaj na temat tego wskaźnika. 
+2. Poczytaj na temat tego wskaźnika. 
 Co mogą oznaczać powyższe przedziały?
-2. Korzystając z trzech powyższych przedziałów stwórz mapy prawdopodobieństwa.
+3. Korzystając z trzech powyższych przedziałów stwórz mapy prawdopodobieństwa.
 W jaki sposób można zinterpretować trzy uzyskane mapy?
-3. Używając wybranego progu prawdopodobieństwa, stwórz trzy mapy binarne.
-4. (Dodatkowe) połącz trzy mapy binarne w jedną mapę pokazującą uproszczone pokrycie terenu.
+4. Używając wybranego progu prawdopodobieństwa, stwórz trzy mapy binarne.
+5. (Dodatkowe) połącz trzy mapy binarne w jedną mapę pokazującą uproszczone pokrycie terenu.
