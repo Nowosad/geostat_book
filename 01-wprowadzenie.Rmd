@@ -69,7 +69,8 @@ sk <- krige(temp~1,
             locations = punkty,
             newdata = siatka,
             model = fitted_sph,
-            beta = 16)
+            beta = 16, 
+            debug.level = 0)
 plot(sk["var1.pred"], main = "Estymacja")
 plot(sk["var1.var"], main = "Wariancja estymacji")
 ```
@@ -82,7 +83,8 @@ sym_ok <- krige(temp~1,
                 newdata = siatka, 
                 model = fitted_sph,
                 nmax = 30, 
-                nsim = 4)
+                nsim = 4, 
+                debug.level = 0)
 # plot(sym_ok)
 ```
 
