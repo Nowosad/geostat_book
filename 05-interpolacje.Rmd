@@ -30,7 +30,7 @@ Istnieją dwa podstawowe rodzaje takich siatek - siatki regularne oraz siatki ni
 ### Siatki regularne
 
 Siatki regularne mają kształt prostokąta obejmującego cały analizowany obszar. 
-Określenie granic obszaru można wykonać na podstawie zasięgu danych punktowych za pomocą funkcji `bbox()` z pakietu **sp**<!-- lub funkcji `extent()` z pakietu **raster**-->.
+Określenie granic obszaru można wykonać na podstawie zasięgu danych punktowych za pomocą funkcji `bbox()` z pakietu **sp**.
 
 ```{r}
 bbox(punkty)
@@ -43,8 +43,8 @@ extent(punkty)
 
 Do stworzenia siatki można użyć funkcji `expand.grid()`.
 Wymaga ona określenia dwóch argumentów - `x` oraz `y` (taka ich nazwa nie jest obowiązkowa). 
-Oba argumenty przyjmują trzy wartości: (i) `from` oznaczający wartość początkową współrzędnej, (ii) `to` określający wartość końcową współrzędnej, oraz (iii) `by` określający rozdzielczość. 
-Przy ustalaniu wartości początkowej i końcowej konieczne jest ich rozszerzenie względem wartości z funkcji `bbox()` lub `extent()`, aby wszystkie analizowane punkty znalazły się na badanym obszarze. 
+Oba argumenty przyjmują trzy wartości: (i) `from` - oznaczający wartość początkową współrzędnej, (ii) `to` -  określający wartość końcową współrzędnej, oraz (iii) `by` - określający rozdzielczość. 
+Przy ustalaniu wartości początkowej i końcowej konieczne jest ich rozszerzenie względem wartości z funkcji `bbox()`, aby wszystkie analizowane punkty znalazły się na badanym obszarze. 
 
 ```{r }
 nowa_siatka <- expand.grid(
@@ -75,7 +75,7 @@ plot(nowa_siatka)
 
 ### Siatki regularne - wizualizacja
 
-Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić za pomocą funkcji `plot()`. 
+Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można wykonać za pomocą funkcji `plot()`. 
 W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add`.
 
 ```{r }
@@ -111,8 +111,8 @@ zip("dane.zip", "dane")
 ## Modele deterministyczne
 
 Modele deterministyczne charakteryzują się tym, że ich parametry są zazwyczaj ustalane w oparciu o funkcję odległości lub powierzchni. 
-W tych modelach brakuje szacunków na temat oceny błędu modelu.
 Zaletą tych modeli jest ich prosta oraz krótki czas obliczeń. 
+W tych modelach brakuje jednak szacunków na temat oceny błędu modelu.
 Do modeli deterministycznych należą, między innymi:
 
 - Metoda diagramów Voronoi'a (ang.  *Voronoi diagram*)
@@ -126,7 +126,6 @@ Do modeli deterministycznych należą, między innymi:
 
 Metoda diagramów Voronoi'a polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego punktu. 
 Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi()` z pakietu **dismo**.
-<!-- Wyniki następnie można przyciąć do badanego obszaru z użyciem funkcji `intersect()` z pakietu **raster**. -->
 
 ```{r }
 voronoi_interp <- voronoi(punkty)
@@ -163,7 +162,7 @@ ggplot(df_idw, aes(x = distance, y = value,
                    color = as.factor(key), group = key)) +
         geom_path(size = 2) + 
         scale_color_brewer(type = "qual", 
-                           name = "idp") +
+                           name = "Wartość \nwykładnika \npotęgowego \n(idp):") +
         labs(x = "Odległość", y = "Waga")
 ```
 
