@@ -2,7 +2,7 @@
 
 ## Co to?
 
-Powtarzalny przykład oznacza fragment kodu, który może być odtworzony przez inną osobę/przez siebie samego na innym komputerze/przez siebie samego w przyszłości.
+Powtarzalny przykład oznacza fragment kodu, który może być odtworzony przez inną osobę na innym komputerze/przez siebie samego w przyszłości.
 
 Powtarzalny przykład może służyć pokazaniu poprawnego rozwiązania, wskazaniu na błędy w funkcjach, lub też jako załącznik do prośby o pomoc z kodem.
 
@@ -19,7 +19,6 @@ Można do tego użyć funkcji `sessionInfo()`
 
 Stworzenie powtarzalnego przykładu w R może zostać ułatwione poprzez stosowanie pakietu **reprex**. 
 Ten pakiet uruchamia wybraną część kodu, wykonuje kolejne operacje, a następnie zapisuje uzyskany wynik do schowka.
-
 
 Pakiet **reprex** można zainstalować poprzez funkcję `install.packages()`:
 
@@ -70,6 +69,9 @@ reprex({
 ```
 
 Powyższy kod ma dwa problemy - czy jesteś w stanie je wskazać?
+
+![](figs/reprex2.png)
+
 Odpowiedź - ten kod nie jest w pełni samowystarczalny - brakuje tam dołączenia pakietu **geostatbook**, który zawiera zbiór danych `punkty`.
 Drugi problem to użyta zmienna do wizualizacji - `"temperatura"` nie istnieje w zbiorze danych `punkty`. 
 Zamiast niej powinna być użyta poprawna nazwa zmiennej - `temp`.
@@ -89,7 +91,7 @@ reprex({
 
 ![](figs/reprex3.png)
 
-W efekcie otrzymujemy nie tylko kod użyty do obliczeń, ale wynikową grafikę.
+W efekcie otrzymujemy nie tylko kod użyty do obliczeń, ale również wynikową grafikę.
 
 ## Więcej informacji
 
