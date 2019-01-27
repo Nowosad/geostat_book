@@ -1,9 +1,4 @@
-```{r include=FALSE, cache=FALSE}
-library("methods")
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = '\\textwidth')
-options(scipen = 99 * 99)
 
-```
 # Dane {#dane-app}
 
 ```{r, echo=FALSE}
@@ -11,15 +6,15 @@ library(sp)
 ```
 
 
-Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu `geostatbook` (dla kolejnych rozdziałów). 
-Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w tym skrypcie.
+Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu **geostatbook** (dla kolejnych rozdziałów). 
+Dodatkowo, przy instalacji pakietu **geostatbook** pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w tym skrypcie.
 
 - [Archiwum zawierające dane do rozdziału drugiego](https://github.com/Nowosad/geostat_book/blob/master/dane.zip?raw=true)
 - [Dane do kolejnych rozdziałów są zawarte w pakiecie geostatbook:](https://github.com/Nowosad/geostatbook)
 
 ```{r instgeobook2, eval=FALSE}
 # install.packages("devtools")
-devtools::install_github("nowosad/geostatbook")
+devtools::install_github("nowosad/geostatbook@2")
 ```
 
 ## Zbiory danych w pakiecie **geostatbook**
