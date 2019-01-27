@@ -158,26 +158,22 @@ plot(kowario)
 Kolejną miarą przestrzennego podobieństwa jest autokorelacja.
 Jej wykres (autokorelogram) pokazuje wartość jednej z miar autokorelacji (np. I Morana lub C Geary'ego) w stosunku do odległości.
 Na poniższym przykładzie, wartość statystyki I Morana jest wyliczana poprzez funkcję `correlog()` z pakietu **pgirmess**.
+
+```{r, echo=FALSE, message=FALSE, include=FALSE}
+dev.off()
+```
  
 ```{r }
 wsp <- coordinates(punkty)
 kor <- correlog(wsp, punkty$temp, method = "Moran")
-kor <- as.data.frame(kor)
-ggplot(kor, aes(dist.class, coef)) + 
-        geom_smooth(linetype = 0) + 
-        geom_line() + 
-        geom_point(size = 5)
+plot(kor)
 ```
-
 
 ## Semiwariancja
 
 ### Miara niepodobieństwa
 
-- Trzecią miarę charakteryzującą relację między obserwacjami odległymi o kolejne odstępy jest semiwariancja
-- Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji
-- Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo
-- Jednocześnie, dla potrzeb interpretacji relacji, kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
+Trzecią miarę charakteryzującą relację między obserwacjami odległymi o kolejne odstępy jest semiwariancja. Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji. Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo. Warto jadnak dodać, że dla potrzeb interpretacji relacji, kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja.
 
 ### Wzór
 
@@ -187,7 +183,7 @@ Jest to połowa średniej kwadratu różnicy pomiędzy wartościami badanej zmie
 $$ \gamma(h) = \frac{1}{2}[(z(s) - z(s+h))]^2 $$
 
 Przykładowo, aby wyliczyć wartość semiwariancji (`gamma`) pomiędzy dwoma punktami musimy znać wartość pierwszego z nich (w przykładzie jest to ok. 22,46 stopni Celsjusza) oraz drugiego z nich (ok. 16,04 stopni Celsjusza).
-Korzystając z wzoru na semiwariację otrzymujemy wartość równą ok. 20,60.
+Korzystając z wzoru na semiwariację otrzymujemy wartość równą ok. 20,6.
 Znamy również odległość między punktami (ok. 4576,59 metra), więc możemy w uproszczeniu stwierdzić, że dla tej pary punktów odległych o 4577 metry wartość semiwariancji wynosi około 20,6.
 
 ```{r }
@@ -393,16 +389,6 @@ vario_map <- variogram(temp~1, locations = punkty,
 plot(vario_map, threshold = 30,
      col.regions = topo.colors(n = 40)) # co najmniej 30 par punktów
 ```
-
-<!-- Mapie semiwariogramu można również się przyjrzeć interaktywnie używając funkcję `plot3D()` z pakietu **rasterVis**. -->
-
-<!-- ```{r mapa_semi, eval=FALSE, fig.width=6} -->
-<!-- plot3D(raster(vario_map$map), col = terrain.colors) -->
-<!-- ``` -->
-
-<!-- ```{r, echo=FALSE} -->
-<!-- knitr::include_graphics("figs/plot3D.png") -->
-<!-- ``` -->
 
 ### Semiwariogramy kierunkowe
 
