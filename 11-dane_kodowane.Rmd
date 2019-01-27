@@ -116,7 +116,7 @@ ggplot(ik@data, aes(var1.pred)) + geom_histogram()
 ```
 
 Następnie można stworzyć nową zmienną binarną w oparciu o wartości estymacji.
-Poniższy kod tworzy dwie nowe zmienne - `prog1`, gdzie wartość progowa została ustalona na 0.1 oraz `prog2` z wartością progową 0.75.
+Poniższy kod tworzy dwie nowe zmienne - `prog1`, gdzie wartość progowa została arbitralnie ustalona na 0.1 oraz `prog2` z wartością progową 0.75.
 
 ```{r}
 ik$prog1 <- ik$var1.pred > 0.1
