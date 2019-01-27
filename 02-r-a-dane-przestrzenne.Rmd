@@ -19,19 +19,14 @@
 R zawiera wiele funkcji pozwalających na przetwarzanie, wizualizację i analizowanie danych przestrzennych.
 Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi:
 
-<!-- uzupełnij -->
-
-- GIS - **sf**, **raster**, **sp**, **rgdal**, **rgeos**
+- GIS - **sp**, **rgdal**, **rgeos**, **sf**, **raster**, **stars**
 - Geostatystyka - **gstat**, **geoR**, **geoRglm**
 
-<!-- - GIS - **sp**, **rgdal**, **raster**, **rasterVis**, **rgeos**, **maptools**, **GeoXp**, **deldir**, **pgirmess**, **spatstat** -->
-<!-- - Geostatystyka - **gstat**, **geoR**, **geoRglm**, **fields**, **spBayes**, **RandomFields**, **vardiag** -->
-
-Więcej szczegółów na ten temat pakietów R służących do analizy przestrzennej można znaleźć pod adresem https://cran.r-project.org/web/views/Spatial.html.
+Więcej szczegółów na temat pakietów R służących do analizy przestrzennej można znaleźć pod adresem https://cran.r-project.org/web/views/Spatial.html.
 
 ### Reprezentacja danych przestrzennych
 
-Dane przestrzenne mogą być reprezentowane w R poprzez szereg różnych klas obiektów z użyciem różnych pakietów R. 
+Dane przestrzenne mogą być reprezentowane poprzez szereg różnych klas obiektów z użyciem różnych pakietów R. 
 Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klas `Spatial*` z pakietu **sp** oraz obiekty klasy `sf` z pakietu **sf**.
 
 Wszystkie obiekty klasy `Spatial*` z pakietu **sp** zawierają tablę atrybutów oraz dwie dodatkowe informacje:
@@ -47,21 +42,19 @@ W oparciu o pakiet **sp** powstało kilkaset dodatkowych pakietów R do analizy 
 
 Dane rastrowe są reprezentowane między innymi poprzez klasę `SpatialGridDataFrame` z pakietu **sp** oraz obiekty klasy `Raster*` z pakietu **raster**, tj. `RasterLayer`, `RasterStack`, `RasterBrick`.
 
-Więcej o pakiecie **sf** oraz **raster** można przeczytać w [rozdziale drugim](https://geocompr.robinlovelace.net/spatial-class.html) Geocomputation with R.
+Więcej o pakiecie **sf** oraz **raster** można przeczytać w [rozdziale drugim](https://geocompr.robinlovelace.net/spatial-class.html) książki Geocomputation with R.
 
 ### GDAL/OGR
 
-- Pakiety **rgdal**, **raster** czy **sf** wykorzystują biblioteki GDAL/OGR w R do wczytywania i zapisywania danych przestrzennych
-- http://www.gdal.org/
+- Pakiety **rgdal**, **raster** czy **sf** wykorzystują biblioteki [GDAL/OGR](http://www.gdal.org/) w R do wczytywania i zapisywania danych przestrzennych
 - GDAL to biblioteka zawierająca funkcje służące do odczytywania i zapisywania danych w formatach rastrowych
 - OGR to biblioteka służąca to odczytywania i zapisywania danych w formatach wektorowych
 
 ### PROJ
 
-- Pakiety **sp**, **raster**, czy **sf** używają biblioteki PROJ do określania i konwersji układów współrzędnych
-- https://proj4.org/
+- Pakiety **sp**, **raster**, czy **sf** używają biblioteki [PROJ](https://proj4.org/) do określania i konwersji układów współrzędnych
 - Dane przestrzenne powinny być zawsze powiązane z układem współrzędnych
-- PROJ - to biblioteka pozwalająca na identyfikację oraz konwersję pomiędzy różnymi układami współrzędnych
+- PROJ to biblioteka pozwalająca na identyfikację oraz konwersję pomiędzy różnymi układami współrzędnych
 - Strona http://www.spatialreference.org/ zawiera bazę danych układów współrzędnych 
 - Układy współrzędnych mogą być opisywane na szereg sposobów, np poprzez:
 
@@ -79,9 +72,9 @@ Więcej o pakiecie **sf** oraz **raster** można przeczytać w [rozdziale drugim
 ### Układ geograficzny
 
 - Proporcje pomiędzy współrzędną oznaczającą długość geograficzną (X) a oznaczającą szerokość geograficzną (Y) nie są równe 1:1
+- Jednostka mapy jest abstrakcyjna
 - Wielkość oczka siatki jest zmienna 
 - Nie pozwala to na proste określanie odległości czy powierzchni
-- Jednostka mapy jest abstrakcyjna
 - Powyższe cechy układów geograficznych powodują, że do większości algorytmów w geostatystyce wykorzystywane są układy współrzędnych prostokątnych płaskich
 
 ### Układ współrzędnych prostokątnych płaskich
@@ -92,8 +85,7 @@ Więcej o pakiecie **sf** oraz **raster** można przeczytać w [rozdziale drugim
 
 ### GEOS
 
-- Pakiety **rgeos** czy **sf** używają biblioteki GEOS do wykonywania operacji przestrzennych
-- http://geos.osgeo.org/
+- Pakiety **rgeos** czy **sf** używają biblioteki [GEOS](http://geos.osgeo.org/) do wykonywania operacji przestrzennych
 - GEOS to biblioteka pozwalająca na przetwarzanie obiektów przestrzennych
 - Przykładowe funkcje tej biblioteki to tworzenie buforów, wyliczanie centroidów, określanie relacji topologicznych (np. przecina, zawiera, etc.) i wiele innych
 
@@ -165,14 +157,6 @@ sp_na_omit <- function(x, margin=1) {
 
 Dane wektorowe (np. GeoPackage czy ESRI Shapefile) można odczytać za pomocą funkcji `readOGR()` z pakietu **rgdal**. 
 W najprostszej sytuacji przyjmuje ona jeden argument `dsn`, który oczekuje ścieżki do pliku wektorowego.
-<!--
-Dane wektorowe (np. ESRI Shapefile) można odczytać za pomocą funkcji `readOGR()` z pakietu **rgdal**. 
-Dla danych w formacie ESRI Shapefile, przyjmuje ona co najmniej dwa argumenty - `dsn` oraz `layer`. 
-Argument `dsn` określa folder, w którym znajdują się dane. 
-W przypadku, gdy dane znajdują się w folderze roboczym należy ten argument określić za pomocą znaku kropki (`"."`). 
-Argument `layer` wymaga podania nazwy pliku bez jego rozszerzenia.
-Przykładowo, gdy pliki nazywają się `granica.dbf`, `granica.prj`, `granica.shp`, oraz `granica.shx` - konieczne jest podanie w argumencie `layer` jedynie nazwy `granica`.
--->
 
 ```{r}
 library(rgdal)
@@ -183,11 +167,10 @@ plot(granica_sp)
 ### Rastry
 
 Istnieje kilka sposobów odczytu danych rastrowych w R. 
-Do najpopularniejszych należą funkcje `readGDAL()` z pakietu `rgdal` oraz `raster()` z pakietu **raster**.
+Do najpopularniejszych należą funkcje `readGDAL()` z pakietu **rgdal** oraz `raster()` z pakietu **raster**.
 Należy w nich jedynie podać ścieżkę do pliku rastrowego.
 
 ```{r}
-library(raster)
 siatka_sp <- readGDAL("dane/siatka.tif")
 plot(siatka_sp)
 ```
@@ -263,7 +246,7 @@ writeOGR(granica_sp, dsn = "dane", layer = "nowa_granica",
          driver = "ESRI Shapefile")
 ```
 
-Zapisywanie w bazach danych przestrzennych odbywa się poprzez nazwy zapisywanego obiektu (np. `granica`), ścieżki do zapisywanego pliku (np. `dane/nowa_granica.gpkg`), nazwę dla nowo utworzonej warstwy (np. `granica`), oraz sterownik - w przypadku danych GeoPackage jest to `GPKG`.
+Zapisywanie w bazach danych przestrzennych odbywa się poprzez nazwy zapisywanego obiektu (np. `granica`), ścieżki do zapisywanego pliku (np. `dane/nowa_granica.gpkg`), nazwę dla nowo utworzonej warstwy (np. `granica`), oraz sterownik - w przypadku formatu GeoPackage jest to `GPKG`.
 
 ```{r zapis_wektora2, eval=FALSE}
 # bazy danych przestrzennych
@@ -281,13 +264,14 @@ writeGDAL(siatka_sp, fname = "dane/nowy_siatka.tif")
 ```
 
 Możliwe jest także użycie szeregu dodatkowych argumentów, np.:
+
 - `type` - określającego typ danych wyjściowych 
 - `options` - pozwalającego na użycie dodatkowych opcji sterownika, np. użycie kompresji danych
 
 ## Wizualizacja danych 2D
 
 Do wizualizacji danych przestrzennych w R służy co najmniej kilkanaście różnych pakietów. 
-Poniżej pokazane są przykłady kilku najprostszych funkcji - `plot()` oraz `spplot()` z pakietu `sp` oraz `levelplot()` z pakietu `rasterVis`.
+Poniżej pokazane są przykłady kilku najprostszych funkcji - `plot()` oraz `spplot()` z pakietu `sp`.
 Więcej o wizualizacji danych przestrzennych można przeczytać w rozdziale [Making maps with R](https://geocompr.robinlovelace.net/adv-map.html) książki Geocomputation with R.
 
 ### Dane punktowe
