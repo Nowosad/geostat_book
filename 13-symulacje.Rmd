@@ -96,6 +96,8 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 
 ## Symulacje warunkowe
 
+### Sekwencyjna symulacja gaussowska
+
 Jednym z podstawowych typów symulacji warunkowych jest sekwencyjna symulacja gaussowska (ang. *Sequential Gaussian simulation*). 
 Polega ona na:
 
@@ -198,7 +200,7 @@ Można na niej odczytać obszary o najpewniejszych (najmniej zmiennych) wartośc
 spplot(sym_sk)
 ```
 
-## Sekwencyjna symulacja danych kodowanych
+### Sekwencyjna symulacja danych kodowanych
 
 Symulacje geostatystyczne można również zastosować do danych binarnych.
 Dla potrzeb przykładu tworzona jest nowa zmienna `temp_ind` przyjmująca wartość `TRUE` dla pomiarów o wartościach temperatury niższych niż 12 stopni Celsjusza oraz `FALSE` dla pomiarów o wartościach temperatury równych lub wyższych niż 12 stopni Celsjusza.
