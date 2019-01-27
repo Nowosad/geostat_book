@@ -18,7 +18,7 @@ par(mar = c(rep(0, 4)))
 W wielu przypadkach, oprócz konkretnych pomiarów, istnieje również informacja na temat zmienności innych cech na analizowanym obszarze. 
 W sytuacji, gdy dodatkowe zmienne są skorelowane ze zmienną analizowaną można wykorzystać jedną z metod krigingu wykorzystującą dane uzupełniające, tj. kriging stratyfikowany, prosty kriging ze zmiennymi średnimi lokalnymi, czy kriging uniwersalny.
 
-```{r, echo=FALSE, fig.asp=0.25}
+```{r, echo=FALSE, fig.asp=0.3}
 library(gridExtra)
 siatka$clc <- as.factor(siatka$clc)
 ip1 <- spplot(siatka["clc"], main = "clc", colorkey = list(space = "bottom"))
@@ -176,7 +176,6 @@ W pierwszym przykładzie, kriging uniwersalny służy stworzeniu semiwariogramu,
 ```{r }
 punkty$clc <- as.factor(punkty$clc)
 vario_uk1 <- variogram(temp~clc, location = punkty)
-# vario_uk1
 # plot(vario_uk1)
 model_uk1 <- vgm(model = "Sph", nugget = 1)
 vario_fit_uk1 <- fit.variogram(vario_uk1, model = model_uk1)
@@ -212,7 +211,6 @@ W kolejnym przykładzie zastosowane są już dwie zmienne uzupełniające - wart
 
 ```{r }
 vario_uk2 <- variogram(temp~ndvi + srtm, location = punkty)
-# vario_uk2
 # plot(vario_uk2)
 model <- vgm(model = "Sph", nugget = 1)
 vario_fit_uk2 <- fit.variogram(vario_uk2, model = model)
