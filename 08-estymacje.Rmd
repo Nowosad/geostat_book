@@ -71,7 +71,7 @@ sk <- krige(temp~1,
 ```
 
 Wynik krigingu prostego, jak i każdy inny uzyskany z użyciem pakietu **gstat**, można podejrzeć używając funkcji `summary()`.
-Szczególnie ważne są dwie, nowe zmienne - `var1.pred` oraz `var1.var`.
+Szczególnie ważne są dwie nowe zmienne - `var1.pred` oraz `var1.var`.
 Pierwsza z nich oznacza wartość estymowaną dla każdego oczka siatki, druga zaś mówi o wariancji estymacji. 
 
 ```{r}
@@ -189,7 +189,7 @@ grid.arrange(p1, p2, ncol = 1)
 ## Porównanie wyników SK, OK i KZT
 
 Poniższe porównanie krigingu prostego (SK), zwykłego (OK) i z trendem (KZT) wykazuje niewielkie różnice w uzyskanych wynikach.
-W rozdziałach  \@ref(estymacje-wielozmienne) oraz \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych) pokazane będą uzyskane wyniki estymacji temperatury powietrza korzystając z innych metod krigingu.
+W rozdziałach \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych) oraz \@ref(estymacje-wielozmienne) pokazane będą uzyskane wyniki estymacji temperatury powietrza korzystając z innych metod krigingu.
 
 ```{r ploty_trzy, echo=FALSE, fig.height=12}
 zmax <- round(max(sk$var1.pred, ok$var1.pred,
