@@ -4,6 +4,8 @@
 ## Wprowadzenie
 
 ### Reprezentacja danych nieprzestrzennych
+
+Skrypty i funkcje w języku R są zbudowane na podstawie szeregu obiektów nieprzestrzennych.
     
 - Wektory (ang. *vector*):
     - liczbowe (ang. *integer*, *numeric*) - `c(1, 2, 3)` i `c(1.21, 3.32, 4.43)`
@@ -16,7 +18,7 @@
 
 ### Pakiety
 
-R zawiera wiele funkcji pozwalających na przetwarzanie, wizualizację i analizowanie danych przestrzennych.
+R zawiera także wiele funkcji pozwalających na przetwarzanie, wizualizację i analizowanie danych przestrzennych.
 Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi:
 
 - GIS - **sp**, **rgdal**, **rgeos**, **sf**, **raster**, **stars**
