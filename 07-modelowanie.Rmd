@@ -110,15 +110,7 @@ Najlepiej, gdy wybór modelu oparty jest o wiedzę na temat zakładanego procesu
 ### Funkcja `fit.variogram()`
 
 Funkcja `fit.variogram()` z pakietu **gstat** dopasowuje zasięg oraz semiwariancję progową w oparciu o ustalone "ręcznie" wejściowe parametry modelu.
-Więcej na temat działania tej funkcji można przeczytać we wpisie na stronie https://www.r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html.
-
-<!-- ### Liniowy model regionalizacji -->
-
-<!-- W przypadku, gdy analizowane zjawisko jest złożone, odwzorowanie kształtu semiwariogramu empirycznego wymaga połączenia dwóch lub większej liczby modeli podstawowych.  -->
-<!-- W takiej sytuacji konieczne jest spełnienie dwóch warunków: -->
-
-<!-- - Wszystkie zastosowane modele muszą być dopuszczalne (`vgm()`) -->
-<!-- - Wariancja progowa każdego podstawowego modelu musi być dodatnia -->
+Więcej na temat działania tej funkcji można przeczytać we wpisie [Fitting variogram models in gstat](https://www.r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html) na stronie https://www.r-spatial.org.
 
 ## Modelowanie izotropowe
 
@@ -166,6 +158,7 @@ plot(vario)
 ```
 
 ```{r }
+# ręczne ustalenie wszystkich parametrów modelu
 model_sph <- vgm(psill = 10, model = "Sph", range = 3000)
 model_sph
 plot(vario, model = model_sph)
@@ -180,6 +173,7 @@ plot(vario, model = fitted_sph)
 <!-- przedsaw, omów, podaj wady i zalety -->
 
 ```{r}
+# ręczne ustalenie tylko typu modelu
 model_sph2 <- vgm(model = "Sph")
 fitted_sph2 <- fit.variogram(vario, model_sph2)
 plot(vario, model = fitted_sph2)
