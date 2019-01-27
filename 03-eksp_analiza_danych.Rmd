@@ -41,7 +41,7 @@ str(punkty)
 ```
 
 Każdą ze zmiennych można obejrzeć oddzielnie, poprzez połączenie nazwy obiekty, znaku `$`, oraz nazwy elementu.
-Przykładowo `punkty$temp` pozwala na obejrzenie wartości wybranej zmiennej z tabeli atrybutów.
+Przykładowo `punkty$temp` pozwala na obejrzenie wartości zmiennej `temp` z tabeli atrybutów.
 
 ```{r}
 str(punkty$temp)
@@ -174,8 +174,7 @@ cov(punkty$temp, punkty$ndvi)
 
 Współczynnik korelacji to unormowana miara zależności pomiędzy dwiema zmiennymi, przyjmująca wartości od -1 do 1. 
 Ten współczynnik jest uzyskiwany poprzez podzielenie wartości kowariancji przez odchylenie standardowe wyników.
-Z racji unormowania nie jest ona uzależniona od jednostki. Korelację można wyliczyć dzięki funkcji `cor()`. 
-Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego obiektu zawierającego zmienne numeryczne.
+Z racji unormowania nie jest ona uzależniona od jednostki. Korelację można wyliczyć dzięki funkcji `cor()`.
 
 ```{r }
 cor(punkty$temp, punkty$ndvi)
