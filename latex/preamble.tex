@@ -1,6 +1,7 @@
 \usepackage{float} %H
 \usepackage{booktabs}
 \usepackage{polski}
+\usepackage{pdfpages}
 \usepackage{amsmath} % if desired
 \usepackage{unicode-math}
 \setmathfont{latinmodern-math.otf}
@@ -18,3 +19,6 @@
 
 % adds bibliography to the toc
 \usepackage[nottoc,notlot,notlof]{tocbibind}
+
+\let\oldmaketitle\maketitle
+\AtBeginDocument{\let\maketitle\relax}
