@@ -1,7 +1,6 @@
 --- 
 title: "Geostatystyka w R"
 author: "Jakub Nowosad"
-date: "Wydanie drugie, `r format(Sys.time(), '%Y')`"
 site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
