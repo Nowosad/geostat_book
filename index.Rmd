@@ -91,7 +91,7 @@ devtools::session_info(pakiety)
 
 Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu **geostatbook** (dla kolejnych rozdziałów). 
 
-- [Archiwum zawierające dane do rozdziału drugiego](https://github.com/Nowosad/geostat_book/blob/master/dane.zip?raw=true)
+- [Archiwum zawierające dane do rozdziału drugiego](https://github.com/Nowosad/geostat_book/blob/master/dane-wyd2.zip?raw=true)
 - [Dane do kolejnych rozdziałów są zawarte w pakiecie geostatbook:](https://github.com/Nowosad/geostatbook)
 
 ```{r instgeobook2, eval=FALSE}
