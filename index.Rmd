@@ -42,8 +42,7 @@ Aktualna wersja skryptu znajduje się pod adresem https://bookdown.org/nowosad/G
 
 Jeżeli używasz skryptu, zacytuj go jako:
 
-- Nowosad, J., (2019). Geostatystyka w R. Online:
-https://bookdown.org/nowosad/Geostatystyka/
+- Nowosad, J., (2019). Geostatystyka w R. Poznań: Space A. ISBN 978-83-953296-0-9.
 
 Zachęcam do zgłaszania wszelkich uwag, błędów, pomysłów oraz komentarzy na stronie https://github.com/Nowosad/geostat_book/issues.
 
