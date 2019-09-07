@@ -60,10 +60,10 @@ Istnieją dwa typy symulacji geostatystycznych:
 Symulacje bezwarunkowe w pakiecie **gstat** tworzy się z wykorzystaniem funkcji `krige()`. 
 Podobnie jak w przypadku estymacji geostatystycznych, należy tutaj podać wzór, model, siatkę, średnią globalną (`beta`), oraz liczbę sąsiednich punktów używanych do symulacji (w przykładzie poniżej `nmax = 30`). 
 Należy wprowadzić również informacje, że nie korzystamy z danych punktowych (`locations = NULL`) oraz że chcemy stworzyć dane sztuczne (`dummy = TRUE`). 
-Ostatni argument (`nsim = 4`) informuje o liczbie symulacji do przeprowadzenia.
+Ostatni argument (`nsim = 4`) informuje o liczbie symulacji do przeprowadzenia (Ryciny \@ref(fig:sym_bezw1-fig), \@ref(fig:sym_bezw2-fig)).
 
 ```{r sym_bezw1, cache=TRUE}
-sym_bezw1 <- krige(formula = z~1, 
+sym_bezw1 = krige(formula = z~1, 
                    model = vgm(psill = 0.025,
                                model = "Exp", 
                                range = 100), 
@@ -73,14 +73,21 @@ sym_bezw1 <- krige(formula = z~1,
                    locations = NULL, 
                    dummy = TRUE, 
                    nsim = 4)
+```
 
-# plot(sym_bezw1[][1:3])
-# spplot(as(sym_bezw1, "Spatial"), main = "Przestrzennie skorelowana powierzchnia
-#        \nśrednia=1,\nsill=0.025, zasięg=100, model wykładniczy")
+```{r sym_bezw1-fig, fig.cap = "Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 100, oraz modelu wykładniczego"}
+ggplot() + 
+  geom_stars(data = sym_bezw1) +
+  coord_equal() +
+  facet_wrap(~ sample) +
+  scale_fill_viridis_c() +
+  theme_void() +
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0))
 ```
 
 ```{r sym_bezw2, cache=TRUE}
-sym_bezw2 <- krige(formula = z~1, 
+sym_bezw2 = krige(formula = z~1, 
                    model = vgm(psill = 0.025, model = "Exp", range = 1500), 
                    newdata = siatka, 
                    beta = 1,
@@ -88,31 +95,38 @@ sym_bezw2 <- krige(formula = z~1,
                    locations = NULL, 
                    dummy = TRUE, 
                    nsim = 4)
-# spplot(sym_bezw2, main = "Przestrzennie skorelowana powierzchnia
-#        \nśrednia=1,\nsill=0.025, zasięg=1500, model
-#        wykładniczy")
+```
+
+```{r sym_bezw2-fig, fig.cap = "Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 1500, oraz modelu wykładniczego"}
+ggplot() + 
+  geom_stars(data = sym_bezw2) +
+  coord_equal() +
+  facet_wrap(~ sample) +
+  scale_fill_viridis_c() +
+  theme_void() +
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0))
 ```
 
 <!--
-sym_bezw_model3 <- gstat(formula=~1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
-sym_bezw3 <- predict(sym_bezw_model3, newdata=siatka, nsim=4)
+sym_bezw_model3 = gstat(formula=~1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
+sym_bezw3 = predict(sym_bezw_model3, newdata=siatka, nsim=4)
 spplot(sym_bezw3, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=1500, model wykładniczy \ntrend na osi y = 0.005")
 
-sym_bezw_model4 <- gstat(formula=~1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0.02,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
-sym_bezw4 <- predict(sym_bezw_model4, newdata=siatka, nsim=4)
+sym_bezw_model4 = gstat(formula=~1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0.02,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
+sym_bezw4 = predict(sym_bezw_model4, newdata=siatka, nsim=4)
 spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=500, model wykładniczy \ntrend na osi x = 0.02, trend na osi y = 0.005")
 -->
 
 ## Symulacje warunkowe
 
 Jednym z podstawowych typów symulacji warunkowych jest sekwencyjna symulacja gaussowska (ang. *Sequential Gaussian simulation*). 
-Polega ona na:
+Polega ona na wybieraniu losowo lokalizacji nie posiadającej zmierzonej wartości badanej zmiennej:
 
-1. Wybraniu lokalizacji nie posiadającej zmierzonej wartości badanej zmiennej
-2. Krigingu wartości tej lokalizacji korzystając z dostępnych danych, co pozwala na uzyskanie rozkładu prawdopodobieństwa badanej zmiennej
-3. Wylosowaniu wartości z rozkładu prawdopodobieństwa za pomocą generatora liczba losowych i przypisaniu tej wartości do lokalizacji
-4. Dodaniu symulowanej wartości do zbioru danych i przejściu do kolejnej lokalizacji
-5. Powtórzeniu poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja
+1. Krigingu wartości w tej lokalizacji korzystając z dostępnych danych
+2. Wylosowaniu wartości z rozkładu normalnego o średniej i wariancji wynikającej z krigingu
+3. Dodaniu symulowanej wartości do zbioru danych i przejściu do kolejnej lokalizacji
+4. Powtórzeniu poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja
 
 Sekwencyjna symulacja gaussowska wymaga zmiennej posiadającej wartości o rozkładzie zbliżonym do normalnego. 
 Można to sprawdzić poprzez wizualizacje danych (histogram, wykres kwantyl-kwantyl) lub też test statystyczny (test Shapiro-Wilka).
@@ -127,7 +141,7 @@ shapiro.test(punkty$temp)
 Na potrzeby symulacji zmienna `temp` została zlogarytmizowna.
 
 ```{r}
-punkty$temp_log <- log(punkty$temp)
+punkty$temp_log = log(punkty$temp)
 ggplot(punkty, aes(temp_log)) + geom_histogram()
 ggplot(punkty, aes(sample = temp_log)) + stat_qq()
 shapiro.test(punkty$temp_log)
@@ -136,14 +150,14 @@ shapiro.test(punkty$temp_log)
 Dalsze etapy przypominają przeprowadzenie estymacji statystycznej, jedynym wyjątkiem jest dodanie argumentu mówiącego o liczbie symulacji do przeprowadzenia (`nsim` w funkcji `krige()`).
 
 ```{r}
-vario <- variogram(temp_log~1, locations = punkty)
-model <- vgm(model = "Sph", nugget = 0.005)
-fitted <- fit.variogram(vario, model)
+vario = variogram(temp_log~1, locations = punkty)
+model = vgm(model = "Sph", nugget = 0.005)
+fitted = fit.variogram(vario, model)
 plot(vario, model = fitted)
 ```
 
 ```{r sym_ok, cache=TRUE}
-sym_ok <- krige(temp_log~1, 
+sym_ok = krige(temp_log~1, 
                 locations = punkty,
                 newdata = siatka, 
                 model = fitted,
@@ -158,17 +172,16 @@ plot(sym_ok)
 Wyniki symulacji można przetworzyć do pierwotnej jednostki z użyciem funkcji wykładniczej (`exp`).
 
 ```{r}
-# sym_ok
-# sym_ok@data <- as.data.frame(apply(sym_ok@data, 2, exp))
-# sym_ok
-# plot(sym_ok)
+sym_ok_rescaled = st_apply(sym_ok, 1:2, exp)
+sym_ok_rescaled
+plot(sym_ok_rescaled)
 ```
 
 Symulacje geostatystyczne pozwalają również na przedstawianie niepewności interpolacji. 
 W tym wypadku należy wykonać znacznie więcej powtórzeń (np. `nsim = 100`).
 
 ```{r master_symulation, cache=TRUE}
-sym_sk <- krige(temp_log~1, 
+sym_sk = krige(temp_log~1, 
                 location = punkty, 
                 newdata = siatka, 
                 model = fitted, 
@@ -184,9 +197,8 @@ W efekcie tej operacji liczba kolumn nie ulega zmianie.
 
 ```{r unitsexp}
 # przywrócenie oryginalnej jednostki
-# sym_sk@data <- data.frame(apply(sym_sk@data, 
-#                                 MARGIN = 2,
-#                                 FUN = exp))
+sym_sk_rescaled = st_apply(sym_sk, 1:2, exp)
+sym_sk_rescaled
 ```
 
 Wyliczenie odchylenia standardowego odbywa się poprzez argumenty `MARGIN = 1` oraz `FUN = sd`.
@@ -194,17 +206,16 @@ W ten sposób funkcja `sd()` będzie wykonana na każdym wierszy.
 W efekcie tej operacji otrzymuje się tylko jedną kolumnę.
 
 ```{r unitsexp2}
-# przywrócenie wyliczenie odchylenia standardowego
-# sym_sk@data <- data.frame(apply(sym_sk@data, 
-#                                 MARGIN = 1, 
-#                                 FUN = sd))
+# wyliczenie odchylenia standardowego
+sym_sk_sd = st_apply(sym_sk_rescaled, c("x", "y"), sd)
+sym_sk_sd
 ```
 
 Finalnie otrzymujemy mapę odchylenia standardowego symulowanych wartości.
 Można na niej odczytać obszary o najpewniejszych (najmniej zmiennych) wartościach (niebieski kolor) oraz obszary o największej zmienności cechy (kolor żółty).
 
 ```{r}
-plot(sym_sk)
+plot(sym_sk_sd)
 ```
 
 ## Sekwencyjna symulacja danych kodowanych
@@ -214,7 +225,7 @@ Dla potrzeb przykładu tworzona jest nowa zmienna `temp_ind` przyjmująca warto�
 
 ```{r }
 summary(punkty$temp)
-punkty$temp_ind <- punkty$temp < 12
+punkty$temp_ind = punkty$temp < 12
 summary(punkty$temp_ind)
 ```
 
@@ -222,16 +233,16 @@ W tej metodzie kolejne etapy przypominają przeprowadzenie krigingu danych kodow
 Jedynie w funkcji `krige()` należy dodać argument mówiący o liczbie symulacji do przeprowadzenia (`nsim`).
 
 ```{r}
-vario_ind <- variogram(temp_ind~1, locations = punkty)
+vario_ind = variogram(temp_ind~1, locations = punkty)
 # plot(vario_ind)
-fitted_ind <- fit.variogram(vario_ind,
+fitted_ind = fit.variogram(vario_ind,
                             vgm(model = "Sph", nugget = 0.3))
 fitted_ind
 plot(vario_ind, model = fitted_ind)
 ```
 
 ```{r sym_ind, cache=TRUE}
-sym_ind <- krige(temp_ind~1, 
+sym_ind = krige(temp_ind~1, 
                  locations = punkty, 
                  newdata = siatka, 
                  model = fitted_ind, 
