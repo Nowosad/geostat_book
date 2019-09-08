@@ -44,8 +44,8 @@ Sprawdźmy działanie pakietu **reprex** na prostym przykładzie - tworzymy dwa 
 ```{r, eval=FALSE}
 library(reprex)
 reprex({
-        x <- 1
-        y <- 5
+        x = 1
+        y = 5
         x * y
 })
 ```
@@ -63,9 +63,9 @@ Powtarzalny przykład może posłużyć do szybkiego określenia problemów z ko
 ```{r, eval=FALSE}
 library(reprex)
 reprex({
-        library(sp)
+        library(sf)
         data(punkty)
-        spplot(punkty, "temperatura")
+        plot(punkty["temperatura"])
 })
 ```
 
@@ -80,10 +80,10 @@ Naprawiona wersja tego kodu znajduje się poniżej:
 ```{r, eval=FALSE}
 library(reprex)
 reprex({
-        library(sp)
+        library(sf)
         library(geostatbook)
         data(punkty)
-        spplot(punkty, "temp")
+        plot(punkty["temp"])
 })
 ```
 

@@ -4,20 +4,23 @@
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
 ```{r, message=FALSE, warning=FALSE}
-library(sp)
+library(sf)
+library(stars)
 library(gstat)
 library(geostatbook)
 data(punkty)
+punkty = st_as_sf(punkty)
 ```
 
 ```{r, echo=FALSE}
 par(mar = c(rep(0, 4)))
-```
-
-```{r, echo=FALSE, eval=FALSE}
-library(sf)
-library(stars)
-punkty = st_as_sf(punkty)
+library(ggplot2)
+p1_base = ggplot() +
+        coord_equal() +
+        scale_fill_viridis_c() +
+        theme_void() +
+        scale_x_discrete(expand = c(0, 0)) +
+        scale_y_discrete(expand = c(0, 0))
 ```
 
 ## Modelowanie matematycznie autokorelacji przestrzennej
@@ -36,9 +39,9 @@ Dodatkowo, matematycznie modelowanie wygładza chaotyczne fluktuacje danych empi
 library(gridExtra)
 punkty$x = st_coordinates(punkty)[,1]
 punkty$y = st_coordinates(punkty)[,2]
-vario_kzt <- variogram(temp~x + y, locations = punkty)
-model_kzt <- vgm(model = "Sph", nugget = 1)
-fitted_kzt <- fit.variogram(vario_kzt, model_kzt)
+vario_kzt = variogram(temp~x + y, locations = punkty)
+model_kzt = vgm(model = "Sph", nugget = 1)
+fitted_kzt = fit.variogram(vario_kzt, model_kzt)
 grid.arrange(plot(vario_kzt), plot(vario_kzt, fitted_kzt))
 ```
 
@@ -141,13 +144,12 @@ Uzyskany model można przedstawić w funkcji `plot()` podając nazwę obiektu za
 To dopasowanie można również zwizualizować używając funkcji `plot()`.
 
 ```{r, echo=FALSE}
-nowa_siatka <- makegrid(punkty, cellsize = 100)
-coordinates(nowa_siatka) <- ~x1 + x2
-gridded(nowa_siatka) <- TRUE
-proj4string(nowa_siatka) <- proj4string(punkty)
+nowa_siatka = st_bbox(punkty) %>%
+  st_as_stars(deltax = 100, deltay = 100)
+
 set.seed(14)
-punkty2 = spsample(nowa_siatka, type = "stratified", n = 50)
-punkty2 = SpatialPointsDataFrame(punkty2, data.frame(values = runif(length(punkty2))))
+punkty2 = st_sample(st_as_sf(nowa_siatka), size = 50, type = "random")
+punkty2 = st_sf(values = runif(length(punkty2)), punkty2)
 ```
 
 ### Model sferyczny
@@ -157,30 +159,30 @@ Reprezentuje on cechę, której zmienność wartości ma charakter naprzemiennyc
 Średnio te płaty mają średnicę określoną przez zasięg (`range`) modelu.
 
 ```{r, echo=FALSE}
-vario2 <- variogram(values~1, locations = punkty2)
-model_sph <- fit.variogram(vario2, vgm(psill = 0.08, model = "Sph", range = 2000))
+vario2 = variogram(values~1, locations = punkty2)
+model_sph = fit.variogram(vario2, vgm(psill = 0.08, model = "Sph", range = 2000))
 # plot(vario2, model_sph)
-k_sph <- krige(values~1, 
+k_sph = krige(values~1, 
                locations = punkty2,
                newdata = nowa_siatka,
                model = model_sph,
                debug.level = 0)
-spplot(k_sph[1], at = seq(-0.05, 1.05, by = 0.05))
+plot(k_sph[1])
 ```
 
 ```{r }
-vario <- variogram(temp~1, locations = punkty)
+vario = variogram(temp~1, locations = punkty)
 plot(vario)
 ```
 
 ```{r }
-model_sph <- vgm(psill = 10, model = "Sph", range = 3000)
+model_sph = vgm(psill = 10, model = "Sph", range = 3000)
 model_sph
 plot(vario, model = model_sph)
 ```
 
 ```{r }
-fitted_sph <- fit.variogram(vario, model_sph)
+fitted_sph = fit.variogram(vario, model_sph)
 fitted_sph
 plot(vario, model = fitted_sph)
 ```
@@ -188,8 +190,8 @@ plot(vario, model = fitted_sph)
 <!-- przedsaw, omów, podaj wady i zalety -->
 
 ```{r}
-model_sph2 <- vgm(model = "Sph")
-fitted_sph2 <- fit.variogram(vario, model_sph2)
+model_sph2 = vgm(model = "Sph")
+fitted_sph2 = fit.variogram(vario, model_sph2)
 plot(vario, model = fitted_sph2)
 ```
 
@@ -200,29 +202,29 @@ W jego przypadku, zamiast zasięgu podaje się tzw. zasięg praktyczny.
 Oznacza on odległość na jakiej model osiąga 95% wartości wariancji progowej.
 
 ```{r, echo=FALSE}
-model_exp <- fit.variogram(vario2, vgm(psill = 0.14, model = "Exp", range = 2200))
+model_exp = fit.variogram(vario2, vgm(psill = 0.14, model = "Exp", range = 2200))
 # plot(vario2, model_exp)
-k_exp <- krige(values~1, 
+k_exp = krige(values~1, 
                locations = punkty2,
                newdata = nowa_siatka,
                model = model_exp,
                debug.level = 0)
-spplot(k_exp[1], at = seq(-0.05, 1.05, by = 0.05))
+plot(k_exp[1])
 ```
 
 ```{r }
-vario <- variogram(temp~1, locations = punkty)
+vario = variogram(temp~1, locations = punkty)
 plot(vario)
 ```
 
 ```{r }
-model_exp <- vgm(psill = 10, model = "Exp", range = 3000)
+model_exp = vgm(psill = 10, model = "Exp", range = 3000)
 model_exp
 plot(vario, model = model_exp)
 ```
 
 ```{r }
-fitted_exp <- fit.variogram(vario, model_exp)
+fitted_exp = fit.variogram(vario, model_exp)
 fitted_exp
 plot(vario, model = fitted_exp)
 ```
@@ -235,29 +237,29 @@ Jest on najczęściej używany do modelowania cech o regularnej i łagodnej zmie
 Model gaussowski z uwagi na swoje cechy zazwyczaj nie powinien być stosowany samodzielnie, lecz jako element modelu złożonego.
 
 ```{r, echo=FALSE}
-model_gau <- vgm(psill = 0.10, model = "Gau", range = 1000)
+model_gau = vgm(psill = 0.10, model = "Gau", range = 1000)
 # plot(vario2, model_gau)
-k_gau <- krige(values~1, 
+k_gau = krige(values~1, 
                locations = punkty2,
                newdata = nowa_siatka,
                model = model_gau,
                debug.level = 0)
-spplot(k_gau[1], at = seq(-0.05, 1.05, by = 0.05))
+plot(k_gau[1])
 ```
 
 ```{r }
-vario <- variogram(temp~1, locations = punkty)
+vario = variogram(temp~1, locations = punkty)
 plot(vario)
 ```
 
 ```{r }
-model_gau <- vgm(psill = 13, model = "Gau", range = 3000)
+model_gau = vgm(psill = 13, model = "Gau", range = 3000)
 model_gau
 plot(vario, model = model_gau)
 ```
 
 ```{r }
-fitted_gau <- fit.variogram(vario, model_gau)
+fitted_gau = fit.variogram(vario, model_gau)
 fitted_gau
 plot(vario, model = fitted_gau)
 ```
@@ -269,30 +271,30 @@ Jego wartość rośnie w nieskończoność, dlatego niemożliwe jest określenie
 W przypadku modelu potęgowego, parametr `range` oznacza wykładnik potęgowy.
 
 ```{r, echo=FALSE}
-model_pow <- fit.variogram(vario2, vgm(psill = 0.3, model = "Pow", range = 0.1))
-model_pow <- vgm(psill = 0.02, model = "Pow", range = 0.14)
+model_pow = fit.variogram(vario2, vgm(psill = 0.3, model = "Pow", range = 0.1))
+model_pow = vgm(psill = 0.02, model = "Pow", range = 0.14)
 # plot(vario2, model_pow)
-k_pow <- krige(values~1, 
+k_pow = krige(values~1, 
                locations = punkty2,
                newdata = nowa_siatka,
                model = model_pow,
                debug.level = 0)
-spplot(k_pow[1], at = seq(-0.05, 1.05, by = 0.05))
+plot(k_pow[1])
 ```
 
 ```{r }
-vario <- variogram(temp~1, locations = punkty)
+vario = variogram(temp~1, locations = punkty)
 plot(vario)
 ```
 
 ```{r }
-model_pow <- vgm(psill = 0.03, model = "Pow", range = 0.7)
+model_pow = vgm(psill = 0.03, model = "Pow", range = 0.7)
 model_pow
 plot(vario, model = model_pow)
 ```
 
 ```{r }
-fitted_pow <- fit.variogram(vario, model_pow)
+fitted_pow = fit.variogram(vario, model_pow)
 fitted_pow
 plot(vario, model = fitted_pow)
 ```
@@ -300,11 +302,16 @@ plot(vario, model = fitted_pow)
 ### Porównanie modeli
 
 ```{r, echo=FALSE}
-library(gridExtra)
-grid.arrange(spplot(k_sph[1], main = "Model sferyczny", at = seq(-0.05, 1.05, by = 0.05)), 
-             spplot(k_exp[1], main = "Model wykładniczny", at = seq(-0.05, 1.05, by = 0.05)), 
-             spplot(k_gau[1], main = "Model gaussowski", at = seq(-0.05, 1.05, by = 0.05)), 
-             spplot(k_pow[1], main = "Model potęgowy", at = seq(-0.05, 1.05, by = 0.05)))
+modl = c(k_sph, k_exp, k_gau, k_pow)
+modl = modl[c(1, 3, 5, 7)]
+names(modl) = c("Model sferyczny", "Model wykładniczny", 
+                "Model gaussowski", "Model potęgowy")
+modl = st_redimension(modl)
+
+p1_base + 
+        geom_stars(data = modl) + 
+        facet_wrap(~new_dim) +
+        scale_fill_viridis_c(name = "")
 ```
 
 ### Modele złożone I
@@ -315,15 +322,15 @@ Najbardziej powszechny model złożony składa się z funkcji nuggetowej (dla od
 Zdefiniowanie takiej funkcji odbywa się poprzez dodanie argumentu `nugget` w funkcji `vgm()`.
 
 ```{r }
-vario <- variogram(temp~1, locations = punkty)
-model_zl1 <- vgm(psill = 10, model = "Sph", range = 3000,
+vario = variogram(temp~1, locations = punkty)
+model_zl1 = vgm(psill = 10, model = "Sph", range = 3000,
                  nugget = 0.5)
 model_zl1
 plot(vario, model = model_zl1)
 ```
 
 ```{r }
-fitted_zl1 <- fit.variogram(vario, model_zl1)
+fitted_zl1 = fit.variogram(vario, model_zl1)
 fitted_zl1
 plot(vario, model = fitted_zl1)
 ```
@@ -335,8 +342,8 @@ Przyjmuje on kolejny obiekt funkcji `vgm()` i poprzez połączenie tych dwóch o
 Na poniższym przykładzie stworzony został model złożony składający się z modelu nuggetowego oraz dwóch modeli gaussowskich.
 
 ```{r }
-vario <- variogram(temp~1, locations = punkty)
-model_zl2 <- vgm(10, "Gau", 3000, add.to = vgm(4, 
+vario = variogram(temp~1, locations = punkty)
+model_zl2 = vgm(10, "Gau", 3000, add.to = vgm(4, 
                                                model = "Gau",
                                                range = 500,
                                                nugget = 0.5))
@@ -345,14 +352,14 @@ plot(vario, model = model_zl2)
 ```
 
 ```{r }
-fitted_zl2 <- fit.variogram(vario, model_zl2)
+fitted_zl2 = fit.variogram(vario, model_zl2)
 plot(vario, model = fitted_zl2)
 ```
 
 ```{r}
-model_zl3 <- vgm(model = "Gau", add.to = vgm(model = "Gau",
+model_zl3 = vgm(model = "Gau", add.to = vgm(model = "Gau",
                                              nugget = 0.5))
-fitted_zl3 <- fit.variogram(vario, model_zl3)
+fitted_zl3 = fit.variogram(vario, model_zl3)
 fitted_zl3
 plot(vario, model = fitted_zl3)
 ```
@@ -380,7 +387,7 @@ Na poniższym przykładzie zasięg ustalony dla głównego kierunku wynosi 4000 
 Wartość proporcji anizotropii, `0.4`, w tym wypadku oznacza że dla prostopadłego kierunku zasięg będzie wynosił 1600 metrów (4000 metrów x 0.4).
 
 ```{r }
-vario_map <- variogram(temp~1, 
+vario_map = variogram(temp~1, 
                        locations = punkty,
                        cutoff = 4000,
                        width = 400, 
@@ -389,7 +396,7 @@ plot(vario_map, threshold = 30, col.regions = topo.colors(n = 40))
 ```
 
 ```{r }
-vario_kier <- variogram(temp~1, 
+vario_kier = variogram(temp~1, 
                         locations = punkty,
                         alpha = c(0, 45, 90, 135),
                         cutoff = 4000)
@@ -397,13 +404,13 @@ plot(vario_kier)
 ```
 
 ```{r }
-vario_kier_fit <- vgm(psill = 8, model = "Sph", range = 4000, 
+vario_kier_fit = vgm(psill = 8, model = "Sph", range = 4000, 
                       nugget = 0.5, anis = c(45, 0.4))
 plot(vario_kier, vario_kier_fit, as.table = TRUE)
 ```
 
 ```{r}
-vario_kier_fit2 <- fit.variogram(vario_kier,
+vario_kier_fit2 = fit.variogram(vario_kier,
                                  vgm(model = "Sph",
                                      anis = c(45, 0.4), 
                                      nugget = 0.5))

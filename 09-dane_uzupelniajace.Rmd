@@ -4,124 +4,140 @@
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
 ```{r, message=FALSE, warning=FALSE}
-library(sp)
+library(sf)
+library(stars)
 library(gstat)
 library(geostatbook)
 data(punkty)
 data(siatka)
+data(dane_uzup)
 ```
 
 ```{r, echo=FALSE}
 par(mar = c(rep(0, 4)))
-```
-
-```{r, echo=FALSE, eval=FALSE}
-library(sf)
-library(stars)
-punkty = st_as_sf(punkty)
-siatka = st_as_stars(siatka)
+library(ggplot2)
+p1_base = ggplot() +
+        coord_equal() +
+        scale_fill_viridis_c() +
+        theme_void() +
+        scale_x_discrete(expand = c(0, 0)) +
+        scale_y_discrete(expand = c(0, 0))
 ```
 
 W wielu przypadkach, oprócz konkretnych pomiarów, istnieje również informacja na temat zmienności innych cech na analizowanym obszarze. 
 W sytuacji, gdy dodatkowe zmienne są skorelowane ze zmienną analizowaną można wykorzystać jedną z metod krigingu wykorzystującą dane uzupełniające, tj. kriging stratyfikowany, prosty kriging ze zmiennymi średnimi lokalnymi, czy kriging uniwersalny.
 
-```{r, echo=FALSE, fig.asp=0.25}
+```{r, message=FALSE, fig.asp=0.25, echo=FALSE}
+dane_uzup$clc = as.factor(dane_uzup$clc)
 library(gridExtra)
-siatka$clc <- as.factor(siatka$clc)
-plot(siatka["clc"])
-ip1 <- spplot(siatka["clc"], main = "clc", colorkey = list(space = "bottom"))
-ip2 <- spplot(siatka["srtm"], main = "srtm", colorkey = list(space = "bottom"))
-ip3 <- spplot(siatka["ndvi"], main = "ndvi", colorkey = list(space = "bottom"))
+ip1 = p1_base + geom_stars(data = dane_uzup["clc"]) +
+        scale_fill_viridis_d() + 
+        ggtitle("clc")
+ip2 = p1_base + geom_stars(data = dane_uzup["srtm"]) + 
+        ggtitle("srtm")
+ip3 = p1_base + geom_stars(data = dane_uzup["ndvi"]) + 
+        ggtitle("ndvi")
 grid.arrange(ip1, ip2, ip3, ncol = 3)
 ```
 
-## Kriging stratyfikowany
+<!-- ## Kriging stratyfikowany -->
 
-### Kriging stratyfikowany (ang. *Kriging within strata*)
+<!-- ### Kriging stratyfikowany (ang. *Kriging within strata*) -->
 
-Kriging stratyfikowany zakłada, że zmienność badanego zjawiska zależy od cechy jakościowej (kategoryzowanej).
-Przykładowo, wartość badanej zmiennej jest różna w zależności od pokrycia terenu.
-Kriging stratyfikowany wymaga posiadania danych zmiennej jakościowej (kategoryzowanej) na całym badanym obszarze.
+<!-- Kriging stratyfikowany zakłada, że zmienność badanego zjawiska zależy od cechy jakościowej (kategoryzowanej). -->
+<!-- Przykładowo, wartość badanej zmiennej jest różna w zależności od pokrycia terenu. -->
+<!-- Kriging stratyfikowany wymaga posiadania danych zmiennej jakościowej (kategoryzowanej) na całym badanym obszarze. -->
 
-W poniższym przykładzie zmienną jakościową jest uproszczone pokrycie terenu ze zmiennej `clc`. 
-Przyjmuje ono jedno z trzech wartości. `1` oznacza obszary rolnicze, `2` oznacza obszary leśne, a `4` oznacza wody powierzchniowe.
+<!-- W poniższym przykładzie zmienną jakościową jest uproszczone pokrycie terenu ze zmiennej `clc`.  -->
+<!-- Przyjmuje ono jedno z trzech wartości. `1` oznacza obszary rolnicze, `2` oznacza obszary leśne, a `4` oznacza wody powierzchniowe. -->
 
-```{r }
-siatka$clc <- as.factor(siatka$clc)
-plot(siatka["clc"])
-```
+<!-- ```{r } -->
+<!-- siatka$clc = as.factor(siatka$clc) -->
+<!-- plot(siatka["clc"]) -->
+<!-- ``` -->
 
-Kriging stratyfikowany polega na niezależnym tworzeniu i modelowaniu semiwariogramów dla każdej z kategorii.
+<!-- Kriging stratyfikowany polega na niezależnym tworzeniu i modelowaniu semiwariogramów dla każdej z kategorii. -->
 
-```{r }
-vario_kws1 <- variogram(temp~1, punkty[punkty$clc == 1, ])
-# plot(vario_kws1)
-fitted_kws1 <- fit.variogram(vario_kws1, vgm(model = "Sph", nugget = 0.5))
-plot(vario_kws1, fitted_kws1)
-```
+<!-- ```{r } -->
+<!-- vario_kws1 = variogram(temp~1, punkty[punkty$clc == 1, ]) -->
+<!-- # plot(vario_kws1) -->
+<!-- fitted_kws1 = fit.variogram(vario_kws1, vgm(model = "Sph", nugget = 0.5)) -->
+<!-- plot(vario_kws1, fitted_kws1) -->
+<!-- ``` -->
 
-```{r }
-vario_kws2 <- variogram(temp~1, punkty[punkty$clc == 2, ])
-# plot(vario_kws2)
-fitted_kws2 <- fit.variogram(vario_kws2, vgm(model = "Gau", nugget = 0.1))
-plot(vario_kws2, fitted_kws2)
-```
+<!-- ```{r } -->
+<!-- vario_kws2 = variogram(temp~1, punkty[punkty$clc == 2, ]) -->
+<!-- # plot(vario_kws2) -->
+<!-- fitted_kws2 = fit.variogram(vario_kws2, vgm(model = "Gau", nugget = 0.1)) -->
+<!-- plot(vario_kws2, fitted_kws2) -->
+<!-- ``` -->
 
-```{r }
-vario_kws4 <- variogram(temp~1, punkty[punkty$clc == 4, ])
-# plot(vario_kws4)
-fitted_kws4 <- fit.variogram(vario_kws4, vgm(model = "Nug"))
-plot(vario_kws4, fitted_kws4)
-```
+<!-- ```{r } -->
+<!-- vario_kws4 = variogram(temp~1, punkty[punkty$clc == 4, ]) -->
+<!-- # plot(vario_kws4) -->
+<!-- fitted_kws4 = fit.variogram(vario_kws4, vgm(model = "Nug")) -->
+<!-- plot(vario_kws4, fitted_kws4) -->
+<!-- ``` -->
 
-Następnie dla każdego obszaru przeprowadzona jest niezależna estymacja wartości analizowanej cechy. 
-Należy jedynie wcześniej zadbać, by w siatce nie było elementów `NA` dotyczących zmiennych jakościowych. 
-W przykładzie tworzona jest nowa siatka (`siatka2`) nie zawierająca braków wartości dla zmiennej `clc`.
+<!-- Następnie dla każdego obszaru przeprowadzona jest niezależna estymacja wartości analizowanej cechy.  -->
+<!-- Należy jedynie wcześniej zadbać, by w siatce nie było elementów `NA` dotyczących zmiennych jakościowych.  -->
+<!-- W przykładzie tworzona jest nowa siatka (`siatka2`) nie zawierająca braków wartości dla zmiennej `clc`. -->
 
-```{r, message=FALSE}
-siatka2 <- dplyr::filter(siatka, clc == 1)
-kws1 <- krige(temp~1, 
-              location = punkty[punkty$clc == 1, ], 
-              newdata = siatka2[na.omit(siatka2$clc == 1), ], 
-              model = fitted_kws1)
-spplot(kws1, "var1.pred")
-```
+<!-- ```{r} -->
+<!-- siatka2 = siatka[siatka$clc == 1,,] -->
+<!-- kws1 = krige(temp~1,  -->
+<!--               location = punkty[punkty$clc == 1, ],  -->
+<!--               newdata = siatka2[na.omit(siatka2$clc == 1), ],  -->
+<!--               model = fitted_kws1) -->
+<!-- spplot(kws1, "var1.pred") -->
+<!-- ``` -->
 
-```{r, message=FALSE}
-kws2 <- krige(temp~1,
-              location = punkty[punkty$clc == 2, ],
-              newdata = siatka2[na.omit(siatka2$clc == 2), ], 
-              model = fitted_kws2)
-spplot(kws2, "var1.pred")
-```
 
-```{r, message=FALSE}
-kws4 <- krige(temp~1, 
-              location = punkty[punkty$clc == 4, ], 
-              newdata = siatka2[na.omit(siatka2$clc == 4), ], 
-              model = fitted_kws4)
-spplot(kws4, "var1.pred")
-```
+<!-- ```{r, message=FALSE} -->
+<!-- siatka2 = dplyr::filter(siatka, clc == 1) -->
+<!-- siatka2  -->
+<!-- kws1 = krige(temp~1,  -->
+<!--               location = punkty[punkty$clc == 1, ],  -->
+<!--               newdata = siatka2[na.omit(siatka2$clc == 1), ],  -->
+<!--               model = fitted_kws1) -->
+<!-- spplot(kws1, "var1.pred") -->
+<!-- ``` -->
 
-Ostatnim etapem jest połączenie cząstkowych wyników w jeden obiekt klasy `SpatialPixelsDataFrame`.
+<!-- ```{r, message=FALSE} -->
+<!-- kws2 = krige(temp~1, -->
+<!--               location = punkty[punkty$clc == 2, ], -->
+<!--               newdata = siatka2[na.omit(siatka2$clc == 2), ],  -->
+<!--               model = fitted_kws2) -->
+<!-- spplot(kws2, "var1.pred") -->
+<!-- ``` -->
 
-```{r}
-kws <- rbind(kws1, kws2, kws4)
-```
+<!-- ```{r, message=FALSE} -->
+<!-- kws4 = krige(temp~1,  -->
+<!--               location = punkty[punkty$clc == 4, ],  -->
+<!--               newdata = siatka2[na.omit(siatka2$clc == 4), ],  -->
+<!--               model = fitted_kws4) -->
+<!-- spplot(kws4, "var1.pred") -->
+<!-- ``` -->
 
-Uzyskane w ten sposób wyniki znacząco różnią się od estymacji krigingem prostym czy zwykłym, wykazując odrębność zmienności w poszczególnych kategoriach pokrycia/użytkowania terenu.
+<!-- Ostatnim etapem jest połączenie cząstkowych wyników w jeden obiekt klasy `SpatialPixelsDataFrame`. -->
 
-```{r plotsykws1, eval=FALSE}
-spplot(kws, "var1.pred")
-spplot(kws, "var1.var")
-```
+<!-- ```{r} -->
+<!-- kws = rbind(kws1, kws2, kws4) -->
+<!-- ``` -->
 
-```{r plotsykws2, echo=FALSE, fig.height=8}
-library(gridExtra)
-p1 <- spplot(kws, "var1.pred", main = "Estymacja KWS")
-p2 <- spplot(kws, "var1.var", main = "Wariancja estymacja KWS")
-grid.arrange(p1, p2, ncol = 1)
-```
+<!-- Uzyskane w ten sposób wyniki znacząco różnią się od estymacji krigingem prostym czy zwykłym, wykazując odrębność zmienności w poszczególnych kategoriach pokrycia/użytkowania terenu. -->
+
+<!-- ```{r plotsykws1, eval=FALSE} -->
+<!-- spplot(kws, "var1.pred") -->
+<!-- spplot(kws, "var1.var") -->
+<!-- ``` -->
+
+<!-- ```{r plotsykws2, echo=FALSE, fig.height=8} -->
+<!-- library(gridExtra) -->
+<!-- p1 = spplot(kws, "var1.pred", main = "Estymacja KWS") -->
+<!-- p2 = spplot(kws, "var1.var", main = "Wariancja estymacja KWS") -->
+<!-- grid.arrange(p1, p2, ncol = 1) -->
+<!-- ``` -->
 
 ## Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)
 
@@ -134,16 +150,16 @@ W takiej sytuacji konieczne jest użycie funkcji `lm()`.
 W poniższym przykładzie budowany jest model liniowy relacji pomiędzy temperaturą powietrza (`temp`), a wysokością nad poziomem morza (`srtm`).
 
 ```{r }
-coef <- lm(temp~srtm, punkty)$coef
+coef = lm(temp~srtm, punkty)$coef
 coef
 ```
 
 Wykorzystując relację pomiędzy tymi dwoma zmiennymi tworzony jest semiwariogram empiryczny, który następnie jest modelowany.
 
 ```{r}
-vario <- variogram(temp~srtm, location = punkty)
-model_sim <- vgm(model = "Sph", nugget = 1)
-fitted_sim <- fit.variogram(vario, model_sim)
+vario = variogram(temp~srtm, location = punkty)
+model_sim = vgm(model = "Sph", nugget = 1)
+fitted_sim = fit.variogram(vario, model_sim)
 fitted_sim
 plot(vario, model = fitted_sim)
 ```
@@ -152,9 +168,9 @@ Ostatnim krokiem jest estymacja geostatystyczna, w której oprócz czterech pods
 W tym wypadku jest to wypadku obiekt uzyskany na podstawie regresji liniowej.
 
 ```{r}
-sk_lvm <- krige(temp~srtm, 
+sk_lvm = krige(temp~srtm, 
                 location = punkty, 
-                newdata = siatka, 
+                newdata = dane_uzup, 
                 model = fitted_sim, 
                 beta = coef)
 sk_lvm
@@ -167,8 +183,10 @@ plot(sk_lvm["var1.var"])
 
 ```{r plotsylvm2, echo=FALSE, fig.height=8}
 library(gridExtra)
-p1 <- spplot(sk_lvm, "var1.pred", main = "Estymacja SK LVM")
-p2 <- spplot(sk_lvm, "var1.var", main = "Wariancja estymacja SK LVM")
+p1 = p1_base + geom_stars(data = sk_lvm["var1.pred"]) +
+        ggtitle("Estymacja SK LVM")
+p2 = p1_base + geom_stars(data = sk_lvm["var1.var"]) + 
+        ggtitle("Wariancja estymacji SK LVM")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
@@ -182,26 +200,26 @@ W krigingu uniwersalnym możemy stosować zarówno zmienne jakościowe, jak i il
 W pierwszym przykładzie, kriging uniwersalny służy stworzeniu semiwariogramu, modelowaniu oraz estymacji temperatury powietrza z użyciem zmiennej pokrycia terenu.
 
 ```{r }
-punkty$clc <- as.factor(punkty$clc)
-vario_uk1 <- variogram(temp~clc, location = punkty)
+punkty$clc = as.factor(punkty$clc)
+vario_uk1 = variogram(temp~clc, location = punkty)
 # vario_uk1
 # plot(vario_uk1)
-model_uk1 <- vgm(model = "Sph", nugget = 1)
-vario_fit_uk1 <- fit.variogram(vario_uk1, model = model_uk1)
+model_uk1 = vgm(model = "Sph", nugget = 1)
+vario_fit_uk1 = fit.variogram(vario_uk1, model = model_uk1)
 vario_fit_uk1
 plot(vario_uk1, vario_fit_uk1)
 ```
 
 ```{r }
-siatka$clc <- as.factor(siatka$clc)
-spplot(siatka, "clc")
+dane_uzup$clc = as.factor(dane_uzup$clc)
+plot(dane_uzup["clc"])
 ```
 
 ```{r }
-uk1 <- krige(temp~clc, 
-             locations = punkty,
-             newdata = siatka, 
-             model = vario_fit_uk1)
+uk1 = krige(temp~clc, 
+            locations = punkty,
+            newdata = dane_uzup, 
+            model = vario_fit_uk1)
 ```
 
 ```{r plotsy3uk1, eval=FALSE}
@@ -210,28 +228,30 @@ plot(uk1["var1.var"])
 ```
 
 ```{r plotsy4uk1, echo=FALSE, fig.height=8}
-# library(gridExtra)
-# p1 <- spplot(uk1, "var1.pred", main = "Estymacja KU")
-# p2 <- spplot(uk1, "var1.var", main = "Wariancja estymacja KU")
-# grid.arrange(p1, p2, ncol = 1)
+library(gridExtra)
+p1 = p1_base + geom_stars(data = uk1["var1.pred"]) +
+        ggtitle("Estymacja KU")
+p2 = p1_base + geom_stars(data = uk1["var1.var"]) + 
+        ggtitle("Wariancja estymacja KU")
+grid.arrange(p1, p2, ncol = 1)
 ```
 
 W kolejnym przykładzie zastosowane są już dwie zmienne uzupełniające - wartość wskaźnika wegetacji (`ndvi`) oraz wysokość nad poziomem morza (`srtm`). 
 
 ```{r }
-vario_uk2 <- variogram(temp~ndvi + srtm, location = punkty)
+vario_uk2 = variogram(temp~ndvi + srtm, location = punkty)
 # vario_uk2
 # plot(vario_uk2)
-model <- vgm(model = "Sph", nugget = 1)
-vario_fit_uk2 <- fit.variogram(vario_uk2, model = model)
+model = vgm(model = "Sph", nugget = 1)
+vario_fit_uk2 = fit.variogram(vario_uk2, model = model)
 vario_fit_uk2
 plot(vario_uk2, vario_fit_uk2)
 ```
 
 ```{r }
-uk2 <- krige(temp~ndvi + srtm,
+uk2 = krige(temp~ndvi + srtm,
              locations = punkty, 
-             newdata = siatka,
+             newdata = dane_uzup,
              model = vario_fit_uk2)
 ```
 
@@ -242,8 +262,10 @@ plot(uk2["var1.var"])
 
 ```{r plotsy4KU, echo=FALSE, fig.height=8}
 library(gridExtra)
-p1 <- spplot(uk2, "var1.pred", main = "Estymacja KU")
-p2 <- spplot(uk2, "var1.var", main = "Wariancja estymacja KU")
+p1 = p1_base + geom_stars(data = uk2["var1.pred"]) +
+        ggtitle("Estymacja KU")
+p2 = p1_base + geom_stars(data = uk2["var1.var"]) + 
+        ggtitle("Wariancja estymacja KU")
 grid.arrange(p1, p2, ncol = 1)
 ```
 

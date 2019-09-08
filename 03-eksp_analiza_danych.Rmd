@@ -4,18 +4,12 @@
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
 ```{r, message=FALSE, warning=FALSE}
-library(sp)
+library(sf)
+library(stars)
 library(ggplot2)
 library(geostatbook)
 data(punkty)
 data(granica)
-```
-
-```{r, echo=FALSE, eval=FALSE}
-library(sf)
-library(stars)
-punkty = st_as_sf(punkty)
-granica = st_as_sf(granica)
 ```
 
 ## Cele eksploracyjnej analizy danych
@@ -196,7 +190,7 @@ Górna z nich to 1,5\*IQR ponad krawędź pudełka, dolna to 1,5\*IQR poniżej w
 Linia środkowa to mediana.  
 
 ```{r }
-punkty$clc <- as.factor(punkty$clc)
+punkty$clc = as.factor(punkty$clc)
 ggplot(punkty, aes(x = clc, y = temp)) + geom_boxplot()
 ```
 
@@ -209,8 +203,8 @@ Aby to stwierdzić konieczne jest wykonanie porównań wielokrotnych (*post-hoc*
 ANOVĘ można wykonać za pomocą funkcji `aov()` definiując zmienną zależną oraz zmienną grupującą oraz zbiór danych.
 
 ```{r }
-punkty$clc <- as.factor(punkty$clc)
-aov_test <- aov(temp~clc, data = punkty)
+punkty$clc = as.factor(punkty$clc)
+aov_test = aov(temp~clc, data = punkty)
 summary(aov_test)
 ```
 
@@ -222,7 +216,7 @@ dev.off()
 ```
 
 ```{r }
-tukey <- TukeyHSD(aov_test, "clc")
+tukey = TukeyHSD(aov_test, "clc")
 plot(tukey, las = 1)
 ```
 
@@ -245,14 +239,14 @@ Centrowanie i skalowanie (standaryzacja):
 
 ```{r, eval=FALSE}
 ggplot(punkty, aes(temp)) + geom_density()
-punkty$temp_center <- punkty$temp - mean(punkty$temp)
+punkty$temp_center = punkty$temp - mean(punkty$temp)
 ggplot(punkty, aes(temp_center)) + geom_density()
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
-p1 <- ggplot(punkty, aes(temp)) + geom_density()
-punkty$temp_center <- punkty$temp - mean(punkty$temp)
-p2 <- ggplot(punkty, aes(temp_center)) + geom_density()
+p1 = ggplot(punkty, aes(temp)) + geom_density()
+punkty$temp_center = punkty$temp - mean(punkty$temp)
+p2 = ggplot(punkty, aes(temp_center)) + geom_density()
 gridExtra::grid.arrange(p1, p2, ncol = 1)
 ```
 
@@ -260,13 +254,13 @@ gridExtra::grid.arrange(p1, p2, ncol = 1)
 
 ```{r, eval=FALSE}
 ggplot(punkty, aes(temp)) + geom_density()
-punkty$temp_scale <- punkty$temp / sd(punkty$temp)
+punkty$temp_scale = punkty$temp / sd(punkty$temp)
 ggplot(punkty, aes(temp_scale)) + geom_density()
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
-punkty$temp_scale <- punkty$temp / sd(punkty$temp)
-p3 <- ggplot(punkty, aes(temp_scale)) + geom_density()
+punkty$temp_scale = punkty$temp / sd(punkty$temp)
+p3 = ggplot(punkty, aes(temp_scale)) + geom_density()
 gridExtra::grid.arrange(p1, p3, ncol = 1)
 ```
 
@@ -276,13 +270,13 @@ Do standaryzacji (centrowanie i skalowanie) służy funkcja `scale()`.
 
 ```{r, eval=FALSE}
 ggplot(punkty, aes(temp)) + geom_density()
-punkty$temp_standard <- as.numeric(scale(punkty$temp))
+punkty$temp_standard = as.numeric(scale(punkty$temp))
 ggplot(punkty, aes(temp_standard)) + geom_density()
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
-punkty$temp_standard <- as.numeric(scale(punkty$temp))
-p4 <- ggplot(punkty, aes(temp_standard)) + geom_density()
+punkty$temp_standard = as.numeric(scale(punkty$temp))
+p4 = ggplot(punkty, aes(temp_standard)) + geom_density()
 gridExtra::grid.arrange(p1, p4, ncol = 1)
 ```
 
@@ -301,17 +295,17 @@ Transformację logarytmiczną można odwrócić używając funkcji `exp()`.
 
 ```{r, eval = FALSE}
 ggplot(punkty, aes(temp)) + geom_density()
-punkty$log_tpz <- log(punkty$temp)
+punkty$log_tpz = log(punkty$temp)
 ggplot(punkty, aes(log_tpz)) + geom_density()
-punkty$exp_tpz <- exp(punkty$log_tpz)
+punkty$exp_tpz = exp(punkty$log_tpz)
 ggplot(punkty, aes(exp_tpz)) + geom_density()
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
-punkty$log_tpz <- log(punkty$temp)
-p5 <- ggplot(punkty, aes(log_tpz)) + geom_density()
-punkty$exp_tpz <- exp(punkty$log_tpz)
-p6 <- ggplot(punkty, aes(exp_tpz)) + geom_density()
+punkty$log_tpz = log(punkty$temp)
+p5 = ggplot(punkty, aes(log_tpz)) + geom_density()
+punkty$exp_tpz = exp(punkty$log_tpz)
+p6 = ggplot(punkty, aes(exp_tpz)) + geom_density()
 gridExtra::grid.arrange(p1, p5, p6, ncol = 1)
 ```
 
@@ -322,17 +316,17 @@ Odwrócenie tej transformacji odbywa się poprzez podniesienie wartości do pot�
 
 ```{r, eval=FALSE}
 ggplot(punkty, aes(temp)) + geom_density()
-punkty$sqrt_tpz <- sqrt(punkty$temp)
+punkty$sqrt_tpz = sqrt(punkty$temp)
 ggplot(punkty, aes(sqrt_tpz)) + geom_density()
-punkty$pow_tpz <- punkty$sqrt_tpz ^ 2
+punkty$pow_tpz = punkty$sqrt_tpz ^ 2
 ggplot(punkty, aes(pow_tpz)) + geom_density()
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
-punkty$sqrt_tpz <- sqrt(punkty$temp)
-p7 <- ggplot(punkty, aes(sqrt_tpz)) + geom_density()
-punkty$pow_tpz <- punkty$sqrt_tpz ^ 2
-p8 <- ggplot(punkty, aes(pow_tpz)) + geom_density()
+punkty$sqrt_tpz = sqrt(punkty$temp)
+p7 = ggplot(punkty, aes(sqrt_tpz)) + geom_density()
+punkty$pow_tpz = punkty$sqrt_tpz ^ 2
+p8 = ggplot(punkty, aes(pow_tpz)) + geom_density()
 gridExtra::grid.arrange(p1, p7, p8, ncol = 1)
 ```
 
@@ -341,12 +335,12 @@ Transformacja danych | Rodzina transformacji Boxa Coxa
 
 ```{r , eval=FALSE}
 ggplot(punkty, aes(temp)) + geom_density()
-transformacja <- BoxCoxTrans(punkty$temp)
+transformacja = BoxCoxTrans(punkty$temp)
 transformacja
-punkty$bc_tpz <- predict(transformacja, punkty$temp)
+punkty$bc_tpz = predict(transformacja, punkty$temp)
 ggplot(punkty@data, aes(bc_tpz)) + geom_density()
-invBoxCox <- function(x, lambda) if (lambda == 0) exp(x) else (lambda * x + 1) ^ (1 / lambda)
-punkty$bc_tpz_inv <- invBoxCox(punkty$bc_tpz, lambda = 0.2)
+invBoxCox = function(x, lambda) if (lambda == 0) exp(x) else (lambda * x + 1) ^ (1 / lambda)
+punkty$bc_tpz_inv = invBoxCox(punkty$bc_tpz, lambda = 0.2)
 ggplot(punkty@data, aes(bc_tpz_inv)) + geom_density()
 ```
 
@@ -373,4 +367,4 @@ Czy jest ona istotna statystycznie?
 Czy istnieje istotna statystycznie różnica w wartościach `ndvi` względem klas pokrycia terenu?
 7. Wypróbuj różne metody transformacji danych w celu redukcji skośności rozkładu zmiennej `ndvi`.
 Która metoda działa w tym przypadku najlepiej?
-8. Stwórz powtarzalny przykład (więcej informacji w appendiksie \@ref(reprex)) używając pakiet **reprex** w oparciu o kod stworzony do rozwiązania poprzedniego zadania.
+8. Stwórz powtarzalny przykład (więcej informacji w appendiksie \@ref(reprex)) używając pakietu **reprex** w oparciu o kod stworzony do rozwiązania poprzedniego zadania.

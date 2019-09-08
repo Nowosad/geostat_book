@@ -21,7 +21,7 @@ Skrypty i funkcje w języku R są zbudowane na podstawie szeregu obiektów niepr
 R zawiera także wiele funkcji pozwalających na przetwarzanie, wizualizację i analizowanie danych przestrzennych.
 Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi:
 
-- GIS - **sf**, **stars** **raster**, **sp**, **rgdal**, **rgeos**
+- GIS - **sf**, **stars**, **raster**, **terra**, **sp**, **rgdal**, **rgeos**
 - Geostatystyka - **gstat**, **geoR**, **geoRglm**
 
 Więcej szczegółów na ten temat pakietów R służących do analizy przestrzennej można znaleźć pod adresem https://cran.r-project.org/web/views/Spatial.html.
@@ -32,8 +32,10 @@ Dane przestrzenne mogą być reprezentowane w R poprzez szereg różnych klas ob
 Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klasy `Spatial*` z pakietu **sp** oraz obiekty klasy `sf` z pakietu **sf**.
 
 Wszystkie obiekty klasy `Spatial*` z pakietu **sp** zawierają tablę atrybutów oraz dwie dodatkowe informacje:
-    - bounding box (`bbox`) - obwiednia - określa zasięg danych
-    - CRS (`proj4string`) - układ współrzędnych
+
+- bounding box (`bbox`) - obwiednia - określa zasięg danych
+- CRS (`proj4string`) - układ współrzędnych
+
 Ten pakiet definiuje klasę obiektów - sposób reprezentacji danych.
 Najczęściej stosowane obiekty klasy `Spatial*` to `SpatialPointsDataFrame`, `SpatialPolygonsDataFrame` oraz `SpatialGridDataFrame`. 
 Ostatnia klasa reprezentuje dane rastrowe.  
@@ -55,15 +57,15 @@ Dane rastrowe są reprezentowane między innymi poprzez klasę `SpatialGridDataF
 
 ### GDAL/OGR
 
-- Pakiety **rgdal**, **raster** czy **sf** wykorzystują biblioteki GDAL/OGR w R do wczytywania i zapisywania danych przestrzennych
+- Pakiety **rgdal**, **raster**, **stars**, czy **sf** wykorzystują biblioteki GDAL/OGR w R do wczytywania i zapisywania danych przestrzennych
 - http://www.gdal.org/
 - GDAL to biblioteka zawierająca funkcje służące do odczytywania i zapisywania danych w formatach rastrowych
 - OGR to biblioteka służąca to odczytywania i zapisywania danych w formatach wektorowych
 
 ### PROJ
 
-- Pakiety **sp**, **raster**, czy **sf** używają biblioteki PROJ do określania i konwersji układów współrzędnych
-- https://proj4.org/
+- Pakiety **sp**, **raster**, **stars**, czy **sf** używają biblioteki PROJ do określania i konwersji układów współrzędnych
+- https://proj.org/
 - Dane przestrzenne powinny być zawsze powiązane z układem współrzędnych
 - PROJ - to biblioteka pozwalająca na identyfikację oraz konwersję pomiędzy różnymi układami współrzędnych
 - Strona http://www.spatialreference.org/ zawiera bazę danych układów współrzędnych 
@@ -111,7 +113,7 @@ Do najpopularniejszych należą dane tekstowe z plików .csv, dane wektorowe z p
 Dane z plików tekstowych (np. .csv) można odczytać za pomocą uogólnionej funkcji `read.table()` lub też funkcji szczegółowych - `read.csv()` lub `read.csv2()`.
 
 ```{r}
-dane_punktowe <- read.csv("dane/punkty.csv")
+dane_punktowe = read.csv("dane/punkty.csv")
 ```
 
 ```{r}
@@ -125,14 +127,14 @@ Nadanie układu współrzędnych odbywa się poprzez funkcję `st_as_sf()`.
 
 ```{r}
 library(sf)
-dane_punktowe_sf <- st_as_sf(dane_punktowe, coords = c("x", "y"))
+dane_punktowe_sf = st_as_sf(dane_punktowe, coords = c("x", "y"))
 dane_punktowe_sf
 ```
 
 Ważne, ale nie wymagane, jest także dodanie informacji o układzie przestrzennym danych za pomocą funkcji `st_set_crs()`. 
 
 ```{r}
-dane_punktowe_sf <- st_set_crs(dane_punktowe_sf, 2180)
+dane_punktowe_sf = st_set_crs(dane_punktowe_sf, 2180)
 ```
 
 Proste wizualizacje uzyskanych danych klasy przestrzennej, np. `sf`, można uzyskać za pomocą funkcji `plot()`.
@@ -148,7 +150,7 @@ Przyjmuje ona co najmniej jeden argument - `dsn`, który określa główny plik 
 
 ```{r}
 library(sf)
-granica_sf <- st_read(dsn = "dane/granica.gpkg")
+granica_sf = st_read(dsn = "dane/granica.gpkg")
 plot(granica_sf)
 ```
 
@@ -161,8 +163,16 @@ Należy w niej jedynie podać ścieżkę do pliku rastrowego.
 
 ```{r}
 library(stars)
-siatka_stars <- read_stars("dane/siatka.tif")
+siatka_stars = read_stars("dane/siatka.tif")
 plot(siatka_stars)
+```
+
+<!-- text -->
+
+```{r}
+siatka_stars2 = split(siatka_stars, "band")
+siatka_stars2
+plot(siatka_stars2)
 ```
 
 ## Przeglądanie danych przestrzennych
@@ -187,7 +197,7 @@ str(dane_punktowe_sf)
 Funkcja `st_drop_geometry()` pozwala na pozbycie się informacji przestrzennych i uzyskanie jedynie obiektu klasy `data.frame` zawierającego nieprzestrzenne informacje o kolejnych punktach w tym zbiorze.
 
 ```{r}
-df <- st_drop_geometry(dane_punktowe_sf)
+df = st_drop_geometry(dane_punktowe_sf)
 head(df)
 ```
 
@@ -196,7 +206,7 @@ head(df)
 Funkcja `st_coordinates()` pozwala na wydobycie współrzędnych z obiektu punktowego klasy `sf`.
 
 ```{r}
-xy <- st_coordinates(dane_punktowe_sf)
+xy = st_coordinates(dane_punktowe_sf)
 head(xy)
 ```
 
@@ -220,16 +230,9 @@ st_crs(dane_punktowe_sf)
 
 ### Wydobywanie wartości z rastra
 
-<!-- do -->
-
-### Łączenie rastrów
-
-<!-- redo -->
-
 ```{r}
-# r1 <- read_stars("/home/jn/Tmp/dane/elev.tif")
-# r2 <- read_stars("/home/jn/Tmp/dane/precip.tif")
-# r3 <- c(r1, r2)
+# https://github.com/r-spatial/stars/issues/197
+dane_punktowe_sf2 = st_join(dane_punktowe_sf, st_as_sf(siatka_stars))
 ```
 
 ## Eksport danych
@@ -295,7 +298,7 @@ W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci katego
 Następnie można je wyświetlić za pomocą funkcji `plot()`.
 
 ```{r}
-dane_punktowe_sf$clc <- as.factor(dane_punktowe_sf$clc)
+dane_punktowe_sf$clc = as.factor(dane_punktowe_sf$clc)
 plot(dane_punktowe_sf["clc"])
 ```
 
@@ -320,6 +323,7 @@ plot(siatka_stars[1, , , 4])
 
 Indeksowanie pozwala też na wyświetlenie fragmentu danych rastrowych.
 Na przykład, indeks `[1, 2:50, 1:20, ]` pozwala na wyświetlenie wszystkich warstw, ale tylko dla kolumn od 20 do 50 i wierszy od 1 do 20.
+
 ```{r}
 # wybrany zasięg przestrzenny
 plot(siatka_stars[1, 20:50, 1:20, ])

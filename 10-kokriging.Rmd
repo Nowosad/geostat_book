@@ -4,7 +4,8 @@
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
 ```{r, message=FALSE, warning=FALSE}
-library(sp)
+library(sf)
+library(stars)
 library(gstat)
 library(geostatbook)
 data(punkty)
@@ -14,14 +15,13 @@ data(siatka)
 
 ```{r, echo=FALSE}
 par(mar = c(rep(0, 4)))
-```
-
-```{r, echo=FALSE, eval=FALSE}
-library(sf)
-library(stars)
-punkty = st_as_sf(punkty)
-punkty_ndvi = st_as_sf(punkty_ndvi)
-siatka = st_as_stars(siatka)
+library(ggplot2)
+p1_base = ggplot() +
+        coord_equal() +
+        scale_fill_viridis_c() +
+        theme_void() +
+        scale_x_discrete(expand = c(0, 0)) +
+        scale_y_discrete(expand = c(0, 0))
 ```
 
 ## Kokriging 
@@ -71,11 +71,11 @@ Składa się on z obiektu pustego (`NULL`), nazwy pierwszej zmiennej (nazwa moż
 Następnie do pierwszego obiektu `g` dodajemy nowe informacje również poprzez funkcję `gstat()`. Jest to nazwa obiektu (`g`), nazwa drugiej zmiennej, wzór, oraz drugi zbiór punktowy.
 
 ```{r, krosssemi}
-g <- gstat(NULL, 
+g = gstat(NULL, 
            id = "SAVI", 
            form = savi~1, 
            data = punkty)
-g <- gstat(g, 
+g = gstat(g, 
            id = "NDVI", 
            form = ndvi~1, 
            data = punkty_ndvi)
@@ -85,7 +85,7 @@ g
 Z uzyskanego w ten sposób obiektu tworzymy krossemiwariogram (funkcja `variogram()`), a następnie go wizualizujemy używając funkcji `plot()`.
 
 ```{r}
-v <- variogram(g)
+v = variogram(g)
 plot(v)
 ```
 
@@ -96,9 +96,9 @@ Podaje się w niej wcześniejszy obiekt `g`, model, oraz argument `fill.all = TR
 Ten ostatni parametr powoduje, że model dodawany jest do wszystkich elementów krossemiwariogramu.
 
 ```{r}
-g_model <- vgm(0.006, model = "Sph",
+g_model = vgm(0.006, model = "Sph",
                range = 2000, nugget = 0.001)
-g <- gstat(g, model = g_model, fill.all = TRUE)
+g = gstat(g, model = g_model, fill.all = TRUE)
 g
 ```
 
@@ -109,7 +109,7 @@ Funkcja `fit.lmc()` oczekuje co najmniej dwóch elementów, krossemiwariogramu o
 W poniższym przykładzie dodatkowo użyto parametru `correct.diagonal = 1.01`, z uwagi na to że analizowane zmienne wykazywały bardzo silną korelację.
 
 ```{r}
-g_fit <- fit.lmc(v, g, correct.diagonal = 1.01)
+g_fit = fit.lmc(v, g, correct.diagonal = 1.01)
 g_fit
 plot(v, g_fit)
 ```
@@ -126,7 +126,7 @@ plot(variogram(g, alpha = c(60, 105, 150, 195)))
 Posiadając dopasowane modele oraz siatkę można uzyskać wynik używając funkcji `predict()`. 
 
 ```{r kokriging_predict, cache=TRUE}
-ck <- predict(g_fit, newdata = siatka)
+ck = predict(g_fit, newdata = siatka)
 ```
 
 W efekcie otrzymujemy pięć zmiennych:
@@ -146,34 +146,36 @@ plot(ck["SAVI.pred"])
 plot(ck["SAVI.var"])
 ```
 
-```{r kokriging_predicted, echo=FALSE, cache=TRUE, fig.height=8}
-# library(gridExtra)
-# p1 <- spplot(ck, "SAVI.pred", main = "Estymacja CK")
-# p2 <- spplot(ck, "SAVI.var", main = "Wariancja estymacji CK")
-# grid.arrange(p1, p2, ncol = 1)
+```{r kokriging_predicted, echo=FALSE, fig.height=8}
+library(gridExtra)
+p1 = p1_base + geom_stars(data = ck["SAVI.pred"]) +
+        ggtitle("Estymacja CK")
+p2 = p1_base + geom_stars(data = ck["SAVI.var"]) + 
+        ggtitle("Wariancja estymacji CK")
+grid.arrange(p1, p2, ncol = 1)
 ```
 
 ```{r kokriging_predict_anizotropia, echo=FALSE, cache=TRUE, eval=FALSE}
 ### Kokriging (anitotropia)
-g <- gstat(NULL, id = "savi", form = savi~1, data = punkty)
-g <- gstat(g, id = "ndvi", form = ndvi~1, data = punkty_ndvi)
+g = gstat(NULL, id = "savi", form = savi~1, data = punkty)
+g = gstat(g, id = "ndvi", form = ndvi~1, data = punkty_ndvi)
 g
 
-vario_g <- variogram(g, map = TRUE, cutoff = 12000, width = 800)
+vario_g = variogram(g, map = TRUE, cutoff = 12000, width = 800)
 plot(vario_g)
 
-vario_g_kier <- variogram(g, alpha = c(15, 60, 105, 150))
+vario_g_kier = variogram(g, alpha = c(15, 60, 105, 150))
 plot(vario_g_kier)
 
-g <- gstat(g, model = vgm(0.005, "Sph", 1000, 
+g = gstat(g, model = vgm(0.005, "Sph", 1000, 
                           nugget = 0.001, anis = c(15, .5)),
            fill.all = TRUE)
-g_fit_a <- fit.lmc(vario_g_kier, g, 
+g_fit_a = fit.lmc(vario_g_kier, g, 
                    fit.ranges = FALSE, fit.method = 1)
 g_fit_a
 plot(vario_g_kier, g_fit_a)
 
-ck_a <- predict(g_fit_a, siatka)
+ck_a = predict(g_fit_a, siatka)
 
 ck_a
 ```
@@ -185,8 +187,8 @@ plot(ck_a["savi.var"])
 
 ```{r plotsyck2a, eval=FALSE, echo=FALSE, fig.height=8}
 # library(gridExtra)
-# p1 <- spplot(ck_a, "savi.pred", main = "Estymacja CK - anizotropia")
-# p2 <- spplot(ck_a, "savi.var", main = "Wariancja estymacji CK - anizotropia")
+# p1 = spplot(ck_a, "savi.pred", main = "Estymacja CK - anizotropia")
+# p2 = spplot(ck_a, "savi.var", main = "Wariancja estymacji CK - anizotropia")
 # grid.arrange(p1, p2, ncol = 2)
 ```
 
@@ -208,8 +210,8 @@ coordinates(meuse) = ~x + y
 Na jego podstawie wydziel dwa obiekty - `meuse155` zawierający tylko zmienną `lead` dla 155 punktów, oraz `meuse60` zawierający tylko zmienną `copper` dla 60 punktów.
 
 ```{r}
-meuse155 <- meuse["lead"]
-meuse60 <- meuse[sample(nrow(meuse), 60), "copper"]
+meuse155 = meuse["lead"]
+meuse60 = meuse[sample(nrow(meuse), 60), "copper"]
 ```
 
 1. Stwórz siatkę interpolacyjną o rozdzielczości 100 jednostek dla obszaru, w którym znajdują się punkty `meuse`.

@@ -4,8 +4,8 @@
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
 ```{r, message=FALSE, warning=FALSE}
-library(sp)
-library(rgeos)
+library(sf)
+library(stars)
 library(gstat)
 library(pgirmess)
 library(ggplot2)
@@ -18,14 +18,6 @@ data(granica)
 ```{r, echo=FALSE}
 par(mar = c(rep(0, 4)))
 options(scipen = 99 * 99)
-```
-
-```{r, echo=FALSE, eval=FALSE}
-library(sf)
-library(stars)
-punkty = st_as_sf(punkty)
-granica = st_as_sf(granica)
-siatka = st_as_stars(siatka)
 ```
 
 <!--
@@ -63,7 +55,7 @@ Inaczej mówiąc, celem geostatystyki nie musi być tylko interpolacja (estymacj
 ```{r diagram, echo=FALSE, eval=FALSE}
 library(DiagrammeR)
 # library('trelliscope')
-p <- DiagrammeR::mermaid("
+p = DiagrammeR::mermaid("
                 graph TB;
                 hw((Dane pomiarowe)) -->Analiza[<center>Analiza <br>i interpretacja <br>struktury przestrzennej</center>];
                 Analiza -->Modelowanie[<center>Modelowanie matematyczne <br>struktury przestrzennej</center>]
@@ -156,7 +148,7 @@ Podobną informację jak wykres rozrzutu z przesunięciem daje autokowariancja. 
 Jej wyliczenie jest możliwe z użyciem funkcji `variogram()` z pakietu **gstat**, gdzie definiuje się analizowaną zmienną, zbiór punktowy, oraz ustala się argument `covariogram` na `TRUE`.
 
 ```{r }
-kowario <- variogram(temp~1, locations = punkty,
+kowario = variogram(temp~1, locations = punkty,
                      covariogram = TRUE)
 plot(kowario)
 ```
@@ -172,8 +164,8 @@ dev.off()
 ```
 
 ```{r }
-wsp <- st_coordinates(punkty)
-kor <- correlog(wsp, punkty$temp, method = "Moran")
+wsp = st_coordinates(punkty)
+kor = correlog(wsp, punkty$temp, method = "Moran")
 plot(kor)
 ```
 
@@ -198,8 +190,8 @@ Korzystając z wzoru na semiwariację otrzymujemy wartość równą ok. 20,60.
 Znamy również odległość między punktami (ok. 4576,59 metra), więc możemy w uproszczeniu stwierdzić, że dla tej pary punktów odległych o 4577 metry wartość semiwariancji wynosi około 20,6.
 
 ```{r }
-odl <- st_distance(punkty[c(1, 2), ])[2]
-gamma <- 0.5 * (punkty$temp[1] - punkty$temp[2]) ^ 2
+odl = st_distance(punkty[c(1, 2), ])[2]
+gamma = 0.5 * (punkty$temp[1] - punkty$temp[2]) ^ 2
 gamma
 ```
 
@@ -211,7 +203,7 @@ Tę semiwariancję można zaprezentować na wykresie zwanym chmurą semiwariogra
 Do jej wyliczenia służy funkcja `variogram()` z argumentem `cloud = TRUE`.
 
 ```{r }
-vario_cloud <- variogram(temp~1, locations = punkty, 
+vario_cloud = variogram(temp~1, locations = punkty, 
                          cloud = TRUE)
 plot(vario_cloud)
 ```
@@ -221,7 +213,7 @@ Aby zlokalizować te pary punktów, można zastosować funkcję `plot()` z argum
 Po skończonym wyborze należy nacisnąć klawisz Esc.
 
 ```{r chmurkowanie, eval=FALSE}
-vario_cloud_sel <- plot(vario_cloud, digitize = TRUE)
+vario_cloud_sel = plot(vario_cloud, digitize = TRUE)
 ```
 
 ```{r, echo=FALSE, fig.width=6}
@@ -252,7 +244,7 @@ $$ \hat{\gamma}(h) = \frac{1}{2N(h)}\sum_{i=1}^{N(h)}(z(s_i) - z(s_i+h))^2 $$
 W oparciu o semiwariogram empiryczny (czyli oparty na danych) możemy następnie dopasować do niego model/e.
 
 ```{r, echo=FALSE}
-vario_par <- variogram(temp~1, locations = punkty)
+vario_par = variogram(temp~1, locations = punkty)
 plot(vario_par, plot.numbers = FALSE)
 ```
 
@@ -262,7 +254,7 @@ Stworzenie podstawowego semiwariogramu w pakiecie **gstat** odbywa się z użyci
 Należy w niej zdefiniować analizowaną zmienną (w tym przykładzie `temp~1`) oraz zbiór punktowy (`punkty`).
 
 ```{r }
-vario_par <- variogram(temp~1, locations = punkty)
+vario_par = variogram(temp~1, locations = punkty)
 vario_par
 ```
 
@@ -300,10 +292,10 @@ Twierdzenie Pitagorasa
 $$x^2 + y^2 = z^2$$
 
 ```{r, eval=FALSE }
-wierz <- as.vector(extent(poligon))
-kraw_x <- wierz[2] - wierz[1]
-kraw_y <- wierz[4] - wierz[3]
-z_kwadrat <- kraw_x ^ 2 + kraw_y ^ 2
+wierz = as.vector(extent(poligon))
+kraw_x = wierz[2] - wierz[1]
+kraw_y = wierz[4] - wierz[3]
+z_kwadrat = kraw_x ^ 2 + kraw_y ^ 2
 0.5 * sqrt(z_kwadrat)
 ```
 -->
@@ -311,7 +303,7 @@ z_kwadrat <- kraw_x ^ 2 + kraw_y ^ 2
 - Powierzchnia zajmowana przez jedną próbkę:
 
 ```{r }
-pow_pr <- st_area(granica) / nrow(punkty)
+pow_pr = st_area(granica) / nrow(punkty)
 pow_pr
 ```
 
@@ -324,7 +316,7 @@ sqrt(pow_pr)
 - Połowa pierwiastka powierzchni:
 
 ```{r }
-pow <- st_area(granica)
+pow = st_area(granica)
 0.5 * sqrt(pow)
 ```
 
@@ -334,7 +326,7 @@ Maksymalny zasięg semiwariogramu (ang. *cutoff distance*) jest domyślnie wylic
 Można jednak tę wartość zmodyfikować używając argumentu `cutoff`.
 
 ```{r}
-vario_par <- variogram(temp~1, locations = punkty,
+vario_par = variogram(temp~1, locations = punkty,
                        cutoff = 4000)
 plot(vario_par)
 ```
@@ -343,7 +335,7 @@ Dodatkowo, domyślnie w pakiecie **gstat** odległość między przedziałami (a
 Można to oczywiście zmienić używając zarówno argumentu `cutoff`, jak i argumentu `width` mówiącego o szerokości odstępów.
 
 ```{r }
-vario_par <- variogram(temp~1, locations = punkty,
+vario_par = variogram(temp~1, locations = punkty,
                        cutoff = 1000, width = 250)
 plot(vario_par)
 ```
@@ -359,19 +351,19 @@ Używanie innych statystyk h-scattergramu, które są mniej czułe na występowa
 
 ```{r }
 # library('SpatialExtremes')
-# n.site <- 15
-# locations <- matrix(runif(2*n.site, 0, 10), ncol = 2)
-# colnames(locations) <- c("lon", "lat")
+# n.site = 15
+# locations = matrix(runif(2*n.site, 0, 10), ncol = 2)
+# colnames(locations) = c("lon", "lat")
 #
 # ##Simulate a max-stable process - with unit Frechet margins
-# data <- rmaxstab(40, locations, cov.mod = "whitmat", nugget = 0, range = 1,
+# data = rmaxstab(40, locations, cov.mod = "whitmat", nugget = 0, range = 1,
 #                  smooth = 2)
 #
 # ##Compute the madogram
 # madogram(data, locations)
-# data2 <- matrix(c(punkty$temp, punkty$X2002.08.20_NDVI), nrow=2)
-# locations2 <- coordinates(punkty)
-# colnames(locations2) <- c("lon", "lat")
+# data2 = matrix(c(punkty$temp, punkty$X2002.08.20_NDVI), nrow=2)
+# locations2 = coordinates(punkty)
+# colnames(locations2) = c("lon", "lat")
 # madogram(data2, locations2)
 ```
 
@@ -394,7 +386,7 @@ Następnie można ją wyświetlić używając funkcji `plot()`.
 Warto w tym wypadku użyć dodatkowego argumentu `threshold`, który powoduje, że niepewna wartość semiwariancji (wyliczona na małej liczbie punktów) nie jest wyświetlana.
 
 ```{r }
-vario_map <- variogram(temp~1, locations = punkty, 
+vario_map = variogram(temp~1, locations = punkty, 
                        cutoff = 4000, width = 400, map = TRUE)
 plot(vario_map, threshold = 30,
      col.regions = topo.colors(n = 40)) # co najmniej 30 par punktów
@@ -417,7 +409,7 @@ Dla argumentu `alpha = c(0, 45, 90, 135)` wybrane cztery główne kierunki to 0,
 Oznacza to, że przykładowo dla kierunku 45 stopni brane pod uwagę będą wszystkie pary punktów pomiędzy 22,5 a 67,5 stopnia.
 
 ```{r }
-vario_kier <- variogram(temp~1, locations = punkty, 
+vario_kier = variogram(temp~1, locations = punkty, 
                         alpha = c(0, 45, 90, 135))
 plot(vario_kier)
 ```
@@ -431,23 +423,19 @@ Możesz go wczytać używając poniższego kodu:
 data(punkty_pref)
 ```
 
-```{r, echo=FALSE}
-punkty_pref = st_as_sf(punkty_pref)
-```
-
 1. Stwórz wykres rozrzutu z przesunięciem dla zmiennej `srtm` dla odstępów od 0 do 5000 metrów co 625 metry.
 Co można odczytać z otrzymanego wykresu?
 2. Wylicz odległość oraz wartość semiwariancji dla zmiennej `srtm` pomiędzy pierwszym i drugim, pierwszym i trzecim, oraz drugim i trzecim punktem.
 Zwizualizuj te trzy punkty.
 W jaki sposób można zinterpretować otrzymane wyniki wartości semiwariancji?
 ```{r, echo=FALSE, eval=FALSE}
-punkty_pref2 <- punkty_pref[c(1, 2, 3), ]
-odl2 <- dist(st_coordinates(punkty_pref2))
-gamma1 <- 0.5 * (punkty_pref2$srtm[1] - punkty_pref2$srtm[2]) ^ 2
+punkty_pref2 = punkty_pref[c(1, 2, 3), ]
+odl2 = dist(st_coordinates(punkty_pref2))
+gamma1 = 0.5 * (punkty_pref2$srtm[1] - punkty_pref2$srtm[2]) ^ 2
 gamma1
-gamma2 <- 0.5 * (punkty_pref2$srtm[1] - punkty_pref2$srtm[3]) ^ 2
+gamma2 = 0.5 * (punkty_pref2$srtm[1] - punkty_pref2$srtm[3]) ^ 2
 gamma2
-gamma3 <- 0.5 * (punkty_pref2$srtm[2] - punkty_pref2$srtm[3]) ^ 2
+gamma3 = 0.5 * (punkty_pref2$srtm[2] - punkty_pref2$srtm[3]) ^ 2
 gamma3
 ```
 3. Twórz chmurę semiwariogramu dla zmiennej `temp`.
@@ -462,7 +450,7 @@ Sprawdź różne wartości `cutoff` (od 3 do 5 km) oraz `width` (od 200 do 500 m
 Zmień domyślną paletę kolorów w wizualizacji mapy semiwariogramu. 
 (Dodatkowe: spróbuj do tego celu użyć pakietu **viridisLite**).
 ```{r, echo=FALSE, eval=FALSE}
-vario_map <- variogram(srtm~1, locations = punkty_pref, 
+vario_map = variogram(srtm~1, locations = punkty_pref, 
                         cutoff = 4000, width = 400, map = TRUE)
 plot(vario_map, threshold = 30, col.regions = viridisLite::viridis(n = 50))
 ```

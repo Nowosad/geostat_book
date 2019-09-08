@@ -93,12 +93,12 @@ devtools::session_info(pakiety)
 Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu **geostatbook** (dla kolejnych rozdziałów). 
 <!--Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w skrypcie.-->
 
-- [Archiwum zawierające dane do rozdziału drugiego](https://github.com/Nowosad/geostat_book/blob/master/dane.zip?raw=true)
+- [Archiwum zawierające dane do rozdziału drugiego](https://github.com/Nowosad/geostat_book/blob/master/dane3.zip?raw=true)
 - [Dane do kolejnych rozdziałów są zawarte w pakiecie geostatbook:](https://github.com/Nowosad/geostatbook)
 
 ```{r instgeobook2, eval=FALSE}
-# install.packages("devtools")
-devtools::install_github("nowosad/geostatbook@2")
+# install.packages("remotes")
+remotes::install_github("nowosad/geostatbook@3")
 ```
 
 Aby ułatwić korzystanie ze skryptu, rozdziały od \@ref(eksploracja-analiza-danych-nieprzestrzennych) do \@ref(symulacje) rozpoczynają się od wczytania wymaganych pakietów oraz zbiorów danych.

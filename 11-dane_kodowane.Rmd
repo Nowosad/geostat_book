@@ -4,7 +4,8 @@
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
 ```{r, message=FALSE, warning=FALSE}
-library(sp)
+library(sf)
+library(stars)
 library(gstat)
 library(ggplot2)
 library(geostatbook)
@@ -14,13 +15,12 @@ data(siatka)
 
 ```{r, echo=FALSE}
 par(mar = c(rep(0, 4)))
-```
-
-```{r, echo=TRUE, eval=TRUE}
-library(sf)
-library(stars)
-punkty = st_as_sf(punkty)
-siatka = st_as_stars(siatka)
+p1_base = ggplot() +
+        coord_equal() +
+        scale_fill_viridis_c() +
+        theme_void() +
+        scale_x_discrete(expand = c(0, 0)) +
+        scale_y_discrete(expand = c(0, 0))
 ```
 
 ## Kriging danych kodowanych
@@ -55,7 +55,7 @@ Przyjmuje ona wartość `TRUE` (czyli `1`) dla pomiarów temperatury wyższych n
 
 ```{r }
 summary(punkty$temp)
-punkty$temp_ind <- punkty$temp > 20
+punkty$temp_ind = punkty$temp > 20
 summary(punkty$temp_ind)
 ```
 
@@ -73,13 +73,13 @@ Tworzenie i modelowanie semiwariogramu empirycznego w krigingu danych kodowanych
 Korzystając z funkcji `variogram()` tworzony jest semiwariogram empiryczny, używając `vgm()` tworzony jest model "ręczny", który następnie jest dopasowywany z użyciem funkcji `fit.variogram()`.
 
 ```{r }
-vario_ind <- variogram(temp_ind~1, locations = punkty)
+vario_ind = variogram(temp_ind~1, locations = punkty)
 plot(vario_ind)
 ```
 
 ```{r }
-model_ind <- vgm(model = "Sph", nugget = 0.01)
-fitted_ind <- fit.variogram(vario_ind, model_ind)
+model_ind = vgm(model = "Sph", nugget = 0.01)
+fitted_ind = fit.variogram(vario_ind, model_ind)
 fitted_ind
 plot(vario_ind, model = fitted_ind)
 ```
@@ -90,7 +90,7 @@ Ostatnim etapem jest stworzenie interpolacji geostatystycznej z pomocą funkcji 
 Wymaga ona czterech argumentów - wzoru (`temp_ind~1`), zbioru punktowego (`punkty`), siatki do interpolacji (`siatka`) oraz modelu (`fitted_ind`).
 
 ```{r }
-ik <- krige(temp_ind~1, 
+ik = krige(temp_ind~1, 
             locations = punkty,
             newdata = siatka,
             model = fitted_ind)
@@ -104,16 +104,12 @@ plot(ik["var1.var"])
 ```
 
 ```{r plotsy2ok, echo=FALSE, fig.height=8}
-# par(mfrow = c(1, 2))
-# plot(ik["var1.pred"], main = "Prawdopodobieństwo Temp > 20")
-# plot(ik["var1.var"], main = "Wariancja estymacji IK")
-# library(gridExtra)
-# ps.options(encoding = "CP1250")
-# p1 <- plot(ik["var1.pred"],
-#              main = "Prawdopodobieństwo Temp > 20")
-# p2 <- plot(ik["var1.var"], 
-#              main = "Wariancja estymacji IK")
-# grid.arrange(p1, p2, ncol = 1)
+library(gridExtra)
+p1 = p1_base + geom_stars(data = ik["var1.pred"]) +
+        ggtitle("Prawdopodobieństwo Temp > 20")
+p2 = p1_base + geom_stars(data = ik["var1.var"]) + 
+        ggtitle("Wariancja estymacji IK")
+grid.arrange(p1, p2, ncol = 1)
 ```
 
 ### Tworzenie mapy binarnej
@@ -122,32 +118,30 @@ Mapy przestawiające prawdopodobieństwo można też przetworzyć do postaci map
 Rozkład wartości prawdopodobieństwa jest możliwy do zobaczenia, np. używając histogramu:
 
 ```{r}
-ggplot(ik, aes(var1.pred)) + geom_histogram()
+ik_df = as.data.frame(ik)
+ggplot(ik_df, aes(var1.pred)) + geom_histogram()
 ```
 
 Następnie można stworzyć nową zmienną binarną w oparciu o wartości estymacji.
 Poniższy kod tworzy dwie nowe zmienne - `prog1`, gdzie wartość progowa została ustalona na 0.1 oraz `prog2` z wartością progową 0.75.
 
 ```{r}
-ik$prog1 <- ik$var1.pred > 0.1
-ik$prog2 <- ik$var1.pred > 0.75
+ik$prog1 = ik$var1.pred > 0.1
+ik$prog2 = ik$var1.pred > 0.75
 ```
 
 W wyniku otrzymuje się binarne mapy, dla których stwierdza się obszary powyżej lub poniższej zadanego prawdopodobieństwa.
 
 ```{r plotsy2ik1, eval=FALSE}
-spplot(ik, "prog1")
-spplot(ik, "prog2")
+plot(ik["prog1"])
+plot(ik["prog2"])
 ```
 
-```{r plotsy2ik2, echo=FALSE, fig.height=8}
-# library(gridExtra)
-# ps.options(encoding = "CP1250")
-# p1p <- spplot(ik, "prog1",
-#              main = "")
-# p2p <- spplot(ik, "prog2",
-#              main = "")
-# grid.arrange(p1p, p2p, ncol = 1)
+```{r plotsy2ik2, echo=FALSE, fig.height=8, message=FALSE}
+library(gridExtra)
+p1p = p1_base + geom_stars(data = ik["prog1"]) + scale_fill_viridis_d()
+p2p = p1_base + geom_stars(data = ik["prog2"]) + scale_fill_viridis_d()
+grid.arrange(p1p, p2p, ncol = 1)
 ```
 
 ### Alternatywne użycie funkcji
@@ -157,29 +151,29 @@ Z jej użyciem można definiować przyjęte progi bezpośrednio do funkcji `vari
 Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopni Celsjusza.
 
 ```{r, message=FALSE}
-vario_ind20 <- variogram(I(temp < 20)~1, locations = punkty)
-fitted_ind20 <- fit.variogram(vario_ind20, 
+vario_ind20 = variogram(I(temp < 20)~1, locations = punkty)
+fitted_ind20 = fit.variogram(vario_ind20, 
                               vgm("Sph", nugget = 0.01))
-vario_ind16 <- variogram(I(temp < 16)~1, locations = punkty)
-fitted_ind16 <- fit.variogram(vario_ind16, 
+vario_ind16 = variogram(I(temp < 16)~1, locations = punkty)
+fitted_ind16 = fit.variogram(vario_ind16, 
                               vgm("Sph", nugget = 0.03))
-vario_ind12 <- variogram(I(temp < 12)~1, locations = punkty)
-fitted_ind12 <- fit.variogram(vario_ind12, 
+vario_ind12 = variogram(I(temp < 12)~1, locations = punkty)
+fitted_ind12 = fit.variogram(vario_ind12, 
                               vgm("Sph", nugget = 0.03))
 ```
 
 ```{r, message=FALSE}
-ik20 <- krige(I(temp < 20)~1,
+ik20 = krige(I(temp < 20)~1,
               locations = punkty,
               newdata = siatka,
               model = fitted_ind20, 
               nmax = 30)
-ik16 <- krige(I(temp < 16)~1,
+ik16 = krige(I(temp < 16)~1,
               locations = punkty,
               newdata = siatka,
               model = fitted_ind16, 
               nmax = 30)
-ik12 <- krige(I(temp < 12)~1,
+ik12 = krige(I(temp < 12)~1,
               locations = punkty,
               newdata = siatka,
               model = fitted_ind12, 
@@ -187,12 +181,14 @@ ik12 <- krige(I(temp < 12)~1,
 ```
 
 ```{r ploty_trzyik, echo=FALSE, fig.height=12}
-# library(gridExtra)
-# ps.options(encoding = "CP1250")
-# p1i <- spplot(ik20, "var1.pred", main = "Prawdopodobieństwo Temp < 20")
-# p2i <- spplot(ik16, "var1.pred", main = "Prawdopodobieństwo Temp < 16")
-# p3i <- spplot(ik12, "var1.pred", main = "Prawdopodobieństwo Temp < 12")
-# grid.arrange(p1i, p2i, p3i, ncol = 1)
+library(gridExtra)
+p1i = p1_base + geom_stars(data = ik20["var1.pred"]) +
+        ggtitle("Prawdopodobieństwo Temp < 20")
+p2i = p1_base + geom_stars(data = ik16["var1.pred"]) + 
+        ggtitle("Prawdopodobieństwo Temp < 16")
+p3i = p1_base + geom_stars(data = ik12["var1.pred"]) + 
+        ggtitle("Prawdopodobieństwo Temp < 12")
+grid.arrange(p1i, p2i, p3i, ncol = 1)
 ```
 
 ## Zadania {#z9}

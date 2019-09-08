@@ -7,19 +7,19 @@ options(scipen = 99 * 99)
 # Dane {#dane-app}
 
 ```{r, echo=FALSE}
-library(sp)
+library(sf)
+library(stars)
 ```
-
 
 Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu `geostatbook` (dla kolejnych rozdziałów). 
 Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w tym skrypcie.
 
-- [Archiwum zawierające dane do rozdziału drugiego](https://github.com/Nowosad/geostat_book/blob/master/dane.zip?raw=true)
+- [Archiwum zawierające dane do rozdziału drugiego](https://github.com/Nowosad/geostat_book/blob/master/dane3.zip?raw=true)
 - [Dane do kolejnych rozdziałów są zawarte w pakiecie geostatbook:](https://github.com/Nowosad/geostatbook)
 
 ```{r instgeobook2, eval=FALSE}
-# install.packages("devtools")
-devtools::install_github("nowosad/geostatbook")
+# install.packages("remotes")
+remotes::install_github("nowosad/geostatbook@3)
 ```
 
 ## Zbiory danych w pakiecie **geostatbook**
@@ -46,7 +46,7 @@ Zmienne:
 - savi - ang. *Soil Adjusted Vegetation Index*
 
 ```{r}
-spplot(punkty)
+plot(punkty)
 ```
 
 ### `punkty_ndvi`
@@ -62,7 +62,7 @@ Zmienna:
 - ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference Vegetation Index*)
 
 ```{r}
-spplot(punkty_ndvi)
+plot(punkty_ndvi)
 ```
 
 ### `punkty_pref`
@@ -84,7 +84,7 @@ Zmienna:
 - savi - ang. *Soil Adjusted Vegetation Index*
 
 ```{r}
-spplot(punkty_pref)
+plot(punkty_pref)
 ```
 
 ### `granica`
@@ -97,7 +97,7 @@ data("granica")
 Granica Suwalskiego Parku Krajobrazowego.
 
 ```{r}
-spplot(granica)
+plot(granica)
 ```
 
 ### `siatka`
@@ -108,6 +108,20 @@ data("siatka")
 ```
 
 Siatka badanego obszaru dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
+Zawiera ona ona 127 wierszy i 96 kolumn.
+
+```{r}
+plot(siatka)
+```
+
+### `dane_uzup`
+
+```{r}
+data("dane_uzup")
+?dane_uzup
+```
+
+Siatka badanego obszaru dla obszaru Suwalskiego Parku Krajobrazowego i okolic zawierająca zmienne dodatkowe.
 Zawiera ona ona 127 wierszy i 96 kolumn oraz 4 zmienne:
 
 - srtm - wysokość w metrach n.p.m. pozyskana z numerycznego modelu terenu z misji SRTM
@@ -117,6 +131,5 @@ Zawiera ona ona 127 wierszy i 96 kolumn oraz 4 zmienne:
 - savi - ang. *Soil Adjusted Vegetation Index*
 
 ```{r}
-spplot(siatka)
+plot(st_redimension(dane_uzup))
 ```
-
