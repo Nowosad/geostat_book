@@ -6,6 +6,7 @@
 ### Reprezentacja danych nieprzestrzennych
 
 Skrypty i funkcje w języku R są zbudowane na podstawie szeregu obiektów nieprzestrzennych.
+<!--ref JN-->
     
 - Wektory (ang. *vector*):
     - liczbowe (ang. *integer*, *numeric*) - `c(1, 2, 3)` i `c(1.21, 3.32, 4.43)`
@@ -31,16 +32,16 @@ Więcej szczegółów na ten temat pakietów R służących do analizy przestrze
 Dane przestrzenne mogą być reprezentowane w R poprzez szereg różnych klas obiektów z użyciem różnych pakietów R. 
 Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klasy `Spatial*` z pakietu **sp** oraz obiekty klasy `sf` z pakietu **sf**.
 
-Wszystkie obiekty klasy `Spatial*` z pakietu **sp** zawierają tablę atrybutów oraz dwie dodatkowe informacje:
+<!-- Wszystkie obiekty klasy `Spatial*` z pakietu **sp** zawierają tablę atrybutów oraz dwie dodatkowe informacje: -->
 
-- bounding box (`bbox`) - obwiednia - określa zasięg danych
-- CRS (`proj4string`) - układ współrzędnych
+<!-- - bounding box (`bbox`) - obwiednia - określa zasięg danych -->
+<!-- - CRS (`proj4string`) - układ współrzędnych -->
 
-Ten pakiet definiuje klasę obiektów - sposób reprezentacji danych.
-Najczęściej stosowane obiekty klasy `Spatial*` to `SpatialPointsDataFrame`, `SpatialPolygonsDataFrame` oraz `SpatialGridDataFrame`. 
-Ostatnia klasa reprezentuje dane rastrowe.  
-Dodatkowo ten pakiet współpracuje z pakietami **rgdal** służącym do wczytywania i zapisywania danych oraz **rgeos** służącym do przetwarzania danych przestrzennych.
-W oparciu o pakiet **sp** powstało kilkaset dodatkowych pakietów R do analizy danych przestrzennych.
+<!-- Ten pakiet definiuje klasę obiektów - sposób reprezentacji danych. -->
+<!-- Najczęściej stosowane obiekty klasy `Spatial*` to `SpatialPointsDataFrame`, `SpatialPolygonsDataFrame` oraz `SpatialGridDataFrame`.  -->
+<!-- Ostatnia klasa reprezentuje dane rastrowe.   -->
+<!-- Dodatkowo ten pakiet współpracuje z pakietami **rgdal** służącym do wczytywania i zapisywania danych oraz **rgeos** służącym do przetwarzania danych przestrzennych. -->
+<!-- W oparciu o pakiet **sp** powstało kilkaset dodatkowych pakietów R do analizy danych przestrzennych. -->
 
 Pakiet **sf** to następca pakietu **sp** oparty o OGC standard Simple Features.
 Łączy on możliwości zarówno pakietu **sp** jak i pakietów **rgdal** i **rgeos**.
@@ -49,11 +50,20 @@ Ten pakiet pozwala na obsługę dodatkowych typów danych wektorowych (np. polig
 Pakiet **sf** jest używany przez kilkadziesiąt dodatkowych pakietów R, jednak wiele metod i funkcji nadal wymaga obiektów klasy **sp**.
 
 Porównanie funkcji dostępnych w pakietach **sp** i **sf** można znaleźć pod adresem https://github.com/r-spatial/sf/wiki/Migrating.
-
 Więcej o pakiecie **sf** można przeczytać w [rozdziale drugim](https://geocompr.robinlovelace.net/spatial-class.html) Geocomputation with R.
 
 Dane rastrowe są reprezentowane między innymi poprzez klasę `SpatialGridDataFrame` z pakietu **sp**, obiekty klasy `Raster*` z pakietu **raster**, oraz klasę `stars` z pakietu **stars**.
-<!-- DODAJ COŚ -->
+<!-- toDo -->
+
+<!-- Here, we introduce a new package for raster analysis, called stars (for scalable, spatiotemporal tidy arrays) that -->
+
+<!--     allows for representing dynamic raster stacks, -->
+<!--     in addition to regular grids handles rotated, sheared, rectilinear and curvilinear rasters, -->
+<!--     provides a tight integration with package sf, -->
+<!--     follows the tidyverse design principles, -->
+<!--     aims at being scalable, also beyond local disk size, -->
+<!--     also handles array data with non-raster spatial dimensions, the vector datacubes, -->
+<!--     provides further integration of novel features in the GDAL library than other R packages have given so far. -->
 
 ### GDAL/OGR
 
@@ -112,11 +122,11 @@ Do najpopularniejszych należą dane tekstowe z plików .csv, dane wektorowe z p
 
 Dane z plików tekstowych (np. .csv) można odczytać za pomocą uogólnionej funkcji `read.table()` lub też funkcji szczegółowych - `read.csv()` lub `read.csv2()`.
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-1}
 dane_punktowe = read.csv("dane/punkty.csv")
 ```
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-2}
 head(dane_punktowe)
 ```
 
@@ -125,7 +135,7 @@ Aby obiekt został przetworzony do klasy przestrzennej, konieczne jest określen
 W tym wypadku współrzędne znajduję się w kolumnach `x` oraz `y`. 
 Nadanie układu współrzędnych odbywa się poprzez funkcję `st_as_sf()`.
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-3}
 library(sf)
 dane_punktowe_sf = st_as_sf(dane_punktowe, coords = c("x", "y"))
 dane_punktowe_sf
@@ -133,13 +143,13 @@ dane_punktowe_sf
 
 Ważne, ale nie wymagane, jest także dodanie informacji o układzie przestrzennym danych za pomocą funkcji `st_set_crs()`. 
 
-```{r}
-dane_punktowe_sf = st_set_crs(dane_punktowe_sf, 2180)
+```{r 02-r-a-dane-przestrzenne-4}
+dane_punktowe_sf = st_set_crs(dane_punktowe_sf, value = 2180)
 ```
 
-Proste wizualizacje uzyskanych danych klasy przestrzennej, np. `sf`, można uzyskać za pomocą funkcji `plot()`.
+Proste wizualizacje uzyskanych danych klasy przestrzennej, np. `sf`, można uzyskać za pomocą funkcji `plot()` (rycina \@ref(fig:02-r-a-dane-przestrzenne-5) i \@ref(fig:02-r-a-dane-przestrzenne-7a)).
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-5, fig.cap="Efekt działania funkcji plot na obiekcie klasy sf."}
 plot(dane_punktowe_sf)
 ```
 
@@ -148,10 +158,10 @@ plot(dane_punktowe_sf)
 Dane wektorowe (np. GeoPackage czy ESRI Shapefile) można odczytać za pomocą funkcji `st_read()` z pakietu **sf**.
 Przyjmuje ona co najmniej jeden argument - `dsn`, który określa główny plik w którym znajdują się dane. 
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-6}
 library(sf)
 granica_sf = st_read(dsn = "dane/granica.gpkg")
-plot(granica_sf)
+# plot(granica_sf)
 ```
 
 ### Rastry
@@ -161,15 +171,16 @@ Do najpopularniejszych należą funkcje `readGDAL()` z pakietu `rgdal` oraz `ras
 W poniższym przykładzie użyjemy funkcji `read_stars()` z pakietu **stars**.
 Należy w niej jedynie podać ścieżkę do pliku rastrowego.
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-7}
 library(stars)
 siatka_stars = read_stars("dane/siatka.tif")
+```
+
+```{r 02-r-a-dane-przestrzenne-7a, fig.cap = "Efekt działania funkcji plot na obiekcie klasy sf."}
 plot(siatka_stars)
 ```
 
-<!-- text -->
-
-```{r}
+```{r 02-r-a-dane-przestrzenne-8, echo=FALSE, eval=FALSE}
 siatka_stars2 = split(siatka_stars, "band")
 siatka_stars2
 plot(siatka_stars2)
@@ -181,40 +192,60 @@ plot(siatka_stars2)
 
 Podstawowe informacje o obiekcie można uzyskać poprzez wpisanie jego nazwy:
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-9}
 dane_punktowe_sf
 ```
 
 Obiekty `sf` są zbudowane z tabeli (data frame) wraz z dodatkową kolumną zawierającą geometrie (często nazywaną `geometry` lub `geom`) oraz szeregu atrybutów przestrzennych.
 Strukturę obiektu `sf` można sprawdzić za pomocą funkcji `str()`:
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-10}
 str(dane_punktowe_sf)
 ```
 
+Obiekty `stars` mogą przyjmować różną formę w zależności od tego czy reprezentują one dane wektorowe czy rastrowe oraz tego ile wymiarów posiadają te dane.
+Obiekt `siatka_stars` posiada dwa wymiary (`x` i `y`) oraz jeden atrybut (`siatka.tif`).
+
+```{r 02-r-a-dane-przestrzenne-10a}
+siatka_stars
+```
+
+Jest zbudowany jako lista zawierająca dwuwymiarową macierz wraz ze zbiorem metadanych (można to sprawdzić za pomocą funkcji `str(siatka_stars)`).
+
 ### Tabla atrybutów
 
-Funkcja `st_drop_geometry()` pozwala na pozbycie się informacji przestrzennych i uzyskanie jedynie obiektu klasy `data.frame` zawierającego nieprzestrzenne informacje o kolejnych punktach w tym zbiorze.
+Funkcja `st_drop_geometry()` pozwala na pozbycie się informacji przestrzennych z obiektu klasy `sf` i uzyskanie jedynie obiektu klasy `data.frame` zawierającego nieprzestrzenne informacje o kolejnych punktach w tym zbiorze.
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-11}
 df = st_drop_geometry(dane_punktowe_sf)
 head(df)
 ```
 
+Przetworzenie obiektu klasy `stars` na `data.frame` odbywa się natomiast używając funkcji `as.data.frame()`.
+
+```{r 02-r-a-dane-przestrzenne-11a}
+siatka_df = as.data.frame(siatka_stars)
+head(siatka_df)
+```
+
 ### Współrzędne
 
-Funkcja `st_coordinates()` pozwala na wydobycie współrzędnych z obiektu punktowego klasy `sf`.
+Funkcja `st_coordinates()` pozwala na wydobycie współrzędnych zarówno z obiektu punktowego klasy `sf` jak i siatki klasy `stars`.
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-12}
+# sf
 xy = st_coordinates(dane_punktowe_sf)
 head(xy)
+# stars
+siatka_xy = st_coordinates(siatka_stars)
+head(siatka_xy)
 ```
 
 ### Obwiednia
 
 Funkcja `st_bbox()` określa zasięg przestrzenny danych w jednostkach mapy.
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-13}
 st_bbox(dane_punktowe_sf)
 ```
 
@@ -222,17 +253,30 @@ st_bbox(dane_punktowe_sf)
 
 Funkcja `st_crs()` wyświetla definicję układu współrzędnych.
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-14}
 st_crs(dane_punktowe_sf)
 ```
 
 ## Interakcja raster-vector
 
-### Wydobywanie wartości z rastra
+### Łączenie danych rastrowych
+
+```{r 02-r-a-dane-przestrzenne-15a}
+srtm_stars = read_stars("dane/srtm.tif")
+clc_stars = read_stars("dane/clc.tif")
+```
 
 ```{r}
+dwie_stars = c(srtm_stars, clc_stars)
+```
+
+### Wydobywanie wartości z rastra
+
+<!-- toDo -->
+
+```{r 02-r-a-dane-przestrzenne-15}
 # https://github.com/r-spatial/stars/issues/197
-dane_punktowe_sf2 = st_join(dane_punktowe_sf, st_as_sf(siatka_stars))
+dane_punktowe_sf2 = st_join(dane_punktowe_sf, st_as_sf(dwie_stars))
 ```
 
 ## Eksport danych
@@ -243,7 +287,7 @@ R pozwala również na zapisywanie danych przestrzennych.
 W przypadku zapisu danych wektorowych za pomocą funkcji `st_write()` konieczne jest podanie ścieżki i  nazwy zapisywanego obiektu wraz z rozszerzeniem (np. `dane/granica.gpkg`).
 
 ```{r zapis_wektora, eval=FALSE}
-st_write(granica, dsn = "dane/granica.gpkg")
+st_write(granica_sf, dsn = "dane/granica.gpkg")
 ```
 
 ### Zapisywanie danych rastrowych
@@ -252,7 +296,7 @@ Funkcja `st_write()` pozwala również na zapisywanie danych rastrowych.
 Wymaga ona podania dwóch argumentów - nazwy zapisywanego obiektu (np. `siatka`) oraz ścieżki i nazwy nowego pliku wraz z rozszerzeniem (np. `dane/nowa_siatka.tif`).
 
 ```{r zapis_rastra, eval=FALSE}
-st_write(siatka_stars, "dane/nowa_siatka.tif")
+write_stars(siatka_stars, dsn = "dane/nowa_siatka.tif")
 ```
 
 <!-- Możliwe jest także użycie szeregu dodatkowych argumentów, np.: -->
@@ -268,26 +312,22 @@ Więcej o wizualizacji danych przestrzennych można przeczytać w rozdziale [Mak
 ### Dane punktowe
 
 Funkcja `plot()` idealnie nadaje się do szybkiego przyjrzenia się, np. rodzajowi próbkowania danych.
-Domyślnie wyświetla ona szereg map - po jeden dla każdej zmiennej:
+Domyślnie wyświetla ona szereg map - po jeden dla każdej zmiennej (rycina \@ref(fig:02-r-a-dane-przestrzenne-16)).
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-16, fig.cap = "Użycie funkcji plot na danych punktowych klasy sf."}
 plot(dane_punktowe_sf)
 ```
 
-Do wyświetlenia tylko geometrii (np. punktów) bez atrybutów służy funkcja `plot()` połączona z funkcją `st_geometry()`:
+Do wyświetlenia tylko geometrii (np. punktów) bez atrybutów służy funkcja `plot()` połączona z funkcją `st_geometry()` (rycina \@ref(fig:02-r-a-dane-przestrzenne-17)).
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-17, fig.cap = "Użycie funkcji plot do wyświetlenia geometrii obiektu klasy sf."}
 plot(st_geometry(dane_punktowe_sf))
 ```
 
 Aby wyświetlić tylko jedną zmienną należy ją zadeklarować poprzez nawias kwadratowy.
-Poniżej można zobaczyć przykłady dla zmiennych `temp` oraz `srtm`.
+Poniżej można zobaczyć przykłady dla zmiennej `srtm` (rycina \@ref(fig:02-r-a-dane-przestrzenne-19)).
 
-```{r}
-plot(dane_punktowe_sf["temp"])
-```
-
-```{r}
+```{r 02-r-a-dane-przestrzenne-19, fig.cap = "Użycie funkcji plot do wyświetlenia zmiennej numerycznej obiektu klasy sf."}
 plot(dane_punktowe_sf["srtm"])
 ```
 
@@ -295,9 +335,9 @@ plot(dane_punktowe_sf["srtm"])
 
 Nie zawsze dane mają postać ciągłych wartości - bywają one również określeniami różnych klas. 
 W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci kategoryzowanej (`as.factor()`).
-Następnie można je wyświetlić za pomocą funkcji `plot()`.
+Następnie można je wyświetlić za pomocą funkcji `plot()` (rycina \@ref(fig:02-r-a-dane-przestrzenne-20)).
 
-```{r}
+```{r 02-r-a-dane-przestrzenne-20, fig.cap = "Użycie funkcji plot do wyświetlenia zmiennej kategoryzowanej obiektu klasy sf."}
 dane_punktowe_sf$clc = as.factor(dane_punktowe_sf$clc)
 plot(dane_punktowe_sf["clc"])
 ```
@@ -305,28 +345,27 @@ plot(dane_punktowe_sf["clc"])
 ### Rastry
 
 Wyświetlanie danych w formacie rastrowym może również odbyć się z użyciem funkcji `plot()`.
-Domyślnie wyświetla ona szereg map - po jeden dla każdej warstwy z pliku rastrowego:
+Domyślnie wyświetla ona pierwszą zmienną (lub warstwę) znajdującą się w obiekcie klasy `stars` (rycina \@ref(fig:02-r-a-dane-przestrzenne-21)).
 
-```{r}
-# pierwsza zmienna
-plot(siatka_stars)
+```{r 02-r-a-dane-przestrzenne-21, fig.cap = "Użycie funkcji plot do wyświetlenia pierwszej zmiennej obiektu klasy stars."}
+paleta = hcl.colors(40, palette = "ag_Sunset")
+plot(dwie_stars, col = paleta)
 ```
 
-Aby wyświetlić tylko jedną zmienną należy ją zadeklarować poprzez indeksowanie.
-Opiera się to o kilka indeksów, np. dla obiektu `siatka_stars` są to `[indeks atrybutu, indeksy kolumn, indeksy wierszy, indeksy kanału]`.
-Przykładowo indeks `[1, , , 4]` pozwala na wyświetlenie kanału czwartego z pierwszego atrybutu.
+Aby wyświetlić tylko wybraną zmienną należy ją zadeklarować poprzez indeksowanie.
+Opiera się to o kilka indeksów, np. dla obiektu `siatka_stars` są to `[indeks atrybutu, indeksy kolumn, indeksy wierszy]`^[Liczba indeksów zależy od złożoności obiektu klasy `stars`. Przykładowo dla obiektów posiadających trzy wymiary, np. wielokanałowe dane satelitarne, mogą to być `[indeks atrybutu, indeksy kolumn, indeksy wierszy, indeksy kanału]`.].
+Przykładowo indeks `[2, , ]` pozwala na wyświetlenie drugiego atrybutu.
+Możliwe jest tutaj również użycie uproszczonej formy `dwie_stars[2]` (rycina \@ref(fig:02-r-a-dane-przestrzenne-22)).
 
-```{r}
-# wybrany kanał
-plot(siatka_stars[1, , , 4])
+```{r 02-r-a-dane-przestrzenne-22, fig.cap = "Użycie funkcji plot do wyświetlenia wybranej zmiennej obiektu klasy stars."}
+plot(dwie_stars[2], col = c("#d9d40c", "#416422", "#0c6cae"))
 ```
 
 Indeksowanie pozwala też na wyświetlenie fragmentu danych rastrowych.
-Na przykład, indeks `[1, 2:50, 1:20, ]` pozwala na wyświetlenie wszystkich warstw, ale tylko dla kolumn od 20 do 50 i wierszy od 1 do 20.
+Na przykład, indeks `[1, 2:50, 1:20]` pozwala na wyświetlenie pierwszej zmiennej, ale tylko dla kolumn od 20 do 50 i wierszy od 1 do 20 (rycina \@ref(fig:02-r-a-dane-przestrzenne-23)).
 
-```{r}
-# wybrany zasięg przestrzenny
-plot(siatka_stars[1, 20:50, 1:20, ])
+```{r 02-r-a-dane-przestrzenne-23, fig.cap = "Użycie funkcji plot do wyświetlenia wybranej zmiennej obiektu klasy stars dla wybranego zasięgu przestrzennego."}
+plot(dwie_stars[1, 20:50, 1:20], col = paleta)
 ```
 
 ## Zadania {#z2}

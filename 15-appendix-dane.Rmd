@@ -1,4 +1,4 @@
-```{r include=FALSE, cache=FALSE}
+```{r 15-appendix-dane-1, include=FALSE, cache=FALSE}
 library("methods")
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = '\\textwidth')
 options(scipen = 99 * 99)
@@ -6,7 +6,7 @@ options(scipen = 99 * 99)
 ```
 # Dane {#dane-app}
 
-```{r, echo=FALSE}
+```{r 15-appendix-dane-2, echo=FALSE}
 library(sf)
 library(stars)
 ```
@@ -24,13 +24,13 @@ remotes::install_github("nowosad/geostatbook@3)
 
 ## Zbiory danych w pakiecie **geostatbook**
 
-```{r}
+```{r 15-appendix-dane-3}
 library(geostatbook)
 ```
 
 ### `punkty`
 
-```{r}
+```{r 15-appendix-dane-4}
 data("punkty")
 ?punkty
 ```
@@ -45,13 +45,13 @@ Zmienne:
 - ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference Vegetation Index*)
 - savi - ang. *Soil Adjusted Vegetation Index*
 
-```{r}
+```{r 15-appendix-dane-5}
 plot(punkty)
 ```
 
 ### `punkty_ndvi`
 
-```{r}
+```{r 15-appendix-dane-6}
 data("punkty_ndvi")
 ?punkty_ndvi
 ```
@@ -61,13 +61,13 @@ Zmienna:
 
 - ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference Vegetation Index*)
 
-```{r}
+```{r 15-appendix-dane-7}
 plot(punkty_ndvi)
 ```
 
 ### `punkty_pref`
 
-```{r}
+```{r 15-appendix-dane-8}
 data("punkty_pref")
 ?punkty_pref
 ```
@@ -83,26 +83,26 @@ Zmienna:
 - ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference Vegetation Index*)
 - savi - ang. *Soil Adjusted Vegetation Index*
 
-```{r}
+```{r 15-appendix-dane-9}
 plot(punkty_pref)
 ```
 
 ### `granica`
 
-```{r}
+```{r 15-appendix-dane-10}
 data("granica")
 ?granica
 ```
 
 Granica Suwalskiego Parku Krajobrazowego.
 
-```{r}
+```{r 15-appendix-dane-11}
 plot(granica)
 ```
 
 ### `siatka`
 
-```{r}
+```{r 15-appendix-dane-12}
 data("siatka")
 ?siatka
 ```
@@ -110,13 +110,13 @@ data("siatka")
 Siatka badanego obszaru dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
 Zawiera ona ona 127 wierszy i 96 kolumn.
 
-```{r}
+```{r 15-appendix-dane-13}
 plot(siatka)
 ```
 
 ### `dane_uzup`
 
-```{r}
+```{r 15-appendix-dane-14}
 data("dane_uzup")
 ?dane_uzup
 ```
@@ -130,6 +130,6 @@ Zawiera ona ona 127 wierszy i 96 kolumn oraz 4 zmienne:
 - ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference  Vegetation Index*)
 - savi - ang. *Soil Adjusted Vegetation Index*
 
-```{r}
+```{r 15-appendix-dane-15}
 plot(st_redimension(dane_uzup))
 ```

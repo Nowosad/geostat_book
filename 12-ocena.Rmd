@@ -3,7 +3,7 @@
 
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
-```{r, message=FALSE, warning=FALSE}
+```{r 12-ocena-1, message=FALSE, warning=FALSE}
 library(sf)
 library(stars)
 library(gstat)
@@ -12,9 +12,10 @@ library(ggplot2)
 library(geostatbook)
 data(punkty)
 data(siatka)
+paleta = hcl.colors(40, palette = "ag_Sunset")
 ```
 
-```{r, echo=FALSE}
+```{r 12-ocena-2, echo=FALSE}
 par(mar = c(rep(0, 4)))
 ```
 
@@ -22,14 +23,14 @@ par(mar = c(rep(0, 4)))
 
 ### Mapa
 
-Do oceny przestrzennej jakości estymacji można zastosować mapę przestawiającą błędy estymacji.
+Do oceny przestrzennej jakości estymacji można zastosować mapę przestawiającą błędy estymacji (rycina \@ref(fig:mapa)).
 Wyliczenie błędów estymacji odbywa się poprzez odjęcie od estymacji wartości obserwowanej.
 
-```{r, eval=FALSE}
+```{r 12-ocena-3, eval=FALSE}
 blad_predykcji = obserwowane - estymacja
 ```
 
-```{r mapa, echo=FALSE, message=FALSE, }
+```{r mapa, echo=FALSE, message=FALSE, fig.cap = "Mapa przedstawiająca rozkład przestrzenny błędów estymacji."}
 set.seed(224)
 punkty_podzial = initial_split(punkty, prop = 0.75, strata = temp)
 train = training(punkty_podzial)
@@ -49,9 +50,9 @@ plot(test_sk["blad_estymacji_sk"], main = "Błąd estymacji", breaks = cuts)
 
 ### Histogram
 
-Błąd estymacji można również przedstawić na wykresach, między innymi, na histogramie.
+Błąd estymacji można również przedstawić na wykresach, między innymi, na histogramie (rycina \@ref(fig:hist)).
 
-```{r hist, echo=FALSE}
+```{r hist, echo=FALSE, fig.cap="Rozkład wartości błędów estymacji."}
 ggplot(test_sk, aes(blad_estymacji_sk)) +
     geom_histogram() + 
     xlab("Błąd estymacji") + 
@@ -60,9 +61,9 @@ ggplot(test_sk, aes(blad_estymacji_sk)) +
 
 ### Wykres rozrzutu
 
-Do porównania pomiędzy wartością estymowaną a obserwowaną może również posłużyć wykres rozrzutu.
+Do porównania pomiędzy wartością estymowaną a obserwowaną może również posłużyć wykres rozrzutu (rycina \@ref(fig:point)).
 
-```{r point, echo=FALSE}
+```{r point, echo=FALSE, fig.cap="Wykres rozrzutu porównujący rzeczywiste (obserwowane) wartości i wartości estymowane."}
 ggplot(test_sk, aes(var1.pred, true)) +
     geom_point() +
     xlab("Estymacja") +
@@ -93,7 +94,7 @@ $$ MPE=\frac{\sum_{i=1}^{n}(v_i - \hat{v}_i)}{n} $$
 
 Średni błąd estymacji można też wyliczyć używając funkcji `mean()` w R.
 
-```{r, eval=FALSE}
+```{r 12-ocena-4, eval=FALSE}
 MPE = mean(obserwowane - estymacja)
 ```
 
@@ -108,7 +109,7 @@ $$ RMSE=\sqrt{\frac{\sum_{i=1}^{n}(v_i-\hat{v}_i)^2}{n}} $$
 
 RMSE można też wyliczyć w R.
 
-```{r, eval=FALSE}
+```{r 12-ocena-5, eval=FALSE}
 RMSE = sqrt(mean((obserwowane - estymacja) ^ 2))
 ```
 
@@ -124,14 +125,14 @@ $$ R^2 = 1 - \frac{\sum_{i=1}^{n} (\hat v_i - v_i)^2}{\sum_{i=1}^{n} (v_i - \ove
 
 R^2^ można też wyliczyć w R.
 
-```{r, eval=FALSE}
+```{r 12-ocena-6, eval=FALSE}
 R2 = 1 - sum((estymacja - obserwowane) ^ 2) /
     sum((obserwowane - mean(obserwowane)) ^ 2)
 ```
 
 lub
 
-```{r, eval=FALSE}
+```{r 12-ocena-7, eval=FALSE}
 R2 = cor(obserwowane, estymacja) ^ 2
 ```
 
@@ -159,17 +160,16 @@ Użycie tej funkcji powoduje stworzenie indeksu zawierającego numery wierszy dl
 Ważną zaletą funkcji `createDataPartition()` jest to, iż  w zbiorze treningowym i testowym zachowane są podobne rozkłady wartości. W przykładzie użyto argumentu `p = 0.75`, który oznacza, że 75% danych będzie należało do zbioru treningowego, a 25% do zbioru testowego.
 Następnie korzystając ze stworzonego indeksu, budowane są dwa zbiory danych - treningowy (`train`) oraz testowy (`test`).
 
-```{r}
+```{r 12-ocena-8}
 set.seed(224)
-library(rsample)
 punkty_podzial = initial_split(punkty, prop = 0.75, strata = temp)
 train = training(punkty_podzial)
 test = testing(punkty_podzial)
 ```
 
-Dalszym krokiem jest stworzenie semiwariogramu empirycznego oraz jego modelowanie w oparciu o zbiór treningowy.
+Dalszym krokiem jest stworzenie semiwariogramu empirycznego oraz jego modelowanie w oparciu o zbiór treningowy (rycina \@ref(fig:12-ocena-9)).
 
-```{r}
+```{r 12-ocena-9, fig.cap = "Model semiwariogramu w oparciu o zbiór testowy."}
 vario = variogram(temp~1, locations = train)
 model = vgm(model = "Sph", nugget = 0.5)
 fitted = fit.variogram(vario, model)
@@ -181,7 +181,7 @@ Wcześniej wymagała ona podania wzoru, zbioru punktowego, siatki oraz modelu.
 W tym przypadku jednak chcemy porównać wynik estymacji i testowy zbiór punktowy. 
 Dlatego też, zamiast obiektu siatki definiujemy obiekt zawierający zbiór testowy (`test`).
 
-```{r}
+```{r 12-ocena-10}
 test_sk = krige(temp~1, 
                  locations = train,
                  newdata = test,
@@ -190,9 +190,9 @@ test_sk = krige(temp~1,
 summary(test_sk)
 ```
 
-Uzyskane w ten sposób wyniki możemy określić używając statystyk jakości estymacji lub też wykresów.
+Uzyskane w ten sposób wyniki możemy określić używając statystyk jakości estymacji lub też wykresów (ryciny \@ref(fig:12-ocena-12), \@ref(fig:12-ocena-13), \@ref(fig:12-ocena-14)).
 
-```{r}
+```{r 12-ocena-11}
 blad_estymacji_sk = test$temp - test_sk$var1.pred
 summary(blad_estymacji_sk)
 
@@ -206,19 +206,19 @@ R2 = cor(test$temp, test_sk$var1.pred) ^ 2
 R2
 ```
 
-```{r}
+```{r 12-ocena-12, fig.cap = "Mapa przedstawiająca rozkład przestrzenny błędów estymacji uzyskanych używając krigingu prostego."}
 test_sk$blad_estymacji_sk = blad_estymacji_sk
 plot(test_sk["blad_estymacji_sk"], breaks = c(-5, -3, -1, 1, 3, 5))
 ```
 
-```{r}
+```{r 12-ocena-13, fig.cap="Rozkład wartości błędów estymacji uzyskanych używając krigingu prostego."}
 ggplot(test_sk, aes(blad_estymacji_sk)) +
     geom_histogram() + 
     xlab("Błąd estymacji") + 
     ylab("Liczebność")
 ```
 
-```{r}
+```{r 12-ocena-14, fig.cap="Wykres rozrzutu porównujący rzeczywiste (obserwowane) wartości i wartości estymowane uzyskane używając krigingu prostego."}
 test_sk$true = test$temp
 ggplot(test_sk, aes(var1.pred, true)) +
     geom_point() +
@@ -226,15 +226,15 @@ ggplot(test_sk, aes(var1.pred, true)) +
     ylab("Obserwacja")
 ```
 
-W sytuacji, gdy uzyskany model jest wystarczająco dobry, możemy również uzyskać estymację dla całego obszaru z użyciem funkcji `krige()`, tym razem jednak podając obiekt siatki.
+W sytuacji, gdy uzyskany model jest wystarczająco dobry, możemy również uzyskać estymację dla całego obszaru z użyciem funkcji `krige()`, tym razem jednak podając obiekt siatki (rycina \@ref(fig:12-ocena-15)).
 
-```{r}
+```{r 12-ocena-15, fig.cap="Estymacja uzyskana dla całego obszaru."}
 test_sk = krige(temp~1,
                  locations = train,
                  newdata = siatka,
                  model = fitted,
                  beta = 16)
-plot(test_sk["var1.pred"])
+plot(test_sk["var1.pred"], col = paleta)
 ```
 
 ### Kroswalidacja
@@ -275,9 +275,9 @@ cv_sk = krige.cv(temp ~ 1,
 summary(cv_sk)
 ```
 
-Uzyskane w ten sposób wyniki możemy określić używając statystyk jakości estymacji lub też wykresów.
+Uzyskane w ten sposób wyniki możemy określić używając statystyk jakości estymacji lub też wykresów (ryciny \@ref(fig:12-ocena-17), \@ref(fig:12-ocena-18), \@ref(fig:12-ocena-19)).
 
-```{r}
+```{r 12-ocena-16}
 summary(cv_sk$residual)
 
 MPE = mean(cv_sk$residual)
@@ -290,38 +290,38 @@ R2 = cor(cv_sk$observed, cv_sk$var1.pred) ^ 2
 R2
 ```
 
-```{r}
+```{r 12-ocena-17, fig.cap = "Mapa przedstawiająca rozkład przestrzenny błędów estymacji uzyskanych używając krigingu prostego i kroswalidacji."}
 plot(cv_sk["residual"], breaks = c(-10, -5, -3, -1, 1, 3, 5, 10))
 ```
 
-```{r}
+```{r 12-ocena-18, fig.cap="Rozkład wartości błędów estymacji uzyskanych używając krigingu prostego i kroswalidacji."}
 ggplot(cv_sk, aes(residual)) +
     geom_histogram() + 
     xlab("Błąd estymacji") + 
     ylab("Liczebność")
 ```
 
-```{r}
+```{r 12-ocena-19, fig.cap="Wykres rozrzutu porównujący rzeczywiste (obserwowane) wartości i wartości estymowane uzyskane używając krigingu prostego i kroswalidacji."}
 ggplot(cv_sk, aes(var1.pred, observed)) +
     geom_point() +
     xlab("Estymacja") +
     ylab("Obserwacja")
 ```
 
-Podobnie jak w walidacji podzbiorem, gdy uzyskany model jest wystarczająco dobry, estymację dla całego obszaru uzyskuje się z użyciem funkcji `krige()`.
+Podobnie jak w walidacji podzbiorem, gdy uzyskany model jest wystarczająco dobry, estymację dla całego obszaru uzyskuje się z użyciem funkcji `krige()` (rycina \@ref(fig:12-ocena-20)).
 
-```{r}
+```{r 12-ocena-20, fig.cap="Estymacja uzyskana dla całego obszaru po oceneniu modelu używając kroswalidacji."}
 cv_skk = krige(temp~1, 
-                locations = train,
+                locations = punkty,
                 newdata = siatka, 
                 model = fitted, 
                 beta = 16)
-plot(cv_skk["var1.pred"])
+plot(cv_skk["var1.pred"], col = paleta)
 ```
 
 <!-- 
 
-```{r, eval=FALSE}
+```{r 12-ocena-21, eval=FALSE}
 # ok_loocv = krige.cv(temp~1, punkty, model=model_zl2)
 # summary(ok_loocv)
 ```
@@ -330,7 +330,7 @@ plot(cv_skk["var1.pred"])
 - Wykresy z loocv
 - wykresy porównujące
 
-```{r, eval=FALSE}
+```{r 12-ocena-22, eval=FALSE}
 # ok_fit = gstat(formula=temp~1, data=punkty, model=model_zl2)
 # ok_loocv = gstat.cv(OK_fit, debug.level=0, random=FALSE)
 # spplot(pe[6])
@@ -346,7 +346,7 @@ plot(cv_skk["var1.pred"])
 ### Walidacja wyników estymacji |  Kriging zwykły - LOO crossvalidation
 krige.cv
 
-```{r, eval=FALSE }
+```{r 12-ocena-23, eval=FALSE }
 # OK_fit = gstat(id="OK_fit", formula=temp~1, data=punkty, model=fitted)
 # pe = gstat.cv(OK_fit, debug.level=0, random=FALSE)
 # spplot(pe[6])
@@ -362,7 +362,7 @@ krige.cv
 
 ### Walidacja wyników estymacji |  K  Kriging uniwersalny - LOO crossvalidation
 
-```{r, eval=FALSE }
+```{r 12-ocena-24, eval=FALSE }
 # KU_fit = gstat(id="KU_fit", formula=temp~odl_od_morza, data=punkty, model=fitted_ku)
 # pe = gstat.cv(KU_fit, debug.level=0, random=FALSE)
 # spplot(pe[6])

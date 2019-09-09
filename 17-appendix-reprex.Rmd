@@ -23,7 +23,7 @@ Ten pakiet uruchamia wybraną część kodu, wykonuje kolejne operacje, a nastę
 
 Pakiet **reprex** można zainstalować poprzez funkcję `install.packages()`:
 
-```{r, eval = FALSE}
+```{r 17-appendix-reprex-1, eval = FALSE}
 install.packages("reprex")
 ```
 
@@ -31,7 +31,7 @@ Główną funkcją w tym pakiecie jest `reprex()`.
 Funkcję `reprex()` można też użyć poprzez wpisanie kodu wewnątrz tej funkcji lub też poprzez wybranie opcji `Reprex selection` z meny Addins w RStudio.
 Możliwe jest również stworzenie powtarzalnego przykładu na podstawie skryptu R:
 
-```{r, eval=FALSE}
+```{r 17-appendix-reprex-2, eval=FALSE}
 reprex(input = "moj_skrypt.R")
 ```
 
@@ -41,7 +41,7 @@ reprex(input = "moj_skrypt.R")
 
 Sprawdźmy działanie pakietu **reprex** na prostym przykładzie - tworzymy dwa obiekty `x` i `y`, nadajemy im wartości a następnie mnożymy je przez siebie:
 
-```{r, eval=FALSE}
+```{r 17-appendix-reprex-3, eval=FALSE}
 library(reprex)
 reprex({
         x = 1
@@ -60,7 +60,7 @@ Spróbujmy teraz trochę bardziej skomplikowanego przykładu.
 Naszym celem jest stworzenie mapy punktowej temperatury na podstawie obiektu **punkty**.
 Powtarzalny przykład może posłużyć do szybkiego określenia problemów z kodem:
 
-```{r, eval=FALSE}
+```{r 17-appendix-reprex-4, eval=FALSE}
 library(reprex)
 reprex({
         library(sf)
@@ -77,7 +77,7 @@ Naprawiona wersja tego kodu znajduje się poniżej:
 
 ![](figs/reprex2.png)
 
-```{r, eval=FALSE}
+```{r 17-appendix-reprex-5, eval=FALSE}
 library(reprex)
 reprex({
         library(sf)

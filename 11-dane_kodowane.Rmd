@@ -3,7 +3,7 @@
 
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
-```{r, message=FALSE, warning=FALSE}
+```{r 11-dane-kodowane-1, message=FALSE, warning=FALSE}
 library(sf)
 library(stars)
 library(gstat)
@@ -11,16 +11,11 @@ library(ggplot2)
 library(geostatbook)
 data(punkty)
 data(siatka)
+paleta = hcl.colors(40, palette = "ag_Sunset")
 ```
 
-```{r, echo=FALSE}
+```{r 11-dane-kodowane-2, echo=FALSE}
 par(mar = c(rep(0, 4)))
-p1_base = ggplot() +
-        coord_equal() +
-        scale_fill_viridis_c() +
-        theme_void() +
-        scale_x_discrete(expand = c(0, 0)) +
-        scale_y_discrete(expand = c(0, 0))
 ```
 
 ## Kriging danych kodowanych
@@ -53,7 +48,7 @@ Pierwszym krokiem w krigingu danych kodowanych jest stworzenie zmiennej binarnej
 Na poniższym przykładzie tworzona jest nowa zmienna `temp_ind`.
 Przyjmuje ona wartość `TRUE` (czyli `1`) dla pomiarów temperatury wyższych niż 20 stopni Celsjusza, a dla pomiarów równych i niższych niż 20 stopni Celsjusza jej wartość wynosi `FALSE` (czyli `0`).
 
-```{r }
+```{r 11-dane-kodowane-3 }
 summary(punkty$temp)
 punkty$temp_ind = punkty$temp > 20
 summary(punkty$temp_ind)
@@ -61,23 +56,23 @@ summary(punkty$temp_ind)
 
 W przykładzie, próg został wyznaczony arbitralnie. 
 Istnieje oczywiście szereg innych możliwości wyznaczania progu. 
-Można wykorzystać wiedzę zewnętrzną (np. toksyczne stężenie analizowanej substancji) lub też posłużyć się wykresem dystrybuanty do określenia istotnej zmiany wartości.
+Można wykorzystać wiedzę zewnętrzną (np. toksyczne stężenie analizowanej substancji) lub też posłużyć się wykresem dystrybuanty do określenia istotnej zmiany wartości (rycina \@ref(fig:11-dane-kodowane-4)).
 
-```{r }
+```{r 11-dane-kodowane-4, fig.cap="Dystrybuanta zmiennej temp."}
 ggplot(punkty, aes(temp)) + stat_ecdf()
 ```
 
 ### Modelowanie
 
-Tworzenie i modelowanie semiwariogramu empirycznego w krigingu danych kodowanych wygląda tak samo jak, np. w przypadku krigingu zwykłego.
+Tworzenie i modelowanie semiwariogramu empirycznego w krigingu danych kodowanych wygląda tak samo jak, np. w przypadku krigingu zwykłego (ryciny \@ref(fig:11-dane-kodowane-5) i \@ref(fig:11-dane-kodowane-6)).
 Korzystając z funkcji `variogram()` tworzony jest semiwariogram empiryczny, używając `vgm()` tworzony jest model "ręczny", który następnie jest dopasowywany z użyciem funkcji `fit.variogram()`.
 
-```{r }
+```{r 11-dane-kodowane-5, fig.cap="Semiwariogram empiryczny binarnej zmiennej temp_ind."}
 vario_ind = variogram(temp_ind~1, locations = punkty)
 plot(vario_ind)
 ```
 
-```{r }
+```{r 11-dane-kodowane-6, fig.cap = "Model semiwariogramu empirycznego binarnej zmiennej temp_ind."}
 model_ind = vgm(model = "Sph", nugget = 0.01)
 fitted_ind = fit.variogram(vario_ind, model_ind)
 fitted_ind
@@ -89,21 +84,21 @@ plot(vario_ind, model = fitted_ind)
 Ostatnim etapem jest stworzenie interpolacji geostatystycznej z pomocą funkcji `krige`.
 Wymaga ona czterech argumentów - wzoru (`temp_ind~1`), zbioru punktowego (`punkty`), siatki do interpolacji (`siatka`) oraz modelu (`fitted_ind`).
 
-```{r }
+```{r 11-dane-kodowane-7 }
 ik = krige(temp_ind~1, 
-            locations = punkty,
-            newdata = siatka,
-            model = fitted_ind)
+           locations = punkty,
+           newdata = siatka,
+           model = fitted_ind)
 ```
 
-W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopni Celsjusza) oraz uzyskaną wariancję estymacji.
+W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopni Celsjusza) oraz uzyskaną wariancję estymacji (rycina \@ref(fig:plotsy2ok)).
 
 ```{r plotsy1ok, eval=FALSE}
-plot(ik["var1.pred"])
-plot(ik["var1.var"])
+plot(ik["var1.pred"], col = paleta)
+plot(ik["var1.var"], col = paleta)
 ```
 
-```{r plotsy2ok, echo=FALSE, fig.height=8}
+```{r plotsy2ok, echo=FALSE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody krigingu danych kodowanych (IK)."}
 library(gridExtra)
 p1 = p1_base + geom_stars(data = ik["var1.pred"]) +
         ggtitle("Prawdopodobieństwo Temp > 20")
@@ -115,9 +110,9 @@ grid.arrange(p1, p2, ncol = 1)
 ### Tworzenie mapy binarnej
 
 Mapy przestawiające prawdopodobieństwo można też przetworzyć do postaci map binarnych poprzez użycie wybranej wartości progowej.
-Rozkład wartości prawdopodobieństwa jest możliwy do zobaczenia, np. używając histogramu:
+Rozkład wartości prawdopodobieństwa jest możliwy do zobaczenia, np. używając histogramu (rycina \@ref(fig:11-dane-kodowane-8)).
 
-```{r}
+```{r 11-dane-kodowane-8, fig.cap = "Rozkład wartości estymacji używając metody krigingu danych kodowanych (IK)."}
 ik_df = as.data.frame(ik)
 ggplot(ik_df, aes(var1.pred)) + geom_histogram()
 ```
@@ -125,22 +120,24 @@ ggplot(ik_df, aes(var1.pred)) + geom_histogram()
 Następnie można stworzyć nową zmienną binarną w oparciu o wartości estymacji.
 Poniższy kod tworzy dwie nowe zmienne - `prog1`, gdzie wartość progowa została ustalona na 0.1 oraz `prog2` z wartością progową 0.75.
 
-```{r}
+```{r 11-dane-kodowane-9}
 ik$prog1 = ik$var1.pred > 0.1
 ik$prog2 = ik$var1.pred > 0.75
 ```
 
-W wyniku otrzymuje się binarne mapy, dla których stwierdza się obszary powyżej lub poniższej zadanego prawdopodobieństwa.
+W wyniku otrzymuje się binarne mapy, dla których stwierdza się obszary powyżej lub poniższej zadanego prawdopodobieństwa (rycina \@ref(fig:plotsy2ik2)).
 
 ```{r plotsy2ik1, eval=FALSE}
-plot(ik["prog1"])
-plot(ik["prog2"])
+plot(ik["prog1"], col = c("#88CCEE", "#CC6677"))
+plot(ik["prog2"], col = c("#88CCEE", "#CC6677"))
 ```
 
-```{r plotsy2ik2, echo=FALSE, fig.height=8, message=FALSE}
+```{r plotsy2ik2, echo=FALSE, fig.height=8, message=FALSE, fig.cap = "Binarne mapy dla progu ustalonego na 0.1 oraz 0.75."}
 library(gridExtra)
-p1p = p1_base + geom_stars(data = ik["prog1"]) + scale_fill_viridis_d()
-p2p = p1_base + geom_stars(data = ik["prog2"]) + scale_fill_viridis_d()
+p1p = p1_base + geom_stars(data = ik["prog1"]) +
+        ggtitle("Próg: 0.1") + scale_fill_carto_d(palette = "Safe")
+p2p = p1_base + geom_stars(data = ik["prog2"]) +
+        ggtitle("Próg: 0.75") + scale_fill_carto_d(palette = "Safe")
 grid.arrange(p1p, p2p, ncol = 1)
 ```
 
@@ -148,9 +145,9 @@ grid.arrange(p1p, p2p, ncol = 1)
 
 Alternatywnie, zamiast tworzenia nowej zmiennej (takiej jak `temp_ind`), można wykorzystać funkcję `I`.
 Z jej użyciem można definiować przyjęte progi bezpośrednio do funkcji `variogram` i `krige`. 
-Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopni Celsjusza.
+Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopni Celsjusza (rycina \@ref(fig:ploty_trzyik)).
 
-```{r, message=FALSE}
+```{r 11-dane-kodowane-10, message=FALSE}
 vario_ind20 = variogram(I(temp < 20)~1, locations = punkty)
 fitted_ind20 = fit.variogram(vario_ind20, 
                               vgm("Sph", nugget = 0.01))
@@ -162,7 +159,7 @@ fitted_ind12 = fit.variogram(vario_ind12,
                               vgm("Sph", nugget = 0.03))
 ```
 
-```{r, message=FALSE}
+```{r 11-dane-kodowane-11, message=FALSE}
 ik20 = krige(I(temp < 20)~1,
               locations = punkty,
               newdata = siatka,
@@ -180,7 +177,7 @@ ik12 = krige(I(temp < 12)~1,
               nmax = 30)
 ```
 
-```{r ploty_trzyik, echo=FALSE, fig.height=12}
+```{r ploty_trzyik, echo=FALSE, fig.height=12, fig.cap = "Estymacje używając metody krigingu danych kodowanych (IK) dla różnych progów prawdopodobieństwa."}
 library(gridExtra)
 p1i = p1_base + geom_stars(data = ik20["var1.pred"]) +
         ggtitle("Prawdopodobieństwo Temp < 20")
@@ -195,7 +192,7 @@ grid.arrange(p1i, p2i, p3i, ncol = 1)
 
 Zadania w tym rozdziale są oparte o dane z obiektu `punkty_ndvi`.
 
-```{r}
+```{r 11-dane-kodowane-12}
 data(punkty_ndvi)
 ```
 

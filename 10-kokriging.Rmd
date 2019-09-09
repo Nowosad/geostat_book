@@ -3,7 +3,7 @@
 
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
-```{r, message=FALSE, warning=FALSE}
+```{r 10-kokriging-1, message=FALSE, warning=FALSE}
 library(sf)
 library(stars)
 library(gstat)
@@ -13,15 +13,8 @@ data(punkty_ndvi)
 data(siatka)
 ```
 
-```{r, echo=FALSE}
+```{r 10-kokriging-2, echo=FALSE}
 par(mar = c(rep(0, 4)))
-library(ggplot2)
-p1_base = ggplot() +
-        coord_equal() +
-        scale_fill_viridis_c() +
-        theme_void() +
-        scale_x_discrete(expand = c(0, 0)) +
-        scale_y_discrete(expand = c(0, 0))
 ```
 
 ## Kokriging 
@@ -56,13 +49,13 @@ Metoda kokrigingu opiera się nie o semiwariogram, lecz o krossemiwariogramy.
 Krossemiwariogram jest to wariancja różnicy pomiędzy dwiema zmiennymi w dwóch lokalizacjach.
 Wyliczając krossemiwariogram otrzymujemy empiryczne semiwariogramy dla dwóch badanych zmiennych oraz krosswariogram dla kombinacji dwóch zmiennych.
 
-W poniższym przykładzie istnieją dwie zmienne, `savi` ze zbioru `punkty` pomierzona w 250 lokalizacjach oraz `ndvi` ze zbioru `punkty_ndvi` pomierzona w 997 punktach.
+W poniższym przykładzie istnieją dwie zmienne, `savi` ze zbioru `punkty` pomierzona w 242 lokalizacjach oraz `ndvi` ze zbioru `punkty_ndvi` pomierzona w 992 punktach (ryciny \@ref(fig:10-kokriging-3) i \@ref(fig:10-kokriging-3)).
 
-```{r}
+```{r 10-kokriging-3, fig.cap="Mapa wartości zmiennej savi."}
 plot(punkty["savi"])
 ```
 
-```{r}
+```{r 10-kokriging-4, fig.cap="Mapa wartości zmiennej ndvi."}
 plot(punkty_ndvi["ndvi"])
 ```
 
@@ -70,7 +63,7 @@ Tworzenie krossemiwariogramów odbywa się z użyciem funkcji `gstat()`. Na pocz
 Składa się on z obiektu pustego (`NULL`), nazwy pierwszej zmiennej (nazwa może być dowolna), wzoru (w przykładzie `savi~1`), oraz pierwszego zbioru punktowego. 
 Następnie do pierwszego obiektu `g` dodajemy nowe informacje również poprzez funkcję `gstat()`. Jest to nazwa obiektu (`g`), nazwa drugiej zmiennej, wzór, oraz drugi zbiór punktowy.
 
-```{r, krosssemi}
+```{r 10-kokriging-5, krosssemi}
 g = gstat(NULL, 
            id = "SAVI", 
            form = savi~1, 
@@ -82,9 +75,9 @@ g = gstat(g,
 g
 ```
 
-Z uzyskanego w ten sposób obiektu tworzymy krossemiwariogram (funkcja `variogram()`), a następnie go wizualizujemy używając funkcji `plot()`.
+Z uzyskanego w ten sposób obiektu tworzymy krossemiwariogram (funkcja `variogram()`), a następnie go wizualizujemy używając funkcji `plot()` (rycina \@ref(fig:10-kokriging-6)).
 
-```{r}
+```{r 10-kokriging-6, fig.cap="Krossemiwariogram zmiennych savi i ndvi."}
 v = variogram(g)
 plot(v)
 ```
@@ -95,7 +88,7 @@ Modelowanie krossemiwariogramów, podobnie jak ich tworzenie, odbywa się używa
 Podaje się w niej wcześniejszy obiekt `g`, model, oraz argument `fill.all = TRUE`. 
 Ten ostatni parametr powoduje, że model dodawany jest do wszystkich elementów krossemiwariogramu.
 
-```{r}
+```{r 10-kokriging-7}
 g_model = vgm(0.006, model = "Sph",
                range = 2000, nugget = 0.001)
 g = gstat(g, model = g_model, fill.all = TRUE)
@@ -103,19 +96,18 @@ g
 ```
 
 W przypadku semiwariogramów funkcja `fit.variogram()` służyła dopasowaniu parametrów modelu do semiwariogramu empirycznego. 
-Podobną rolę w krossemiwariogramach spełnia funkcja `fit.lmc()`.
-Dopasowuje ona liniowy model koregionalizacji do semiwariogramów wielozmienych. 
+Podobną rolę w krossemiwariogramach spełnia funkcja `fit.lmc()` - dopasowuje ona liniowy model koregionalizacji do semiwariogramów wielozmienych (rycina \@ref(fig:10-kokriging-8)).
 Funkcja `fit.lmc()` oczekuje co najmniej dwóch elementów, krossemiwariogramu oraz modelów krossemiwariancji. 
 W poniższym przykładzie dodatkowo użyto parametru `correct.diagonal = 1.01`, z uwagi na to że analizowane zmienne wykazywały bardzo silną korelację.
 
-```{r}
+```{r 10-kokriging-8, fig.cap="Modele krossemiwariogramu zmiennych savi i ndvi."}
 g_fit = fit.lmc(v, g, correct.diagonal = 1.01)
 g_fit
 plot(v, g_fit)
 ```
 
 <!--
-```{r , eval=FALSE}
+```{r 10-kokriging-9, eval=FALSE}
 # plot(variogram(g, map=TRUE, cutoff=12000, width=800))
 plot(variogram(g, alpha = c(60, 105, 150, 195)))
 ```
@@ -123,7 +115,7 @@ plot(variogram(g, alpha = c(60, 105, 150, 195)))
 
 ## Kokriging 
 
-Posiadając dopasowane modele oraz siatkę można uzyskać wynik używając funkcji `predict()`. 
+Posiadając dopasowane modele oraz siatkę można uzyskać wynik używając funkcji `predict()` (rycina \@ref(fig:kokriging_predicted)). 
 
 ```{r kokriging_predict, cache=TRUE}
 ck = predict(g_fit, newdata = siatka)
@@ -137,16 +129,16 @@ W efekcie otrzymujemy pięć zmiennych:
 4. `NDVI.var` - wariancje zmiennej `ndvi`
 5. `cov.SAVI.NDVI` - kowariancje zmiennych `savi` oraz `ndvi`
 
-```{r}
+```{r 10-kokriging-10}
 ck
 ```
 
 ```{r plotsyck1, eval=FALSE}
-plot(ck["SAVI.pred"])
-plot(ck["SAVI.var"])
+plot(ck["SAVI.pred"], col = paleta)
+plot(ck["SAVI.var"], col = paleta)
 ```
 
-```{r kokriging_predicted, echo=FALSE, fig.height=8}
+```{r kokriging_predicted, echo=FALSE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody kokrigingu (CK)."}
 library(gridExtra)
 p1 = p1_base + geom_stars(data = ck["SAVI.pred"]) +
         ggtitle("Estymacja CK")
@@ -199,18 +191,18 @@ plot(ck_a["savi.var"])
 
 ## Zadania {#z10}
 
-Zadania w tym rozdziale są oparte o dane z `meuse` z pakietu **sp**.
+Zadania w tym rozdziale są oparte o dane z `meuse.all` z pakietu **gstat**.
 
-```{r}
-library(sp)
-data("meuse")
-coordinates(meuse) = ~x + y
+```{r 10-kokriging-11}
+data("meuse.all")
+meuse = st_as_sf(meuse.all, coords = c("x", "y"))
 ```
 
-Na jego podstawie wydziel dwa obiekty - `meuse155` zawierający tylko zmienną `lead` dla 155 punktów, oraz `meuse60` zawierający tylko zmienną `copper` dla 60 punktów.
+Na jego podstawie wydziel dwa obiekty - `meuse155` zawierający tylko zmienną `lead` dla 164 punktów, oraz `meuse60` zawierający tylko zmienną `copper` dla 60 punktów.
 
-```{r}
-meuse155 = meuse["lead"]
+```{r 10-kokriging-12}
+set.seed(431)
+meuse164 = meuse["lead"]
 meuse60 = meuse[sample(nrow(meuse), 60), "copper"]
 ```
 
@@ -222,4 +214,3 @@ Porównaj graficznie uzyskane modele.
 Następnie stwórz model automatyczny.
 Porównaj uzyskane wyniki.
 5. Stwórz estymację zmiennej `copper` w nowo utworzonej siatce korzystając z kokrigingu.
-

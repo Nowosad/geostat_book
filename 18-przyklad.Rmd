@@ -1,6 +1,6 @@
 # Przykład analizy geostatystycznej {#przyklad}
 
-```{r, echo=FALSE, eval=FALSE}
+```{r 18-przyklad-1, echo=FALSE, eval=FALSE}
 library(sp)
 library(gstat)
 
@@ -65,31 +65,35 @@ Poniższy suplement skupia się na pokazaniu przykładu uproszczonej analizy geo
 Pierwszym krokiem analizy geostatystycznej jest załadowanie pakietów, które zostaną użyte.
 Oczywiście, brakujące pakiety można załadować także w trakcie analizy geostatystycznej.
 
-```{r}
+```{r 18-przyklad-2}
 library(sf)
 library(stars)
 library(gstat)
 library(ggplot2)
+paleta = hcl.colors(40, palette = "ag_Sunset")
 ```
 
 Kolejnym krokiem jest wczytanie danych oraz sprawdzenie ich jakości.
 
-```{r}
+```{r 18-przyklad-3}
 moje_punkty = st_read("dane/moje_punkty.gpkg")
 summary(moje_punkty)
 ```
 
 Obiekt `moje_punkty` zawiera tylko jedną zmienną `tavg`, która ma być użyta do stworzenia estymacji.
-Warto zwizualizować rozkład wartości tej zmiennej w postaci histogramu oraz mapy:
+Warto zwizualizować rozkład wartości tej zmiennej w postaci histogramu oraz mapy (rycina \@ref(fig:18-przyklad-4) i \@ref(fig:18-przyklad-4a)).
 
-```{r}
+```{r 18-przyklad-4, fig.cap="Rozkład wartości zmiennej tavg."}
 ggplot(moje_punkty, aes(tavg)) + geom_histogram()
+```
+
+```{r 18-przyklad-4a, fig.cap="Rozkład przestrzenny wartości zmiennej tavg."}
 plot(moje_punkty)
 ```
 
 Można w ten sposób zauważyć, że występują co najmniej dwie wartości odstające.
 
-```{r}
+```{r 18-przyklad-5}
 moje_punkty[moje_punkty$tavg == max(moje_punkty$tavg), ]
 moje_punkty[moje_punkty$tavg == min(moje_punkty$tavg), ]
 ```
@@ -99,20 +103,20 @@ Należy w tym momencie zastanowić się czy te wartości odstające są prawidł
 W tej sytuacji, nie posiadając zewnętrznej informacji, bezpieczniej jest usunąć te dwa pomiary.
 Można to zrobić wyszukując id punktów za pomocą pakietu **mapview**.
 
-```{r, echo=FALSE, eval=FALSE}
+```{r 18-przyklad-6, echo=FALSE, eval=FALSE}
 library(mapview)
 mapview(moje_punkty)
 ```
 
 Teraz id punktów można użyć do ich wybrania i zastąpienia potencjalnie błędnych wartości wartościami `NA`.
 
-```{r}
+```{r 18-przyklad-7}
 # usunięcie wartości według id
 moje_punkty[60, "tavg"] = NA
 moje_punkty[72, "tavg"] = NA
 ```
 
-```{r, eval=FALSE, echo=FALSE}
+```{r 18-przyklad-8, eval=FALSE, echo=FALSE}
 # lub usunięcie wartości według wartości maksymalnej/minimalnej
 moje_punkty[moje_punkty$tavg %in% max(moje_punkty$tavg, na.rm = TRUE), "tavg"] = NA
 moje_punkty[moje_punkty$tavg %in% min(moje_punkty$tavg, na.rm = TRUE), "tavg"] = NA
@@ -121,50 +125,54 @@ moje_punkty[moje_punkty$tavg %in% min(moje_punkty$tavg, na.rm = TRUE), "tavg"] =
 Te punkty nadal istnieją jednak w obiekcie `moje_punkty`.
 Można je usunąć korzystając z funkcji `is.na` oraz indeksowania:
 
-```{r}
+```{r 18-przyklad-9}
 moje_punkty = moje_punkty[!is.na(moje_punkty$tavg), ]
 ```
 
-Po tej zmianie powinno się po raz kolejny obejrzeć dokładnie dane w celu stwierdzenia, czy problem został naprawiony i czy nie występują dodatkowe sytuacje problemowe.
+Po tej zmianie powinno się po raz kolejny obejrzeć dokładnie dane w celu stwierdzenia, czy problem został naprawiony i czy nie występują dodatkowe sytuacje problemowe (rycina \@ref(fig:18-przyklad-10) i \@ref(fig:18-przyklad-10a)).
 
-```{r}
+```{r 18-przyklad-10, fig.cap="Rozkład wartości zmiennej tavg po usunięciu wartości odstających."}
 ggplot(moje_punkty, aes(tavg)) + geom_histogram()
+```
+
+```{r 18-przyklad-10a, fig.cap="Rozkład przestrzenny wartości zmiennej tavg po usunięciu wartości odstających."}
 plot(moje_punkty)
 ```
 
-Można dodatkowo stworzyć chmurę semiwariogramu w celu wyszukania potencjalnych wartości lokalnie odstających.
+Można dodatkowo stworzyć chmurę semiwariogramu w celu wyszukania potencjalnych wartości lokalnie odstających (rycina \@ref(fig:18-przyklad-11)).
 
-```{r}
+```{r 18-przyklad-11, fig.cap="Chmura semiwariogramu zmiennej tavg."}
 moja_chmura = variogram(tavg~1, moje_punkty, cloud = TRUE)
 plot(moja_chmura)
 ```
 
 ## Tworzenie modeli semiwariogramów
 
-Posiadając już poprawne dane można sprawdzić czy badane zjawisko wykazuje anizotropię przestrzenną poprzez stworzenie mapy semiwariogramu.
+Posiadając już poprawne dane można sprawdzić czy badane zjawisko wykazuje anizotropię przestrzenną poprzez stworzenie mapy semiwariogramu (rycina \@ref(fig:18-przyklad-12)).
 
-```{r}
+```{r 18-przyklad-12, fig.cap="Mapa semiwariogramu zmiennej tavg."}
 moja_mapa = variogram(tavg~1, 
                        locations = moje_punkty,
                        cutoff = 4500,
                        width = 850, 
                        map = TRUE)
-plot(moja_mapa, threshold = 30, col.regions = topo.colors(n = 40))
+plot(moja_mapa, threshold = 30, 
+     col.regions = hcl.colors(40, palette = "ag_GrnYl", rev = TRUE))
 ```
 
 Uzyskana mapa nie pozwala na jednoznaczne stwierdzenie kierunkowej zmienności podobieństwa badanej cechy, w związku z tym można skupić się na modelowaniu izotropowym.
 Kolejnym etapem jest stworzenie semiwariogramu oraz jego modelowanie.
 Optymalnie tworzonych jest więcej niż model semiwariogramu, co pozwala na porównanie uzyskanych wyników i wybór lepszego modelu.
 Do tego przykładu zostały stworzone dwa modele semiwariogramu.
-Pierwszy z nich używa tylko zmiennej `tavg` oraz modelu ręcznego o wybranych parametrach.
+Pierwszy z nich używa tylko zmiennej `tavg` oraz modelu ręcznego o wybranych parametrach (ryciny \@ref(fig:18-przyklad-13), \@ref(fig:18-przyklad-14), \@ref(fig:18-przyklad-15), \@ref(fig:18-przyklad-16)).
 
-```{r}
+```{r 18-przyklad-13, fig.cap="Semiwariogram zmiennej tavg."}
 moj_semiwar = variogram(tavg~1, 
                         locations = moje_punkty)
 plot(moj_semiwar)
 ```
 
-```{r}
+```{r 18-przyklad-14, fig.cap="Model semiwariogramu zmiennej tavg."}
 moj_model = vgm(psill = 0.65,
         model = "Sph",
         range = 2000,
@@ -174,7 +182,7 @@ plot(moj_semiwar, moj_model)
 
 Drugi model, oprócz zmiennej `tavg`, używa też wartości współrzędnych oraz modelu o parametrach zmodyfikowanych przez funkcję `fit.variogram()`.
 
-```{r}
+```{r 18-przyklad-15, fig.cap="Semiwariogram zmiennej tavg uwzględniający współrzędne x i y."}
 moje_punkty$X = st_coordinates(moje_punkty)[, 1]
 moje_punkty$Y = st_coordinates(moje_punkty)[, 2]
 moj_semiwar2 = variogram(tavg ~ X + Y,
@@ -182,7 +190,7 @@ moj_semiwar2 = variogram(tavg ~ X + Y,
 plot(moj_semiwar2)
 ```
 
-```{r}
+```{r 18-przyklad-16, fig.cap="Model semiwariogramu zmiennej tavg uwzględniający współrzędne x i y."}
 moj_model2 = vgm(model = "Sph", nugget = 0.1)
 moj_model2 = fit.variogram(moj_semiwar2, moj_model2)
 moj_model2
@@ -194,7 +202,7 @@ plot(moj_semiwar2, moj_model2)
 Aby porównać oba modele należy przyjąć metodę walidacji oraz współczynnik jakości estymacji.
 W tym przykładzie użyto kroswalidacji metodą LOO (funkcja `krige.cv`) oraz pierwiastek średniego błędu kwadratowego (RMSE) jako miary jakości.
 
-```{r}
+```{r 18-przyklad-17}
 ocena1 = krige.cv(tavg ~ 1,
                   locations = moje_punkty,
                   model = moj_model,
@@ -202,7 +210,7 @@ ocena1 = krige.cv(tavg ~ 1,
 RMSE1 = sqrt(mean((ocena1$residual) ^ 2))
 ```
 
-```{r}
+```{r 18-przyklad-18}
 ocena2 = krige.cv(tavg ~ X + Y,
                   locations = moje_punkty,
                   model = moj_model2)
@@ -211,7 +219,7 @@ RMSE2 = sqrt(mean((ocena2$residual) ^ 2))
 
 Porównanie dwóch wartości RMSE pozwala zdecydowanie stwierdzić, że drugi model charakteryzuje się lepszą jakością estymacji.
 
-```{r}
+```{r 18-przyklad-19}
 RMSE1
 RMSE2
 ```
@@ -220,7 +228,7 @@ RMSE2
 
 Przedostatnim krokiem jest utworzenie siatki do estymacji.
 
-```{r}
+```{r 18-przyklad-20}
 punkty_bbox = st_bbox(moje_punkty)
 moja_siatka = st_as_stars(punkty_bbox, 
                           deltax = 100,
@@ -231,13 +239,13 @@ moja_siatka$Y = st_coordinates(moja_siatka)[, 2]
 
 ## Stworzenie estymacji
 
-Następnie nowo utworzona siatka może posłużyć do stworzenia estymacji.
+Następnie nowo utworzona siatka może posłużyć do stworzenia estymacji (rycina \@ref(fig:18-przyklad-21)).
 
-```{r}
+```{r 18-przyklad-21, fig.cap = "Estymacja i wariancja estymacji drugiego modelu zmiennej tavg."}
 moja_estymacja = krige(tavg ~ X + Y,
                        locations = moje_punkty,
                        newdata = moja_siatka,
                        model = moj_model2)
-plot(moja_estymacja[1])
-plot(moja_estymacja[2])
+plot(moja_estymacja[1], col = paleta)
+plot(moja_estymacja[2], col = paleta)
 ```

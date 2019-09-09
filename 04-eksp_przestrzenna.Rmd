@@ -3,7 +3,7 @@
 
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
-```{r, interpolate_init, message=FALSE, warning=FALSE}
+```{r 04-eksp-przestrzenna-1, interpolate_init, message=FALSE, warning=FALSE}
 library(sf)
 library(stars)
 library(mapview)
@@ -12,7 +12,7 @@ data(punkty)
 data(granica)
 ```
 
-```{r, echo=FALSE}
+```{r 04-eksp-przestrzenna-2, echo=FALSE}
 par(mar = c(rep(0, 4)))
 ```
 
@@ -39,7 +39,7 @@ Eksploracyjna analiza danych przestrzennych w przypadku danych punktowych ma na 
 
 Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()`.
 
-```{r}
+```{r 04-eksp-przestrzenna-3}
 plot(st_geometry(granica))
 plot(st_geometry(punkty), add = TRUE)
 ```
@@ -60,7 +60,7 @@ Funkcja `spsample()` z pakietu **sp** pozwala na stworzenie kilku typów próbko
 
 W regularnym typie próbkowania, kolejne punkty rozłożone są równomiernie na badanym obszarze.
 
-```{r }
+```{r 04-eksp-przestrzenna-4 }
 set.seed(225)
 regularny = st_sample(granica, 150, type = "regular")
 plot(regularny)
@@ -71,7 +71,7 @@ plot(regularny)
 W losowym typie próbkowania każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia. 
 Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych.
 
-```{r }
+```{r 04-eksp-przestrzenna-5 }
 set.seed(301)
 losowy = st_sample(granica, 150, type = "random")
 plot(losowy)
@@ -81,7 +81,7 @@ plot(losowy)
 
 Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu.
 
-```{r, error = TRUE}
+```{r 04-eksp-przestrzenna-6, error = TRUE}
 set.seed(125)
 strat = st_sample(granica, 150, type = "stratified")
 plot(strat)
@@ -91,7 +91,7 @@ plot(strat)
 
 W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbowane niż inne.
 
-```{r, error = TRUE}
+```{r 04-eksp-przestrzenna-7, error = TRUE}
 set.seed(425)
 pref = st_sample(granica, 150, type = "clustered",
                  nclusters = 30)
@@ -104,9 +104,9 @@ Dane lokalnie odstające oznaczają nietypowe przestrzennie wartości danej cech
 Inaczej mówiąc, może to być niska wartość otoczona wysokimi wartościami lub też wysoka wartość otoczona niskimi wartościami.
 Dane lokalnie ostające mogą oznaczać zarówno błąd w danych albo wpływ innego czynnika na analizowaną cechę. 
 Przyjrzenie się wartościom analizowanej cechy można wykonać z użyciem funkcji `plot()`. 
-Na poniższym przykładzie wyświetlona jest zmienna `temp` oznaczająca średnią temperaturę dobową.
+Na poniższym przykładzie wyświetlona jest zmienna `temp` oznaczająca średnią temperaturę dobową (rycina \@ref(fig:04-eksp-przestrzenna-8)).
 
-```{r }
+```{r 04-eksp-przestrzenna-8, fig.cap = "Wizualizacja zmiennej temp pozwalająca na wyszukanie wartości lokalnie odstających."}
 plot(punkty["temp"], reset = FALSE)
 plot(st_geometry(granica), add = TRUE)
 ```

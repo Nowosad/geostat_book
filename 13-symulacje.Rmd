@@ -3,7 +3,7 @@
 
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
-```{r, message=FALSE, warning=FALSE}
+```{r 13-symulacje-1, message=FALSE, warning=FALSE}
 library(sf)
 library(stars)
 library(gstat)
@@ -11,9 +11,10 @@ library(ggplot2)
 library(geostatbook)
 data(punkty)
 data(siatka)
+paleta = hcl.colors(40, palette = "ag_Sunset")
 ```
 
-```{r, echo=FALSE}
+```{r 13-symulacje-2, echo=FALSE}
 par(mar = c(rep(0, 4)))
 ```
 
@@ -54,7 +55,7 @@ Istnieją dwa typy symulacji geostatystycznych:
 Symulacje bezwarunkowe w pakiecie **gstat** tworzy się z wykorzystaniem funkcji `krige()`. 
 Podobnie jak w przypadku estymacji geostatystycznych, należy tutaj podać wzór, model, siatkę, średnią globalną (`beta`), oraz liczbę sąsiednich punktów używanych do symulacji (w przykładzie poniżej `nmax = 30`). 
 Należy wprowadzić również informacje, że nie korzystamy z danych punktowych (`locations = NULL`) oraz że chcemy stworzyć dane sztuczne (`dummy = TRUE`). 
-Ostatni argument (`nsim = 4`) informuje o liczbie symulacji do przeprowadzenia (Ryciny \@ref(fig:sym_bezw1-fig), \@ref(fig:sym_bezw2-fig)).
+Ostatni argument (`nsim = 4`) informuje o liczbie symulacji do przeprowadzenia (Ryciny \@ref(fig:symbezw1-fig), \@ref(fig:symbezw2-fig)).
 
 ```{r sym_bezw1, cache=TRUE}
 sym_bezw1 = krige(formula = z~1, 
@@ -69,15 +70,14 @@ sym_bezw1 = krige(formula = z~1,
                    nsim = 4)
 ```
 
-```{r sym_bezw1-fig, fig.cap = "Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 100, oraz modelu wykładniczego"}
-ggplot() + 
+```{r sym_bezw1a, eval=FALSE}
+plot(sym_bezw1, col = paleta)
+```
+
+```{r symbezw1-fig, fig.cap = "Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 100, oraz modelu wykładniczego", echo=FALSE}
+p1_base + 
   geom_stars(data = sym_bezw1) +
-  coord_equal() +
-  facet_wrap(~ sample) +
-  scale_fill_viridis_c() +
-  theme_void() +
-  scale_x_discrete(expand = c(0, 0)) +
-  scale_y_discrete(expand = c(0, 0))
+  facet_wrap(~ sample)
 ```
 
 ```{r sym_bezw2, cache=TRUE}
@@ -91,15 +91,14 @@ sym_bezw2 = krige(formula = z~1,
                    nsim = 4)
 ```
 
-```{r sym_bezw2-fig, fig.cap = "Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 1500, oraz modelu wykładniczego"}
-ggplot() + 
+```{r sym_bezw2a, eval=FALSE}
+plot(sym_bezw2, col = paleta)
+```
+
+```{r symbezw2-fig, fig.cap = "Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 1500, oraz modelu wykładniczego", echo=FALSE}
+p1_base + 
   geom_stars(data = sym_bezw2) +
-  coord_equal() +
-  facet_wrap(~ sample) +
-  scale_fill_viridis_c() +
-  theme_void() +
-  scale_x_discrete(expand = c(0, 0)) +
-  scale_y_discrete(expand = c(0, 0))
+  facet_wrap(~ sample)
 ```
 
 <!--
@@ -123,27 +122,33 @@ Polega ona na wybieraniu losowo lokalizacji nie posiadającej zmierzonej wartoś
 4. Powtórzeniu poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja
 
 Sekwencyjna symulacja gaussowska wymaga zmiennej posiadającej wartości o rozkładzie zbliżonym do normalnego. 
-Można to sprawdzić poprzez wizualizacje danych (histogram, wykres kwantyl-kwantyl) lub też test statystyczny (test Shapiro-Wilka).
+Można to sprawdzić poprzez wizualizacje danych (histogram, wykres kwantyl-kwantyl) lub też test statystyczny (test Shapiro-Wilka) (ryciny \@ref(fig:13-symulacje-3) i \@ref(fig:13-symulacje-3a)).
 Zmienna `temp` nie ma rozkładu zbliżonego do normalnego.
 
-```{r}
+```{r 13-symulacje-3, fig.cap="Rozkład wartości zmiennej temp."}
 ggplot(punkty, aes(temp)) + geom_histogram()
+```
+
+```{r 13-symulacje-3a, fig.cap="Wykres kwantyl-kwantyl wartości zmiennej temp."}
 ggplot(punkty, aes(sample = temp)) + stat_qq()
 shapiro.test(punkty$temp)
 ```
 
-Na potrzeby symulacji zmienna `temp` została zlogarytmizowna.
+Na potrzeby symulacji zmienna `temp` została zlogarytmizowna (ryciny \@ref(fig:13-symulacje-4) i \@ref(fig:13-symulacje-4a)).
 
-```{r}
+```{r 13-symulacje-4, fig.cap="Rozkład wartości zmiennej temp po logaritmizacji."}
 punkty$temp_log = log(punkty$temp)
 ggplot(punkty, aes(temp_log)) + geom_histogram()
+```
+
+```{r 13-symulacje-4a, fig.cap="Wykres kwantyl-kwantyl wartości zmiennej temp po logaritmizacji."}
 ggplot(punkty, aes(sample = temp_log)) + stat_qq()
 shapiro.test(punkty$temp_log)
 ```
 
-Dalsze etapy przypominają przeprowadzenie estymacji statystycznej, jedynym wyjątkiem jest dodanie argumentu mówiącego o liczbie symulacji do przeprowadzenia (`nsim` w funkcji `krige()`).
+Dalsze etapy przypominają przeprowadzenie estymacji statystycznej, jedynym wyjątkiem jest dodanie argumentu mówiącego o liczbie symulacji do przeprowadzenia (`nsim` w funkcji `krige()`) (ryciny \@ref(fig:13-symulacje-5) i \@ref(fig:13-symulacje-6)).
 
-```{r}
+```{r 13-symulacje-5, fig.cap = "Model semiwariogramu zmiennej temp_log."}
 vario = variogram(temp_log~1, locations = punkty)
 model = vgm(model = "Sph", nugget = 0.005)
 fitted = fit.variogram(vario, model)
@@ -159,16 +164,16 @@ sym_ok = krige(temp_log~1,
                 nsim = 4)
 ```
 
-```{r}
-plot(sym_ok)
+```{r 13-symulacje-6, fig.cap = "Symulacja warunkowa zmiennej temp_log."}
+plot(sym_ok, col = paleta)
 ```
 
-Wyniki symulacji można przetworzyć do pierwotnej jednostki z użyciem funkcji wykładniczej (`exp`).
+Wyniki symulacji można przetworzyć do pierwotnej jednostki z użyciem funkcji wykładniczej (`exp`) (rycina \@ref(13-symulacje-7)).
 
-```{r}
+```{r 13-symulacje-7, fig.cap = "Symulacja warunkowa zmiennej temp_log po przeskalowaniu do oryginalnych wartości."}
 sym_ok_rescaled = st_apply(sym_ok, 1:2, exp)
 sym_ok_rescaled
-plot(sym_ok_rescaled)
+plot(sym_ok_rescaled, col = paleta)
 ```
 
 Symulacje geostatystyczne pozwalają również na przedstawianie niepewności interpolacji. 
@@ -205,11 +210,11 @@ sym_sk_sd = st_apply(sym_sk_rescaled, MARGIN = c("x", "y"), FUN = sd)
 sym_sk_sd
 ```
 
-Finalnie otrzymujemy mapę odchylenia standardowego symulowanych wartości.
+Finalnie otrzymujemy mapę odchylenia standardowego symulowanych wartości  (rycina \@ref(fig:13-symulacje-8)).
 Można na niej odczytać obszary o najpewniejszych (najmniej zmiennych) wartościach (niebieski kolor) oraz obszary o największej zmienności cechy (kolor żółty).
 
-```{r}
-plot(sym_sk_sd)
+```{r 13-symulacje-8, fig.cap = "Mapa odchylenia standardowego symulowanych wartości."}
+plot(sym_sk_sd, col = paleta)
 ```
 
 ## Sekwencyjna symulacja danych kodowanych
@@ -217,16 +222,16 @@ plot(sym_sk_sd)
 Symulacje geostatystyczne można również zastosować do danych binarnych.
 Dla potrzeb przykładu tworzona jest nowa zmienna `temp_ind` przyjmująca wartość `TRUE` dla pomiarów o wartościach temperatury niższych niż 12 stopni Celsjusza oraz `FALSE` dla pomiarów o wartościach temperatury równych lub wyższych niż 12 stopni Celsjusza.
 
-```{r}
+```{r 13-symulacje-9}
 summary(punkty$temp)
 punkty$temp_ind = punkty$temp < 12
 summary(punkty$temp_ind)
 ```
 
-W tej metodzie kolejne etapy przypominają przeprowadzenie krigingu danych kodowanych. 
+W tej metodzie kolejne etapy przypominają przeprowadzenie krigingu danych kodowanych (rycina \@ref(fig:13-symulacje-10)). 
 Jedynie w funkcji `krige()` należy dodać argument mówiący o liczbie symulacji do przeprowadzenia (`nsim`).
 
-```{r}
+```{r 13-symulacje-10, fig.cap = "Model semiwariogramu empirycznego binarnej zmiennej temp_ind stworzony na potrzeby symulacji."}
 vario_ind = variogram(temp_ind~1, locations = punkty)
 # plot(vario_ind)
 fitted_ind = fit.variogram(vario_ind,
@@ -246,10 +251,11 @@ sym_ind = krige(temp_ind~1,
 ```
 
 Wynik symulacji danych kodowanych znacząco różni się od wyniku krigingu danych kodowanych.
-W przeciwieństwie do tej drugiej metody, w rezultacie symulacji nie otrzymujemy prawdopodobieństwa zajścia danej klasy, ale konkretne wartości `1` lub `0`.
+W przeciwieństwie do tej drugiej metody, w rezultacie symulacji nie otrzymujemy prawdopodobieństwa zajścia danej klasy, ale konkretne wartości `1` lub `0` (rycina \@ref(fig:13-symulacje-11)).
 
-```{r}
-plot(sym_ind, main = "Symulacje warunkowe")
+```{r 13-symulacje-11, fig.cap="Przykłady symulacji danych kodowanych."}
+plot(sym_ind, main = "Symulacja warunkowa", 
+     col = c("#88CCEE", "#CC6677"))
 ```
 
 <!--

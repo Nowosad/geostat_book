@@ -3,24 +3,18 @@
 
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
-```{r, message=FALSE, warning=FALSE}
+```{r 08-estymacje-1, message=FALSE, warning=FALSE}
 library(sf)
 library(stars)
 library(gstat)
 library(geostatbook)
 data(punkty)
 data(siatka)
+paleta = hcl.colors(40, palette = "ag_Sunset")
 ```
 
-```{r, echo=FALSE}
+```{r 08-estymacje-2, echo=FALSE}
 par(mar = c(rep(0, 4)))
-library(ggplot2)
-p1_base = ggplot() +
-        coord_equal() +
-        scale_fill_viridis_c() +
-        theme_void() +
-        scale_x_discrete(expand = c(0, 0)) +
-        scale_y_discrete(expand = c(0, 0))
 ```
 
 ## Kriging
@@ -50,27 +44,27 @@ Istnieje szereg meteod krigingu, w tym:
 ### Kriging prosty (ang. *Simple kriging*)
 
 Kriging prosty zakłada, że średnia jest znana i stała na całym obszarze.
-W poniższym przykładzie po stworzeniu semiwariogramu empirycznego, dopasowano model semiwariogramu składający się z funkcji sferycznej o zasięgu 4000 metrów i wartości nuggetu równej 0,5.
+W poniższym przykładzie po stworzeniu semiwariogramu empirycznego, dopasowano model semiwariogramu składający się z funkcji sferycznej o zasięgu 4000 metrów i wartości nuggetu równej 0,5 (rycina \@ref(fig:08-estymacje-3)).
 
-```{r }
+```{r 08-estymacje-3, fig.cap="Model złożony z modelu nuggetowego i sferycznego dla zmiennej temp."}
 vario = variogram(temp~1, locations = punkty)
 model = vgm(10, model = "Sph", range = 4000, nugget = 0.5)
 model
 plot(vario, model = model)
 ```
 
-```{r}
+```{r 08-estymacje-4}
 # fitted = fit.variogram(vario, model)
 ```
 
 Następnie nastąpiła estymacja wartości z użyciem metody kriginu prostego. 
 W funkcji `krige()` z pakietu **gstat**, użycie tej metody wymaga ustalenia średniej wartości cechy za pomocą argumentu `beta`. 
 
-```{r }
+```{r 08-estymacje-5 }
 mean(punkty$temp)
 ```
 
-```{r}
+```{r 08-estymacje-6}
 sk = krige(temp~1, 
             locations = punkty,
             newdata = siatka,
@@ -82,18 +76,18 @@ Wynik krigingu prostego, jak i każdy inny uzyskany z użyciem pakietu **gstat**
 Szczególnie ważne są dwie, nowe zmienne - `var1.pred` oraz `var1.var`.
 Pierwsza z nich oznacza wartość estymowaną dla każdego oczka siatki, druga zaś mówi o wariancji estymacji. 
 
-```{r}
+```{r 08-estymacje-7}
 sk
 ```
 
-Obie uzyskane zmienne można wyświetlić z użyciem funkcji `spplot()`.
+Obie uzyskane zmienne można wyświetlić z użyciem funkcji `plot()` (rycina \@ref(fig:plotsy2)).
 
 ```{r plotsy1, eval=FALSE}
-plot(sk["var1.pred"])
-plot(sk["var1.var"])
+plot(sk["var1.pred"], col = paleta)
+plot(sk["var1.var"], col = paleta)
 ```
 
-```{r plotsy2, echo=FALSE, eval=TRUE, fig.height=8}
+```{r plotsy2, echo=FALSE, eval=TRUE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody krigingu prostego (SK)."}
 library(gridExtra)
 p1 = p1_base + geom_stars(data = sk["var1.pred"]) +
         ggtitle("Estymacja SK")
@@ -113,7 +107,7 @@ Parametry ruchomego okna można określić za pomocą jednego z dwóch argument�
 - `nmax` - użyta zostanie określona liczba najbliższych obserwacji
 - `maxdist` -  użyte zostaną jedynie obserwacje w zadanej odległości
 
-```{r }
+```{r 08-estymacje-8 }
 # ok = krige(temp~1,
 #             locations = punkty,
 #             newdata = siatka, 
@@ -126,18 +120,18 @@ ok = krige(temp~1,
             maxdist = 1500)
 ```
 
-Podobnie jak w przypadku krigingu prostego, można przyjrzeć się wynikom estymacji używając funkcji `summary()` oraz wyświetlić je używając funkcji `spplot()`.
+Podobnie jak w przypadku krigingu prostego, można przyjrzeć się wynikom estymacji używając funkcji `summary()` oraz wyświetlić je używając funkcji `plot()` (rycina \@ref(fig:plotsy2ok2)).
 
-```{r}
+```{r 08-estymacje-9}
 ok
 ```
 
 ```{r plotsy1ok2, eval=FALSE}
-plot(ok["var1.pred"])
-plot(ok["var1.var"])
+plot(ok["var1.pred"], col = paleta)
+plot(ok["var1.var"], col = paleta)
 ```
 
-```{r plotsy2ok2, echo=FALSE, eval=TRUE, fig.height=8}
+```{r plotsy2ok2, echo=FALSE, eval=TRUE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody krigingu zwykłego (OK)."}
 library(gridExtra)
 p1 = p1_base + geom_stars(data = ok["var1.pred"]) +
         ggtitle("Estymacja OK")
@@ -153,7 +147,7 @@ grid.arrange(p1, p2, ncol = 1)
 Kriging z trendem, określany również jako kriging z wewnętrznym trendem, do estymacji wykorzystuje (oprócz zmienności wartości wraz z odległością) położenie analizowanych punktów.
 W pierwszym kroku konieczne jest dodanie współrzęnych do używanego obiektu, jak też i do używanej siatki.
 
-```{r}
+```{r 08-estymacje-10}
 # dodanie współrzędnych do punktów
 punkty$x = st_coordinates(punkty)[, 1]
 punkty$y = st_coordinates(punkty)[, 2]
@@ -162,40 +156,40 @@ siatka$x = st_coordinates(siatka)[, 1]
 siatka$y = st_coordinates(siatka)[, 2]
 ```
 
-Następnie pierwszy z argumentów w funkcji `variogram()` musi przyjąć postać `temp~x+y`, co oznacza, że uwzględniamy liniowy trend zależny od współrzędnej `x` oraz `y`.
+Następnie pierwszy z argumentów w funkcji `variogram()` musi przyjąć postać `temp ~ x + y`, co oznacza, że uwzględniamy liniowy trend zależny od współrzędnej `x` oraz `y` (rycina \@ref(fig:08-estymacje-11)).
 
-```{r }
-vario_kzt = variogram(temp~x + y, locations = punkty)
+```{r 08-estymacje-11, fig.cap="Semiwariogram zmiennej temp uwzględniający współrzędne x i y."}
+vario_kzt = variogram(temp ~ x + y, locations = punkty)
 plot(vario_kzt)
 ```
 
 Dalszym etapem jest dopasowanie modelu semiwariancji, a następnie wyliczenie estymowanych wartości z użyciem funkcji `krige()`.
-Należy tutaj pamiętać, aby wzór (w przykładzie `temp~x + y`) był taki sam podczas budowania semiwariogramu, jak i estymacji.
+Należy tutaj pamiętać, aby wzór (w przykładzie `temp ~ x + y`) był taki sam podczas budowania semiwariogramu, jak i estymacji (rycina \@ref(fig:08-estymacje-12)).
 
-```{r}
+```{r 08-estymacje-12, fig.cap="Model semiwariogramu zmiennej temp uwzględniający współrzędne x i y."}
 model_kzt = vgm(model = "Sph", nugget = 1)
 fitted_kzt = fit.variogram(vario_kzt, model_kzt)
 fitted_kzt
 plot(vario_kzt, fitted_kzt)
 ```
 
-```{r}
-kzt = krige(temp~x + y, 
+```{r 08-estymacje-13}
+kzt = krige(temp ~ x + y, 
              locations = punkty, 
              newdata = siatka, 
              model = fitted_kzt)
 ```
 
-```{r}
-summary(kzt)
+```{r 08-estymacje-14}
+kzt
 ```
 
 ```{r plotsy1kzt, eval=FALSE}
-plot(kzt["var1.pred"])
-plot(kzt["var1.var"])
+plot(kzt["var1.pred"], col = paleta)
+plot(kzt["var1.var"], col = paleta)
 ```
 
-```{r plotsy2kzt, echo=FALSE, eval=TRUE, fig.height=8}
+```{r plotsy2kzt, echo=FALSE, eval=TRUE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody krigingu z trendem (KZT)."}
 library(gridExtra)
 p1 = p1_base + geom_stars(data = kzt["var1.pred"]) +
         ggtitle("Estymacja KZT")
@@ -206,10 +200,10 @@ grid.arrange(p1, p2, ncol = 1)
 
 ## Porównanie wyników SK, OK i KZT
 
-Poniższe porównanie krigingu prostego (SK), zwykłego (OK) i z trendem (KZT) wykazuje niewielkie różnice w uzyskanych wynikach.
-W rozdziałach  \@ref(estymacje-wielozmienne) oraz \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych) pokazane będą uzyskane wyniki interpolacji temperatury powietrza korzystając z innych metod krigingu.
+Poniższe porównanie krigingu prostego (SK), zwykłego (OK) i z trendem (KZT) wykazuje niewielkie różnice w uzyskanych wynikach (rycina \@ref(fig:ploty-trzy)).
+W rozdziałach \@ref(estymacje-wielozmienne) oraz \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych) pokazane będą uzyskane wyniki interpolacji temperatury powietrza korzystając z innych metod krigingu.
 
-```{r ploty_trzy, echo=FALSE, message=FALSE}
+```{r ploty-trzy, echo=FALSE, message=FALSE, fig.asp=0.25, fig.cap="Porównanie wyników estymacji używając metody krigingu prostego (SK), krigingu zwykłego (OK) i krigingu z trendem (KZT)."}
 est = c(sk, ok, kzt)
 est = est[c(1, 3, 5)]
 names(est) = c("Estymacja SK", "Estymacja OK", "Estymacja KZT")
@@ -217,8 +211,7 @@ est = st_redimension(est)
 
 p1_base + 
         geom_stars(data = est) + 
-        facet_wrap(~new_dim) +
-        scale_fill_viridis_c(name = "")
+        facet_wrap(~new_dim)
 ```
 
 ## Zadania {#z8}
@@ -226,13 +219,13 @@ p1_base +
 Zadania w tym rozdziale są oparte o dane z obiektu `punkty_pref`.
 Możesz go wczytać używając poniższego kodu:
 
-```{r}
+```{r 08-estymacje-15}
 data(punkty_pref)
 ```
 
 Na jego podstawie stwórz trzy obiekty - `punkty_pref1` zawierający wszystkie punkty, `punkty_pref2` zawierający losowe 100 punktów, oraz `punkty_pref3` zawierający losowe 30 punktów.
 
-```{r}
+```{r 08-estymacje-16}
 set.seed(2018-11-25)
 punkty_pref1 = punkty_pref
 punkty_pref2 = punkty_pref[sample(nrow(punkty_pref), 100), ]

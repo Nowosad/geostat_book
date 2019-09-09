@@ -1,7 +1,7 @@
 --- 
 title: "Geostatystyka w R"
 author: "Jakub Nowosad"
-date: "`r format(Sys.time(), '%Y')`"
+date: "`r format(Sys.time(), '%Y-%m-%d')`"
 site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
@@ -18,16 +18,19 @@ github-repo: "nowosad/geostat_book"
 cover-image: "Rfigs/book_cover2.png"
 ---
 
-```{r, echo=FALSE}
+```{r index-1, echo=FALSE}
 is_online = curl::has_internet()
 is_html = knitr::is_html_output()
 ```
 
 # O skrypcie {-}
 
-```{r fig.align='center', eval=is_html, echo=FALSE, out.width='30%'}
+```{r index-2, fig.align='center', eval=FALSE, echo=FALSE, out.width='30%'}
+#eval=is_html
 knitr::include_graphics("Rfigs/book_cover2.png", dpi = NA)
 ```
+
+**Skrypt jest obecnie aktualizowany do celów trzeciego wydania.**
 
 Masz przed sobą skrypt zawierający materiały do ćwiczeń z geostatystyki.
 Składa się ona z kilkunastu rozdziałów pokazujących jak: wygląda geostatystyczna analiza danych (rozdział \@ref(wprowadzenie)), dodawać i wizualizować dane przestrzenne w R (rozdział \@ref(r-a-dane-przestrzenne)), wykonywać wstępną eksplorację danych nieprzestrzennych (rozdział \@ref(eksploracja-analiza-danych-nieprzestrzennych)), wstępnie analizować dane przestrzenne (rozdział \@ref(eksploracyjna-analiza-danych-przestrzennych)), wykorzystywać deterministyczne metody interpolacji (rozdział \@ref(metody-interpolacji)), rozumieć i wykorzystywać przestrzenne miary podobieństwa i niepodobieństwa (rozdział \@ref(geostatystyka-prolog)), modelować semiwariogramy bezkierunkowe i kierunkowe (rozdział \@ref(modelowanie-matematycznie-autokorelacji-przestrzennej)), tworzyć estymacje jednozmienne (rozdział \@ref(estymacje-jednozmienne)), estymacje wykorzystujące dane uzupełniające (rozdział \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych)), estymacje wielozmienne (rozdział \@ref(estymacje-wielozmienne)), estymacje danych kodowanych (rozdział \@ref(estymacja-lokalnego-rozkadu-prawdopodobienstwa)), oceniać jakość wykonanych estymacji (rozdział \@ref(ocena-jakosci-estymacji)) oraz budować symulacje przestrzenne (rozdział \@ref(symulacje)).
@@ -36,13 +39,15 @@ Począwszy od drugiego, każdy rozdział kończy się również szeregiem zadań
 Dodatkowo załączone są cztery appendiksy. 
 W appendiksie \@ref(zrodla-wiedzy) można znaleźć odnośniki do innych materiałów związanych z geostatystyką i R, appendiks \@ref(dane-app) opisuje dane użyte w tym skrypcie, appendiks \@ref(reprex) wprowadza pojęcie powtarzalnego przykładu i tłumaczy jak taki przykład stworzyć, a appendiks \@ref(przyklad) pokazuje uproszczony przykład analizy geostatystycznej.
 
+<!--co nowego w trzecim wydaniu-->
+
 Wszystkie zaprezentowane metody i analizy zawierają również kod w języku R.
 Skrypt został stworzony w R [@R-base] z wykorzystaniem pakietów **bookdown** [@R-bookdown], **rmarkdown** [@R-rmarkdown], **knitr** [@R-knitr] oraz programu [Pandoc](http://pandoc.org/). 
 Aktualna wersja skryptu znajduje się pod adresem https://bookdown.org/nowosad/Geostatystyka/. 
 
 Jeżeli używasz skryptu, zacytuj go jako:
 
-- Nowosad, J., (2019). Geostatystyka w R. Online:
+- Nowosad, J., (2019). Geostatystyka w R. Poznań: Space A. ISBN 978-83-953296-0-9. Online:
 https://bookdown.org/nowosad/Geostatystyka/
 
 Zachęcam do zgłaszania wszelkich uwag, błędów, pomysłów oraz komentarzy na stronie https://github.com/Nowosad/geostat_book/issues.
@@ -57,12 +62,13 @@ Aby zainstalować R oraz RStudio można skorzystać z poniższych odnośników:
 - [R](https://www.r-project.org/) - https://cloud.r-project.org/
 - [RStudio](https://www.rstudio.com/) - https://www.rstudio.com/products/rstudio/download/
 
-Dodatkowo, użyte zostały poniższe pakiety R [@R-caret;@R-dismo;@R-fields;@R-ggplot2;@R-gridExtra;@R-gstat;@R-mapview;@R-pgirmess;@R-rgdal;@R-rgeos;@R-sp].
+Dodatkowo, użyte zostały poniższe pakiety R [@R-caret;@R-dismo;@R-fields;@R-ggplot2;@R-gridExtra;@R-gstat;@R-mapview;@R-pgirmess;@R-rcartocolor;@R-rsample;@R-sf;@R-stars].
 
 ```{r pakietsy}
 pakiety = c(
   "caret", "dismo", "fields", "ggplot2", "gridExtra",
-  "gstat", "mapview", "pgirmess", "rsample", "sf", "stars"
+  "gstat", "mapview", "pgirmess", "rcartocolor", 
+  "rsample", "sf", "stars"
 )
 ```
 
