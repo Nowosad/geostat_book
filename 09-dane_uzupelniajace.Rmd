@@ -189,7 +189,7 @@ grid.arrange(p1, p2, ncol = 1)
 Kriging uniwersalny, określany również jako kriging z trendem (ang. *Kriging with a trend model*) zakłada, że nieznana średnia lokalna zmienia się stopniowo na badanym obszarze. 
 W krigingu uniwersalnym możemy stosować zarówno zmienne jakościowe, jak i ilościowe. 
 
-W pierwszym przykładzie, kriging uniwersalny służy stworzeniu semiwariogramu, modelowaniu oraz estymacji temperatury powietrza z użyciem zmiennej pokrycia terenu (ryciny \@ref(fig:09-dane-uzupelniajace-7), \ref(fig:09-dane-uzupelniajace-8), \@ref(fig:plotsy4uk1)).
+W pierwszym przykładzie, kriging uniwersalny służy stworzeniu semiwariogramu, modelowaniu oraz estymacji temperatury powietrza z użyciem zmiennej pokrycia terenu (ryciny \@ref(fig:09-dane-uzupelniajace-7), \@ref(fig:09-dane-uzupelniajace-8), \@ref(fig:plotsy4uk1)).
 
 ```{r 09-dane-uzupelniajace-7, fig.cap = "Model semiwariogramy zmiennej temp używając zmiennej clc."}
 punkty$clc = as.factor(punkty$clc)
