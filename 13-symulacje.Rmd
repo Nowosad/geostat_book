@@ -170,7 +170,7 @@ sym_ok = krige(temp_log~1,
 plot(sym_ok, col = paleta)
 ```
 
-Wyniki symulacji można przetworzyć do pierwotnej jednostki z użyciem funkcji wykładniczej (`exp`) (rycina \@ref(13-symulacje-7)).
+Wyniki symulacji można przetworzyć do pierwotnej jednostki z użyciem funkcji wykładniczej (`exp`) (rycina \@ref(fig:13-symulacje-7)).
 
 ```{r 13-symulacje-7, fig.cap = "Symulacja warunkowa zmiennej temp_log po przeskalowaniu do oryginalnych wartości."}
 sym_ok_rescaled = st_apply(sym_ok, 1:2, exp)
