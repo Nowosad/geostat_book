@@ -249,3 +249,4 @@ moja_estymacja = krige(tavg ~ X + Y,
 plot(moja_estymacja[1], col = paleta)
 plot(moja_estymacja[2], col = paleta)
 ```
+

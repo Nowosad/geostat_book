@@ -4,24 +4,27 @@
 
 ## Podstawy R
 
-- [An Introduction to R](http://cran.r-project.org/doc/manuals/R-intro.pdf) - oficjalne wprowadzenie do R
-- [Przewodnik po pakiecie R](http://www.biecek.pl/R/)
-- [Programowanie w języku R](http://rksiazka.rexamine.com/)
-- [Hands-On Programming with R](https://rstudio-education.github.io/hopr/)
-- [R for Data Science](http://r4ds.had.co.nz/) i jej polskie tłumaczenie [Język R. Kompletny zestaw narzędzi dla analityków danych](https://helion.pl/ksiazki/jezyk-r-kompletny-zestaw-narzedzi-dla-analitykow-danych-hadley-wickham-garrett-grolemund,jezrko.htm#format/b)
+- [Elementarz programisty: Wstęp do programowania używając R](https://nowosad.github.io/elp/) [@nowosadElementarz2019]
+- [Przewodnik po pakiecie R](http://www.biecek.pl/R/) [@biecekPrzewodnikPoPakiecie2014]
+- http://www.gagolewski.com/publications/programowanier/ [@gagolewski2016programowanie]
+- https://r4ds.had.co.nz/ - https://helion.pl/ksiazki/jezyk-r-kompletny-zestaw-narzedzi-dla-analitykow-danych-hadley-wickham-garrett-grolemund,jezrko.htm#format/d [@wickham2016r]
+- https://csgillespie.github.io/efficientR/ - https://helion.pl/ksiazki/wydajne-programowanie-w-r-praktyczny-przewodnik-po-lepszym-programowaniu-gillespie-colin-lovelace-robin,a_0491.htm#format/d [@gillespie2016efficient]
+- http://www.enwo.pl/przetwarzanie/index.html [@czerneckiMetodyPrzetwarzaniaDanych2018]
 
 ## Analizy przestrzenne w R
 
-- [Geocomputation with R](http://robinlovelace.net/geocompr/)
-- [Applied Spatial Dala Analysis with R](http://www.asdar-book.org/)
+- [Geocomputation with R](http://robinlovelace.net/geocompr/) [@lovelace2019geocomputation]
+- [An introduction to geostatistics with R/gstat](https://pdfs.semanticscholar.org/7423/87ac0fbfb6641bdd3d513c97ea10dc7bdd6f.pdf) [@rossiter2016introduction]
+- [Applied Spatial Dala Analysis with R](http://www.asdar-book.org/) [@bivand2014applied]
+- [Spatial Data Science](https://www.r-spatial.org/book/) [@pebesma2020spatial]
 - [CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html)
 
 ## Geostatystyka
 
-- [Praktyczny poradnik - jak szybko zrozumieć i wykorzystać geostatystykę w pracy badawczej](http://www.geoinfo.amu.edu.pl/staff/astach/www_geostat/programy/A_Stach_%20poradnik_geostatystyki.pdf)
-- [A Practical Guide to Geostatistical Mapping](http://spatial-analyst.net/book/system/files/Hengl_2009_GEOSTATe2c1w.pdf)
-- [gstat user's manual](http://www.gstat.org/gstat.pdf)
-- [Applied Geostatistics](https://books.google.pl/books?id=vC2dcXFLI3YC)
-- [Statistics for spatial data](https://books.google.pl/books?id=4SdRAAAAMAAJ)
-- [Geostatistics for Natural Resources Evaluation](http://www.oupcanada.com/catalog/9780195115383.html)
-- [Geostatistics for Environmental Scientists](http://eu.wiley.com/WileyCDA/WileyTitle/productCd-0470028580.html)
+- [Praktyczny poradnik - jak szybko zrozumieć i wykorzystać geostatystykę w pracy badawczej](http://www.geoinfo.amu.edu.pl/staff/astach/www_geostat/programy/A_Stach_%20poradnik_geostatystyki.pdf) [@stachpraktyczny]
+- [A Practical Guide to Geostatistical Mapping](http://spatial-analyst.net/book/system/files/Hengl_2009_GEOSTATe2c1w.pdf) [@hengl2009practical]
+- [gstat user's manual](http://www.gstat.org/gstat.pdf) [@pebesma2001gstat]
+- [Applied Geostatistics](https://books.google.pl/books?id=vC2dcXFLI3YC) [@isaaks1989applied]
+- [Statistics for spatial data](https://books.google.pl/books?id=4SdRAAAAMAAJ) [@cressie1992statistics]
+- [Geostatistics for Natural Resources Evaluation](http://www.oupcanada.com/catalog/9780195115383.html) [@goovaerts1997geostatistics]
+- [Geostatistics for Environmental Scientists](http://eu.wiley.com/WileyCDA/WileyTitle/productCd-0470028580.html) [@webster2007geostatistics]
