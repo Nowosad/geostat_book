@@ -115,7 +115,7 @@ plot(variogram(g, alpha = c(60, 105, 150, 195)))
 
 ## Kokriging 
 
-Posiadając dopasowane modele oraz siatkę można uzyskać wynik używając funkcji `predict()` (rycina \@ref(fig:kokriging_predicted)). 
+Posiadając dopasowane modele oraz siatkę można uzyskać wynik używając funkcji `predict()` (rycina \@ref(fig:kokriging-predicted)). 
 
 ```{r kokriging_predict, cache=TRUE}
 ck = predict(g_fit, newdata = siatka)
@@ -138,7 +138,7 @@ plot(ck["SAVI.pred"], col = paleta)
 plot(ck["SAVI.var"], col = paleta)
 ```
 
-```{r kokriging_predicted, echo=FALSE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody kokrigingu (CK)."}
+```{r kokriging-predicted, echo=FALSE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody kokrigingu (CK)."}
 library(gridExtra)
 p1 = p1_base + geom_stars(data = ck["SAVI.pred"]) +
         ggtitle("Estymacja CK")

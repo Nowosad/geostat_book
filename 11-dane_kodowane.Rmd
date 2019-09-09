@@ -145,7 +145,7 @@ grid.arrange(p1p, p2p, ncol = 1)
 
 Alternatywnie, zamiast tworzenia nowej zmiennej (takiej jak `temp_ind`), można wykorzystać funkcję `I`.
 Z jej użyciem można definiować przyjęte progi bezpośrednio do funkcji `variogram` i `krige`. 
-Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopni Celsjusza (rycina \@ref(fig:ploty_trzyik)).
+Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopni Celsjusza (rycina \@ref(fig:ploty-trzyik)).
 
 ```{r 11-dane-kodowane-10, message=FALSE}
 vario_ind20 = variogram(I(temp < 20)~1, locations = punkty)
@@ -177,7 +177,7 @@ ik12 = krige(I(temp < 12)~1,
               nmax = 30)
 ```
 
-```{r ploty_trzyik, echo=FALSE, fig.height=12, fig.cap = "Estymacje używając metody krigingu danych kodowanych (IK) dla różnych progów prawdopodobieństwa."}
+```{r ploty-trzyik, echo=FALSE, fig.height=12, fig.cap = "Estymacje używając metody krigingu danych kodowanych (IK) dla różnych progów prawdopodobieństwa."}
 library(gridExtra)
 p1i = p1_base + geom_stars(data = ik20["var1.pred"]) +
         ggtitle("Prawdopodobieństwo Temp < 20")

@@ -124,22 +124,22 @@ Przestrzenna kowariancja, korelacja i semiwariancja to miary określające przes
 
 - Kowariancja i korelacja to miary podobieństwa pomiędzy dwoma zmiennymi
 - Przenosząc to na aspekt przestrzenny, badamy jedną zmienną, ale pomiędzy dwoma punktami odległymi od siebie o pewien dystans (określany jako lag)
-- W efekcie otrzymujemy miarę podobieństwa pomiędzy wartością głowy i ogona (rycina \@ref(fig:z_przs0))
+- W efekcie otrzymujemy miarę podobieństwa pomiędzy wartością głowy i ogona (rycina \@ref(fig:zprzs0))
 
-```{r z_przs0, echo=FALSE, fig.cap = "Relacja między wartościami zmiennej temp w danym miejscu a wartościami zmiennej temp w odległości do 200 metrów."}
+```{r zprzs0, echo=FALSE, fig.cap = "Relacja między wartościami zmiennej temp w danym miejscu a wartościami zmiennej temp w odległości do 200 metrów."}
 hscat(temp~1, data = punkty, breaks = c(0, 200))
 ```
 
 ### Wykres rozrzutu z przesunięciem
 
 Wykres rozrzutu z przesunięciem pokazuje korelację pomiędzy wartościami analizowanej cechy w pewnych grupach odległości. 
-Taki wykres można stworzyć używając funkcji `hscat()` z pakietu **gstat** (rycina \@ref(fig:z_przs)). 
+Taki wykres można stworzyć używając funkcji `hscat()` z pakietu **gstat** (rycina \@ref(fig:zprzs)). 
 Przykładowo, na poniższym wykresie widać wartość cechy `temp` z kolejnymi przesunięciami - od 0 do 500 metrów, od 500 metrów do 1000 metrów, itd.
 W pierwszym przedziale wartość cechy `temp` z przesunięciem wykazuje korelację na poziomie 0,876, a następnie z każdym kolejnym przedziałem (odległością) ta wartość maleje.
 W przedziale 3500 do 4000 metrów osiąga jedynie 0,128.
 Pozwala to na stwierdzenie, że cecha `temp` wykazuje zmienność przestrzenną - podobieństwo jej wartości zmniejsza się wraz z odległością.
 
-```{r z_przs, fig.height=7, fig.cap = "Wykres rozrzutu z przesunięciem dla zamiennej temp."}
+```{r zprzs, fig.height=7, fig.cap = "Wykres rozrzutu z przesunięciem dla zamiennej temp."}
 hscat(temp~1, data = punkty, breaks = seq(0, 4000, by = 500))
 ```
 
