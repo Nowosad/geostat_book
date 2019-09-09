@@ -173,7 +173,6 @@ Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego ob
 
 ```{r 03-eksp-analiza-danych-15 }
 cor(punkty$temp, punkty$ndvi)
-ggplot(punkty@data, aes(temp, ndvi)) + geom_point()
 ```
 
 ```{r 03-eksp-analiza-danych-15a, fig.cap = "Wykres rozrzutu reprezentujący relację pomiędzy zmienną temp i ndvi z obiektu punkty."}
