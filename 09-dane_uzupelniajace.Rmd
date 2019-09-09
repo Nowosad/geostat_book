@@ -85,15 +85,6 @@ grid.arrange(ip1, ip2, ip3, ncol = 3)
 <!--               model = fitted_kws1) -->
 <!-- spplot(kws1, "var1.pred") -->
 <!-- ``` -->
-
-```{r, message=FALSE}
-kws2 <- krige(temp~1,
-              location = punkty[punkty$clc == 2, ],
-              newdata = siatka2[na.omit(siatka2$clc == 2), ], 
-              model = fitted_kws2)
-spplot(kws2, "var1.pred")
-```
-
 <!-- ```{r, message=FALSE} -->
 <!-- siatka2 = dplyr::filter(siatka, clc == 1) -->
 <!-- siatka2  -->
