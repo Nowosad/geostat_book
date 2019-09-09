@@ -3,9 +3,9 @@
 
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
-```{r, interpolate_inits, message=FALSE, warning=FALSE}
-library(sp)
-library(rgdal)
+```{r 05-interpolacje-1, interpolate_inits, message=FALSE, warning=FALSE}
+library(sf)
+library(stars)
 library(gstat)
 library(dismo)
 library(fields)
@@ -13,10 +13,11 @@ library(geostatbook)
 data(punkty)
 data(siatka)
 data(granica)
+paleta = hcl.colors(40, palette = "ag_Sunset")
 ```
 
-```{r, echo=FALSE}
-par(mar = c(rep(0, 4)))
+```{r 05-interpolacje-2, echo=FALSE}
+# par(mar = c(rep(0, 4)))
 ```
 
 Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania do stworzenia estymacji przestrzennych. 
@@ -30,57 +31,61 @@ Istnieją dwa podstawowe rodzaje takich siatek - siatki regularne oraz siatki ni
 ### Siatki regularne
 
 Siatki regularne mają kształt prostokąta obejmującego cały analizowany obszar. 
-Określenie granic obszaru można wykonać na podstawie zasięgu danych punktowych za pomocą funkcji `bbox()` z pakietu **sp**.
+Określenie granic obszaru można wykonać na podstawie zasięgu danych punktowych za pomocą funkcji `st_bbox()` z pakietu **sf**.
 
-```{r}
-bbox(punkty)
+```{r 05-interpolacje-3}
+st_bbox(punkty)
 ```
 
-```{r, eval=FALSE, echo=FALSE}
-bbox(punkty)
-extent(punkty)
+Do stworzenia siatki można wykorzystać funkcję `st_as_stars()`.
+Tworzy ona nowy obiekt na podstawie obwiedni istniejącego obiektu punktowego oraz zadanej rozdzielczości (rycina \@ref(fig:05-interpolacje-4)).
+
+```{r 05-interpolacje-4, fig.cap = "Wizualizacja regularnej siatki."}
+punkty_bbox = st_bbox(punkty)
+nowa_siatka = st_as_stars(punkty_bbox, 
+                          deltax = 500,
+                          deltay = 500)
+plot(nowa_siatka)
 ```
 
 Do stworzenia siatki można użyć funkcji `expand.grid()`.
 Wymaga ona określenia dwóch argumentów - `x` oraz `y` (taka ich nazwa nie jest obowiązkowa). 
-Oba argumenty przyjmują trzy wartości: (i) `from` - oznaczający wartość początkową współrzędnej, (ii) `to` -  określający wartość końcową współrzędnej, oraz (iii) `by` - określający rozdzielczość. 
-Przy ustalaniu wartości początkowej i końcowej konieczne jest ich rozszerzenie względem wartości z funkcji `bbox()`, aby wszystkie analizowane punkty znalazły się na badanym obszarze. 
+Oba argumenty przyjmują trzy wartości: (i) `from` oznaczający wartość początkową współrzędnej, (ii) `to` określający wartość końcową współrzędnej, oraz (iii) `by` określający rozdzielczość. 
+Przy ustalaniu wartości początkowej i końcowej konieczne jest ich rozszerzenie względem wartości z funkcji `bbox()` lub `extent()`, aby wszystkie analizowane punkty znalazły się na badanym obszarze. 
 
-```{r }
-nowa_siatka <- expand.grid(
+<!-- Do stworzenia siatki można użyć funkcji `expand.grid()`. -->
+<!-- Wymaga ona określenia dwóch argumentów - `x` oraz `y` (taka ich nazwa nie jest obowiązkowa).  -->
+<!-- Oba argumenty przyjmują trzy wartości: (i) `from` oznaczający wartość początkową współrzędnej, (ii) `to` określający wartość końcową współrzędnej, oraz (iii) `by` określający rozdzielczość.  -->
+<!-- Przy ustalaniu wartości początkowej i końcowej konieczne jest ich rozszerzenie względem wartości z funkcji `bbox()` lub `extent()`, aby wszystkie analizowane punkty znalazły się na badanym obszarze.  -->
+
+```{r  , eval=FALSE, echo=FALSE}
+nowa_siatka = expand.grid(
   x = seq(from = 745050, to = 757050, by = 500),
   y = seq(from = 712650, to = 721650, by = 500)
 )
 ```
 
-Utworzony w ten sposób obiekt wymaga określenia współrzędnych (funkcja `coordinates()`), potwierdzenia że dane mają być siatką (funkcja `gridded()`), oraz przypisania układu współrzędnych z obiektu punktowego (funkcja `proj4string()`).
+<!-- Utworzony w ten sposób obiekt wymaga określenia współrzędnych (funkcja `coordinates()`), potwierdzenia że dane mają być siatką (funkcja `gridded()`), oraz przypisania układu współrzędnych z obiektu punktowego (funkcja `proj4string()`). -->
 
-```{r }
-coordinates(nowa_siatka) <- ~x + y
-gridded(nowa_siatka) <- TRUE
-proj4string(nowa_siatka) <- proj4string(punkty)
+```{r 05-interpolacje-5, eval=FALSE, echo=FALSE}
+nowa_siatka = stars::st_as_stars(st_bbox(punkty), nx = 25, ny = 19)
 plot(nowa_siatka)
 ```
 
-Alternatywnie, do stworzenia siatki można wykorzystać funkcję `makegrid()`.
-Tworzy ona nowy obiekt na podstawie istniejącego obiektu punktowego oraz zadanej rozdzielczości. 
-
-```{r}
-nowa_siatka <- makegrid(punkty, cellsize = 500)
-coordinates(nowa_siatka) <- ~x1 + x2
-gridded(nowa_siatka) <- TRUE
-proj4string(nowa_siatka) <- proj4string(punkty)
+coordinates(nowa_siatka) = ~x + y
+gridded(nowa_siatka) = TRUE
+proj4string(nowa_siatka) = proj4string(punkty)
 plot(nowa_siatka)
 ```
 
 ### Siatki regularne - wizualizacja
 
-Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można wykonać za pomocą funkcji `plot()`. 
-W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add`.
+Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić za pomocą funkcji `plot()`. 
+W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add` (rycina \@ref(fig:05-interpolacje-6)).
 
-```{r }
+```{r 05-interpolacje-6, fig.cap = "Wizualizacja regularnej siatki z nałożonym położeniem obserwacji punktowych."}
 plot(nowa_siatka)
-plot(punkty, add = TRUE)
+plot(st_geometry(punkty), add = TRUE)
 ```
 
 ### Siatki nieregularne
@@ -94,25 +99,25 @@ Taki obiekt można np. stworzyć za pomocą oprogramowania GISowego takiego jak 
 Następnie tworzony jest nowy obiekt `nowa_siatka_n` poprzez wybranie tylko tych oczek siatki, które znajdują się wewnątrz zadanych granic.
 
 ```{r siatkan}
-granica <- readOGR("dane/granica.gpkg")
-nowa_siatka_n <- nowa_siatka[granica]
+granica = st_read("dane/granica.gpkg", quiet = TRUE)
+nowa_siatka_n = nowa_siatka[granica]
 ```
 
-Wynik przetworzenia można zobaczyć z użyciem funkcji `plot`.
+Wynik przetworzenia można zobaczyć z użyciem funkcji `plot` (rycina \@ref(fig:05-interpolacje-7)).
 
-```{r }
+```{r 05-interpolacje-7, fig.cap = "Wizualizacja nieregularnej siatki."}
 plot(nowa_siatka_n)
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-zip("dane.zip", "dane")
+```{r 05-interpolacje-8, echo=FALSE, eval=FALSE}
+zip("dane3.zip", files = "dane")
 ```
 
 ## Modele deterministyczne
 
 Modele deterministyczne charakteryzują się tym, że ich parametry są zazwyczaj ustalane w oparciu o funkcję odległości lub powierzchni. 
+W tych modelach brakuje szacunków na temat oceny błędu modelu.
 Zaletą tych modeli jest ich prosta oraz krótki czas obliczeń. 
-W tych modelach brakuje jednak szacunków na temat oceny błędu modelu.
 Do modeli deterministycznych należą, między innymi:
 
 - Metoda diagramów Voronoi'a (ang.  *Voronoi diagram*)
@@ -125,33 +130,26 @@ Do modeli deterministycznych należą, między innymi:
 ### Voronoi
 
 Metoda diagramów Voronoi'a polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego punktu. 
-Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi()` z pakietu **dismo**.
+Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi()` z pakietu **dismo** (rycina \@ref(fig:05-interpolacje-10)).
 
-```{r }
-voronoi_interp <- voronoi(punkty)
-plot(voronoi_interp, main = "Poligony Voronoia")
+```{r 05-interpolacje-9 }
+voronoi_interp = voronoi(st_coordinates(punkty))
+voronoi_interp = st_as_sf(voronoi_interp)
+voronoi_interp$temp = punkty$temp
 ```
 
-```{r}
-spplot(voronoi_interp, zcol = "temp", 
-       main = "Poligony Voronoia - temperatura")
+```{r 05-interpolacje-10, fig.cap = "Interpolacja zmiennej temp używając metody diagramów Voronoia."}
+plot(voronoi_interp["temp"],
+     main = "Poligony Voronoia - temperatura")
 ```
 
 ### IDW
 
 Metoda średniej ważonej odległością (IDW) wylicza wartość dla każdej komórki na podstawie wartości punktów obokległych ważonych odwrotnością ich odległości. 
 W efekcie, czym bardziej jest punkt oddalony, tym mniejszy jest jego wpływ na interpolowaną wartość. 
-Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (ang. *power*).
-W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`).
+Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (ang. *power*) (rycina \@ref(fig:05-interpolacje-11)).
 
-```{r }
-idw_interp <- idw(temp~1, locations = punkty,
-                 newdata = siatka, idp = 2)
-spplot(idw_interp, zcol = "var1.pred", contour = TRUE, 
-       main = "IDW")
-```
-
-```{r, echo=FALSE, warning=FALSE}
+```{r 05-interpolacje-12, echo=FALSE, warning=FALSE, fig.cap = "Relacja pomiędzy argumentem wykładnika potęgowego a wpływem wartości punktów wraz z odległością."}
 library(tidyr)
 library(ggplot2)
 d = 1:100
@@ -162,14 +160,17 @@ ggplot(df_idw, aes(x = distance, y = value,
                    color = as.factor(key), group = key)) +
         geom_path(size = 2) + 
         scale_color_brewer(type = "qual", 
-                           name = "Wartość \nwykładnika \npotęgowego \n(idp):") +
+                           name = "idp") +
         labs(x = "Odległość", y = "Waga")
 ```
 
-<!--
-dodaj wykresy idw
-https://rpubs.com/DonalOLeary/80504
--->
+W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`) (rycina \@ref(fig:05-interpolacje-11)).
+
+```{r 05-interpolacje-11, fig.cap = "Interpolacja zmiennej temp używając metody średniej ważonej odległością (IDW)."}
+idw_interp = idw(temp~1, locations = punkty,
+                 newdata = siatka, idp = 2)
+plot(idw_interp["var1.pred"], main = "IDW", col = paleta)
+```
 
 ### Funkcje wielomianowe
 
@@ -177,56 +178,61 @@ Stosowanie funkcji wielomianowych w R może odbyć się z wykorzystaniem funkcji
 Wymaga ona podania trzech argumentów: `formula` określającego naszą analizowaną cechę (`temp~1` mówi, że chcemy interpolować wartość temperatury zależnej od samej siebie), `data` określający analizowany zbiór danych, oraz `degree` określającą stopień wielomianu.
 Następnie funkcja `predict()` przenosi nowe wartości na wcześniej stworzoną siatkę.
 
-```{r }
+```{r 05-interpolacje-13 }
 # wielomian 1 stopnia
-wielomian_1 <- gstat(formula = temp~1, locations = punkty,
+wielomian_1 = gstat(formula = temp~1, locations = punkty,
                      degree = 1)
-wielomian_1_pred <- predict(wielomian_1, newdata = siatka)
-spplot(wielomian_1_pred, zcol = "var1.pred", contour = TRUE,
+wielomian_1_pred = predict(wielomian_1, newdata = siatka)
+plot(wielomian_1_pred["var1.pred"], 
        main = "Powierzchnia trendu - wielomian pierwszego
-       stopnia")
+       stopnia", col = paleta)
 ```
 
-```{r }
+```{r 05-interpolacje-14 }
 # wielomian 2 stopnia
-wielomian_2 <- gstat(formula = temp~1, locations = punkty,
+wielomian_2 = gstat(formula = temp~1, locations = punkty,
                      degree = 2)
-wielomian_2_pred <- predict(wielomian_2, newdata = siatka)
-spplot(wielomian_2_pred, zcol = "var1.pred", contour = TRUE,
+wielomian_2_pred = predict(wielomian_2, newdata = siatka)
+plot(wielomian_2_pred["var1.pred"],
        main = "Powierzchnia trendu - wielomian drugiego
-       stopnia")
+       stopnia", col = paleta)
 ```
 
-```{r }
+```{r 05-interpolacje-15 }
 # wielomian 3 stopnia
-wielomian_3 <- gstat(formula = temp~1, locations = punkty,
+wielomian_3 = gstat(formula = temp~1, locations = punkty,
                      degree = 3)
-wielomian_3_pred <- predict(wielomian_3, newdata = siatka)
-spplot(wielomian_3_pred, zcol = "var1.pred", contour = TRUE,
+wielomian_3_pred = predict(wielomian_3, newdata = siatka)
+plot(wielomian_3_pred["var1.pred"],
        main = "Powierzchnia trendu - wielomian trzeciego
-       stopnia")
+       stopnia", col = paleta)
 ```
 
 ### Funkcje sklejane
 
 Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**) dopasowuje krzywą powierzchnię do wartości analizowanych punktów.
 
-```{r }
-tps <- Tps(coordinates(punkty), punkty$temp)
-siatka$tps_pred <- predict(tps, coordinates(siatka))
-spplot(siatka, "tps_pred", contour = TRUE, 
-       main = "Funkcje sklejane")
+```{r 05-interpolacje-16 }
+tps = Tps(st_coordinates(punkty), punkty$temp)
+siatka$tps_pred = predict(tps, st_coordinates(siatka))
+plot(siatka["tps_pred"], 
+       main = "Funkcje sklejane", col = paleta)
 ```
 
 ### Porównanie modeli deterministycznych
 
-```{r echo=FALSE}
+```{r 05-interpolacje-17, echo=FALSE, message=FALSE}
 library(gridExtra)
-p1 <- spplot(wielomian_3_pred[1], main = "Wielomiany")
-p2 <- spplot(siatka, "tps_pred", main = "Funkcje sklejane")
-p3 <- spplot(voronoi_interp, "temp", main = "Poligony Voronoia")
-p4 <- spplot(idw_interp, "var1.pred", main = "IDW")
-grid.arrange(p3, p4, p1, p2)
+p1 = p1_base + 
+  geom_sf(data = voronoi_interp, aes(fill = temp)) +
+  ggtitle("Poligony Voronoia")
+p2 = p1_base + geom_stars(data = idw_interp["var1.pred"]) + 
+        ggtitle("IDW")
+p3 = p1_base + geom_stars(data = wielomian_3_pred["var1.pred"]) +
+        ggtitle("Wielomiany")
+p4 = p1_base + geom_stars(data = siatka["tps_pred"]) + 
+        ggtitle("Funkcje sklejane")
+grid.arrange(p1, p2, p3, p4, ncol = 2)
 ```
 
 ## Modele statystyczne

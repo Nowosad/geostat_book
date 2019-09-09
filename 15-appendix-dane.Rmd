@@ -1,31 +1,37 @@
+```{r 15-appendix-dane-1, include=FALSE, cache=FALSE}
+library("methods")
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = '\\textwidth')
+options(scipen = 99 * 99)
 
+```
 # Dane {#dane-app}
 
-```{r, echo=FALSE}
-library(sp)
+```{r 15-appendix-dane-2, echo=FALSE}
+library(sf)
+library(stars)
 ```
 
 
-Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu **geostatbook** (dla kolejnych rozdziałów). 
-Dodatkowo, przy instalacji pakietu **geostatbook** pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w tym skrypcie.
+Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu `geostatbook` (dla kolejnych rozdziałów). 
+Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w tym skrypcie.
 
-- [Archiwum zawierające dane do rozdziału drugiego](https://github.com/Nowosad/geostat_book/blob/master/dane-wyd2.zip?raw=true)
+- [Archiwum zawierające dane do rozdziału drugiego](https://github.com/Nowosad/geostat_book/blob/master/dane3.zip?raw=true)
 - [Dane do kolejnych rozdziałów są zawarte w pakiecie geostatbook:](https://github.com/Nowosad/geostatbook)
 
 ```{r instgeobook2, eval=FALSE}
-# install.packages("devtools")
-devtools::install_github("nowosad/geostatbook@2")
+# install.packages("remotes")
+remotes::install_github("nowosad/geostatbook@3)
 ```
 
 ## Zbiory danych w pakiecie **geostatbook**
 
-```{r}
+```{r 15-appendix-dane-3}
 library(geostatbook)
 ```
 
 ### `punkty`
 
-```{r}
+```{r 15-appendix-dane-4}
 data("punkty")
 ?punkty
 ```
@@ -40,13 +46,13 @@ Zmienne:
 - ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference Vegetation Index*)
 - savi - ang. *Soil Adjusted Vegetation Index*
 
-```{r}
-spplot(punkty)
+```{r 15-appendix-dane-5}
+plot(punkty)
 ```
 
 ### `punkty_ndvi`
 
-```{r}
+```{r 15-appendix-dane-6}
 data("punkty_ndvi")
 ?punkty_ndvi
 ```
@@ -56,13 +62,13 @@ Zmienna:
 
 - ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference Vegetation Index*)
 
-```{r}
-spplot(punkty_ndvi)
+```{r 15-appendix-dane-7}
+plot(punkty_ndvi)
 ```
 
 ### `punkty_pref`
 
-```{r}
+```{r 15-appendix-dane-8}
 data("punkty_pref")
 ?punkty_pref
 ```
@@ -78,31 +84,45 @@ Zmienna:
 - ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference Vegetation Index*)
 - savi - ang. *Soil Adjusted Vegetation Index*
 
-```{r}
-spplot(punkty_pref)
+```{r 15-appendix-dane-9}
+plot(punkty_pref)
 ```
 
 ### `granica`
 
-```{r}
+```{r 15-appendix-dane-10}
 data("granica")
 ?granica
 ```
 
 Granica Suwalskiego Parku Krajobrazowego.
 
-```{r}
-spplot(granica)
+```{r 15-appendix-dane-11}
+plot(granica)
 ```
 
 ### `siatka`
 
-```{r}
+```{r 15-appendix-dane-12}
 data("siatka")
 ?siatka
 ```
 
 Siatka badanego obszaru dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
+Zawiera ona ona 127 wierszy i 96 kolumn.
+
+```{r 15-appendix-dane-13}
+plot(siatka)
+```
+
+### `dane_uzup`
+
+```{r 15-appendix-dane-14}
+data("dane_uzup")
+?dane_uzup
+```
+
+Siatka badanego obszaru dla obszaru Suwalskiego Parku Krajobrazowego i okolic zawierająca zmienne dodatkowe.
 Zawiera ona ona 127 wierszy i 96 kolumn oraz 4 zmienne:
 
 - srtm - wysokość w metrach n.p.m. pozyskana z numerycznego modelu terenu z misji SRTM
@@ -111,7 +131,7 @@ Zawiera ona ona 127 wierszy i 96 kolumn oraz 4 zmienne:
 - ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference  Vegetation Index*)
 - savi - ang. *Soil Adjusted Vegetation Index*
 
-```{r}
-spplot(siatka)
+```{r 15-appendix-dane-15}
+plot(st_redimension(dane_uzup))
 ```
 

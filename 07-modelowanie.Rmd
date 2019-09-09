@@ -3,14 +3,16 @@
 
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
-```{r, message=FALSE, warning=FALSE}
-library(sp)
+```{r 07-modelowanie-1, message=FALSE, warning=FALSE}
+library(sf)
+library(stars)
 library(gstat)
 library(geostatbook)
 data(punkty)
+paleta = hcl.colors(40, palette = "ag_Sunset")
 ```
 
-```{r, echo=FALSE}
+```{r 07-modelowanie-2, echo=FALSE}
 par(mar = c(rep(0, 4)))
 ```
 
@@ -24,26 +26,28 @@ Semiwariogram empiryczny (wyliczony z danych punktowych) jest:
 - Chaotyczny - badana próba jest jedynie przybliżeniem rzeczywistości, dodatkowo obciążonym błędami
 
 Estymacje i symulacje przestrzenne wymagają modelu struktury przestrzennej analizowanej cechy, a nie tylko wartości empirycznych.
-Dodatkowo, matematycznie modelowanie wygładza chaotyczne fluktuacje danych empirycznych.
+Dodatkowo, matematycznie modelowanie wygładza chaotyczne fluktuacje danych empirycznych (rycina \@ref(fig:07-modelowanie-3)).
 
-```{r, echo=FALSE}
+```{r 07-modelowanie-3, echo=FALSE, fig.cap = "Porównanie semiwariogramu empirycznego i modelu semiwariogramu."}
 library(gridExtra)
-vario_kzt <- variogram(temp~x + y, locations = punkty)
-model_kzt <- vgm(model = "Sph", nugget = 1)
-fitted_kzt <- fit.variogram(vario_kzt, model_kzt)
+punkty$x = st_coordinates(punkty)[,1]
+punkty$y = st_coordinates(punkty)[,2]
+vario_kzt = variogram(temp~x + y, locations = punkty)
+model_kzt = vgm(model = "Sph", nugget = 1)
+fitted_kzt = fit.variogram(vario_kzt, model_kzt)
 grid.arrange(plot(vario_kzt), plot(vario_kzt, fitted_kzt))
 ```
 
 ### Model semiwariogramu
 
-Model semiwariogramu składa się zazwyczaj z trzech podstawowych elementów.
+Model semiwariogramu składa się zazwyczaj z trzech podstawowych elementów (rycina \@ref(fig:07-modelowanie-4)).
 Są to:
 
 - **Nugget** - efekt nuggetowy - pozwala na określenie błędu w danych wejściowych oraz zmienności na dystansie krótszym niż pierwszy odstęp
 - **Sill** - semiwariancja progowa - oznacza wariancję badanej zmiennej
 - **Range** - zasięg - to odległość do której istnieje przestrzenna korelacja
 
-```{r, echo=FALSE}
+```{r 07-modelowanie-4, echo=FALSE, fig.cap = "Podstawowe elementy modelu semiwariogramu."}
 knitr::include_graphics("figs/model_semiwariogramu.png")
 ```
 
@@ -69,26 +73,26 @@ Pakiet `gstat` zawiera 20 podstawowych modeli geostatystycznych, w tym najczęś
 
 Do wyświetlenia listy nazw modeli i ich skrótów służy funkcja `vgm()`.
 
-```{r }
+```{r 07-modelowanie-5 }
 vgm()
 ```
 
-Można się również im przyjrzeć używając funkcji `show.vgms()`.
+Można się również im przyjrzeć używając funkcji `show.vgms()` (rycina \@ref(fig:07-modelowanie-6)).
 
-```{r }
+```{r 07-modelowanie-6, fig.cap = "Przykład modeli semiwariogramu dostępnych w pakiecie gstat."}
 show.vgms()
 ```
 
-Istnieje możliwość wyświetlenia tylko wybranych modeli podstawowych poprzez argument `models`. 
+Istnieje możliwość wyświetlenia tylko wybranych modeli podstawowych poprzez argument `models` (rycina \@ref(fig:07-modelowanie-7)).
 
-```{r }
+```{r 07-modelowanie-7, fig.cap = "Porównanie modeli sferycznego (Sph), gaussowskiego (Gau), potęgowego (Pow) i wykładniczego (Exp)."}
 show.vgms(models = c("Sph", "Gau", "Pow", "Exp"), 
           range = 1.4, max = 2.5)
 ```
 
-Dodatkowo, można je porównać na jednym wykresie poprzez argument `as.groups = TRUE`.
+Dodatkowo, można je porównać na jednym wykresie poprzez argument `as.groups = TRUE` (rycina \@ref(fig:07-modelowanie-8)).
 
-```{r }
+```{r 07-modelowanie-8, fig.cap = "Porównanie modeli sferycznego (Sph), gaussowskiego (Gau), potęgowego (Pow) i wykładniczego (Exp) na jednym wykresie."}
 show.vgms(models = c("Sph", "Gau", "Pow", "Exp"), 
           range = 1.4, max = 2.5, as.groups = TRUE)
 ```
@@ -109,8 +113,15 @@ Najlepiej, gdy wybór modelu oparty jest o wiedzę na temat zakładanego procesu
 
 ### Funkcja `fit.variogram()`
 
-Funkcja `fit.variogram()` z pakietu **gstat** dopasowuje zasięg oraz semiwariancję progową w oparciu o ustalone "ręcznie" wejściowe parametry modelu.
-Więcej na temat działania tej funkcji można przeczytać we wpisie [Fitting variogram models in gstat](https://www.r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html) na stronie https://www.r-spatial.org.
+Funkcja `fit.variogram()` z pakietu **gstat** dopasowuje zasięg oraz semiwariancję progową w oparciu o ustalone "ręcznie" wejściowe parametry modelu^[Więcej na temat działania tej funkcji można przeczytać we wpisie na stronie https://www.r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html.].
+
+<!-- ### Liniowy model regionalizacji -->
+
+<!-- W przypadku, gdy analizowane zjawisko jest złożone, odwzorowanie kształtu semiwariogramu empirycznego wymaga połączenia dwóch lub większej liczby modeli podstawowych.  -->
+<!-- W takiej sytuacji konieczne jest spełnienie dwóch warunków: -->
+
+<!-- - Wszystkie zastosowane modele muszą być dopuszczalne (`vgm()`) -->
+<!-- - Wariancja progowa każdego podstawowego modelu musi być dodatnia -->
 
 ## Modelowanie izotropowe
 
@@ -124,192 +135,218 @@ Uzyskany model można przedstawić w funkcji `plot()` podając nazwę obiektu za
 3. Dopasować parametry modelu używając funkcji `fit.variogram()`.
 To dopasowanie można również zwizualizować używając funkcji `plot()`.
 
-```{r, echo=FALSE}
-nowa_siatka <- makegrid(punkty, cellsize = 100)
-coordinates(nowa_siatka) <- ~x1 + x2
-gridded(nowa_siatka) <- TRUE
-proj4string(nowa_siatka) <- proj4string(punkty)
+```{r 07-modelowanie-9, echo=FALSE}
+nowa_siatka = st_bbox(punkty) %>%
+  st_as_stars(deltax = 100, deltay = 100)
+
 set.seed(14)
-punkty2 = spsample(nowa_siatka, type = "stratified", n = 50)
-punkty2 = SpatialPointsDataFrame(punkty2, data.frame(values = runif(length(punkty2))))
+punkty2 = st_sample(st_as_sf(nowa_siatka), size = 50, type = "random")
+punkty2 = st_sf(values = runif(length(punkty2)), punkty2)
 ```
 
 ### Model sferyczny
 
 Model sferyczny (`Sph`) jest jednym z najczęściej stosowanych modeli geostatystycznych. 
-Reprezentuje on cechę, której zmienność wartości ma charakter naprzemiennych płatów niskich i wysokich wartości.
+Reprezentuje on cechę, której zmienność wartości ma charakter naprzemiennych płatów niskich i wysokich wartości (rycina \@ref(fig:07-modelowanie-10)).
 Średnio te płaty mają średnicę określoną przez zasięg (`range`) modelu.
 
-```{r, echo=FALSE}
-vario2 <- variogram(values~1, locations = punkty2)
-model_sph <- fit.variogram(vario2, vgm(psill = 0.08, model = "Sph", range = 2000))
+```{r 07-modelowanie-10, echo=FALSE, fig.cap="Przykład zjawiska reprezentowanego poprzez model sferyczny."}
+vario2 = variogram(values~1, locations = punkty2)
+model_sph = fit.variogram(vario2, vgm(psill = 0.08, model = "Sph", range = 2000))
 # plot(vario2, model_sph)
-k_sph <- krige(values~1, 
+k_sph = krige(values~1, 
                locations = punkty2,
                newdata = nowa_siatka,
                model = model_sph,
                debug.level = 0)
-spplot(k_sph[1], at = seq(-0.05, 1.05, by = 0.05))
+plot(k_sph[1], col = paleta, main = "", key.pos = NULL)
 ```
 
-```{r }
-vario <- variogram(temp~1, locations = punkty)
+(rycina \@ref(fig:07-modelowanie-11)).
+
+```{r 07-modelowanie-11, fig.cap="Semiwariogram zmiennej temp."}
+vario = variogram(temp~1, locations = punkty)
 plot(vario)
 ```
 
-```{r }
-# ręczne ustalenie wszystkich parametrów modelu
-model_sph <- vgm(psill = 10, model = "Sph", range = 3000)
+(rycina \@ref(fig:07-modelowanie-12)).
+
+```{r 07-modelowanie-12, fig.cap="Model sferyczny zmiennej temp."}
+model_sph = vgm(psill = 10, model = "Sph", range = 3000)
 model_sph
 plot(vario, model = model_sph)
 ```
 
-```{r }
-fitted_sph <- fit.variogram(vario, model_sph)
+(rycina \@ref(fig:07-modelowanie-13)).
+
+```{r 07-modelowanie-13, fig.cap="Automatycznie dopasowany model sferyczny zmiennej temp używając wstępnie podanych parametrów."}
+fitted_sph = fit.variogram(vario, model_sph)
 fitted_sph
 plot(vario, model = fitted_sph)
 ```
 
 <!-- przedsaw, omów, podaj wady i zalety -->
+(rycina \@ref(fig:07-modelowanie-14)).
 
-```{r}
-# ręczne ustalenie tylko typu modelu
-model_sph2 <- vgm(model = "Sph")
-fitted_sph2 <- fit.variogram(vario, model_sph2)
+```{r 07-modelowanie-14, fig.cap="Automatycznie dopasowany model sferyczny zmiennej temp używając jedynie wstępnie podanego typu modelu."}
+model_sph2 = vgm(model = "Sph")
+fitted_sph2 = fit.variogram(vario, model_sph2)
 plot(vario, model = fitted_sph2)
 ```
 
 ### Model wykładniczy
 
-Model wykładniczy (`Exp`) również jest jednym z najczęściej używanych w geostatystyce. Od modelu sferycznego różni go szczególnie to, że nie ma on skończonego zasięgu.
+Model wykładniczy (`Exp`) również jest jednym z najczęściej używanych w geostatystyce.
+Od modelu sferycznego różni go szczególnie to, że nie ma on skończonego zasięgu.
 W jego przypadku, zamiast zasięgu podaje się tzw. zasięg praktyczny.
-Oznacza on odległość na jakiej model osiąga 95% wartości wariancji progowej.
+Oznacza on odległość na jakiej model osiąga 95% wartości wariancji progowej (rycina \@ref(fig:07-modelowanie-15)).
 
-```{r, echo=FALSE}
-model_exp <- fit.variogram(vario2, vgm(psill = 0.14, model = "Exp", range = 2200))
+```{r 07-modelowanie-15, echo=FALSE, fig.cap="Przykład zjawiska reprezentowanego poprzez model wykładniczy."}
+model_exp = fit.variogram(vario2, vgm(psill = 0.14, model = "Exp", range = 2200))
 # plot(vario2, model_exp)
-k_exp <- krige(values~1, 
+k_exp = krige(values~1, 
                locations = punkty2,
                newdata = nowa_siatka,
                model = model_exp,
                debug.level = 0)
-spplot(k_exp[1], at = seq(-0.05, 1.05, by = 0.05))
+plot(k_exp[1], col = paleta, main = "", key.pos = NULL)
 ```
 
-```{r }
-vario <- variogram(temp~1, locations = punkty)
-plot(vario)
+```{r 07-modelowanie-16 }
+vario = variogram(temp~1, locations = punkty)
+# plot(vario)
 ```
 
-```{r }
-model_exp <- vgm(psill = 10, model = "Exp", range = 3000)
+(rycina \@ref(fig:07-modelowanie-17)).
+
+```{r 07-modelowanie-17, fig.cap="Model wykładniczy zmiennej temp."}
+model_exp = vgm(psill = 10, model = "Exp", range = 3000)
 model_exp
 plot(vario, model = model_exp)
 ```
 
-```{r }
-fitted_exp <- fit.variogram(vario, model_exp)
+(rycina \@ref(fig:07-modelowanie-18)).
+
+```{r 07-modelowanie-18, fig.cap="Automatycznie dopasowany model wykładniczy zmiennej temp."}
+fitted_exp = fit.variogram(vario, model_exp)
 fitted_exp
 plot(vario, model = fitted_exp)
 ```
 
 ### Model gaussowski
 
-Model gaussowski (`Gau`) również posiada zasięg praktyczny definiowany jako 95% wartości wariancji progowej. 
+Model gaussowski (`Gau`) również posiada zasięg praktyczny definiowany jako 95% wartości wariancji progowej (rycina \@ref(fig:07-modelowanie-19)).
 Jego cechą charakterystyczną jest paraboliczny kształt na początkowym odcinku. 
 Jest on najczęściej używany do modelowania cech o regularnej i łagodnej zmienności przestrzennej. 
 Model gaussowski z uwagi na swoje cechy zazwyczaj nie powinien być stosowany samodzielnie, lecz jako element modelu złożonego.
 
-```{r, echo=FALSE}
-model_gau <- vgm(psill = 0.10, model = "Gau", range = 1000)
+```{r 07-modelowanie-19, echo=FALSE, fig.cap="Przykład zjawiska reprezentowanego poprzez model gaussowski."}
+model_gau = vgm(psill = 0.10, model = "Gau", range = 1000)
 # plot(vario2, model_gau)
-k_gau <- krige(values~1, 
+k_gau = krige(values~1, 
                locations = punkty2,
                newdata = nowa_siatka,
                model = model_gau,
                debug.level = 0)
-spplot(k_gau[1], at = seq(-0.05, 1.05, by = 0.05))
+plot(k_gau[1], col = paleta, main = "", key.pos = NULL)
 ```
 
-```{r }
-vario <- variogram(temp~1, locations = punkty)
-plot(vario)
+```{r 07-modelowanie-20 }
+vario = variogram(temp~1, locations = punkty)
+# plot(vario)
 ```
 
-```{r }
-model_gau <- vgm(psill = 13, model = "Gau", range = 3000)
+(rycina \@ref(fig:07-modelowanie-21)).
+
+```{r 07-modelowanie-21, fig.cap="Model gaussowski zmiennej temp."}
+model_gau = vgm(psill = 13, model = "Gau", range = 3000)
 model_gau
 plot(vario, model = model_gau)
 ```
 
-```{r }
-fitted_gau <- fit.variogram(vario, model_gau)
+(rycina \@ref(fig:07-modelowanie-22)).
+
+```{r 07-modelowanie-22, fig.cap="Automatycznie dopasowany model gaussowski zmiennej temp."}
+fitted_gau = fit.variogram(vario, model_gau)
 fitted_gau
 plot(vario, model = fitted_gau)
 ```
 
 ### Model potęgowy
 
-Model potęgowy (`Pow`) to przykład tzw. modelu nieograniczonego.
+Model potęgowy (`Pow`) to przykład tzw. modelu nieograniczonego (rycina \@ref(fig:07-modelowanie-23)).
 Jego wartość rośnie w nieskończoność, dlatego niemożliwe jest określenie jego zasięgu. 
 W przypadku modelu potęgowego, parametr `range` oznacza wykładnik potęgowy.
 
-```{r, echo=FALSE}
-model_pow <- fit.variogram(vario2, vgm(psill = 0.3, model = "Pow", range = 0.1))
-model_pow <- vgm(psill = 0.02, model = "Pow", range = 0.14)
+```{r 07-modelowanie-23, echo=FALSE, fig.cap="Przykład zjawiska reprezentowanego poprzez model potęgowy."}
+model_pow = fit.variogram(vario2, vgm(psill = 0.3, model = "Pow", range = 0.1))
+model_pow = vgm(psill = 0.02, model = "Pow", range = 0.14)
 # plot(vario2, model_pow)
-k_pow <- krige(values~1, 
+k_pow = krige(values~1, 
                locations = punkty2,
                newdata = nowa_siatka,
                model = model_pow,
                debug.level = 0)
-spplot(k_pow[1], at = seq(-0.05, 1.05, by = 0.05))
+plot(k_pow[1], col = paleta, main = "", key.pos = NULL)
 ```
 
-```{r }
-vario <- variogram(temp~1, locations = punkty)
-plot(vario)
+```{r 07-modelowanie-24 }
+vario = variogram(temp~1, locations = punkty)
+# plot(vario)
 ```
 
-```{r }
-model_pow <- vgm(psill = 0.03, model = "Pow", range = 0.7)
+(rycina \@ref(fig:07-modelowanie-25)).
+
+```{r 07-modelowanie-25, fig.cap="Model potęgowy zmiennej temp."}
+model_pow = vgm(psill = 0.03, model = "Pow", range = 0.7)
 model_pow
 plot(vario, model = model_pow)
 ```
 
-```{r }
-fitted_pow <- fit.variogram(vario, model_pow)
+(rycina \@ref(fig:07-modelowanie-26)).
+
+```{r 07-modelowanie-26, fig.cap="Automatycznie dopasowany model potęgowy zmiennej temp."}
+fitted_pow = fit.variogram(vario, model_pow)
 fitted_pow
 plot(vario, model = fitted_pow)
 ```
 
 ### Porównanie modeli
 
-```{r, echo=FALSE}
-library(gridExtra)
-grid.arrange(spplot(k_sph[1], main = "Model sferyczny", at = seq(-0.05, 1.05, by = 0.05)), 
-             spplot(k_exp[1], main = "Model wykładniczny", at = seq(-0.05, 1.05, by = 0.05)), 
-             spplot(k_gau[1], main = "Model gaussowski", at = seq(-0.05, 1.05, by = 0.05)), 
-             spplot(k_pow[1], main = "Model potęgowy", at = seq(-0.05, 1.05, by = 0.05)))
+Z uwagi na swoją charakterystykę, każdy z powyższych modeli ma inny zakres wartości.
+Aby porównać te modele należy je przedstawić używając tej samej skali kolorystycznej (\@ref(fig:07-modelowanie-27)).
+
+```{r 07-modelowanie-27, echo=FALSE, fig.cap="Porównanie powierzchni reprezentowanej przez modele sferyczny, wykładniczy, gaussowski i potęgowy."}
+modl = c(k_sph, k_exp, k_gau, k_pow)
+modl = modl[c(1, 3, 5, 7)]
+names(modl) = c("Model sferyczny", "Model wykładniczny", 
+                "Model gaussowski", "Model potęgowy")
+modl = st_redimension(modl)
+
+p1_base + 
+        geom_stars(data = modl) + 
+        facet_wrap(~new_dim)
 ```
 
 ### Modele złożone I
 
 Najczęściej pojedynczy model nie jest w stanie odwzorować dokładnie zmienności przestrzennej analizowanej cechy.
 W takich sytuacjach konieczne jest połączenie dwóch lub więcej modeli podstawowych. 
-Najbardziej powszechny model złożony składa się z funkcji nuggetowej (dla odległości zero) oraz drugiej funkcji (dla dalszej odległości). 
+Najbardziej powszechny model złożony składa się z funkcji nuggetowej (dla odległości zero) oraz drugiej funkcji (dla dalszej odległości) (rycina \@ref(fig:07-modelowanie-28)).. 
 Zdefiniowanie takiej funkcji odbywa się poprzez dodanie argumentu `nugget` w funkcji `vgm()`.
 
-```{r }
-vario <- variogram(temp~1, locations = punkty)
-model_zl1 <- vgm(psill = 10, model = "Sph", range = 3000,
+```{r 07-modelowanie-28, fig.cap="Złożony model zmiennej temp."}
+vario = variogram(temp~1, locations = punkty)
+model_zl1 = vgm(psill = 10, model = "Sph", range = 3000,
                  nugget = 0.5)
 model_zl1
 plot(vario, model = model_zl1)
 ```
 
-```{r }
-fitted_zl1 <- fit.variogram(vario, model_zl1)
+(rycina \@ref(fig:07-modelowanie-29)).
+
+```{r 07-modelowanie-29, fig.cap="Automatycznie dopasowany złożony model zmiennej temp."}
+fitted_zl1 = fit.variogram(vario, model_zl1)
 fitted_zl1
 plot(vario, model = fitted_zl1)
 ```
@@ -318,11 +355,11 @@ plot(vario, model = fitted_zl1)
 
 Bardziej złożone modele można tworzyć z pomocą argumentu `add.to`.
 Przyjmuje on kolejny obiekt funkcji `vgm()` i poprzez połączenie tych dwóch obiektów otrzymuje model złożony. 
-Na poniższym przykładzie stworzony został model złożony składający się z modelu nuggetowego oraz dwóch modeli gaussowskich.
+Na poniższym przykładzie stworzony został model złożony składający się z modelu nuggetowego oraz dwóch modeli gaussowskich (rycina \@ref(fig:07-modelowanie-30)).
 
-```{r }
-vario <- variogram(temp~1, locations = punkty)
-model_zl2 <- vgm(10, "Gau", 3000, add.to = vgm(4, 
+```{r 07-modelowanie-30, fig.cap="Złożony model zmiennej temp składający się z modelu nuggetowego oraz dwóch modeli gaussowskich."}
+vario = variogram(temp~1, locations = punkty)
+model_zl2 = vgm(10, "Gau", 3000, add.to = vgm(4, 
                                                model = "Gau",
                                                range = 500,
                                                nugget = 0.5))
@@ -330,8 +367,10 @@ model_zl2
 plot(vario, model = model_zl2)
 ```
 
-```{r }
-fitted_zl2 <- fit.variogram(vario, model_zl2)
+(rycina \@ref(fig:07-modelowanie-31))
+
+```{r 07-modelowanie-31, fig.cap="Automatycznie dopasowany złożony model zmiennej temp składający się z modelu nuggetowego oraz dwóch modeli gaussowskich."}
+fitted_zl2 = fit.variogram(vario, model_zl2)
 plot(vario, model = fitted_zl2)
 ```
 
@@ -347,13 +386,13 @@ plot(vario, model = fitted_zl3)
 
 ### Anizotropia
 
-Uwzględnienie anizotropii wymaga zamiany parametru zasięgu na trzy inne parametry:
+Uwzględnienie anizotropii wymaga zamiany parametru zasięgu na trzy inne parametry (rycina \@ref(fig:07-modelowanie-33)):
 
 - Kąt określający dominujący kierunek
 - Zasięg w dominującym kierunku
 - Proporcję anizotropii, czyli relację pomiędzy zasięgiem w przeciwległym kierunku do zasięgu w dominującym kierunku
 
-```{r, echo=FALSE}
+```{r 07-modelowanie-33, echo=FALSE, fig.cap="Podstawowe parametry mapy semiwariogramu."}
 knitr::include_graphics("figs/mapa_semiwariogramu.png")
 ```
 
@@ -363,33 +402,40 @@ Następnie w funkcji `vgm()` należy podać nowy argument `anis`.
 Przyjmuje on dwie wartości. Pierwsza z nich (`45` w przykładzie poniżej) oznacza dominujący kierunek anizotropii, druga zaś (`0.4`) mówi o tzw. proporcji anizotropii.
 Proporcja anizotropii jest to relacja pomiędzy zmiennością na kierunku prostopadłym a głównym kierunku.
 Na poniższym przykładzie zasięg ustalony dla głównego kierunku wynosi 4000 metrów.
-Wartość proporcji anizotropii, `0.4`, w tym wypadku oznacza że dla prostopadłego kierunku zasięg będzie wynosił 1600 metrów (4000 metrów x 0.4).
+Wartość proporcji anizotropii, `0.4`, w tym wypadku oznacza że dla prostopadłego kierunku zasięg będzie wynosił 1600 metrów (4000 metrów x 0.4) (rycina \@ref(fig:07-modelowanie-34)).
 
-```{r }
-vario_map <- variogram(temp~1, 
+```{r 07-modelowanie-34, fig.cap="Mapa semiwariogramu zmiennej temp."}
+vario_map = variogram(temp~1, 
                        locations = punkty,
                        cutoff = 4000,
                        width = 400, 
                        map = TRUE)
-plot(vario_map, threshold = 30, col.regions = topo.colors(n = 40))
+plot(vario_map, threshold = 30, 
+     col.regions = hcl.colors(40, palette = "ag_GrnYl", rev = TRUE))
 ```
 
-```{r }
-vario_kier <- variogram(temp~1, 
+(rycina \@ref(fig:07-modelowanie-35))
+
+```{r 07-modelowanie-35, fig.cap="Semiwariogramy kierunkowe zmiennej temp."}
+vario_kier = variogram(temp~1, 
                         locations = punkty,
                         alpha = c(0, 45, 90, 135),
                         cutoff = 4000)
 plot(vario_kier)
 ```
 
-```{r }
-vario_kier_fit <- vgm(psill = 8, model = "Sph", range = 4000, 
+(rycina \@ref(fig:07-modelowanie-36))
+
+```{r 07-modelowanie-36, fig.cap="Modele kierunkowe zmiennej temp."}
+vario_kier_fit = vgm(psill = 8, model = "Sph", range = 4000, 
                       nugget = 0.5, anis = c(45, 0.4))
 plot(vario_kier, vario_kier_fit, as.table = TRUE)
 ```
 
-```{r}
-vario_kier_fit2 <- fit.variogram(vario_kier,
+(rycina \@ref(fig:07-modelowanie-37))
+
+```{r 07-modelowanie-37, fig.cap="Automatycznie dopasowane modele kierunkowe zmiennej temp."}
+vario_kier_fit2 = fit.variogram(vario_kier,
                                  vgm(model = "Sph",
                                      anis = c(45, 0.4), 
                                      nugget = 0.5))
@@ -400,7 +446,7 @@ plot(vario_kier, vario_kier_fit2, as.table = TRUE)
 
 Przyjrzyj się danym z obiektu `punkty_pref`. Możesz go wczytać używając poniższego kodu:
 
-```{r}
+```{r 07-modelowanie-38}
 data(punkty_pref)
 ```
 

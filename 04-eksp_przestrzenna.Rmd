@@ -3,15 +3,16 @@
 
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
-```{r, interpolate_init, message=FALSE, warning=FALSE}
-library(sp)
+```{r 04-eksp-przestrzenna-1, interpolate_init, message=FALSE, warning=FALSE}
+library(sf)
+library(stars)
 library(mapview)
 library(geostatbook)
 data(punkty)
 data(granica)
 ```
 
-```{r, echo=FALSE}
+```{r 04-eksp-przestrzenna-2, echo=FALSE}
 par(mar = c(rep(0, 4)))
 ```
 
@@ -38,9 +39,9 @@ Eksploracyjna analiza danych przestrzennych w przypadku danych punktowych ma na 
 
 Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()`.
 
-```{r}
-plot(granica)
-plot(punkty, add = TRUE)
+```{r 04-eksp-przestrzenna-3}
+plot(st_geometry(granica))
+plot(st_geometry(punkty), add = TRUE)
 ```
 
 ## Próbkowanie
@@ -59,9 +60,9 @@ Funkcja `spsample()` z pakietu **sp** pozwala na stworzenie kilku typów próbko
 
 W regularnym typie próbkowania, kolejne punkty rozłożone są równomiernie na badanym obszarze.
 
-```{r }
+```{r 04-eksp-przestrzenna-4 }
 set.seed(225)
-regularny <- spsample(granica, 150, type = "regular")
+regularny = st_sample(granica, 150, type = "regular")
 plot(regularny)
 ```
 
@@ -70,9 +71,9 @@ plot(regularny)
 W losowym typie próbkowania każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia. 
 Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych.
 
-```{r }
+```{r 04-eksp-przestrzenna-5 }
 set.seed(301)
-losowy <- spsample(granica, 150, type = "random")
+losowy = st_sample(granica, 150, type = "random")
 plot(losowy)
 ```
 
@@ -80,9 +81,9 @@ plot(losowy)
 
 Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu.
 
-```{r }
+```{r 04-eksp-przestrzenna-6, error = TRUE}
 set.seed(125)
-strat <- spsample(granica, 150, type = "stratified")
+strat = st_sample(granica, 150, type = "stratified")
 plot(strat)
 ```
 
@@ -90,9 +91,9 @@ plot(strat)
 
 W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbowane niż inne.
 
-```{r }
+```{r 04-eksp-przestrzenna-7, error = TRUE}
 set.seed(425)
-pref <- spsample(granica, 150, type = "clustered",
+pref = st_sample(granica, 150, type = "clustered",
                  nclusters = 30)
 plot(pref)
 ```
@@ -103,10 +104,11 @@ Dane lokalnie odstające oznaczają nietypowe przestrzennie wartości danej cech
 Inaczej mówiąc, może to być niska wartość otoczona wysokimi wartościami lub też wysoka wartość otoczona niskimi wartościami.
 Dane lokalnie ostające mogą oznaczać zarówno błąd w danych albo wpływ innego czynnika na analizowaną cechę. 
 Przyjrzenie się wartościom analizowanej cechy można wykonać z użyciem funkcji `plot()`. 
-Na poniższym przykładzie wyświetlona jest zmienna `temp` oznaczająca średnią temperaturę dobową.
+Na poniższym przykładzie wyświetlona jest zmienna `temp` oznaczająca średnią temperaturę dobową (rycina \@ref(fig:04-eksp-przestrzenna-8)).
 
-```{r }
-spplot(punkty, "temp", sp.layout = granica)
+```{r 04-eksp-przestrzenna-8, fig.cap = "Wizualizacja zmiennej temp pozwalająca na wyszukanie wartości lokalnie odstających."}
+plot(punkty["temp"], reset = FALSE)
+plot(st_geometry(granica), add = TRUE)
 ```
 
 Dodatkowo można wykorzystać pakiet **mapview** do interaktywnego określania wartości oraz numeru punktu (numer wiersza w tabeli atrybutów).
@@ -151,30 +153,30 @@ mapview(punkty["temp"])
 
 <!-- ```{r rozkom01} -->
 <!-- data(punkty_pref) -->
-<!-- punkty_pref$id <- 1:nrow(punkty_pref) -->
+<!-- punkty_pref$id = 1:nrow(punkty_pref) -->
 <!-- spplot(punkty_pref, "id", colorkey = TRUE) -->
 
 <!-- data(granica) -->
-<!-- siatka_n <- raster(extent(gBuffer(granica, width = 500))) -->
-<!-- res(siatka_n) <- c(1000, 1000) -->
-<!-- siatka_n[] <- 0 -->
-<!-- proj4string(siatka_n) <- CRS(proj4string(punkty_pref)) -->
-<!-- siatka_n <- as(siatka_n, "SpatialPolygonsDataFrame") -->
-<!-- siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ] -->
+<!-- siatka_n = raster(extent(gBuffer(granica, width = 500))) -->
+<!-- res(siatka_n) = c(1000, 1000) -->
+<!-- siatka_n[] = 0 -->
+<!-- proj4string(siatka_n) = CRS(proj4string(punkty_pref)) -->
+<!-- siatka_n = as(siatka_n, "SpatialPolygonsDataFrame") -->
+<!-- siatka_n = siatka_n[!is.na(siatka_n@data$layer), ] -->
 <!-- plot(siatka_n) -->
 <!-- plot(punkty_pref, add = TRUE) -->
 
-<!-- punkty_pref$liczebnosc <- rep(0, length(punkty_pref)) -->
-<!-- siatka_nr <- aggregate(punkty_pref["liczebnosc"], by = siatka_n, FUN = length) -->
+<!-- punkty_pref$liczebnosc = rep(0, length(punkty_pref)) -->
+<!-- siatka_nr = aggregate(punkty_pref["liczebnosc"], by = siatka_n, FUN = length) -->
 <!-- spplot(siatka_nr, "liczebnosc") -->
 
-<!-- liczba <- over(punkty_pref, siatka_nr) -->
-<!-- punkty_pref$waga <- ((1 / liczba$liczebnosc) / sum(!is.na(siatka_nr$liczebnosc))) * length(punkty_pref) -->
+<!-- liczba = over(punkty_pref, siatka_nr) -->
+<!-- punkty_pref$waga = ((1 / liczba$liczebnosc) / sum(!is.na(siatka_nr$liczebnosc))) * length(punkty_pref) -->
 
 <!-- spplot(punkty_pref, "waga") -->
 
-<!-- srednia_arytmetyczna <- mean(punkty_pref$temp) -->
-<!-- srednia_wazona_c1 <- mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
+<!-- srednia_arytmetyczna = mean(punkty_pref$temp) -->
+<!-- srednia_wazona_c1 = mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
 <!-- ``` -->
 
 <!-- ### Rozgrupowanie komórkowe II | (ang. *cell declustering*) -->
@@ -197,32 +199,32 @@ mapview(punkty["temp"])
 
 <!-- ```{r rozkom02} -->
 <!-- data(punkty_pref) -->
-<!-- punkty_pref$id <- 1:nrow(punkty_pref) -->
+<!-- punkty_pref$id = 1:nrow(punkty_pref) -->
 <!-- spplot(punkty_pref, "id", colorkey = TRUE) -->
 
 <!-- data(granica) -->
-<!-- siatka_n <- raster(extent(gBuffer(granica, width = 500))) -->
-<!-- res(siatka_n) <- c(100, 100) -->
-<!-- siatka_n[] <- 0 -->
-<!-- proj4string(siatka_n) <- CRS(proj4string(punkty_pref)) -->
-<!-- siatka_n <- as(siatka_n, "SpatialPointsDataFrame") -->
-<!-- siatka_n <- siatka_n[!is.na(siatka_n@data$layer), ] -->
-<!-- gridded(siatka_n) <- TRUE -->
+<!-- siatka_n = raster(extent(gBuffer(granica, width = 500))) -->
+<!-- res(siatka_n) = c(100, 100) -->
+<!-- siatka_n[] = 0 -->
+<!-- proj4string(siatka_n) = CRS(proj4string(punkty_pref)) -->
+<!-- siatka_n = as(siatka_n, "SpatialPointsDataFrame") -->
+<!-- siatka_n = siatka_n[!is.na(siatka_n@data$layer), ] -->
+<!-- gridded(siatka_n) = TRUE -->
 <!-- plot(siatka_n, border = TRUE) -->
 <!-- ``` -->
 
 <!-- ```{r rozkom02b} -->
-<!-- out <- krige(id~1, punkty_pref, siatka_n, nmax = 1) -->
+<!-- out = krige(id~1, punkty_pref, siatka_n, nmax = 1) -->
 <!-- spplot(out, "var1.pred") -->
-<!-- df <- as.data.frame(table(out[[1]])) -->
-<!-- df$waga <- df$Freq / sum(df$Freq) -->
-<!-- punkty_pref <- sp::merge(punkty_pref, df, by.x = "id", by.y = "Var1") -->
+<!-- df = as.data.frame(table(out[[1]])) -->
+<!-- df$waga = df$Freq / sum(df$Freq) -->
+<!-- punkty_pref = sp::merge(punkty_pref, df, by.x = "id", by.y = "Var1") -->
 <!-- summary(punkty_pref$waga) -->
 <!-- spplot(out, "var1.pred", sp.layout = list("sp.points", punkty_pref)) -->
 <!-- # spplot(punkty_pref, "waga") -->
 
-<!-- srednia_arytmetyczna <- mean(punkty_pref$temp) -->
-<!-- srednia_wazona_c2 <- sum(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
+<!-- srednia_arytmetyczna = mean(punkty_pref$temp) -->
+<!-- srednia_wazona_c2 = sum(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
 <!-- ``` -->
 
 <!-- ### Rozgrupowanie poligonowe | (ang. *polygon declustering*) -->
@@ -240,44 +242,44 @@ mapview(punkty["temp"])
 
 <!-- ```{r rozpoly} -->
 <!-- data(punkty_pref) -->
-<!-- punkty_pref$id <- 1:nrow(punkty_pref) -->
+<!-- punkty_pref$id = 1:nrow(punkty_pref) -->
 <!-- spplot(punkty_pref, "id", colorkey = TRUE) -->
 
-<!-- v <- voronoi(punkty_pref) -->
+<!-- v = voronoi(punkty_pref) -->
 <!-- plot(punkty_pref, cex = 0.2, col = "red") -->
 <!-- plot(v, add = TRUE) -->
 
-<!-- v$pow <- area(v) -->
-<!-- v$waga <- v$pow / sum(v$pow) * length(punkty_pref) -->
+<!-- v$pow = area(v) -->
+<!-- v$waga = v$pow / sum(v$pow) * length(punkty_pref) -->
 
-<!-- punkty_pref <- sp::merge(punkty_pref, v[c("id", "waga")], by = "id") -->
+<!-- punkty_pref = sp::merge(punkty_pref, v[c("id", "waga")], by = "id") -->
 <!-- spplot(punkty_pref, "waga") -->
 
-<!-- srednia_arytmetyczna <- mean(punkty_pref$temp, na.rm = TRUE) -->
-<!-- srednia_wazona_p <- mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
+<!-- srednia_arytmetyczna = mean(punkty_pref$temp, na.rm = TRUE) -->
+<!-- srednia_wazona_p = mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
 <!-- ``` -->
 
 <!-- ```{r old_with_intersect, echo=FALSE, eval=FALSE} -->
 <!-- data(punkty_pref) -->
-<!-- punkty_pref$id <- 1:nrow(punkty_pref) -->
+<!-- punkty_pref$id = 1:nrow(punkty_pref) -->
 <!-- spplot(punkty_pref, "id", colorkey = TRUE) -->
 
-<!-- v <- voronoi(punkty_pref) -->
+<!-- v = voronoi(punkty_pref) -->
 <!-- plot(punkty_pref, cex = 0.2, col = "red") -->
 <!-- plot(v, add = TRUE) -->
 
-<!-- v_intersect <- intersect(granica, v) -->
+<!-- v_intersect = intersect(granica, v) -->
 <!-- plot(punkty_pref, cex = 0.2, col = "red") -->
 <!-- plot(v_intersect, add = TRUE) -->
 
-<!-- v_intersect$pow <- area(v_intersect) -->
-<!-- v_intersect$waga <- v_intersect$pow / sum(v_intersect$pow) * length(punkty_pref) -->
+<!-- v_intersect$pow = area(v_intersect) -->
+<!-- v_intersect$waga = v_intersect$pow / sum(v_intersect$pow) * length(punkty_pref) -->
 
-<!-- punkty_pref <- merge(punkty_pref, v_intersect[c("id", "waga")], by = "id") -->
+<!-- punkty_pref = merge(punkty_pref, v_intersect[c("id", "waga")], by = "id") -->
 <!-- spplot(punkty_pref, "waga") -->
 
-<!-- srednia_arytmetyczna <- mean(punkty_pref$temp, na.rm = TRUE) -->
-<!-- srednia_wazona_p <- mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
+<!-- srednia_arytmetyczna = mean(punkty_pref$temp, na.rm = TRUE) -->
+<!-- srednia_wazona_p = mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
 <!-- ``` -->
 
 
@@ -288,9 +290,9 @@ mapview(punkty["temp"])
 <!-- Rozgrupowanie komórkowe II oraz rozgrupowanie poligonowe były w tym przypadku mniej dokładne, wyraźnie zawyżając wartości temperatury.  -->
 
 <!-- ```{r tab_dec_1, echo=FALSE} -->
-<!-- srednia_arytmetyczna_pop <- 15.5912781 -->
-<!-- df <- data.frame(sa = c(srednia_arytmetyczna_pop, srednia_arytmetyczna, srednia_wazona_c1, srednia_wazona_c2, srednia_wazona_p)) -->
-<!-- rownames(df) <- c("Populacja", "Próba", "Rozgrupowanie komórkowe I", "Rozgrupowanie komórkowe II", "Rozgrupowanie poligonowe") -->
+<!-- srednia_arytmetyczna_pop = 15.5912781 -->
+<!-- df = data.frame(sa = c(srednia_arytmetyczna_pop, srednia_arytmetyczna, srednia_wazona_c1, srednia_wazona_c2, srednia_wazona_p)) -->
+<!-- rownames(df) = c("Populacja", "Próba", "Rozgrupowanie komórkowe I", "Rozgrupowanie komórkowe II", "Rozgrupowanie poligonowe") -->
 <!-- knitr::kable(df, col.names = "Średnia arytmetyczna", row.names = TRUE, digits = 4) -->
 <!-- ``` -->
 
@@ -306,3 +308,4 @@ mapview(punkty["temp"])
 
 1. Określ i opisz typ próbkowania danych `punkty`.
 2. Wykonaj mapę pokazującą przestrzenny rozkład wartości NDVI w zbiorze `punkty`. (Dodatkowo: spróbuj użyć do tego pakietu **tmap** - `install.packages("tmap")`).
+m

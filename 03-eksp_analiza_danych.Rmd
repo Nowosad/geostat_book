@@ -3,8 +3,9 @@
 
 Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
 
-```{r, message=FALSE, warning=FALSE}
-library(sp)
+```{r 03-eksp-analiza-danych-1, message=FALSE, warning=FALSE}
+library(sf)
+library(stars)
 library(ggplot2)
 library(geostatbook)
 data(punkty)
@@ -28,22 +29,16 @@ Nie istnieje jedyna, optymalna ścieżka eksploracji danych.
 Proces ten różni się w zależności od posiadanego zbioru danych, jak i od postawionego pytania.
 Warto jednak, aby jednym z pierwszych kroków było przyjrzenie się danym wejściowym. 
 Pozwala na to, między innymi, funkcja `str()`. 
-Przykładowo, dla obiektu klasy `SpatialPointsDataFrame` wyświetla ona szereg ważnych informacji. 
-Można tam odczytać, że obiekt `punkty` zawiera pięć elementów (ang. *slots*) rozpoczynających się od symbolu `@`.
-Pierwszy z nich, `@data` jest obiektem klasy `data.frame` zawierającym informacje o kolejnych punktach w tym zbiorze.
-Element `@coords.nrs` określa numer kolumn zawierających współrzędne w oryginalnym zbiorze danych.
-W poniższym przypadku żadna kolumna nie ma takich informacji.
-Kolejny element, `@coords` definiuje współrzędne kolejnych punktów w obiekcie `punkty`.
-Ostatnie dwa elementy, `@bbox` i `@proj4string` określają kolejno zasięg przestrzenny danych oraz definicję ich układu współrzędnych.
+Przykładowo, dla obiektu klasy `sf` wyświetla ona szereg ważnych informacji. 
 
-```{r}
+```{r 03-eksp-analiza-danych-2}
 str(punkty)
 ```
 
 Każdą ze zmiennych można obejrzeć oddzielnie, poprzez połączenie nazwy obiekty, znaku `$`, oraz nazwy elementu.
-Przykładowo `punkty$temp` pozwala na obejrzenie wartości zmiennej `temp` z tabeli atrybutów.
+Przykładowo `punkty$temp` pozwala na obejrzenie wartości wybranej zmiennej z tabeli atrybutów.
 
-```{r}
+```{r 03-eksp-analiza-danych-3}
 str(punkty$temp)
 ```
 
@@ -54,7 +49,7 @@ str(punkty$temp)
 Podstawową funkcją w R służącą wyliczaniu podstawowych statystyk jest `summary()`. 
 Dla zmiennych numerycznych wyświetla ona wartość minimalną, pierwszy kwartyl, medianę, średnią, trzeci kwartyl, oraz wartość maksymalną. 
 
-```{r }
+```{r 03-eksp-analiza-danych-4 }
 summary(punkty)
 ```
 
@@ -62,7 +57,7 @@ summary(punkty)
 
 Do określenia wartości przeciętnej zmiennych najczęściej stosuje się medianę i średnią.
 
-```{r }
+```{r 03-eksp-analiza-danych-5 }
 median(punkty$temp, na.rm = TRUE)
 mean(punkty$temp, na.rm = TRUE)
 ```
@@ -81,7 +76,7 @@ Po co używać średniej?
 
 Minimalna i maksymalna wartość zmiennej służy do określenia ekstremów w zbiorze danych, jak i sprawdzenia zakresu wartości.
 
-```{r }
+```{r 03-eksp-analiza-danych-6 }
 min(punkty$temp, na.rm = TRUE)
 max(punkty$temp, na.rm = TRUE)
 ```
@@ -90,17 +85,17 @@ max(punkty$temp, na.rm = TRUE)
 
 Dodatkowo, często używaną statystyką jest odchylenie standardowe.
 Wartość ta określa w jak mocno wartości zmiennej odstają od średniej.
-Dla rozkładu normalnego ta wartość ma znane własności:
+Dla rozkładu normalnego ta wartość ma znane własności (rycina \@ref(fig:03-eksp-analiza-danych-7)):
 
 - 68% obserwacji mieści się w granicach jednego odchylenia standardowego od średniej
 - 95% obserwacji mieści się w granicach dwóch odchyleń standardowych od średniej
 - 99,7% obserwacji mieści się w granicach trzech odchyleń standardowych od średniej
 
-```{r, echo=FALSE}
+```{r 03-eksp-analiza-danych-7, echo=FALSE, fig.cap = "Rozrzut wartości w rozkładzie normalnym w zależności od odchylenia standardowego."}
 knitr::include_graphics("figs/normal_distribution.png")
 ```
 
-```{r }
+```{r 03-eksp-analiza-danych-8 }
 sd(punkty$temp, na.rm = TRUE)
 ```
 
@@ -108,47 +103,45 @@ sd(punkty$temp, na.rm = TRUE)
 
 ### Histogram
 
-Histogram należy do typów wykresów najczęściej używanych w eksploracyjnej analizie danych.
+Histogram należy do typów wykresów najczęściej używanych w eksploracyjnej analizie danych (rycina \@ref(fig:03-eksp-analiza-danych-9)).
 
-```{r }
-ggplot(punkty@data, aes(temp)) + geom_histogram()
+```{r 03-eksp-analiza-danych-9, fig.cap = "Histogram reprezentujący wartości zmiennej temp z obiektu punkty."}
+ggplot(punkty, aes(temp)) + geom_histogram()
 ```
 
-- Stworzony przez Karla Pearsona
-- Jest graficzną reprezentacją rozkładu danych
-- Wartości danych są łączone w przedziały (na osi poziomej) a na osi pionowej jest ukazana liczba punktów (obserwacji) w każdym przedziale
-- Różny dobór przedziałów może dawać inną informację
-- W pakiecie **ggplot2**, domyślnie przedział jest ustalany poprzez podzielenie zakresu wartości przez 30
+Został on stworzony przez Karla Pearsona i jest graficzną reprezentacją rozkładu danych.
+Wartości danych są łączone w przedziały (na osi poziomej) a na osi pionowej jest ukazana liczba punktów (obserwacji) w każdym przedziale.
+Co ważne, różny dobór przedziałów może dawać inną informację - w pakiecie **ggplot2**, domyślnie przedział jest ustalany poprzez podzielenie zakresu wartości przez 30.
 
 ### Estymator jądrowy gęstości (ang. *kernel density estimation*)
 
 Podobną funkcję do histogramu spełnia estymator jądrowy gęstości.
-Przypomina on wygładzony wykres histogramu i również służy graficznej reprezentacji rozkładu danych.
+Przypomina on wygładzony wykres histogramu i również służy graficznej reprezentacji rozkładu danych (rycina \@ref(fig:03-eksp-analiza-danych-10)).
 
-```{r }
-ggplot(punkty@data, aes(temp)) + geom_density()
+```{r 03-eksp-analiza-danych-10, fig.cap = "Rozkład wartości zmiennej temp z obiektu punkty."}
+ggplot(punkty, aes(temp)) + geom_density()
 ```
 
 ### Wykres kwantyl-kwantyl (ang.*quantile-quantile*)
 
-Wykres kwantyl-kwantyl ułatwia interpretację rozkładu danych. 
+Wykres kwantyl-kwantyl ułatwia interpretację rozkładu danych (rycina \@ref(fig:03-eksp-analiza-danych-11)).
 
-```{r }
-ggplot(punkty@data, aes(sample = temp)) + geom_qq()
+```{r 03-eksp-analiza-danych-11, fig.cap = "Wykres kwantyl-kwantyl wartości zmiennej temp z obiektu punkty."}
+ggplot(punkty, aes(sample = temp)) + geom_qq()
 ```
 
-Na poniższej rycinie można zobaczyć przykłady najczęściej spotykanych cech rozkładu danych w wykresach kwantyl-kwantyl.
+Na poniższej rycinie można zobaczyć przykłady najczęściej spotykanych cech rozkładu danych w wykresach kwantyl-kwantyl (rycina \@ref(fig:03-eksp-analiza-danych-12)).
 
-```{r, echo=FALSE}
+```{r 03-eksp-analiza-danych-12, echo=FALSE, fig.cap = "Interpretacja rozkładu danych w zależności od wyglądu wykresu kwantyl-kwantyl."}
 knitr::include_graphics("figs/qq_plot_explained.png")
 ```
 
 ### Dystrybuanta (CDF)
 
-Dystrybuanta (ang. *cumulative distribution function* - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości.
+Dystrybuanta (ang. *cumulative distribution function* - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości (rycina \@ref(fig:03-eksp-analiza-danych-13)).
 
-```{r }
-ggplot(punkty@data, aes(temp)) + stat_ecdf()
+```{r 03-eksp-analiza-danych-13, fig.cap = "Dystrybuanta zmiennej temp z obiektu punkty."}
+ggplot(punkty, aes(temp)) + stat_ecdf()
 ```
 
 ## Porównanie zmiennych
@@ -166,7 +159,7 @@ Wielkość samej kowariancji uzależniona jest od przyjętej skali zmiennej (jed
 Inne wyniku uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wysokości terenu w metrach i temperatury w stopniach Celsjusza a inne dla wysokości terenu w metrach i temperatury w stopniach Fahrenheita. 
 Do wyliczania kowariancji w R służy funkcja `cov()`. 
 
-```{r }
+```{r 03-eksp-analiza-danych-14 }
 cov(punkty$temp, punkty$ndvi)
 ```
 
@@ -174,21 +167,23 @@ cov(punkty$temp, punkty$ndvi)
 
 Współczynnik korelacji to unormowana miara zależności pomiędzy dwiema zmiennymi, przyjmująca wartości od -1 do 1. 
 Ten współczynnik jest uzyskiwany poprzez podzielenie wartości kowariancji przez odchylenie standardowe wyników.
-Z racji unormowania nie jest ona uzależniona od jednostki. Korelację można wyliczyć dzięki funkcji `cor()`.
+Z racji unormowania nie jest ona uzależniona od jednostki.
+Korelację można wyliczyć dzięki funkcji `cor()` (rycina \@ref(fig:03-eksp-analiza-danych-15a)).
+Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego obiektu zawierającego zmienne numeryczne.
 
-```{r }
+```{r 03-eksp-analiza-danych-15 }
 cor(punkty$temp, punkty$ndvi)
 ggplot(punkty@data, aes(temp, ndvi)) + geom_point()
 ```
 
-<!-- ```{r } -->
-<!-- cor(punkty[c(1, 3:5)]) -->
-<!-- ``` -->
+```{r 03-eksp-analiza-danych-15a, fig.cap = "Wykres rozrzutu reprezentujący relację pomiędzy zmienną temp i ndvi z obiektu punkty."}
+ggplot(punkty, aes(temp, ndvi)) + geom_point()
+```
 
 Dodatkowo funkcja `cor.test()` służy do testowania istotności korelacji.
 Za pomocą argumentu `method` można również wybrać jedną z trzech dostępnych miar korelacji.
 
-```{r }
+```{r 03-eksp-analiza-danych-16 }
 cor.test(punkty$temp, punkty$ndvi)
 ```
 
@@ -201,14 +196,14 @@ cor.test(punkty$temp, punkty$ndvi)
 
 ### Wykres pudełkowy
 
-Wykres pudełkowy obrazuje pięć podstawowych statystyk opisowych oraz wartości odstające. 
+Wykres pudełkowy obrazuje pięć podstawowych statystyk opisowych oraz wartości odstające (rycina \@ref(fig:03-eksp-analiza-danych-17)).
 Pudełko to zakres międzykwartylowy (IQR), a linie oznaczają najbardziej ekstremalne wartości, ale nie odstające.
 Górna z nich to 1,5\*IQR ponad krawędź pudełka, dolna to 1,5\*IQR poniżej wartości dolnej krawędzi pudełka. 
 Linia środkowa to mediana.  
 
-```{r }
-punkty$clc <- as.factor(punkty$clc)
-ggplot(punkty@data, aes(x = clc, y = temp)) + geom_boxplot()
+```{r 03-eksp-analiza-danych-17, fig.cap = "Wykres pudełkowy pokazujący relację pomiędzy zmienną clc i temp z obiektu punkty."}
+punkty$clc = as.factor(punkty$clc)
+ggplot(punkty, aes(x = clc, y = temp)) + geom_boxplot()
 ```
 
 ### Testowanie istotności różnić średniej pomiędzy grupami
@@ -219,21 +214,21 @@ ANOVA nie pozwala na stwierdzenie między którymi grupami występują różnice
 Aby to stwierdzić konieczne jest wykonanie porównań wielokrotnych (*post-hoc*). 
 ANOVĘ można wykonać za pomocą funkcji `aov()` definiując zmienną zależną oraz zmienną grupującą oraz zbiór danych.
 
-```{r }
-punkty$clc <- as.factor(punkty$clc)
-aov_test <- aov(temp~clc, data = punkty)
+```{r 03-eksp-analiza-danych-18 }
+punkty$clc = as.factor(punkty$clc)
+aov_test = aov(temp~clc, data = punkty)
 summary(aov_test)
 ```
 
 Do wykonania porównań wielokrotnych służy funkcja `TukeyHSD()`.
-Dodatkowo wyniki można wizualizować za pomocą funkcji `plot()`.
+Dodatkowo wyniki można wizualizować za pomocą funkcji `plot()` (rycina \@ref(fig:03-eksp-analiza-danych-20)).
 
-```{r, echo=FALSE, message=FALSE, include=FALSE}
+```{r 03-eksp-analiza-danych-19, echo=FALSE, message=FALSE, include=FALSE}
 dev.off()
 ```
 
-```{r }
-tukey <- TukeyHSD(aov_test, "clc")
+```{r 03-eksp-analiza-danych-20, fig.cap = "Graficzna reprezentacja wyniku porównań wielokrotnych."}
+tukey = TukeyHSD(aov_test, "clc")
 plot(tukey, las = 1)
 ```
 
@@ -254,30 +249,36 @@ Centrowanie i skalowanie (standaryzacja):
 
 ### Centrowanie
 
-```{r, eval=FALSE}
-ggplot(punkty@data, aes(temp)) + geom_density()
-punkty$temp_center <- punkty$temp - mean(punkty$temp)
-ggplot(punkty@data, aes(temp_center)) + geom_density()
+<!-- toDo -->
+(rycina \@ref(fig:03-eksp-analiza-danych-22))
+
+```{r 03-eksp-analiza-danych-21, eval=FALSE}
+ggplot(punkty, aes(temp)) + geom_density()
+punkty$temp_center = punkty$temp - mean(punkty$temp)
+ggplot(punkty, aes(temp_center)) + geom_density()
 ```
 
-```{r, eval=TRUE, echo=FALSE}
-p1 <- ggplot(punkty@data, aes(temp)) + geom_density()
-punkty$temp_center <- punkty$temp - mean(punkty$temp)
-p2 <- ggplot(punkty@data, aes(temp_center)) + geom_density()
+```{r 03-eksp-analiza-danych-22, eval=TRUE, echo=FALSE, fig.cap = "Porównania wartości zmiennej temp przed i po centrowaniu."}
+p1 = ggplot(punkty, aes(temp)) + geom_density()
+punkty$temp_center = punkty$temp - mean(punkty$temp)
+p2 = ggplot(punkty, aes(temp_center)) + geom_density()
 gridExtra::grid.arrange(p1, p2, ncol = 1)
 ```
 
 ### Skalowanie
 
-```{r, eval=FALSE}
-ggplot(punkty@data, aes(temp)) + geom_density()
-punkty$temp_scale <- punkty$temp / sd(punkty$temp)
-ggplot(punkty@data, aes(temp_scale)) + geom_density()
+<!-- toDo -->
+(rycina \@ref(fig:03-eksp-analiza-danych-24))
+
+```{r 03-eksp-analiza-danych-23, eval=FALSE}
+ggplot(punkty, aes(temp)) + geom_density()
+punkty$temp_scale = punkty$temp / sd(punkty$temp)
+ggplot(punkty, aes(temp_scale)) + geom_density()
 ```
 
-```{r, eval=TRUE, echo=FALSE}
-punkty$temp_scale <- punkty$temp / sd(punkty$temp)
-p3 <- ggplot(punkty@data, aes(temp_scale)) + geom_density()
+```{r 03-eksp-analiza-danych-24, eval=TRUE, echo=FALSE, fig.cap = "Porównania wartości zmiennej temp przed i po skalowaniu."}
+punkty$temp_scale = punkty$temp / sd(punkty$temp)
+p3 = ggplot(punkty, aes(temp_scale)) + geom_density()
 gridExtra::grid.arrange(p1, p3, ncol = 1)
 ```
 
@@ -285,15 +286,18 @@ gridExtra::grid.arrange(p1, p3, ncol = 1)
 
 Do standaryzacji (centrowanie i skalowanie) służy funkcja `scale()`.
 
-```{r, eval=FALSE}
-ggplot(punkty@data, aes(temp)) + geom_density()
-punkty$temp_standard <- as.numeric(scale(punkty$temp))
-ggplot(punkty@data, aes(temp_standard)) + geom_density()
+<!-- toDo -->
+(rycina \@ref(fig:03-eksp-analiza-danych-26))
+
+```{r 03-eksp-analiza-danych-25, eval=FALSE}
+ggplot(punkty, aes(temp)) + geom_density()
+punkty$temp_standard = as.numeric(scale(punkty$temp))
+ggplot(punkty, aes(temp_standard)) + geom_density()
 ```
 
-```{r, eval=TRUE, echo=FALSE}
-punkty$temp_standard <- as.numeric(scale(punkty$temp))
-p4 <- ggplot(punkty@data, aes(temp_standard)) + geom_density()
+```{r 03-eksp-analiza-danych-26, eval=TRUE, echo=FALSE, fig.cap = "Porównania wartości zmiennej temp przed i po standaryzacji."}
+punkty$temp_standard = as.numeric(scale(punkty$temp))
+p4 = ggplot(punkty, aes(temp_standard)) + geom_density()
 gridExtra::grid.arrange(p1, p4, ncol = 1)
 ```
 
@@ -310,19 +314,22 @@ Redukcja skośności:
 Logarytmizacja w R może odbyć się za pomocą funkcji `log()`. 
 Transformację logarytmiczną można odwrócić używając funkcji `exp()`.
 
-```{r, eval = FALSE}
-ggplot(punkty@data, aes(temp)) + geom_density()
-punkty$log_tpz <- log(punkty$temp)
-ggplot(punkty@data, aes(log_tpz)) + geom_density()
-punkty$exp_tpz <- exp(punkty$log_tpz)
-ggplot(punkty@data, aes(exp_tpz)) + geom_density()
+<!-- toDo -->
+(rycina \@ref(fig:03-eksp-analiza-danych-28))
+
+```{r 03-eksp-analiza-danych-27, eval = FALSE}
+ggplot(punkty, aes(temp)) + geom_density()
+punkty$log_tpz = log(punkty$temp)
+ggplot(punkty, aes(log_tpz)) + geom_density()
+punkty$exp_tpz = exp(punkty$log_tpz)
+ggplot(punkty, aes(exp_tpz)) + geom_density()
 ```
 
-```{r, eval=TRUE, echo=FALSE}
-punkty$log_tpz <- log(punkty$temp)
-p5 <- ggplot(punkty@data, aes(log_tpz)) + geom_density()
-punkty$exp_tpz <- exp(punkty$log_tpz)
-p6 <- ggplot(punkty@data, aes(exp_tpz)) + geom_density()
+```{r 03-eksp-analiza-danych-28, eval=TRUE, echo=FALSE, fig.cap = "Porównania wartości zmiennej temp przed i po transformacji logaritmicznej."}
+punkty$log_tpz = log(punkty$temp)
+p5 = ggplot(punkty, aes(log_tpz)) + geom_density()
+punkty$exp_tpz = exp(punkty$log_tpz)
+p6 = ggplot(punkty, aes(exp_tpz)) + geom_density()
 gridExtra::grid.arrange(p1, p5, p6, ncol = 1)
 ```
 
@@ -331,33 +338,36 @@ gridExtra::grid.arrange(p1, p5, p6, ncol = 1)
 Pierwiastkowanie w R może odbyć się za pomocą funkcji `sqrt()`. 
 Odwrócenie tej transformacji odbywa się poprzez podniesienie wartości do potęgi (`^2`).
 
-```{r, eval=FALSE}
-ggplot(punkty@data, aes(temp)) + geom_density()
-punkty$sqrt_tpz <- sqrt(punkty$temp)
-ggplot(punkty@data, aes(sqrt_tpz)) + geom_density()
-punkty$pow_tpz <- punkty$sqrt_tpz ^ 2
-ggplot(punkty@data, aes(pow_tpz)) + geom_density()
+<!-- toDo -->
+(rycina \@ref(fig:03-eksp-analiza-danych-30))
+
+```{r 03-eksp-analiza-danych-29, eval=FALSE}
+ggplot(punkty, aes(temp)) + geom_density()
+punkty$sqrt_tpz = sqrt(punkty$temp)
+ggplot(punkty, aes(sqrt_tpz)) + geom_density()
+punkty$pow_tpz = punkty$sqrt_tpz ^ 2
+ggplot(punkty, aes(pow_tpz)) + geom_density()
 ```
 
-```{r, eval=TRUE, echo=FALSE}
-punkty$sqrt_tpz <- sqrt(punkty$temp)
-p7 <- ggplot(punkty@data, aes(sqrt_tpz)) + geom_density()
-punkty$pow_tpz <- punkty$sqrt_tpz ^ 2
-p8 <- ggplot(punkty@data, aes(pow_tpz)) + geom_density()
+```{r 03-eksp-analiza-danych-30, eval=TRUE, echo=FALSE, fig.cap = "Porównania wartości zmiennej temp przed i po pierwiastkowaniu."}
+punkty$sqrt_tpz = sqrt(punkty$temp)
+p7 = ggplot(punkty, aes(sqrt_tpz)) + geom_density()
+punkty$pow_tpz = punkty$sqrt_tpz ^ 2
+p8 = ggplot(punkty, aes(pow_tpz)) + geom_density()
 gridExtra::grid.arrange(p1, p7, p8, ncol = 1)
 ```
 
 <!--
 Transformacja danych | Rodzina transformacji Boxa Coxa
 
-```{r , eval=FALSE}
-ggplot(punkty@data, aes(temp)) + geom_density()
-transformacja <- BoxCoxTrans(punkty$temp)
+```{r 03-eksp-analiza-danych-31, eval=FALSE}
+ggplot(punkty, aes(temp)) + geom_density()
+transformacja = BoxCoxTrans(punkty$temp)
 transformacja
-punkty$bc_tpz <- predict(transformacja, punkty$temp)
+punkty$bc_tpz = predict(transformacja, punkty$temp)
 ggplot(punkty@data, aes(bc_tpz)) + geom_density()
-invBoxCox <- function(x, lambda) if (lambda == 0) exp(x) else (lambda * x + 1) ^ (1 / lambda)
-punkty$bc_tpz_inv <- invBoxCox(punkty$bc_tpz, lambda = 0.2)
+invBoxCox = function(x, lambda) if (lambda == 0) exp(x) else (lambda * x + 1) ^ (1 / lambda)
+punkty$bc_tpz_inv = invBoxCox(punkty$bc_tpz, lambda = 0.2)
 ggplot(punkty@data, aes(bc_tpz_inv)) + geom_density()
 ```
 
@@ -368,7 +378,7 @@ ggplot(punkty@data, aes(bc_tpz_inv)) + geom_density()
 Przyjrzyj się danym z obiektu `punkty_pref`.
 Możesz go wczytać używając poniższego kodu:
 
-```{r}
+```{r 03-eksp-analiza-danych-32}
 data(punkty_pref)
 ```
 
@@ -384,4 +394,4 @@ Czy jest ona istotna statystycznie?
 Czy istnieje istotna statystycznie różnica w wartościach `ndvi` względem klas pokrycia terenu?
 7. Wypróbuj różne metody transformacji danych w celu redukcji skośności rozkładu zmiennej `ndvi`.
 Która metoda działa w tym przypadku najlepiej?
-8. Stwórz powtarzalny przykład (więcej informacji w appendiksie \@ref(reprex)) używając pakiet **reprex** w oparciu o kod stworzony do rozwiązania poprzedniego zadania.
+8. Stwórz powtarzalny przykład (więcej informacji w appendiksie \@ref(reprex)) używając pakietu **reprex** w oparciu o kod stworzony do rozwiązania poprzedniego zadania.

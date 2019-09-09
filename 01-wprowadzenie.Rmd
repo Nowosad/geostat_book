@@ -5,76 +5,83 @@
 > Geostatystyka to gałąź statystyki skupiająca się na przestrzennych lub czasoprzestrzennych zbiorach danych
 
 Geostatystyka jest stosowana obecnie w wielu dyscyplinach, jakich jak geologia naftowa, oceanografia, geochemia, logistyka, leśnictwo, gleboznawstwo, hydrologia, meteorologia, czy epidemiologia.
+<!--refs-->
 
 Geostatystyczna analiza danych może przyjmować różną postać w zależności od postawionego celu analizy.
-Poniższa rycina przestawia uproszczoną ścieżkę postępowania geostatystycznego.
+Rycina \@ref(fig:01-wprowadzenie-1) przestawia uproszczoną ścieżkę postępowania geostatystycznego.
 
-```{r, echo=FALSE, fig.width=8}
+```{r 01-wprowadzenie-1, echo=FALSE, fig.width=8, fig.cap = "Uproszczona ścieżka postępowania geostatystycznego."}
 knitr::include_graphics("figs/diag.png")
 ```
 
-Punktem wyjścia analizy geostatystycznej jest posiadanie danych przestrzennych opisujących badane zjawisko, np. w **postaci punktowej**:
+Punktem wyjścia analizy geostatystycznej jest posiadanie danych przestrzennych opisujących badane zjawisko, np. w **postaci punktowej** (rycina \@ref(fig:01-wprowadzenie-3)).
 
-```{r, echo=FALSE}
-library(sp)
+```{r 01-wprowadzenie-2, echo=FALSE}
+library(sf)
+library(stars)
 library(geostatbook)
 library(gstat)
-data("punkty")
-data("granica")
-data("siatka")
-granica_plot <- list("sp.polygons", granica)
-spplot(punkty["temp"], sp.layout = list(granica_plot))
+data(punkty)
+data(granica)
+data(siatka)
+paleta = hcl.colors(40, palette = "ag_Sunset")
+```
+
+```{r 01-wprowadzenie-3, echo=FALSE, fig.cap = "Przykładowe dane reprezentujące pomiary punktowe zmiennej numerycznej."}
+plot(punkty["temp"], reset = FALSE, main = NA)
+plot(st_geometry(granica), add = TRUE)
 ```
 
 Na ich podstawie chcemy zrozumieć zmienność przestrzenną analizowanej cechy.
-Do tego może nam posłużyć wykres nazywany **semiwariogramem**:
+Do tego może nam posłużyć wykres nazywany **semiwariogramem** (rycina \@ref(fig:01-wprowadzenie-4)).
 
-```{r, echo=FALSE}
-var <- variogram(temp~1, data = punkty)
+```{r 01-wprowadzenie-4, echo=FALSE, fig.cap = "Wykres, nazywany semiwariogramem, reprezentujący niepodobieństwo wartości wraz z odległością."}
+var = variogram(temp~1, data = punkty)
 plot(var)
 ```
 
 Opisuje on przestrzenną zmienność badanej cechy i za jego pomocą możemy stwierdzić jak szybko to zjawisko zmienia się w przestrzeni.
-Dodatkowo za pomocą **mapy semiwariogramu** możliwe jest stwierdzenie czy istnieją jakieś kierunki w których ta cecha zmienia się zmienia bardziej dynamicznie, a w których ta zmiana jest wolniejsza:
+Dodatkowo za pomocą **mapy semiwariogramu** (rycina \@ref(fig:01-wprowadzenie-5)) możliwe jest stwierdzenie czy istnieją jakieś kierunki w których ta cecha zmienia się zmienia bardziej dynamicznie, a w których ta zmiana jest wolniejsza.
 
-```{r, echo=FALSE}
-var_map <- variogram(temp~1, data = punkty, 
+```{r 01-wprowadzenie-5, echo=FALSE, fig.cap = "Mapa semiwariogramu reprezentująca niepodobieństwo wartości wraz z odległością i kierunkiem."}
+var_map = variogram(temp~1, data = punkty, 
                        cutoff = 4000, width = 400, map = TRUE)
-plot(var_map, threshold = 30, col.regions = topo.colors(n = 40))
+plot(var_map, threshold = 30,
+     col.regions = hcl.colors(40, palette = "ag_GrnYl", rev = TRUE)) 
 ```
 
-Następnie korzystając z wiedzy uzyskanej z semiwariogramu i mapy semiwariogramu, jesteśmy w stanie stworzyć **model semiwariogramu**:
+Następnie korzystając z wiedzy uzyskanej z semiwariogramu i mapy semiwariogramu, jesteśmy w stanie stworzyć **model semiwariogramu** (rycina \@ref(fig:01-wprowadzenie-6)).
 
-```{r, echo=FALSE}
-fitted_sph <- fit.variogram(var, vgm(model = "Sph", nugget = 1))
+```{r 01-wprowadzenie-6, echo=FALSE, fig.cap = "Model reprezentowany przez ciągłą linię naniesiony na semiwariogram."}
+fitted_sph = fit.variogram(var, vgm(model = "Sph", nugget = 1))
 plot(var, model = fitted_sph)
 ```
 
 Pozwala on zarówno na lepszy opis zmienności zjawiska, jak również służy do tworzenia **estymacji** czy też **symulacji**.
-Estymacja tworzy najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji:
+Estymacja tworzy najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji (rycina \@ref(fig:01-wprowadzenie-7)).
 
-```{r, echo=FALSE, message=FALSE}
-sk <- krige(temp~1, 
+```{r 01-wprowadzenie-7, echo=FALSE, message=FALSE, fig.cap = "Estymacja (oszacowanie) wartości badanej zmiennej dla całego obszaru."}
+sk = krige(temp~1, 
             locations = punkty,
             newdata = siatka,
             model = fitted_sph,
             beta = 16, 
             debug.level = 0)
-spplot(sk, "var1.pred", main = "Estymacja")
-spplot(sk, "var1.var", main = "Wariancja estymacji")
+plot(sk["var1.pred"], main = "Estymacja",
+     col = paleta)
 ```
 
-Rolą symulacji jest natomiast generowanie równie prawdopodobne możliwości rozkładu badanej cechy:
+Rolą symulacji (rycina \@ref(fig:01-wprowadzenie-8)) jest natomiast generowanie równie prawdopodobne możliwości rozkładu badanej cechy.
 
-```{r, echo=FALSE, message=FALSE}
-sym_ok <- krige(temp~1, 
+```{r 01-wprowadzenie-8, echo=FALSE, message=FALSE, fig.cap = "Przykłady symulowanych wartości badanej zmiennej dla całego obszaru."}
+sym_ok = krige(temp~1, 
                 locations = punkty,
                 newdata = siatka, 
                 model = fitted_sph,
                 nmax = 30, 
                 nsim = 4, 
                 debug.level = 0)
-spplot(sym_ok)
+plot(sym_ok, col = paleta)
 ```
 
 Każdy z powyższych elementów geostatystycznej analizy danych zostanie rozwinięty w dalszych rozdziałach tego skryptu.
