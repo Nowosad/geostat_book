@@ -77,9 +77,9 @@ ggplot(test_sk, aes(var1.pred, true)) +
 W momencie, gdy trzeba określić jakość estymacji lub porównać wyniki pomiędzy estymacjami należy zastosować tzw. statystyki jakości estymacji. 
 Do podstawowych statystyk ocen jakości estymacji należą:
 
-- Średni błąd estymacji (MPE, ang. *mean prediction error*)
-- Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root mean square error*)
-- Współczynnik determinacji (R^2^, ang. *coefficient of determination*)
+- Średni błąd estymacji (MPE, ang. *mean prediction error*).
+- Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root mean square error*).
+- Współczynnik determinacji (R^2^, ang. *coefficient of determination*).
     
 Idealna estymacja dawałaby brak błędu oraz współczynnik determinacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. 
 Należy jednak zdawać sobie sprawę, że dane wejściowe są obarczone błędem/niepewnością, dlatego też w praktyce idealna estymacja nie jest osiągana.
@@ -155,10 +155,11 @@ Następnie wynik estymacji porównywany jest z rzeczywistymi wartościami ze zbi
 Zaletą tego podejścia jest stosowanie danych niezależnych od estymacji do oceny jakości modelu. 
 Wadą natomiast jest konieczność posiadania (relatywnie) dużego zbioru danych.
 
-Na poniższym przykładzie zbiór danych dzielony jest używając funkcji `createDataPartition()` z pakietu **caret**.
-Użycie tej funkcji powoduje stworzenie indeksu zawierającego numery wierszy dla zbioru treningowego.
-Ważną zaletą funkcji `createDataPartition()` jest to, iż  w zbiorze treningowym i testowym zachowane są podobne rozkłady wartości. W przykładzie użyto argumentu `p = 0.75`, który oznacza, że 75% danych będzie należało do zbioru treningowego, a 25% do zbioru testowego.
-Następnie korzystając ze stworzonego indeksu, budowane są dwa zbiory danych - treningowy (`train`) oraz testowy (`test`).
+Na poniższym przykładzie zbiór danych dzielony jest używając funkcji `initial_split()` z pakietu **rsample**.
+Użycie tej funkcji powoduje obiektu zawierającego wydzielony podzbiór treningowy i testowy.
+Ważną zaletą funkcji `initial_split()` jest to, iż  w zbiorze treningowym i testowym zachowane są podobne rozkłady wartości. 
+W przykładzie użyto argumentu `prop = 0.75`, który oznacza, że 75% danych będzie należało do zbioru treningowego, a 25% do zbioru testowego.
+Następnie, korzystając ze stworzonego obiektu, budowane są dwa zbiory danych - treningowy (`train`) oraz testowy (`test`).
 
 ```{r 12-ocena-8}
 set.seed(224)
@@ -230,10 +231,10 @@ W sytuacji, gdy uzyskany model jest wystarczająco dobry, możemy również uzys
 
 ```{r 12-ocena-15, fig.cap="Estymacja uzyskana dla całego obszaru."}
 test_sk = krige(temp~1,
-                 locations = train,
-                 newdata = siatka,
-                 model = fitted,
-                 beta = 16)
+                locations = train,
+                newdata = siatka,
+                model = fitted,
+                beta = 16)
 plot(test_sk["var1.pred"], col = paleta)
 ```
 
@@ -242,12 +243,12 @@ plot(test_sk["var1.pred"], col = paleta)
 W przypadku kroswalidacji te same dane wykorzystywane są do budowy modelu, estymacji, a następnie do oceny prognozy.
 Procedura kroswalidacji LOO (ang. *leave-one-out cross-validation*) składa się z poniższych kroków:
 
-1. Zbudowanie matematycznego modelu z dostępnych obserwacji
+1. Zbudowanie matematycznego modelu z dostępnych obserwacji.
 2. Dla każdej znanej obserwacji następuje:
-    - Usunięcie jej ze zbioru danych
-    - Użycie modelu do wykonania estymacji w miejscu tej obserwacji
-    - Wyliczenie reszty (ang. *residual*), czyli różnicy pomiędzy znaną wartością a estymacją
-3. Podsumowanie otrzymanych wyników
+    - Usunięcie jej ze zbioru danych.
+    - Użycie modelu do wykonania estymacji w miejscu tej obserwacji.
+    - Wyliczenie reszty (ang. *residual*), czyli różnicy pomiędzy znaną wartością a estymacją.
+3. Podsumowanie otrzymanych wyników.
     
 W pakiecie **gstat**, kroswalidacja LOO jest dostępna w funkcjach `krige.cv()` oraz `gstat.cv()`. 
 Działają one bardzo podobnie jak funkcje `krige()` oraz `gstat()`, jednak w przeciwieństwie do nich nie wymagają podania obiektu siatki.
@@ -257,14 +258,14 @@ vario = variogram(temp~1, data = punkty)
 model = vgm(model = "Sph", nugget = 0.5)
 fitted = fit.variogram(vario, model)
 cv_sk = krige.cv(temp ~ 1,
-                  locations = punkty,
-                  model = fitted,
-                  beta = 16)
+                 locations = punkty,
+                 model = fitted,
+                 beta = 16)
 summary(cv_sk)
 ```
 
 ```{r trueloovv, echo=FALSE, cache=TRUE}
-vario = variogram(temp~1, data = punkty)
+vario = variogram(temp ~ 1, data = punkty)
 model = vgm(model = "Sph", nugget = 0.5)
 fitted = fit.variogram(vario, model)
 cv_sk = krige.cv(temp ~ 1,
@@ -296,8 +297,8 @@ plot(cv_sk["residual"], breaks = c(-10, -5, -3, -1, 1, 3, 5, 10))
 
 ```{r 12-ocena-18, fig.cap="Rozkład wartości błędów estymacji uzyskanych używając krigingu prostego i kroswalidacji."}
 ggplot(cv_sk, aes(residual)) +
-    geom_histogram() + 
-    xlab("Błąd estymacji") + 
+    geom_histogram() +
+    xlab("Błąd estymacji") +
     ylab("Liczebność")
 ```
 
