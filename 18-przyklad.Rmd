@@ -142,7 +142,7 @@ plot(moje_punkty)
 Można dodatkowo stworzyć chmurę semiwariogramu w celu wyszukania potencjalnych wartości lokalnie odstających (rycina \@ref(fig:18-przyklad-11)).
 
 ```{r 18-przyklad-11, fig.cap="Chmura semiwariogramu zmiennej tavg."}
-moja_chmura = variogram(tavg~1, moje_punkty, cloud = TRUE)
+moja_chmura = variogram(tavg ~ 1, moje_punkty, cloud = TRUE)
 plot(moja_chmura)
 ```
 
@@ -151,11 +151,11 @@ plot(moja_chmura)
 Posiadając już poprawne dane można sprawdzić czy badane zjawisko wykazuje anizotropię przestrzenną poprzez stworzenie mapy semiwariogramu (rycina \@ref(fig:18-przyklad-12)).
 
 ```{r 18-przyklad-12, fig.cap="Mapa semiwariogramu zmiennej tavg."}
-moja_mapa = variogram(tavg~1, 
-                       locations = moje_punkty,
-                       cutoff = 4500,
-                       width = 850, 
-                       map = TRUE)
+moja_mapa = variogram(tavg ~ 1, 
+                      locations = moje_punkty,
+                      cutoff = 4500,
+                      width = 850, 
+                      map = TRUE)
 plot(moja_mapa, threshold = 30, 
      col.regions = hcl.colors(40, palette = "ag_GrnYl", rev = TRUE))
 ```
@@ -167,7 +167,7 @@ Do tego przykładu zostały stworzone dwa modele semiwariogramu.
 Pierwszy z nich używa tylko zmiennej `tavg` oraz modelu ręcznego o wybranych parametrach (ryciny \@ref(fig:18-przyklad-13), \@ref(fig:18-przyklad-14), \@ref(fig:18-przyklad-15), \@ref(fig:18-przyklad-16)).
 
 ```{r 18-przyklad-13, fig.cap="Semiwariogram zmiennej tavg."}
-moj_semiwar = variogram(tavg~1, 
+moj_semiwar = variogram(tavg ~ 1, 
                         locations = moje_punkty)
 plot(moj_semiwar)
 ```
