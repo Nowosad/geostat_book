@@ -67,12 +67,12 @@ ggplot(punkty, aes(temp)) + stat_ecdf()
 Tworzenie i modelowanie semiwariogramu empirycznego w krigingu danych kodowanych wygląda tak samo jak, np. w przypadku krigingu zwykłego (ryciny \@ref(fig:11-dane-kodowane-5) i \@ref(fig:11-dane-kodowane-6)).
 Korzystając z funkcji `variogram()` tworzony jest semiwariogram empiryczny, używając `vgm()` tworzony jest model "ręczny", który następnie jest dopasowywany z użyciem funkcji `fit.variogram()`.
 
-```{r 11-dane-kodowane-5, fig.cap="Semiwariogram empiryczny binarnej zmiennej temp_ind."}
+```{r 11-dane-kodowane-5, fig.cap="Semiwariogram empiryczny binarnej zmiennej."}
 vario_ind = variogram(temp_ind ~ 1, locations = punkty)
 plot(vario_ind)
 ```
 
-```{r 11-dane-kodowane-6, fig.cap = "Model semiwariogramu empirycznego binarnej zmiennej temp_ind."}
+```{r 11-dane-kodowane-6, fig.cap = "Model semiwariogramu empirycznego binarnej zmiennej."}
 model_ind = vgm(model = "Sph", nugget = 0.01)
 fitted_ind = fit.variogram(vario_ind, model_ind)
 fitted_ind
