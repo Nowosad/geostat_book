@@ -40,6 +40,11 @@ Dodatkowo załączone są cztery appendiksy.
 W appendiksie \@ref(zrodla-wiedzy) można znaleźć odnośniki do innych materiałów związanych z geostatystyką i R, appendiks \@ref(dane-app) opisuje dane użyte w tym skrypcie, appendiks \@ref(reprex) wprowadza pojęcie powtarzalnego przykładu i tłumaczy jak taki przykład stworzyć, a appendiks \@ref(przyklad) pokazuje uproszczony przykład analizy geostatystycznej.
 
 <!--co nowego w trzecim wydaniu-->
+<!-- sp -> sf + stars -->
+<!-- fig captions -->
+<!-- updated references -->
+<!-- rewrite to many sections of the book -->
+<!-- improved/changed figures -->
 
 Wszystkie zaprezentowane metody i analizy zawierają również kod w języku R.
 Skrypt został stworzony w R [@R-base] z wykorzystaniem pakietów **bookdown** [@R-bookdown], **rmarkdown** [@R-rmarkdown], **knitr** [@R-knitr] oraz programu [Pandoc](http://pandoc.org/). 
@@ -66,9 +71,8 @@ Dodatkowo, użyte zostały poniższe pakiety R [@R-dismo;@R-fields;@R-ggplot2;@R
 
 ```{r pakietsy}
 pakiety = c(
-  "dismo", "fields", "ggplot2", "gridExtra",
-  "gstat", "mapview", "pgirmess", "rcartocolor", 
-  "rsample", "sf", "stars"
+  "dismo", "fields", "ggplot2", "gridExtra", "gstat", "mapview", 
+  "pgirmess", "rcartocolor", "rsample", "sf", "stars"
 )
 ```
 
@@ -80,8 +84,8 @@ knitr::write_bib(c(pakiety, "bookdown", "knitr", "rmarkdown",
 Pakiety R używane w tym skrypcie można zainstalować za pomocą metapakietu **geostatbook** [@R-geostatbook]:
 
 ```{r instgeobook, eval=FALSE}
-install.packages("devtools")
-devtools::install_github("nowosad/geostatbook@3")
+install.packages("remotes")
+remotes::install_github("nowosad/geostatbook@3")
 ```
 
 Jest to również możliwe poprzez funkcję `install.packages()`:
