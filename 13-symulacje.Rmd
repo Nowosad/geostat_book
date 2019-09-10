@@ -233,7 +233,7 @@ summary(punkty$temp_ind)
 W tej metodzie kolejne etapy przypominają przeprowadzenie krigingu danych kodowanych (rycina \@ref(fig:13-symulacje-10)). 
 Jedynie w funkcji `krige()` należy dodać argument mówiący o liczbie symulacji do przeprowadzenia (`nsim`).
 
-```{r 13-symulacje-10, fig.cap = "Model semiwariogramu empirycznego binarnej zmiennej temp_ind stworzony na potrzeby symulacji."}
+```{r 13-symulacje-10, fig.cap = "Model semiwariogramu empirycznego binarnej zmiennej stworzony na potrzeby symulacji."}
 vario_ind = variogram(temp_ind ~ 1, locations = punkty)
 # plot(vario_ind)
 fitted_ind = fit.variogram(vario_ind,
