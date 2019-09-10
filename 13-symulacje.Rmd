@@ -150,7 +150,7 @@ shapiro.test(punkty$temp_log)
 
 Dalsze etapy przypominają przeprowadzenie estymacji statystycznej, jedynym wyjątkiem jest dodanie argumentu mówiącego o liczbie symulacji do przeprowadzenia (`nsim` w funkcji `krige()`) (ryciny \@ref(fig:13-symulacje-5) i \@ref(fig:13-symulacje-6)).
 
-```{r 13-symulacje-5, fig.cap = "Model semiwariogramu zmiennej temp_log."}
+```{r 13-symulacje-5, fig.cap = "Model semiwariogramu zmiennej temp po logaritmizacji"}
 vario = variogram(temp_log ~ 1, locations = punkty)
 model = vgm(model = "Sph", nugget = 0.005)
 fitted = fit.variogram(vario, model)
@@ -166,13 +166,13 @@ sym_ok = krige(temp_log ~ 1,
                nsim = 4)
 ```
 
-```{r 13-symulacje-6, fig.cap = "Symulacja warunkowa zmiennej temp_log."}
+```{r 13-symulacje-6, fig.cap = "Symulacja warunkowa zmiennej temp po logaritmizacji."}
 plot(sym_ok, col = paleta)
 ```
 
 Wyniki symulacji można przetworzyć do pierwotnej jednostki z użyciem funkcji wykładniczej (`exp`) (rycina \@ref(fig:13-symulacje-7)).
 
-```{r 13-symulacje-7, fig.cap = "Symulacja warunkowa zmiennej temp_log po przeskalowaniu do oryginalnych wartości."}
+```{r 13-symulacje-7, fig.cap = "Symulacja warunkowa po przeskalowaniu do oryginalnych wartości."}
 sym_ok_rescaled = st_apply(sym_ok, 1:2, exp)
 sym_ok_rescaled
 plot(sym_ok_rescaled, col = paleta)
