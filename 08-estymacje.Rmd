@@ -105,8 +105,8 @@ W krigingu zwykłym średnia traktowana jest jako wartość nieznana.
 Metoda ta uwzględnia lokalne fluktuacje średniej poprzez stosowanie ruchomego okna. 
 Parametry ruchomego okna można określić za pomocą jednego z dwóch argumentów:
 
-- `nmax` - użyta zostanie określona liczba najbliższych obserwacji
-- `maxdist` -  użyte zostaną jedynie obserwacje w zadanej odległości
+- `nmax` - użyta zostanie określona liczba najbliższych obserwacji.
+- `maxdist` - użyte zostaną jedynie obserwacje w zadanej odległości.
 
 ```{r 08-estymacje-8 }
 # ok = krige(temp~1,
@@ -153,7 +153,7 @@ spplot(ok, "var1.var", sp.layout = list(as(punkty, "Spatial"), pch = 21, col = "
 ### Kriging z trendem (ang. *Kriging with a trend*)
 
 Kriging z trendem, określany również jako kriging z wewnętrznym trendem, do estymacji wykorzystuje (oprócz zmienności wartości wraz z odległością) położenie analizowanych punktów.
-W pierwszym kroku konieczne jest dodanie współrzęnych do używanego obiektu, jak też i do używanej siatki.
+W pierwszym kroku konieczne jest dodanie współrzęnych do używanego obiektu i do używanej siatki.
 
 ```{r 08-estymacje-10}
 # dodanie współrzędnych do punktów
