@@ -150,7 +150,7 @@ Wymaga ona podania trzech argumentów: `formula` określającego naszą analizow
 Następnie funkcja `predict()` przenosi nowe wartości na wcześniej stworzoną siatkę.
 Porównanie wielomianów pierwszego, drugiego i trzeciego stopnia można znaleźć na rycinach \@ref(fig:05-interpolacje-13), \@ref(fig:05-interpolacje-14) i \@ref(fig:05-interpolacje-15).
 
-```{r 05-interpolacje-13, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu pierwszego stopnia.}
+```{r 05-interpolacje-13, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu pierwszego stopnia."}
 # wielomian 1 stopnia
 wielomian_1 = gstat(formula = temp~1, locations = punkty,
                     degree = 1)
@@ -159,7 +159,7 @@ plot(wielomian_1_pred["var1.pred"],
      main = "Wielomian pierwszego stopnia", col = paleta)
 ```
 
-```{r 05-interpolacje-14, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu drugiego stopnia.}
+```{r 05-interpolacje-14, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu drugiego stopnia."}
 # wielomian 2 stopnia
 wielomian_2 = gstat(formula = temp~1, locations = punkty,
                     degree = 2)
@@ -168,7 +168,7 @@ plot(wielomian_2_pred["var1.pred"],
      main = "Wielomian drugiego stopnia", col = paleta)
 ```
 
-```{r 05-interpolacje-15, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu trzeciego stopnia.}
+```{r 05-interpolacje-15, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu trzeciego stopnia."}
 # wielomian 3 stopnia
 wielomian_3 = gstat(formula = temp~1, locations = punkty,
                     degree = 3)
