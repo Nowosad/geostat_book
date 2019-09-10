@@ -30,12 +30,12 @@ Z tego powodu bardzo cenne jest odpowiednie wykorzystanie informacji z próby.
 
 Eksploracyjna analiza danych przestrzennych w przypadku danych punktowych ma na celu:
 
-- Sprawdzenie poprawności współrzędnych
-- Wgląd w typ próbkowania danych
-- Sprawdzenie poprawności danych, w tym między innymi określenie danych odstających lokalnie
-- Identyfikacja głównych cech struktury przestrzennej zjawiska (np. trend)
+- Sprawdzenie poprawności współrzędnych (sekcja \@ref(popr-wsp)).
+- Wgląd w typ próbkowania danych (sekcja \@ref(probkowanie)).
+- Sprawdzenie poprawności danych, w tym między innymi określenie danych odstających lokalnie (sekcja \@ref(dane-odst)).
+- Identyfikacja głównych cech struktury przestrzennej zjawiska (np. trend) (rozdział \@ref(metody-interpolacji)).
 
-## Sprawdzenie poprawności współrzędnych
+## Sprawdzenie poprawności współrzędnych {#popr-wsp}
 
 Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()`.
 
@@ -44,12 +44,12 @@ plot(st_geometry(granica))
 plot(st_geometry(punkty), add = TRUE)
 ```
 
-## Próbkowanie
+## Próbkowanie {#probkowanie}
 
 ### Podstawowe typy próbowania
 
 Istnieje cały szereg typów próbkowania danych przestrzennych.
-Funkcja `spsample()` z pakietu **sp** pozwala na stworzenie kilku typów próbkowania (argument `type`), między innymi:
+Funkcja `st_sample()` z pakietu **sf** pozwala na stworzenie kilku typów próbkowania (argument `type`), między innymi:
 
 - Regularny (ang.*regular*)
 - Losowy (ang.*random*)
@@ -98,7 +98,7 @@ pref = st_sample(granica, 150, type = "clustered",
 plot(pref)
 ```
 
-## Dane lokalnie odstające
+## Dane lokalnie odstające {#dane-odst}
 
 Dane lokalnie odstające oznaczają nietypowe przestrzennie wartości danej cechy.
 Inaczej mówiąc, może to być niska wartość otoczona wysokimi wartościami lub też wysoka wartość otoczona niskimi wartościami.
@@ -307,5 +307,5 @@ mapview(punkty["temp"])
 ## Zadania {#z4}
 
 1. Określ i opisz typ próbkowania danych `punkty`.
-2. Wykonaj mapę pokazującą przestrzenny rozkład wartości NDVI w zbiorze `punkty`. (Dodatkowo: spróbuj użyć do tego pakietu **tmap** - `install.packages("tmap")`).
-m
+2. Wykonaj mapę pokazującą przestrzenny rozkład wartości NDVI w zbiorze `punkty`. 
+(Dodatkowo: spróbuj użyć do tego pakietu **tmap** - `install.packages("tmap")`).
