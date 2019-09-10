@@ -11,7 +11,6 @@ library(sf)
 library(stars)
 ```
 
-
 Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu `geostatbook` (dla kolejnych rozdziałów). 
 Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w tym skrypcie.
 
@@ -36,7 +35,7 @@ data("punkty")
 ?punkty
 ```
 
-Zbiór danych `punkty` zawiera 252 obserwacje oraz 5 zmiennych dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
+Zbiór danych `punkty` zawiera 242 obserwacje oraz 5 zmiennych dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
 Zmienne:
 
 - srtm - wysokość w metrach n.p.m. pozyskana z numerycznego modelu terenu z misji SRTM
@@ -57,7 +56,7 @@ data("punkty_ndvi")
 ?punkty_ndvi
 ```
 
-Zbiór danych `punkty_ndvi` zawiera 1011 obserwacji oraz 1 zmienną dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
+Zbiór danych `punkty_ndvi` zawiera 993 obserwacji oraz 1 zmienną dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
 Zmienna:
 
 - ndvi - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference Vegetation Index*)
@@ -73,7 +72,7 @@ data("punkty_pref")
 ?punkty_pref
 ```
 
-Zbiór danych `punkty_pref` zawiera 239 obserwacji oraz 1 zmiennych dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
+Zbiór danych `punkty_pref` zawiera 264 obserwacji oraz 5 zmiennych dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
 Są one rozlokowane w sposób preferencyjny.
 Zmienna:
 
