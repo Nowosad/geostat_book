@@ -48,35 +48,7 @@ nowa_siatka = st_as_stars(punkty_bbox,
 plot(nowa_siatka)
 ```
 
-Do stworzenia siatki można użyć funkcji `expand.grid()`.
-Wymaga ona określenia dwóch argumentów - `x` oraz `y` (taka ich nazwa nie jest obowiązkowa). 
-Oba argumenty przyjmują trzy wartości: (i) `from` oznaczający wartość początkową współrzędnej, (ii) `to` określający wartość końcową współrzędnej, oraz (iii) `by` określający rozdzielczość. 
-Przy ustalaniu wartości początkowej i końcowej konieczne jest ich rozszerzenie względem wartości z funkcji `bbox()` lub `extent()`, aby wszystkie analizowane punkty znalazły się na badanym obszarze. 
-
-<!-- Do stworzenia siatki można użyć funkcji `expand.grid()`. -->
-<!-- Wymaga ona określenia dwóch argumentów - `x` oraz `y` (taka ich nazwa nie jest obowiązkowa).  -->
-<!-- Oba argumenty przyjmują trzy wartości: (i) `from` oznaczający wartość początkową współrzędnej, (ii) `to` określający wartość końcową współrzędnej, oraz (iii) `by` określający rozdzielczość.  -->
-<!-- Przy ustalaniu wartości początkowej i końcowej konieczne jest ich rozszerzenie względem wartości z funkcji `bbox()` lub `extent()`, aby wszystkie analizowane punkty znalazły się na badanym obszarze.  -->
-
-```{r  , eval=FALSE, echo=FALSE}
-nowa_siatka = expand.grid(
-  x = seq(from = 745050, to = 757050, by = 500),
-  y = seq(from = 712650, to = 721650, by = 500)
-)
-```
-
-<!-- Utworzony w ten sposób obiekt wymaga określenia współrzędnych (funkcja `coordinates()`), potwierdzenia że dane mają być siatką (funkcja `gridded()`), oraz przypisania układu współrzędnych z obiektu punktowego (funkcja `proj4string()`). -->
-
-```{r 05-interpolacje-5, eval=FALSE, echo=FALSE}
-nowa_siatka = stars::st_as_stars(st_bbox(punkty), nx = 25, ny = 19)
-plot(nowa_siatka)
-```
-
-coordinates(nowa_siatka) = ~x + y
-gridded(nowa_siatka) = TRUE
-proj4string(nowa_siatka) = proj4string(punkty)
-plot(nowa_siatka)
-```
+<!-- siatka by hand -->
 
 ### Siatki regularne - wizualizacja
 
@@ -84,7 +56,7 @@ Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają m
 W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add` (rycina \@ref(fig:05-interpolacje-6)).
 
 ```{r 05-interpolacje-6, fig.cap = "Wizualizacja regularnej siatki z nałożonym położeniem obserwacji punktowych."}
-plot(nowa_siatka)
+plot(nowa_siatka, reset = FALSE)
 plot(st_geometry(punkty), add = TRUE)
 ```
 
@@ -92,9 +64,8 @@ plot(st_geometry(punkty), add = TRUE)
 
 Siatki nieregularne mają zazwyczaj kształt wieloboku obejmującego analizowany obszar. 
 Mogą one powstać, np. w oparciu o wcześniej istniejące granice.
-Siatki nieregularne w R mogą być reprezentowane poprzez klasę `SpatialPixelsDataFrame`.
 
-W poniższym przypadku odczytywana jest granica badanego obszaru z pliku GeoPackage.
+W poniższym przypadku odczytywana jest granica badanego obszaru z pliku w formacie GeoPackage.
 Taki obiekt można np. stworzyć za pomocą oprogramowania GISowego takiego jak [QGIS](http://www.qgis.org/pl/site/).
 Następnie tworzony jest nowy obiekt `nowa_siatka_n` poprzez wybranie tylko tych oczek siatki, które znajdują się wewnątrz zadanych granic.
 
@@ -103,7 +74,7 @@ granica = st_read("dane/granica.gpkg", quiet = TRUE)
 nowa_siatka_n = nowa_siatka[granica]
 ```
 
-Wynik przetworzenia można zobaczyć z użyciem funkcji `plot` (rycina \@ref(fig:05-interpolacje-7)).
+Wynik przetworzenia można zobaczyć z użyciem funkcji `plot()` (rycina \@ref(fig:05-interpolacje-7)).
 
 ```{r 05-interpolacje-7, fig.cap = "Wizualizacja nieregularnej siatki."}
 plot(nowa_siatka_n)
@@ -120,16 +91,16 @@ W tych modelach brakuje szacunków na temat oceny błędu modelu.
 Zaletą tych modeli jest ich prosta oraz krótki czas obliczeń. 
 Do modeli deterministycznych należą, między innymi:
 
-- Metoda diagramów Voronoi'a (ang.  *Voronoi diagram*)
-- Metoda średniej ważonej odległością (ang. *Inverse Distance Weighted - IDW*)
-- Funkcje wielomianowe (ang. *Polynomials*)
-- Funkcje sklejane (ang. *Splines*)
+- Metoda diagramów Voronoi'a (ang.  *Voronoi diagram*) (sekcja \@ref(voronoi))
+- Metoda średniej ważonej odległością (ang. *Inverse Distance Weighted - IDW*)  (sekcja \@ref(idw))
+- Funkcje wielomianowe (ang. *Polynomials*)  (sekcja \@ref(funkcje-wielomianowe))
+- Funkcje sklejane (ang. *Splines*)  (sekcja \@ref(funkcje sklejane))
 
 <!--http://neondataskills.org/Data-Workshops/ESA15-Going-On-The-Grid-Spatial-Interpolation-Basics/-->
 
-### Voronoi
+### Diagramy Woronoja {#voronoi}
 
-Metoda diagramów Voronoi'a polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego punktu. 
+Metoda diagramów Woronoja polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego punktu. 
 Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi()` z pakietu **dismo** (rycina \@ref(fig:05-interpolacje-10)).
 
 ```{r 05-interpolacje-9 }
@@ -138,16 +109,16 @@ voronoi_interp = st_as_sf(voronoi_interp)
 voronoi_interp$temp = punkty$temp
 ```
 
-```{r 05-interpolacje-10, fig.cap = "Interpolacja zmiennej temp używając metody diagramów Voronoia."}
+```{r 05-interpolacje-10, fig.cap = "Interpolacja zmiennej temp używając metody diagramów Woronoja."}
 plot(voronoi_interp["temp"],
-     main = "Poligony Voronoia - temperatura")
+     main = "Diagramy Woronoja - temperatura")
 ```
 
 ### IDW
 
 Metoda średniej ważonej odległością (IDW) wylicza wartość dla każdej komórki na podstawie wartości punktów obokległych ważonych odwrotnością ich odległości. 
 W efekcie, czym bardziej jest punkt oddalony, tym mniejszy jest jego wpływ na interpolowaną wartość. 
-Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (ang. *power*) (rycina \@ref(fig:05-interpolacje-11)).
+Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (idp, ang. *inverse distance weighting power*) (rycina \@ref(fig:05-interpolacje-11)).
 
 ```{r 05-interpolacje-12, echo=FALSE, warning=FALSE, fig.cap = "Relacja pomiędzy argumentem wykładnika potęgowego a wpływem wartości punktów wraz z odległością."}
 library(tidyr)
@@ -177,61 +148,80 @@ plot(idw_interp["var1.pred"], main = "IDW", col = paleta)
 Stosowanie funkcji wielomianowych w R może odbyć się z wykorzystaniem funkcji `gstat()` z pakietu **gstat**.
 Wymaga ona podania trzech argumentów: `formula` określającego naszą analizowaną cechę (`temp~1` mówi, że chcemy interpolować wartość temperatury zależnej od samej siebie), `data` określający analizowany zbiór danych, oraz `degree` określającą stopień wielomianu.
 Następnie funkcja `predict()` przenosi nowe wartości na wcześniej stworzoną siatkę.
+Porównanie wielomianów pierwszego, drugiego i trzeciego stopnia można znaleźć na rycinach \@ref(fig:05-interpolacje-13), \@ref(fig:05-interpolacje-14) i \@ref(fig:05-interpolacje-15).
 
-```{r 05-interpolacje-13 }
+```{r 05-interpolacje-13, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu pierwszego stopnia.}
 # wielomian 1 stopnia
 wielomian_1 = gstat(formula = temp~1, locations = punkty,
-                     degree = 1)
+                    degree = 1)
 wielomian_1_pred = predict(wielomian_1, newdata = siatka)
 plot(wielomian_1_pred["var1.pred"], 
-       main = "Powierzchnia trendu - wielomian pierwszego
-       stopnia", col = paleta)
+     main = "Wielomian pierwszego stopnia", col = paleta)
 ```
 
-```{r 05-interpolacje-14 }
+```{r 05-interpolacje-14, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu drugiego stopnia.}
 # wielomian 2 stopnia
 wielomian_2 = gstat(formula = temp~1, locations = punkty,
-                     degree = 2)
+                    degree = 2)
 wielomian_2_pred = predict(wielomian_2, newdata = siatka)
 plot(wielomian_2_pred["var1.pred"],
-       main = "Powierzchnia trendu - wielomian drugiego
-       stopnia", col = paleta)
+     main = "Wielomian drugiego stopnia", col = paleta)
 ```
 
-```{r 05-interpolacje-15 }
+```{r 05-interpolacje-15, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu trzeciego stopnia.}
 # wielomian 3 stopnia
 wielomian_3 = gstat(formula = temp~1, locations = punkty,
-                     degree = 3)
+                    degree = 3)
 wielomian_3_pred = predict(wielomian_3, newdata = siatka)
 plot(wielomian_3_pred["var1.pred"],
-       main = "Powierzchnia trendu - wielomian trzeciego
-       stopnia", col = paleta)
+     main = "Wielomian trzeciego stopnia", col = paleta)
 ```
 
 ### Funkcje sklejane
 
-Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**) dopasowuje krzywą powierzchnię do wartości analizowanych punktów.
+Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**) dopasowuje krzywą powierzchnię do wartości analizowanych punktów (rycina \@ref(fig:05-interpolacje-16)).
 
-```{r 05-interpolacje-16 }
+```{r 05-interpolacje-16, fig.cap="Interpolacja zmiennej temp z użyciem funkcji sklejanych."}
 tps = Tps(st_coordinates(punkty), punkty$temp)
 siatka$tps_pred = predict(tps, st_coordinates(siatka))
 plot(siatka["tps_pred"], 
-       main = "Funkcje sklejane", col = paleta)
+     main = "Funkcje sklejane", col = paleta)
 ```
 
 ### Porównanie modeli deterministycznych
 
-```{r 05-interpolacje-17, echo=FALSE, message=FALSE}
+Na rycinie \@ref(fig:05-interpolacje-17) można wizualnie porównać wyniki uzyskane czterema metodami deterministycznymi.
+
+```{r 05-interpolacje-17, echo=FALSE, message=FALSE, fig.cap="Porównanie czterech metod interpolacji dla zmiennej temp używając jednolitej skali wartości."}
+max_val = max(voronoi_interp$temp, idw_interp[["var1.pred"]],
+              wielomian_3_pred[["var1.pred"]], siatka[["tps_pred"]],
+              na.rm = TRUE)
+min_val = min(voronoi_interp$temp, idw_interp[["var1.pred"]],
+              wielomian_3_pred[["var1.pred"]], siatka[["tps_pred"]],
+              na.rm = TRUE)
+
 library(gridExtra)
 p1 = p1_base + 
   geom_sf(data = voronoi_interp, aes(fill = temp)) +
-  ggtitle("Poligony Voronoia")
+  ggtitle("Poligony Voronoia") +
+        rcartocolor::scale_fill_carto_c(palette = "ag_Sunset",
+                                        na.value = "#ffffff",
+                                        limits = c(min_val, max_val))
 p2 = p1_base + geom_stars(data = idw_interp["var1.pred"]) + 
-        ggtitle("IDW")
+        ggtitle("IDW") +
+        rcartocolor::scale_fill_carto_c(palette = "ag_Sunset",
+                                        na.value = "#ffffff",
+                                        limits = c(min_val, max_val))
 p3 = p1_base + geom_stars(data = wielomian_3_pred["var1.pred"]) +
-        ggtitle("Wielomiany")
+        ggtitle("Wielomiany") +
+        rcartocolor::scale_fill_carto_c(palette = "ag_Sunset",
+                                        na.value = "#ffffff",
+                                        limits = c(min_val, max_val))
 p4 = p1_base + geom_stars(data = siatka["tps_pred"]) + 
-        ggtitle("Funkcje sklejane")
+        ggtitle("Funkcje sklejane") +
+        rcartocolor::scale_fill_carto_c(palette = "ag_Sunset",
+                                        na.value = "#ffffff",
+                                        limits = c(min_val, max_val))
 grid.arrange(p1, p2, p3, p4, ncol = 2)
 ```
 
