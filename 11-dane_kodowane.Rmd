@@ -32,13 +32,13 @@ Wartości danych wykorzystywane do krigingu danych kodowanych są określone jak
 
 Zalety:
 
-- Możliwość zastosowania, gdy nie interesuje nas konkretna wartość, ale znalezienie obszarów o wartości przekraczającej dany poziom
-- Nie jest istotny kształt rozkładu
+- Możliwość zastosowania, gdy nie interesuje nas konkretna wartość, ale znalezienie obszarów o wartości przekraczającej dany poziom.
+- Nie jest istotny kształt rozkładu.
 
 Wady:
 
-- Potencjalnie trudne do modelowania semiwariogramy (szczególnie skrajnych przedziałów)
-- Czasochłonność/pracochłonność
+- Potencjalnie trudne do modelowania semiwariogramy (szczególnie skrajnych przedziałów).
+- Czasochłonność/pracochłonność.
     
 ## Przykłady krigingu danych kodowanych
 
@@ -68,7 +68,7 @@ Tworzenie i modelowanie semiwariogramu empirycznego w krigingu danych kodowanych
 Korzystając z funkcji `variogram()` tworzony jest semiwariogram empiryczny, używając `vgm()` tworzony jest model "ręczny", który następnie jest dopasowywany z użyciem funkcji `fit.variogram()`.
 
 ```{r 11-dane-kodowane-5, fig.cap="Semiwariogram empiryczny binarnej zmiennej temp_ind."}
-vario_ind = variogram(temp_ind~1, locations = punkty)
+vario_ind = variogram(temp_ind ~ 1, locations = punkty)
 plot(vario_ind)
 ```
 
@@ -82,10 +82,10 @@ plot(vario_ind, model = fitted_ind)
 ### Estymacja
 
 Ostatnim etapem jest stworzenie interpolacji geostatystycznej z pomocą funkcji `krige`.
-Wymaga ona czterech argumentów - wzoru (`temp_ind~1`), zbioru punktowego (`punkty`), siatki do interpolacji (`siatka`) oraz modelu (`fitted_ind`).
+Wymaga ona czterech argumentów - wzoru (`temp_ind ~ 1`), zbioru punktowego (`punkty`), siatki do interpolacji (`siatka`) oraz modelu (`fitted_ind`).
 
 ```{r 11-dane-kodowane-7 }
-ik = krige(temp_ind~1, 
+ik = krige(temp_ind ~ 1, 
            locations = punkty,
            newdata = siatka,
            model = fitted_ind)
@@ -148,13 +148,13 @@ Z jej użyciem można definiować przyjęte progi bezpośrednio do funkcji `vari
 Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopni Celsjusza (rycina \@ref(fig:ploty-trzyik)).
 
 ```{r 11-dane-kodowane-10, message=FALSE}
-vario_ind20 = variogram(I(temp < 20)~1, locations = punkty)
+vario_ind20 = variogram(I(temp < 20) ~ 1, locations = punkty)
 fitted_ind20 = fit.variogram(vario_ind20, 
                               vgm("Sph", nugget = 0.01))
-vario_ind16 = variogram(I(temp < 16)~1, locations = punkty)
+vario_ind16 = variogram(I(temp < 16) ~ 1, locations = punkty)
 fitted_ind16 = fit.variogram(vario_ind16, 
                               vgm("Sph", nugget = 0.03))
-vario_ind12 = variogram(I(temp < 12)~1, locations = punkty)
+vario_ind12 = variogram(I(temp < 12) ~ 1, locations = punkty)
 fitted_ind12 = fit.variogram(vario_ind12, 
                               vgm("Sph", nugget = 0.03))
 ```
