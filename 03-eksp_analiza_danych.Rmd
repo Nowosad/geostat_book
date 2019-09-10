@@ -62,9 +62,9 @@ median(punkty$temp, na.rm = TRUE)
 mean(punkty$temp, na.rm = TRUE)
 ```
 
-- W wypadku symetrycznego rozkładu te dwie cechy są równe
-- Średnia jest bardziej wrażliwa na wartości odstające
-- Mediana jest lepszą miarą środka danych, jeżeli są one skośne
+W wypadku symetrycznego rozkładu te dwie cechy są równe. 
+Średnia jest bardziej wrażliwa na wartości odstające.
+Mediana jest lepszą miarą środka danych, jeżeli są one skośne.
 
 Po co używać średniej?
 
@@ -111,7 +111,7 @@ ggplot(punkty, aes(temp)) + geom_histogram()
 
 Został on stworzony przez Karla Pearsona i jest graficzną reprezentacją rozkładu danych.
 Wartości danych są łączone w przedziały (na osi poziomej) a na osi pionowej jest ukazana liczba punktów (obserwacji) w każdym przedziale.
-Co ważne, różny dobór przedziałów może dawać inną informację - w pakiecie **ggplot2**, domyślnie przedział jest ustalany poprzez podzielenie zakresu wartości przez 30.
+Co ważne, różny dobór przedziałów może dawać inną informację - w pakiecie **ggplot2** domyślnie przedział jest ustalany poprzez podzielenie zakresu wartości przez 30.
 
 ### Estymator jądrowy gęstości (ang. *kernel density estimation*)
 
@@ -238,18 +238,10 @@ plot(tukey, las = 1)
 Transformacja danych może mieć na celu ułatwienie porównywania różnych zmiennych, zniwelowanie skośności rozkładu lub też zmniejszenie wpływu danych odstających.
 W efekcie transformacja danych ułatwia przeprowadzenie analiz (geo-)statystycznych i polepsza wyniki prognoz z modeli.
 
-### Cechy standaryzacji
-
-Centrowanie i skalowanie (standaryzacja):
-
-- Centrowanie danych - wybierana jest przeciętna wartość predyktora, a następnie od wszystkich wartości predyktorów odejmowana jest wybrana wcześniej wartość
-- Skalowanie danych - dzielenie każdej wartości predyktora przez jego odchylenie standardowe
-- Wadą tego podejścia jest główne zmniejszenie interpretowalności pojedynczych wartości
-
 ### Centrowanie
 
-<!-- toDo -->
-(rycina \@ref(fig:03-eksp-analiza-danych-22))
+Centrowanie danych polega na wybraniu przeciętnej wartości predyktora, a następnie odjęciu wybranej wcześniej wartości od wszystkich wartości predyktorów 
+(rycina \@ref(fig:03-eksp-analiza-danych-22)).
 
 ```{r 03-eksp-analiza-danych-21, eval=FALSE}
 ggplot(punkty, aes(temp)) + geom_density()
@@ -266,8 +258,7 @@ gridExtra::grid.arrange(p1, p2, ncol = 1)
 
 ### Skalowanie
 
-<!-- toDo -->
-(rycina \@ref(fig:03-eksp-analiza-danych-24))
+Skalowanie danych to dzielenie każdej wartości predyktora przez jego odchylenie standardowe (rycina \@ref(fig:03-eksp-analiza-danych-24)).
 
 ```{r 03-eksp-analiza-danych-23, eval=FALSE}
 ggplot(punkty, aes(temp)) + geom_density()
@@ -283,10 +274,8 @@ gridExtra::grid.arrange(p1, p3, ncol = 1)
 
 ### Standaryzacja
 
-Do standaryzacji (centrowanie i skalowanie) służy funkcja `scale()`.
-
-<!-- toDo -->
-(rycina \@ref(fig:03-eksp-analiza-danych-26))
+Do standaryzacji (centrowanie i skalowanie) służy funkcja `scale()` (rycina \@ref(fig:03-eksp-analiza-danych-26)).
+<!-- Wadą tego podejścia jest główne zmniejszenie interpretowalności pojedynczych wartości. -->
 
 ```{r 03-eksp-analiza-danych-25, eval=FALSE}
 ggplot(punkty, aes(temp)) + geom_density()
@@ -311,10 +300,7 @@ Redukcja skośności:
 ### Logarytmizacja
 
 Logarytmizacja w R może odbyć się za pomocą funkcji `log()`. 
-Transformację logarytmiczną można odwrócić używając funkcji `exp()`.
-
-<!-- toDo -->
-(rycina \@ref(fig:03-eksp-analiza-danych-28))
+Transformację logarytmiczną można odwrócić używając funkcji `exp()` (rycina \@ref(fig:03-eksp-analiza-danych-28)).
 
 ```{r 03-eksp-analiza-danych-27, eval = FALSE}
 ggplot(punkty, aes(temp)) + geom_density()
@@ -335,10 +321,7 @@ gridExtra::grid.arrange(p1, p5, p6, ncol = 1)
 ### Pierwiastkowanie
 
 Pierwiastkowanie w R może odbyć się za pomocą funkcji `sqrt()`. 
-Odwrócenie tej transformacji odbywa się poprzez podniesienie wartości do potęgi (`^2`).
-
-<!-- toDo -->
-(rycina \@ref(fig:03-eksp-analiza-danych-30))
+Odwrócenie tej transformacji odbywa się poprzez podniesienie wartości do potęgi (`^2`) (rycina \@ref(fig:03-eksp-analiza-danych-30)).
 
 ```{r 03-eksp-analiza-danych-29, eval=FALSE}
 ggplot(punkty, aes(temp)) + geom_density()
