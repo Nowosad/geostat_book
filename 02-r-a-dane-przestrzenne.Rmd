@@ -6,7 +6,7 @@
 ### Reprezentacja danych nieprzestrzennych
 
 Skrypty i funkcje w języku R są zbudowane na podstawie szeregu obiektów nieprzestrzennych.
-<!--ref JN-->
+Do wbudowanych typów obiektów należą:<!--ref JN-->
     
 - Wektory (ang. *vector*):
     - liczbowe (ang. *integer*, *numeric*) - `c(1, 2, 3)` i `c(1.21, 3.32, 4.43)`
@@ -14,8 +14,8 @@ Skrypty i funkcje w języku R są zbudowane na podstawie szeregu obiektów niepr
     - logiczne (ang. *logical*) - `c(TRUE, FALSE)`
     - czynnikowe (ang. *factor*) - `c("jeden", "dwa", "trzy", "jeden")`
 - Ramki danych (ang. *data.frame*) - to zbiór zmiennych (kolumn) oraz obserwacji (wierszy) zawierających różne typy danych
-- Macierze (ang. *matrix*)
-- Listy (ang. *list*)
+- Macierze (ang. *matrix*) - to zbiór kolumn oraz wierszy zawierających wektory jednego typu
+- Listy (ang. *list*) - to sposób przechowywania obiektów o różnych typach i różnej długości
 
 ### Pakiety
 
@@ -29,7 +29,7 @@ Więcej szczegółów na ten temat pakietów R służących do analizy przestrze
 
 ### Reprezentacja danych przestrzennych
 
-Dane przestrzenne mogą być reprezentowane w R poprzez szereg różnych klas obiektów z użyciem różnych pakietów R. 
+Dane przestrzenne mogą być reprezentowane w R poprzez wiele różnych klas obiektów z użyciem różnych pakietów R. 
 Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klasy `Spatial*` z pakietu **sp** oraz obiekty klasy `sf` z pakietu **sf**.
 
 <!-- Wszystkie obiekty klasy `Spatial*` z pakietu **sp** zawierają tablę atrybutów oraz dwie dodatkowe informacje: -->
@@ -46,81 +46,70 @@ Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klasy `Spa
 Pakiet **sf** to następca pakietu **sp** oparty o OGC standard Simple Features.
 Łączy on możliwości zarówno pakietu **sp** jak i pakietów **rgdal** i **rgeos**.
 Więkość jego funkcji zaczyna się od prefiksu `st_`.
-Ten pakiet pozwala na obsługę dodatkowych typów danych wektorowych (np. poligon i multipoligon to dwie oddzielne klasy), łatwiejsze przetwarzanie danych, oraz obsługę przestrzennych baz danych takich jak PostGIS.
-Pakiet **sf** jest używany przez kilkadziesiąt dodatkowych pakietów R, jednak wiele metod i funkcji nadal wymaga obiektów klasy **sp**.
-
+Ten pakiet definiuje klasę obiektów `sf`, która jest sposobem reprezentacji przestrzennych danych wektorowych.
+Pozwala on na stosowanie dodatkowych typów danych wektorowych (np. poligon i multipoligon to dwie oddzielne klasy), łatwiejsze przetwarzanie danych, oraz obsługę przestrzennych baz danych takich jak PostGIS.
+Pakiet **sf** jest używany przez kilkadziesiąt dodatkowych pakietów R, jednak wiele metod i funkcji nadal wymaga obiektów klasy **sp**. 
 Porównanie funkcji dostępnych w pakietach **sp** i **sf** można znaleźć pod adresem https://github.com/r-spatial/sf/wiki/Migrating.
 Więcej o pakiecie **sf** można przeczytać w [rozdziale drugim](https://geocompr.robinlovelace.net/spatial-class.html) Geocomputation with R.
 
 Dane rastrowe są reprezentowane między innymi poprzez klasę `SpatialGridDataFrame` z pakietu **sp**, obiekty klasy `Raster*` z pakietu **raster**, oraz klasę `stars` z pakietu **stars**.
 <!-- toDo -->
 
-<!-- Here, we introduce a new package for raster analysis, called stars (for scalable, spatiotemporal tidy arrays) that -->
-
-<!--     allows for representing dynamic raster stacks, -->
-<!--     in addition to regular grids handles rotated, sheared, rectilinear and curvilinear rasters, -->
-<!--     provides a tight integration with package sf, -->
-<!--     follows the tidyverse design principles, -->
-<!--     aims at being scalable, also beyond local disk size, -->
-<!--     also handles array data with non-raster spatial dimensions, the vector datacubes, -->
-<!--     provides further integration of novel features in the GDAL library than other R packages have given so far. -->
+Pakiet **stars** (*scalable, spatiotemporal tidy arrays*) pozwala na obsługę różnorodnych danych przestrzennych i czasoprzestrzennych reprezentowanych jako kostka danych (ang. *data cubes*).
+Obejmuje to, między innymi, regularne i nieregularne dane rastrowe, ale także czasoprzestrzenne dane wektorowe.
+Ten pakiet zapewnia klasy i metody do wczytywania, przetwarzania, wizualizacji czy zapisywania kości danych.
+Posiada on także wbudowaną integrację z pakietem **sf**.
 
 ### GDAL/OGR
 
-- Pakiety **rgdal**, **raster**, **stars**, czy **sf** wykorzystują biblioteki GDAL/OGR w R do wczytywania i zapisywania danych przestrzennych
-- http://www.gdal.org/
-- GDAL to biblioteka zawierająca funkcje służące do odczytywania i zapisywania danych w formatach rastrowych
-- OGR to biblioteka służąca to odczytywania i zapisywania danych w formatach wektorowych
+Pakiety **sf** czy **stars** wykorzystują biblioteki [GDAL/OGR](http://www.gdal.org/) w R do wczytywania i zapisywania danych przestrzennych. 
+GDAL to biblioteka zawierająca funkcje służące do odczytywania i zapisywania danych w formatach rastrowych, a OGR to biblioteka służąca to odczytywania i zapisywania danych w formatach wektorowych.
 
 ### PROJ
 
-- Pakiety **sp**, **raster**, **stars**, czy **sf** używają biblioteki PROJ do określania i konwersji układów współrzędnych
-- https://proj.org/
-- Dane przestrzenne powinny być zawsze powiązane z układem współrzędnych
-- PROJ - to biblioteka pozwalająca na identyfikację oraz konwersję pomiędzy różnymi układami współrzędnych
-- Strona http://www.spatialreference.org/ zawiera bazę danych układów współrzędnych 
-- Układy współrzędnych mogą być opisywane na szereg sposobów, np poprzez:
+Dane przestrzenne powinny być zawsze powiązane z układem współrzędnych. 
+W ten sposób możliwe jest określenie gdzie są one położone, a także pozwala to na wykonywanie na nich wielu operacji przestrzennych.
+Biblioteka [PROJ](https://proj.org/) jest używana przez pakiety **sf** i **stars** do określania i konwersji układów współrzędnych.
+Układy współrzędnych mogą być opisywane na szereg sposobów, np poprzez:
 
-    - Reprezentację proj4string - określa ona szereg własności układu współrzędnych
-    - Kod EPSG (ang. *European Petroleum Survey Group*) - pozwala on na łatwe identyfikowanie układów współrzędnych.
+- Reprezentację proj4string - określa ona szereg własności układu współrzędnych
+- Kod EPSG (ang. *European Petroleum Survey Group*) - pozwala on na łatwe identyfikowanie układów współrzędnych
 
-- Przykładowo, układ PL 1992 może być określony jako:
+Przykładowo, układ PL 1992 może być określony jako:
 
 `"+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"`
 
-- ...lub też za pomocą kodu EPSG:
+...lub też za pomocą kodu EPSG:
     
 `2180`
 
-### Układ geograficzny
+Strona http://www.spatialreference.org/ zawiera bazę danych układów współrzędnych.
 
-- Proporcje pomiędzy współrzędną oznaczającą długość geograficzną (X) a oznaczającą szerokość geograficzną (Y) nie są równe 1:1
-- Wielkość oczka siatki jest zmienna 
-- Nie pozwala to na proste określanie odległości czy powierzchni
-- Jednostka mapy jest abstrakcyjna
-- Powyższe cechy układów geograficznych powodują, że do większości algorytmów w geostatystyce wykorzystywane są układy współrzędnych prostokątnych płaskich
+### Układy współrzędnych
 
-### Układ współrzędnych prostokątnych płaskich
+Dane przestrzenne mogą być reprezentowane używając układów współrzędnych geograficznych lub prostokątnych płaskich.
 
-- Określane są w miarach liniowych (np. metrach)
-- Proporcje między współrzędną X a Y są równe 1:1
-- Wielkość oczka jest stała
+W układzie współrzędnych geograficznych proporcje pomiędzy współrzędną oznaczającą długość geograficzną (X) a oznaczającą szerokość geograficzną (Y) nie są równe 1:1. 
+W tych układach realna wielkość oczka siatki (jego powierzchnia) jest zmienna, a jednostka mapy jest abstrakcyjna.
+W efekcie nie pozwala to na proste określanie odległości czy powierzchni.
+Powyższe cechy układów współrzędnych geograficznych powodują, że do większości algorytmów w geostatystyce wykorzystywane są układy współrzędnych prostokątnych płaskich.
+
+Układy współrzędnych prostokątnych płaskich określane są w miarach liniowych (np. metrach).
+W tych układach proporcje między współrzędną X a Y są równe 1:1, a wielkość oczka jest stała.
 
 ### GEOS
 
-- Pakiety **rgeos** czy **sf** używają biblioteki GEOS do wykonywania operacji przestrzennych
-- http://geos.osgeo.org/
-- GEOS to biblioteka pozwalająca na przetwarzanie obiektów przestrzennych
-- Przykładowe funkcje tej biblioteki to tworzenie buforów, wyliczanie centroidów, określanie relacji topologicznych (np. przecina, zawiera, etc.) i wiele innych
+Pakiet  **sf** używa biblioteki [GEOS](http://geos.osgeo.org/) do wykonywania operacji przestrzennych. 
+Przykładowe funkcje tej biblioteki to tworzenie buforów, wyliczanie centroidów, określanie relacji topologicznych (np. przecina, zawiera, etc.) i wiele innych.
 
 ## Import danych
 
 R pozwala na odczytywanie danych przestrzennych z wielu formatów.
-Do najpopularniejszych należą dane tekstowe z plików .csv, dane wektorowe z plików .shp, dane rastrowe z plików w formacie GeoTIFF, oraz bazy danych przestrzennych z plików .gpkg.
+Do najpopularniejszych należą dane tekstowe z plików `.csv`, dane wektorowe z plików `.shp`, dane rastrowe z plików w formacie GeoTIFF, oraz bazy danych przestrzennych z plików `.gpkg`.
 
 ### Format .csv (dane punktowe)
 
-Dane z plików tekstowych (np. .csv) można odczytać za pomocą uogólnionej funkcji `read.table()` lub też funkcji szczegółowych - `read.csv()` lub `read.csv2()`.
+Dane z plików tekstowych (np. `.csv`) można odczytać za pomocą uogólnionej funkcji `read.table()` lub też funkcji szczegółowych - `read.csv()` lub `read.csv2()`.
 
 ```{r 02-r-a-dane-przestrzenne-1}
 dane_punktowe = read.csv("dane/punkty.csv")
@@ -147,34 +136,11 @@ Ważne, ale nie wymagane, jest także dodanie informacji o układzie przestrzenn
 dane_punktowe_sf = st_set_crs(dane_punktowe_sf, value = 2180)
 ```
 
-Proste wizualizacje uzyskanych danych klasy przestrzennej, np. `sf`, można uzyskać za pomocą funkcji `plot()` (rycina \@ref(fig:02-r-a-dane-przestrzenne-5) i \@ref(fig:02-r-a-dane-przestrzenne-7a)).
+Proste wizualizacje uzyskanych danych klasy przestrzennej, np. `sf` czy `stars`, można uzyskać za pomocą funkcji `plot()` (rycina \@ref(fig:02-r-a-dane-przestrzenne-5) i \@ref(fig:02-r-a-dane-przestrzenne-7a)).
 
 ```{r 02-r-a-dane-przestrzenne-5, fig.cap="Efekt działania funkcji plot na obiekcie klasy sf."}
 plot(dane_punktowe_sf)
 ```
-
-<!--
-### Usuwanie punktów zawierających braki wartości
-
-```{r }
-sp_na_omit <- function(x, margin=1) {
-  if (!inherits(x, "SpatialPointsDataFrame") & !inherits(x, "SpatialPolygonsDataFrame")) {
-    stop("MUST BE sp SpatialPointsDataFrame OR SpatialPolygonsDataFrame CLASS OBJECT")
-  }
-  na.index <- unique(as.data.frame(which(is.na(x@data), arr.ind = TRUE))[, margin])
-  if (margin == 1) {
-    cat("DELETING ROWS: ", na.index, "\n")
-    return(x[-na.index, ])
-  }
-  if (margin == 2) {
-    cat("DELETING COLUMNS: ", na.index, "\n")
-    return(x[, -na.index])
-  }
-}
-# wolin_lato_los2 <- sp_na_omit(wolin_lato_los)
-# summary(wolin_lato_los2)
-```
--->
 
 ### Dane poligonowe (formaty gisowe)
 
@@ -190,7 +156,7 @@ granica_sf = st_read(dsn = "dane/granica.gpkg")
 ### Rastry
 
 Istnieje kilka sposobów odczytu danych rastrowych w R. 
-Do najpopularniejszych należą funkcje `readGDAL()` z pakietu `rgdal` oraz `raster()` z pakietu **raster**.
+Do najpopularniejszych należą funkcje `readGDAL()` z pakietu **rgdal** oraz `raster()` z pakietu **raster**.
 W poniższym przykładzie użyjemy funkcji `read_stars()` z pakietu **stars**.
 Należy w niej jedynie podać ścieżkę do pliku rastrowego.
 
@@ -227,7 +193,7 @@ str(dane_punktowe_sf)
 ```
 
 Obiekty `stars` mogą przyjmować różną formę w zależności od tego czy reprezentują one dane wektorowe czy rastrowe oraz tego ile wymiarów posiadają te dane.
-Obiekt `siatka_stars` posiada dwa wymiary (`x` i `y`) oraz jeden atrybut (`siatka.tif`).
+Przykładowy obiekt `siatka_stars` posiada dwa wymiary (`x` i `y`) oraz jeden atrybut (`siatka.tif`).
 
 ```{r 02-r-a-dane-przestrzenne-10a}
 siatka_stars
@@ -240,8 +206,8 @@ Jest zbudowany jako lista zawierająca dwuwymiarową macierz wraz ze zbiorem met
 Funkcja `st_drop_geometry()` pozwala na pozbycie się informacji przestrzennych z obiektu klasy `sf` i uzyskanie jedynie obiektu klasy `data.frame` zawierającego nieprzestrzenne informacje o kolejnych punktach w tym zbiorze.
 
 ```{r 02-r-a-dane-przestrzenne-11}
-df = st_drop_geometry(dane_punktowe_sf)
-head(df)
+punkty_df = st_drop_geometry(dane_punktowe_sf)
+head(punkty_df)
 ```
 
 Przetworzenie obiektu klasy `stars` na `data.frame` odbywa się natomiast używając funkcji `as.data.frame()`.
@@ -284,17 +250,23 @@ st_crs(dane_punktowe_sf)
 
 ### Łączenie danych rastrowych
 
+Połączenie danych rastrowych pochodzących z kilku plików może odbyć się poprzez wczytanie ich jako osobnych obiektów klasy `stars` a następnie połączenie ich używając funkcji `c()`.
+
 ```{r 02-r-a-dane-przestrzenne-15a}
 srtm_stars = read_stars("dane/srtm.tif")
 clc_stars = read_stars("dane/clc.tif")
+dwie_stars = c(srtm_stars, clc_stars)
 ```
 
-```{r}
-dwie_stars = c(srtm_stars, clc_stars)
+W efekcie uzyskiwany jest obiekt posiadający dwa atrybuty odpowiadające wczytanym plikom.
+
+```{r 02-r-a-dane-przestrzenne-15b}
+dwie_stars
 ```
 
 ### Wydobywanie wartości z rastra
 
+Posiadając dwa obiekty, jeden punktowy a drugi rastrowy, dotyczące tego samego obszaru możliwe jest wydobycie wartości dla punktów używając funkcji `st_join()`.
 <!-- toDo -->
 
 ```{r 02-r-a-dane-przestrzenne-15}
@@ -371,6 +343,12 @@ Wyświetlanie danych w formacie rastrowym może również odbyć się z użyciem
 Domyślnie wyświetla ona pierwszą zmienną (lub warstwę) znajdującą się w obiekcie klasy `stars` (rycina \@ref(fig:02-r-a-dane-przestrzenne-21)).
 
 ```{r 02-r-a-dane-przestrzenne-21, fig.cap = "Użycie funkcji plot do wyświetlenia pierwszej zmiennej obiektu klasy stars."}
+plot(dwie_stars)
+```
+
+Zmiana kolorów mapy odbywa się poprzez podanie wektora kolorów (palety) w argumencie `col` (rycina \@ref(fig:02-r-a-dane-przestrzenne-21a)).
+
+```{r 02-r-a-dane-przestrzenne-21a, fig.cap = "Użycie funkcji plot do wyświetlenia pierwszej zmiennej obiektu klasy stars wraz z zadaną paletą kolorów."}
 paleta = hcl.colors(40, palette = "ag_Sunset")
 plot(dwie_stars, col = paleta)
 ```
