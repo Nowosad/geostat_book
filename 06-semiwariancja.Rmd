@@ -36,14 +36,14 @@ Geostatystyka jest to zbiór narzędzi statystycznych uwzględniających w anali
 - Istnieje informacja o lokalizacji obserwacji
 -->
 
-### Funkcje
+### Funkcje geostatystyki
 
 Istnieją cztery główne funkcje geostatystyki:
 
-1. Identyfikacja i modelowanie struktury przestrzennej/czasowej zjawiska
-2. Estymacja - szacowanie wartości badanej zmiennej w nieopróbowanym miejscu i/lub momencie czasu
-3. Symulacja - generowanie alternatywnych obrazów, które honorują wyniki pomiarów i strukturę przestrzenną/czasową zjawiska
-4. Optymalizacja próbkowania/sieci pomiarowej 
+1. Identyfikacja i modelowanie struktury przestrzennej/czasowej zjawiska.
+2. Estymacja - szacowanie wartości badanej zmiennej w nieopróbowanym miejscu i/lub momencie czasu.
+3. Symulacja - generowanie alternatywnych obrazów, które honorują wyniki pomiarów i strukturę przestrzenną/czasową zjawiska.
+4. Optymalizacja próbkowania/sieci pomiarowej.
 
 Inaczej mówiąc, celem geostatystyki nie musi być tylko interpolacja (estymacja) przestrzenna, ale również zrozumienie zmienności przestrzennej lub czasowej zjawiska, symulowanie wartości, oraz optymalizacja sieci pomiarowej.
 
@@ -69,52 +69,44 @@ p = DiagrammeR::mermaid("
 <!-- knitr::include_graphics("figs/diag.png") -->
 <!-- ``` -->
 
-<!-- ### Geostatystyka | Cele -->
-<!-- - Charakterystyka struktury przestrzennej badanego zjawiska -->
-<!-- - Uwzględnienie przestrzennych relacji między zmiennymi -->
-<!-- - Interpolacja wartości -->
-<!-- - Wizualizacja -->
-<!-- - Określenie niepewności danych -->
-<!-- - Stwierdzenie niepewności estymacji -->
-
 ### Podstawowe etapy
 
 W przypadku estymacji geostatystycznej, zwanej inaczej interpolacją geostatystyczną, pełna ścieżka postępowania składa się z siedmiu elementów:
 
-1. Zaprojektowanie sposobu (typu) próbkowania oraz organizacji zadań
-2. Zebranie danych, analiza laboratoryjna
-3. Wstępna eksploracja danych, ocena ich jakości
-4. Modelowanie semiwariogramów na podstawie dostępnych danych
-5. Estymacja badanej cechy
-6. Porównanie i ocena modeli
-7. Stworzenie wynikowego produktu i jego dystrybucja
+1. Zaprojektowanie sposobu (typu) próbkowania oraz organizacji zadań.
+2. Zebranie danych, analiza laboratoryjna.
+3. Wstępna eksploracja danych, ocena ich jakości.
+4. Modelowanie semiwariogramów na podstawie dostępnych danych.
+5. Estymacja badanej cechy.
+6. Porównanie i ocena modeli.
+7. Stworzenie wynikowego produktu i jego dystrybucja.
 
 ### Dane wejściowe
 
 Jedną z najważniejszych ograniczeń stosowania metod geostatystycznych jest spełnienie odpowiednich założeń dotyczących danych wejściowych.
 Muszą one:
 
-1. Zawierać wystarczająco dużą liczbę punktów (minimalnie >30, ale zazwyczaj więcej niż 100/150)
-2. Być reprezentatywne
-3. Być niezależne
-4. Być stworzone używając stałej metodyki
-5. Być wystarczająco dokładne
+- Zawierać wystarczająco dużą liczbę punktów (minimalnie >30, ale zazwyczaj więcej niż 100/150).
+- Być reprezentatywne.
+- Być niezależne.
+- Być stworzone używając stałej metodyki.
+- Być wystarczająco dokładne.
 
 ### Badane zjawisko
 
-Oprócz ograniczeń dotyczących danych wejściowych, istnieją również założenia dotyczące analizowanej cechy (analizowanego zjawiska):
+Oprócz ograniczeń dotyczących danych wejściowych, istnieją również dwa założenia dotyczące analizowanej cechy (analizowanego zjawiska):
 
-1. Przestrzennej ciągłości - przestrzenna korelacja między zmienny w dwóch lokalizacjach zależy tylko od ich odległości (oraz czasem kierunku), lecz nie od tego gdzie są one położone
-2. Stacjonarności - średnia i wariancja są stałe na całym badanym obszarze
+1. Przestrzennej ciągłości - przestrzenna korelacja między zmienny w dwóch lokalizacjach zależy tylko od ich odległości (oraz czasem kierunku), lecz nie od tego gdzie są one położone.
+2. Stacjonarności - średnia i wariancja są stałe na całym badanym obszarze.
 
 ### Podstawowe symbole
 
 Podstawowe symbole w określaniu przestrzennej zmienności to:
 
-- $s$ - wektor współrzędnych
-- $z(s)$ - badana zmienna jako funkcja położenia - inaczej określany jako ogon (ang. *tail*)
-- $h$ - lag - odstęp pomiędzy dwoma lokalizacjami
-- $z(s+h)$ - wartość badanej zmiennej odległej o odstęp $h$ - inaczej określany jako głowa (ang. *head*)
+- $s$ - wektor współrzędnych.
+- $z(s)$ - badana zmienna jako funkcja położenia - inaczej określany jako ogon (ang. *tail*).
+- $h$ - lag - odstęp pomiędzy dwoma lokalizacjami.
+- $z(s+h)$ - wartość badanej zmiennej odległej o odstęp $h$ - inaczej określany jako głowa (ang. *head*).
 
 ## Przestrzenna kowariancja i korelacja
 
@@ -122,9 +114,9 @@ Podstawowe symbole w określaniu przestrzennej zmienności to:
 
 Przestrzenna kowariancja, korelacja i semiwariancja to miary określające przestrzenną zmienność analizowanej cechy.
 
-- Kowariancja i korelacja to miary podobieństwa pomiędzy dwoma zmiennymi
-- Przenosząc to na aspekt przestrzenny, badamy jedną zmienną, ale pomiędzy dwoma punktami odległymi od siebie o pewien dystans (określany jako lag)
-- W efekcie otrzymujemy miarę podobieństwa pomiędzy wartością głowy i ogona (rycina \@ref(fig:zprzs0))
+- Kowariancja i korelacja to miary podobieństwa pomiędzy dwoma zmiennymi.
+- Przenosząc to na aspekt przestrzenny, badamy jedną zmienną, ale pomiędzy dwoma punktami odległymi od siebie o pewien dystans (określany jako lag).
+- W efekcie otrzymujemy miarę podobieństwa pomiędzy wartością głowy i ogona (rycina \@ref(fig:zprzs0)).
 
 ```{r zprzs0, echo=FALSE, fig.cap = "Relacja między wartościami zmiennej temp w danym miejscu a wartościami zmiennej temp w odległości do 200 metrów."}
 hscat(temp~1, data = punkty, breaks = c(0, 200))
@@ -134,14 +126,15 @@ hscat(temp~1, data = punkty, breaks = c(0, 200))
 
 Wykres rozrzutu z przesunięciem pokazuje korelację pomiędzy wartościami analizowanej cechy w pewnych grupach odległości. 
 Taki wykres można stworzyć używając funkcji `hscat()` z pakietu **gstat** (rycina \@ref(fig:zprzs)). 
-Przykładowo, na poniższym wykresie widać wartość cechy `temp` z kolejnymi przesunięciami - od 0 do 500 metrów, od 500 metrów do 1000 metrów, itd.
-W pierwszym przedziale wartość cechy `temp` z przesunięciem wykazuje korelację na poziomie 0,876, a następnie z każdym kolejnym przedziałem (odległością) ta wartość maleje.
-W przedziale 3500 do 4000 metrów osiąga jedynie 0,128.
-Pozwala to na stwierdzenie, że cecha `temp` wykazuje zmienność przestrzenną - podobieństwo jej wartości zmniejsza się wraz z odległością.
 
 ```{r zprzs, fig.height=7, fig.cap = "Wykres rozrzutu z przesunięciem dla zamiennej temp."}
 hscat(temp~1, data = punkty, breaks = seq(0, 4000, by = 500))
 ```
+
+Przykładowo, na powyższym wykresie widać wartość cechy `temp` z kolejnymi przesunięciami - od 0 do 500 metrów, od 500 metrów do 1000 metrów, itd.
+W pierwszym przedziale wartość cechy `temp` z przesunięciem wykazuje korelację na poziomie 0,876, a następnie z każdym kolejnym przedziałem (odległością) ta wartość maleje.
+W przedziale 3500 do 4000 metrów osiąga jedynie 0,128.
+Pozwala to na stwierdzenie, że cecha `temp` wykazuje zmienność przestrzenną - podobieństwo jej wartości zmniejsza się wraz z odległością.
 
 ### Autokowariancja
 
@@ -162,7 +155,7 @@ Jej wykres (autokorelogram) pokazuje wartość jednej z miar autokorelacji (np. 
 Na poniższym przykładzie, wartość statystyki I Morana jest wyliczana poprzez funkcję `correlog()` z pakietu **pgirmess**.
 
 ```{r 06-semiwariancja-4, echo=FALSE, message=FALSE}
-suppressMessages(dev.off())
+invisible(dev.off())
 ```
 
 ```{r 06-semiwariancja-5, fig.cap = "Autokorelacja zmiennej temp."}
@@ -175,21 +168,21 @@ plot(kor)
 
 ### Miara niepodobieństwa
 
-- Trzecią miarę charakteryzującą relację między obserwacjami odległymi o kolejne odstępy jest semiwariancja
-- Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji
-- Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo
-- Jednocześnie, dla potrzeb interpretacji relacji, kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja
+Trzecią miarę charakteryzującą relację między obserwacjami odległymi o kolejne odstępy jest semiwariancja. 
+Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji.
+Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo.
+Jednocześnie warto zdawać sobie sprawę, że kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja dla potrzeb interpretacji relacji przestrzennych.
 
 ### Wzór
 
 Zmienność przestrzenna analizowanej cechy może być określona za pomocą semiwariancji.
-Jest to połowa średniej kwadratu różnicy pomiędzy wartościami badanej zmiennej w dwóch lokalizacjach odległych o wektor $h$:
+Jest to połowa średniej kwadratu różnicy pomiędzy wartościami badanej zmiennej ($z$) w dwóch lokalizacjach odległych o wektor $h$:
 
 $$ \gamma(h) = \frac{1}{2}[(z(s) - z(s+h))]^2 $$
 
-Przykładowo, aby wyliczyć wartość semiwariancji (`gamma`) pomiędzy dwoma punktami musimy znać wartość pierwszego z nich (w przykładzie jest to ok. 22,46 stopni Celsjusza) oraz drugiego z nich (ok. 16,04 stopni Celsjusza).
-Korzystając z wzoru na semiwariację otrzymujemy wartość równą ok. 20,60.
-Znamy również odległość między punktami (ok. 4576,59 metra), więc możemy w uproszczeniu stwierdzić, że dla tej pary punktów odległych o 4577 metry wartość semiwariancji wynosi około 20,6.
+Przykładowo, aby wyliczyć wartość semiwariancji (`gamma`) pomiędzy dwoma punktami musimy znać wartość pierwszego z nich (w przykładzie jest to ok. 13,85 stopni Celsjusza) oraz drugiego z nich (ok. 15,48 stopni Celsjusza).
+Korzystając z wzoru na semiwariację otrzymujemy wartość równą ok. 1,33.
+Znamy również odległość między punktami (ok. 3240,89 metra), więc możemy w uproszczeniu stwierdzić, że dla tej pary punktów odległych o 3240 metrów wartość semiwariancji wynosi około 1,33.
 
 ```{r 06-semiwariancja-6 }
 odl = st_distance(punkty[c(1, 2), ])[2]
@@ -246,7 +239,7 @@ $$ \hat{\gamma}(h) = \frac{1}{2N(h)}\sum_{i=1}^{N(h)}(z(s_i) - z(s_i+h))^2 $$
 W oparciu o semiwariogram empiryczny (czyli oparty na danych) możemy następnie dopasować do niego model/e.
 
 ```{r 06-semiwariancja-10, echo=FALSE, fig.cap="Semiwariogram empiryczny zmiennej temp."}
-vario_par = variogram(temp~1, locations = punkty)
+vario_par = variogram(temp ~ 1, locations = punkty)
 plot(vario_par, plot.numbers = FALSE)
 ```
 
@@ -271,17 +264,18 @@ plot(vario_par, plot.numbers = TRUE)
 
 Przy ustalaniu parametrów semiwariogramu powinno się stosować do kilku utartych zasad (tzw. *rules of thumb*):
 
-- W każdym odstępie powinno się znaleźć co najmniej 30 par punktów
-- Maksymalny zasięg semiwariogramu (ang. *cutoff distance*) to 1/2 pierwiastka z badanej powierzchni (inne źródła mówią o połowie z przekątnej badanego obszaru/jednej trzeciej)
-- Liczba odstępów powinna nie być mniejsza niż 10
-- Optymalnie maksymalny zasięg semiwariogramu powinien być dłuższy o 10-15% od zasięgu zjawiska
-- Optymalnie odstępy powinny być jak najbliżej siebie i jednocześnie nie być chaotyczne
-- Warto metodą prób i błędów określić optymalne parametry semiwariogramu
-- Należy określić czy zjawisko wykazuje anizotropię przestrzenną
+- W każdym odstępie powinno się znaleźć co najmniej 30 par punktów.
+- Maksymalny zasięg semiwariogramu (ang. *cutoff distance*) to 1/2 pierwiastka z badanej powierzchni (inne źródła mówią o połowie z przekątnej badanego obszaru/jednej trzeciej).
+- Liczba odstępów powinna nie być mniejsza niż 10.
+- Optymalnie maksymalny zasięg semiwariogramu powinien być dłuższy o 10-15% od zasięgu zjawiska.
+- Optymalnie odstępy powinny być jak najbliżej siebie i jednocześnie nie być chaotyczne.
+- Warto metodą prób i błędów określić optymalne parametry semiwariogramu.
+- Należy określić czy zjawisko wykazuje anizotropię przestrzenną.
 
 ### Obliczenia pomocnicze
 
-- Liczba par obserwacji:
+W zrozumieniu danych oraz przy określaniu parametrów semiwariogramu może pomóc szereg obliczeń pomocniczych.
+Przykładowo, aby wyliczyć liczbę par obserwacji można użyć poniższego kodu.
 
 ```{r 06-semiwariancja-13 }
 0.5 * nrow(punkty) * (nrow(punkty) - 1)
@@ -302,21 +296,21 @@ z_kwadrat = kraw_x ^ 2 + kraw_y ^ 2
 ```
 -->
 
-- Powierzchnia zajmowana przez jedną próbkę:
+Powierzchnia zajmowana przez jedną próbkę jest osiągana poprzez podzielenie całej badanej powierzchni poprzez liczbę punktów.
 
 ```{r 06-semiwariancja-15 }
 pow_pr = st_area(granica) / nrow(punkty)
 pow_pr
 ```
 
-- Średnia odległość między punktami :
+Średnia odległość między punktami to wartość pierwiastka z powierzchni zajmowanej przez jedną próbkę.
 
 ```{r 06-semiwariancja-16 }
 sqrt(pow_pr)
 ```
 
-
-- Połowa pierwiastka powierzchni:
+Ostatnim obliczeniem pomocniczym jest określenie połowy pierwiastka powierzchni.
+Może być ono następnie użyte do ustalenia maksymalnegp zasięgu semiwariogramu.
 
 ```{r 06-semiwariancja-17 }
 pow = st_area(granica)
@@ -330,7 +324,7 @@ Można jednak tę wartość zmodyfikować używając argumentu `cutoff` (rycina 
 
 ```{r 06-semiwariancja-18, fig.cap="Semiwariogram empiryczny zmiennej temp używając ręcznie ustalonej wartości maksymalnego zasięgu semiwariogramu."}
 vario_par = variogram(temp~1, locations = punkty,
-                       cutoff = 4000)
+                      cutoff = 4000)
 plot(vario_par)
 ```
 
@@ -339,7 +333,7 @@ Można to oczywiście zmienić używając zarówno argumentu `cutoff`, jak i arg
 
 ```{r 06-semiwariancja-19, fig.cap="Semiwariogram empiryczny zmiennej temp używając ręcznie ustalonej wartości szerokości odstępów."}
 vario_par = variogram(temp~1, locations = punkty,
-                       cutoff = 4000, width = 100)
+                      cutoff = 4000, width = 100)
 plot(vario_par)
 ```
 
@@ -376,7 +370,7 @@ Używanie innych statystyk h-scattergramu, które są mniej czułe na występowa
 
 ### Anizotropia struktury przestrzennej
 
-W wielu sytuacjach, wartość cechy zależy nie tylko od odległości, ale także od kierunku. 
+W wielu sytuacjach, podobieństwo pomiędzy wartość cechy w punktach zależy nie tylko od odległości, ale także od kierunku. 
 O takim zjawisku mówimy, że wykazuje ono anizotropię struktury przestrzennej.
 
 ### Mapa semiwariogramu
@@ -390,7 +384,7 @@ Warto w tym wypadku użyć dodatkowego argumentu `threshold`, który powoduje, �
 
 ```{r 06-semiwariancja-21, fig.cap="Mapa semiwariogramu zmiennej temp."}
 vario_map = variogram(temp~1, locations = punkty, 
-                       cutoff = 4000, width = 400, map = TRUE)
+                      cutoff = 4000, width = 400, map = TRUE)
 # co najmniej 30 par punktów
 plot(vario_map, threshold = 30,
      col.regions = hcl.colors(40, palette = "ag_GrnYl", rev = TRUE)) 
