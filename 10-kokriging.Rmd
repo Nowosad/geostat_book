@@ -65,13 +65,13 @@ Następnie do pierwszego obiektu `g` dodajemy nowe informacje również poprzez 
 
 ```{r 10-kokriging-5, krosssemi}
 g = gstat(NULL, 
-           id = "SAVI", 
-           form = savi~1, 
-           data = punkty)
+          id = "SAVI", 
+          form = savi~1, 
+          data = punkty)
 g = gstat(g, 
-           id = "NDVI", 
-           form = ndvi~1, 
-           data = punkty_ndvi)
+          id = "NDVI", 
+          form = ndvi~1, 
+          data = punkty_ndvi)
 g
 ```
 
@@ -90,7 +90,7 @@ Ten ostatni parametr powoduje, że model dodawany jest do wszystkich elementów 
 
 ```{r 10-kokriging-7}
 g_model = vgm(0.006, model = "Sph",
-               range = 2000, nugget = 0.001)
+              range = 2000, nugget = 0.001)
 g = gstat(g, model = g_model, fill.all = TRUE)
 g
 ```
