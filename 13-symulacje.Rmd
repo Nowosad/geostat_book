@@ -37,17 +37,17 @@ Korzystając z symulacji geostatystycznych nie tworzymy estymacji, ale generujem
 
 Właściwości symulacji geostatystycznych: 
 
-- Efekt symulacji ma bardziej realistyczny przestrzenny wzór (ang. *pattern*) niż kriging, którego efektem jest wygładzona reprezentacja rzeczywistości
-- Każda z symulowanych map jest równie prawdopodobna
-- Symulacje pozwalają na przedstawianie niepewności interpolacji
-- Jednocześnie - kriging jest znacznie lepszy, gdy naszym celem jest jak najdokładniejsza estymacja
+- Efekt symulacji ma bardziej realistyczny przestrzenny wzór (ang. *pattern*) niż kriging, którego efektem jest wygładzona reprezentacja rzeczywistości.
+- Każda z symulowanych map jest równie prawdopodobna.
+- Symulacje pozwalają na przedstawianie niepewności interpolacji.
+- Jednocześnie - kriging jest znacznie lepszy, gdy naszym celem jest jak najdokładniejsza estymacja.
 
 ### Typy symulacji
 
 Istnieją dwa typy symulacji geostatystycznych:
 
-- Symulacje bezwarunkowe (ang. *Unconditional Simulations*) - wykorzystujące semiwariogram, żeby włączyć informację przestrzenną, ale wartości ze zmierzonych punktów nie są w niej wykorzystywane
-- Symulacje warunkowe (ang. *Conditional Simulations*) - opiera się ona o średnią wartość, strukturę kowariancji oraz obserwowane wartości (w tym sekwencyjna symulacja danych kodowanych (ang. *Sequential indicator simulation*))
+- Symulacje bezwarunkowe (ang. *Unconditional Simulations*) - wykorzystujące semiwariogram, żeby włączyć informację przestrzenną, ale wartości ze zmierzonych punktów nie są w niej wykorzystywane.
+- Symulacje warunkowe (ang. *Conditional Simulations*) - opiera się ona o średnią wartość, strukturę kowariancji oraz obserwowane wartości (w tym sekwencyjna symulacja danych kodowanych (ang. *Sequential indicator simulation*)).
 
 ## Symulacje bezwarunkowe
 
@@ -118,10 +118,10 @@ spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sil
 Jednym z podstawowych typów symulacji warunkowych jest sekwencyjna symulacja gaussowska (ang. *Sequential Gaussian simulation*). 
 Polega ona na wybieraniu losowo lokalizacji nie posiadającej zmierzonej wartości badanej zmiennej:
 
-1. Krigingu wartości w tej lokalizacji korzystając z dostępnych danych
-2. Wylosowaniu wartości z rozkładu normalnego o średniej i wariancji wynikającej z krigingu
-3. Dodaniu symulowanej wartości do zbioru danych i przejściu do kolejnej lokalizacji
-4. Powtórzeniu poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja
+1. Krigingu wartości w tej lokalizacji korzystając z dostępnych danych.
+2. Wylosowaniu wartości z rozkładu normalnego o średniej i wariancji wynikającej z krigingu.
+3. Dodaniu symulowanej wartości do zbioru danych i przejściu do kolejnej lokalizacji.
+4. Powtórzeniu poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja.
 
 Sekwencyjna symulacja gaussowska wymaga zmiennej posiadającej wartości o rozkładzie zbliżonym do normalnego. 
 Można to sprawdzić poprzez wizualizacje danych (histogram, wykres kwantyl-kwantyl) lub też test statystyczny (test Shapiro-Wilka) (ryciny \@ref(fig:13-symulacje-3) i \@ref(fig:13-symulacje-3a)).
@@ -151,19 +151,19 @@ shapiro.test(punkty$temp_log)
 Dalsze etapy przypominają przeprowadzenie estymacji statystycznej, jedynym wyjątkiem jest dodanie argumentu mówiącego o liczbie symulacji do przeprowadzenia (`nsim` w funkcji `krige()`) (ryciny \@ref(fig:13-symulacje-5) i \@ref(fig:13-symulacje-6)).
 
 ```{r 13-symulacje-5, fig.cap = "Model semiwariogramu zmiennej temp_log."}
-vario = variogram(temp_log~1, locations = punkty)
+vario = variogram(temp_log ~ 1, locations = punkty)
 model = vgm(model = "Sph", nugget = 0.005)
 fitted = fit.variogram(vario, model)
 plot(vario, model = fitted)
 ```
 
 ```{r sym_ok, cache=TRUE}
-sym_ok = krige(temp_log~1, 
-                locations = punkty,
-                newdata = siatka, 
-                model = fitted,
-                nmax = 30, 
-                nsim = 4)
+sym_ok = krige(temp_log ~ 1, 
+               locations = punkty,
+               newdata = siatka, 
+               model = fitted,
+               nmax = 30, 
+               nsim = 4)
 ```
 
 ```{r 13-symulacje-6, fig.cap = "Symulacja warunkowa zmiennej temp_log."}
@@ -182,12 +182,12 @@ Symulacje geostatystyczne pozwalają również na przedstawianie niepewności in
 W tym wypadku należy wykonać znacznie więcej powtórzeń (np. `nsim = 100`).
 
 ```{r master_symulation, cache=TRUE}
-sym_sk = krige(temp_log~1, 
-                location = punkty, 
-                newdata = siatka, 
-                model = fitted, 
-                nsim = 100, 
-                nmax = 30)
+sym_sk = krige(temp_log ~ 1, 
+               location = punkty, 
+               newdata = siatka, 
+               model = fitted, 
+               nsim = 100, 
+               nmax = 30)
 ```
 
 Uzyskane wyniki należy przeliczyć do oryginalnej jednostki, a następnie wyliczyć odchylenie standardowe ich wartości.
@@ -234,7 +234,7 @@ W tej metodzie kolejne etapy przypominają przeprowadzenie krigingu danych kodow
 Jedynie w funkcji `krige()` należy dodać argument mówiący o liczbie symulacji do przeprowadzenia (`nsim`).
 
 ```{r 13-symulacje-10, fig.cap = "Model semiwariogramu empirycznego binarnej zmiennej temp_ind stworzony na potrzeby symulacji."}
-vario_ind = variogram(temp_ind~1, locations = punkty)
+vario_ind = variogram(temp_ind ~ 1, locations = punkty)
 # plot(vario_ind)
 fitted_ind = fit.variogram(vario_ind,
                             vgm(model = "Sph", nugget = 0.3))
@@ -243,13 +243,13 @@ plot(vario_ind, model = fitted_ind)
 ```
 
 ```{r sym_ind, cache=TRUE}
-sym_ind = krige(temp_ind~1, 
-                 locations = punkty, 
-                 newdata = siatka, 
-                 model = fitted_ind, 
-                 indicators = TRUE,
-                 nsim = 4, 
-                 nmax = 30)
+sym_ind = krige(temp_ind ~ 1, 
+                locations = punkty, 
+                newdata = siatka, 
+                model = fitted_ind, 
+                indicators = TRUE,
+                nsim = 4, 
+                nmax = 30)
 ```
 
 Wynik symulacji danych kodowanych znacząco różni się od wyniku krigingu danych kodowanych.
