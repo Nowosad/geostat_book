@@ -18,6 +18,10 @@ paleta = hcl.colors(40, palette = "ag_Sunset")
 par(mar = c(rep(0, 4)))
 ```
 
+<!-- demo(cosimulation) -->
+<!-- krigeSimCE -->
+<!-- krigeSTSimTB -->
+
 <!--
 ## Symulacje przestrzenne 1:
  sekwencyjna symulacja i ko symulacja gaussowska,
@@ -44,7 +48,7 @@ Właściwości symulacji geostatystycznych:
 
 ### Typy symulacji
 
-Istnieją dwa typy symulacji geostatystycznych:
+Istnieją dwa podstwowe typy symulacji geostatystycznych:
 
 - Symulacje bezwarunkowe (ang. *Unconditional Simulations*) - wykorzystujące semiwariogram, żeby włączyć informację przestrzenną, ale wartości ze zmierzonych punktów nie są w niej wykorzystywane.
 - Symulacje warunkowe (ang. *Conditional Simulations*) - opiera się ona o średnią wartość, strukturę kowariancji oraz obserwowane wartości (w tym sekwencyjna symulacja danych kodowanych (ang. *Sequential indicator simulation*)).

@@ -43,7 +43,7 @@ Istnieją cztery główne funkcje geostatystyki:
 1. Identyfikacja i modelowanie struktury przestrzennej/czasowej zjawiska.
 2. Estymacja - szacowanie wartości badanej zmiennej w nieopróbowanym miejscu i/lub momencie czasu.
 3. Symulacja - generowanie alternatywnych obrazów, które honorują wyniki pomiarów i strukturę przestrzenną/czasową zjawiska.
-4. Optymalizacja próbkowania/sieci pomiarowej.
+4. Optymalizacja próbkowania/sieci pomiarowej.<!--https://cran.r-project.org/web/packages/geosample/vignettes/geosample-vignette.pdf-->
 
 Inaczej mówiąc, celem geostatystyki nie musi być tylko interpolacja (estymacja) przestrzenna, ale również zrozumienie zmienności przestrzennej lub czasowej zjawiska, symulowanie wartości, oraz optymalizacja sieci pomiarowej.
 
