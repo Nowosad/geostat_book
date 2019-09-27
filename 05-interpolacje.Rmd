@@ -111,7 +111,8 @@ voronoi_interp$temp = punkty$temp
 
 ```{r 05-interpolacje-10, fig.cap = "Interpolacja zmiennej temp używając metody diagramów Woronoja."}
 plot(voronoi_interp["temp"],
-     main = "Diagramy Woronoja - temperatura")
+     main = "Diagramy Woronoja - temperatura",
+     pal = hcl.colors(10, palette = "ag_Sunset"))
 ```
 
 ### IDW
