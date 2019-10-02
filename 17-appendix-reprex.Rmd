@@ -77,8 +77,6 @@ Drugi problem to użyta zmienna do wizualizacji - `"temperatura"` nie istnieje w
 Zamiast niej powinna być użyta poprawna nazwa zmiennej - `temp`.
 Naprawiona wersja tego kodu znajduje się poniżej:
 
-![](figs/reprex2.png)
-
 ```{r 17-appendix-reprex-5, eval=FALSE}
 library(reprex)
 reprex({

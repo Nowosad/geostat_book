@@ -22,7 +22,7 @@ Do wbudowanych typów obiektów należą:<!--ref JN-->
 R zawiera także wiele funkcji pozwalających na przetwarzanie, wizualizację i analizowanie danych przestrzennych.
 Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi:
 
-- GIS - **sf**, **stars**, **raster**, **terra**, **sp**, **rgdal**, **rgeos**
+- Obsługa danych przestrzennych - **sf**, **stars**, **raster**, **terra**, **sp**, **rgdal**, **rgeos**
 - Geostatystyka - **gstat**, **geoR**, **geoRglm**
 
 Więcej szczegółów na ten temat pakietów R służących do analizy przestrzennej można znaleźć pod adresem https://cran.r-project.org/web/views/Spatial.html.
