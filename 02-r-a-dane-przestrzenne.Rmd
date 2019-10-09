@@ -142,18 +142,18 @@ Proste wizualizacje uzyskanych danych klasy przestrzennej, np. `sf` czy `stars`,
 plot(dane_punktowe_sf)
 ```
 
-### Dane poligonowe (formaty gisowe)
+### Dane wektorowe
 
 Dane wektorowe (np. GeoPackage czy ESRI Shapefile) można odczytać za pomocą funkcji `st_read()` z pakietu **sf**.
 Przyjmuje ona co najmniej jeden argument - `dsn`, który określa główny plik w którym znajdują się dane. 
 
 ```{r 02-r-a-dane-przestrzenne-6}
 library(sf)
-granica_sf = st_read(dsn = "dane/granica.gpkg")
+granica_sf = read_sf(dsn = "dane/granica.gpkg")
 # plot(granica_sf)
 ```
 
-### Rastry
+### Dane rastrowe
 
 Istnieje kilka sposobów odczytu danych rastrowych w R. 
 Do najpopularniejszych należą funkcje `readGDAL()` z pakietu **rgdal** oraz `raster()` z pakietu **raster**.
@@ -163,6 +163,7 @@ Należy w niej jedynie podać ścieżkę do pliku rastrowego.
 ```{r 02-r-a-dane-przestrzenne-7}
 library(stars)
 siatka_stars = read_stars("dane/siatka.tif")
+siatka_stars
 ```
 
 ```{r 02-r-a-dane-przestrzenne-7a, fig.cap = "Efekt działania funkcji plot na obiekcie klasy sf."}
@@ -246,7 +247,7 @@ Funkcja `st_crs()` wyświetla definicję układu współrzędnych.
 st_crs(dane_punktowe_sf)
 ```
 
-## Interakcja raster-vector
+## Przetwarzanie danych przestrzennych
 
 ### Łączenie danych rastrowych
 
@@ -282,7 +283,7 @@ R pozwala również na zapisywanie danych przestrzennych.
 W przypadku zapisu danych wektorowych za pomocą funkcji `st_write()` konieczne jest podanie ścieżki i  nazwy zapisywanego obiektu wraz z rozszerzeniem (np. `dane/granica.gpkg`).
 
 ```{r zapis_wektora, eval=FALSE}
-st_write(granica_sf, dsn = "dane/granica.gpkg")
+write_sf(granica_sf, dsn = "dane/granica.gpkg")
 ```
 
 ### Zapisywanie danych rastrowych
