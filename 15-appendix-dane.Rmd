@@ -19,7 +19,7 @@ Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pa
 
 ```{r instgeobook2, eval=FALSE}
 # install.packages("remotes")
-remotes::install_github("nowosad/geostatbook@3)
+remotes::install_github("nowosad/geostatbook@3")
 ```
 
 ## Zbiory danych w pakiecie **geostatbook**
