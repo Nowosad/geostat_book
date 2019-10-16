@@ -60,7 +60,7 @@ Funkcja `st_sample()` z pakietu **sf** pozwala na stworzenie kilku typów próbk
 
 W regularnym typie próbkowania, kolejne punkty rozłożone są równomiernie na badanym obszarze.
 
-```{r 04-eksp-przestrzenna-4 }
+```{r 04-eksp-przestrzenna-4, echo=FALSE}
 set.seed(225)
 regularny = st_sample(granica, 150, type = "regular")
 plot(regularny)
@@ -71,7 +71,7 @@ plot(regularny)
 W losowym typie próbkowania każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia. 
 Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych.
 
-```{r 04-eksp-przestrzenna-5 }
+```{r 04-eksp-przestrzenna-5, echo=FALSE}
 set.seed(301)
 losowy = st_sample(granica, 150, type = "random")
 plot(losowy)
@@ -81,7 +81,13 @@ plot(losowy)
 
 Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu.
 
-```{r 04-eksp-przestrzenna-6, error = TRUE}
+```{r 04-eksp-przestrzenna-6b, error = TRUE, echo=FALSE}
+set.seed(125)
+strat = sp::spsample(as(granica, "Spatial"), 150, type = "stratified")
+sp::plot(strat)
+```
+
+```{r 04-eksp-przestrzenna-6, error = TRUE, echo=FALSE, eval = FALSE}
 set.seed(125)
 strat = st_sample(granica, 150, type = "stratified")
 plot(strat)
@@ -91,7 +97,14 @@ plot(strat)
 
 W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbowane niż inne.
 
-```{r 04-eksp-przestrzenna-7, error = TRUE}
+```{r 04-eksp-przestrzenna-7b, error = TRUE, echo=FALSE}
+set.seed(425)
+pref = sp::spsample(as(granica, "Spatial"), 150, type = "clustered",
+                 nclusters = 30)
+sp::plot(pref)
+```
+
+```{r 04-eksp-przestrzenna-7, error = TRUE, echo=FALSE, eval = FALSE}
 set.seed(425)
 pref = st_sample(granica, 150, type = "clustered",
                  nclusters = 30)

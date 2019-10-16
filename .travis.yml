@@ -24,6 +24,7 @@ install:
   - R -e "install.packages('tinytex')"
   - R -e "tinytex::install_tinytex()"
   - R -e "devtools::install_github('nowosad/geostatbook')"
+  - R -e "install.packages('sp')"
 
 script:
   - ./_build.sh
