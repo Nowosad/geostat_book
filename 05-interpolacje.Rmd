@@ -38,7 +38,7 @@ st_bbox(punkty)
 ```
 
 Do stworzenia siatki można wykorzystać funkcję `st_as_stars()`.
-Tworzy ona nowy obiekt na podstawie obwiedni istniejącego obiektu punktowego oraz zadanej rozdzielczości (rycina \@ref(fig:05-interpolacje-4)).
+Tworzy ona nowy obiekt na podstawie obwiedni istniejącego obiektu punktowego oraz zadanej rozdzielczości (rycina \@ref(fig:05-interpolacje-4)).^[Możliwe jest też ręczne określenie granic obszaru poprzez wpisanie zakresów współrzędnych w funkcji `st_bbox()`.]
 
 ```{r 05-interpolacje-4, fig.cap = "Wizualizacja regularnej siatki."}
 punkty_bbox = st_bbox(punkty)
@@ -111,7 +111,8 @@ voronoi_interp$temp = punkty$temp
 
 ```{r 05-interpolacje-10, fig.cap = "Interpolacja zmiennej temp używając metody diagramów Woronoja."}
 plot(voronoi_interp["temp"],
-     main = "Diagramy Woronoja - temperatura")
+     main = "Diagramy Woronoja - temperatura",
+     pal = hcl.colors(10, palette = "ag_Sunset"))
 ```
 
 ### IDW
