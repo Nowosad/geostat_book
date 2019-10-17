@@ -104,7 +104,7 @@ sd(punkty$temp, na.rm = TRUE)
 Dla zmiennych kategoryzowanych nie powinno wyliczać się powyższych statystyk.
 Możliwe jest natomiast określenie liczebności grup używając funkcji `table()`.
 
-```{r 03-eksp-analiza-danych-8 }
+```{r 03-eksp-analiza-danych-8b }
 table(punkty$clc)
 ```
 
@@ -265,7 +265,7 @@ Redukcja skośności może być przeprowadzona z użyciem:
 
 Test Shapiro-Wilka pozwala na sprawdzenie normalności rozkładu wybranej zmiennej.
 
-```{r}
+```{r 03-eksp-analiza-danych-20b}
 shapiro.test(punkty$temp)
 ```
 
