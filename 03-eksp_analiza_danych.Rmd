@@ -283,6 +283,7 @@ ggplot(punkty, aes(exp_tpz)) + geom_density()
 ```
 
 ```{r 03-eksp-analiza-danych-28, eval=TRUE, echo=FALSE, fig.cap = "Porównania wartości zmiennej temp przed i po transformacji logaritmicznej."}
+p1 = ggplot(punkty, aes(temp)) + geom_density()
 punkty$log_tpz = log(punkty$temp)
 p5 = ggplot(punkty, aes(log_tpz)) + geom_density()
 punkty$exp_tpz = exp(punkty$log_tpz)
