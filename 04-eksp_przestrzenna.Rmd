@@ -31,84 +31,17 @@ Z tego powodu bardzo cenne jest odpowiednie wykorzystanie informacji z próby.
 Eksploracyjna analiza danych przestrzennych w przypadku danych punktowych ma na celu:
 
 - Sprawdzenie poprawności współrzędnych (sekcja \@ref(popr-wsp)).
-- Wgląd w typ próbkowania danych (sekcja \@ref(probkowanie)).
 - Sprawdzenie poprawności danych, w tym między innymi określenie danych odstających lokalnie (sekcja \@ref(dane-odst)).
+- Wgląd w typ próbkowania danych (sekcja \@ref(probkowanie)).
 - Identyfikacja głównych cech struktury przestrzennej zjawiska (np. trend) (rozdział \@ref(metody-interpolacji)).
 
 ## Sprawdzenie poprawności współrzędnych {#popr-wsp}
 
 Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()`.
 
-```{r 04-eksp-przestrzenna-3}
-plot(st_geometry(granica))
+```{r 04-eksp-przestrzenna-3, fig.cap = "Lokalizacja punktów pomiarowych na tle granicy obszaru badań."}
+plot(st_geometry(granica), axes = TRUE)
 plot(st_geometry(punkty), add = TRUE)
-```
-
-## Próbkowanie {#probkowanie}
-
-### Podstawowe typy próbowania
-
-Istnieje cały szereg typów próbkowania danych przestrzennych.
-Funkcja `st_sample()` z pakietu **sf** pozwala na stworzenie kilku typów próbkowania (argument `type`), między innymi:
-
-- Regularny (ang.*regular*)
-- Losowy (ang.*random*)
-- Losowy stratyfikowany (ang.*stratified*)
-- Preferencyjny (ang.*clustered*)
-
-### Typ próbowania | Regularny
-
-W regularnym typie próbkowania, kolejne punkty rozłożone są równomiernie na badanym obszarze.
-
-```{r 04-eksp-przestrzenna-4, echo=FALSE}
-set.seed(225)
-regularny = st_sample(granica, 150, type = "regular")
-plot(regularny)
-```
-
-### Typ próbowania | Losowy
-
-W losowym typie próbkowania każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia. 
-Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych.
-
-```{r 04-eksp-przestrzenna-5, echo=FALSE}
-set.seed(301)
-losowy = st_sample(granica, 150, type = "random")
-plot(losowy)
-```
-
-### Typ próbowania | Losowy stratyfikowany
-
-Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu.
-
-```{r 04-eksp-przestrzenna-6b, error = TRUE, echo=FALSE}
-set.seed(125)
-strat = sp::spsample(as(granica, "Spatial"), 150, type = "stratified")
-sp::plot(strat)
-```
-
-```{r 04-eksp-przestrzenna-6, error = TRUE, echo=FALSE, eval = FALSE}
-set.seed(125)
-strat = st_sample(granica, 150, type = "stratified")
-plot(strat)
-```
-
-### Typ próbowania | Preferencyjny
-
-W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbowane niż inne.
-
-```{r 04-eksp-przestrzenna-7b, error = TRUE, echo=FALSE}
-set.seed(425)
-pref = sp::spsample(as(granica, "Spatial"), 150, type = "clustered",
-                 nclusters = 30)
-sp::plot(pref)
-```
-
-```{r 04-eksp-przestrzenna-7, error = TRUE, echo=FALSE, eval = FALSE}
-set.seed(425)
-pref = st_sample(granica, 150, type = "clustered",
-                 nclusters = 30)
-plot(pref)
 ```
 
 ## Dane lokalnie odstające {#dane-odst}
@@ -128,6 +61,73 @@ Dodatkowo można wykorzystać pakiet **mapview** do interaktywnego określania w
 
 ```{r klik, eval=FALSE}
 mapview(punkty["temp"])
+```
+
+## Próbkowanie {#probkowanie}
+
+### Podstawowe typy próbowania
+
+Istnieje cały szereg typów próbkowania danych przestrzennych.
+Funkcja `st_sample()` z pakietu **sf** pozwala na stworzenie kilku typów próbkowania (argument `type`), między innymi:
+
+- Regularny (ang.*regular*)
+- Losowy (ang.*random*)
+- Losowy stratyfikowany (ang.*stratified*)
+- Preferencyjny (ang.*clustered*)
+
+### Regularny typ próbowania
+
+W regularnym typie próbkowania, kolejne punkty rozłożone są równomiernie na badanym obszarze.
+
+```{r 04-eksp-przestrzenna-4, echo=FALSE, fig.cap = "Przykład próbkowania regularnego."}
+set.seed(225)
+regularny = st_sample(granica, 150, type = "regular")
+plot(regularny)
+```
+
+### Losowy typ próbowania
+
+W losowym typie próbkowania każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia. 
+Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych.
+
+```{r 04-eksp-przestrzenna-5, echo=FALSE, fig.cap = "Przykład próbkowania losowego."}
+set.seed(301)
+losowy = st_sample(granica, 150, type = "random")
+plot(losowy)
+```
+
+### Losowy stratyfikowany typ próbowania
+
+Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu.
+
+```{r 04-eksp-przestrzenna-6b, error = TRUE, echo=FALSE, fig.cap = "Przykład próbkowania losowego stratyfikowanego."}
+set.seed(125)
+strat = sp::spsample(as(granica, "Spatial"), 150, type = "stratified")
+sp::plot(strat, pch = 1)
+```
+
+```{r 04-eksp-przestrzenna-6, error = TRUE, echo=FALSE, eval = FALSE}
+set.seed(125)
+strat = st_sample(granica, 150, type = "stratified")
+plot(strat)
+```
+
+### Preferencyjny typ próbowania
+
+W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbowane niż inne.
+
+```{r 04-eksp-przestrzenna-7b, error = TRUE, echo=FALSE, fig.cap = "Przykład próbkowania preferencyjnego."}
+set.seed(425)
+pref = sp::spsample(as(granica, "Spatial"), 150, type = "clustered",
+                 nclusters = 30)
+sp::plot(pref, pch = 1)
+```
+
+```{r 04-eksp-przestrzenna-7, error = TRUE, echo=FALSE, eval = FALSE}
+set.seed(425)
+pref = st_sample(granica, 150, type = "clustered",
+                 nclusters = 30)
+plot(pref)
 ```
 
 <!-- https://www.youtube.com/watch?v=75IZVZBaLkQ -->
