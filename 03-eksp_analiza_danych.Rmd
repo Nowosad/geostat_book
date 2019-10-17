@@ -99,6 +99,15 @@ knitr::include_graphics("figs/normal_distribution.png")
 sd(punkty$temp, na.rm = TRUE)
 ```
 
+### Liczebność grup
+
+Dla zmiennych kategoryzowanych nie powinno wyliczać się powyższych statystyk.
+Możliwe jest natomiast określenie liczebności grup używając funkcji `table()`.
+
+```{r 03-eksp-analiza-danych-8 }
+table(punkty$clc)
+```
+
 ## Wykresy
 
 ### Histogram
@@ -113,18 +122,18 @@ Został on stworzony przez Karla Pearsona i jest graficzną reprezentacją rozk�
 Wartości danych są łączone w przedziały (na osi poziomej) a na osi pionowej jest ukazana liczba punktów (obserwacji) w każdym przedziale.
 Co ważne, różny dobór przedziałów może dawać inną informację - w pakiecie **ggplot2** domyślnie przedział jest ustalany poprzez podzielenie zakresu wartości przez 30.
 
-### Estymator jądrowy gęstości (ang. *kernel density estimation*)
+### Estymator jądrowy gęstości
 
-Podobną funkcję do histogramu spełnia estymator jądrowy gęstości.
+Podobną funkcję do histogramu spełnia estymator jądrowy gęstości (ang. *kernel density estimation*).
 Przypomina on wygładzony wykres histogramu i również służy graficznej reprezentacji rozkładu danych (rycina \@ref(fig:03-eksp-analiza-danych-10)).
 
 ```{r 03-eksp-analiza-danych-10, fig.cap = "Rozkład wartości zmiennej temp z obiektu punkty."}
 ggplot(punkty, aes(temp)) + geom_density()
 ```
 
-### Wykres kwantyl-kwantyl (ang.*quantile-quantile*)
+### Wykres kwantyl-kwantyl
 
-Wykres kwantyl-kwantyl ułatwia interpretację rozkładu danych (rycina \@ref(fig:03-eksp-analiza-danych-11)).
+Wykres kwantyl-kwantyl (ang.*quantile-quantile*) ułatwia interpretację rozkładu danych (rycina \@ref(fig:03-eksp-analiza-danych-11)).
 
 ```{r 03-eksp-analiza-danych-11, fig.cap = "Wykres kwantyl-kwantyl wartości zmiennej temp z obiektu punkty."}
 ggplot(punkty, aes(sample = temp)) + geom_qq()
@@ -144,6 +153,14 @@ Dystrybuanta (ang. *cumulative distribution function* - CDF) wyświetla prawdopo
 ggplot(punkty, aes(temp)) + stat_ecdf()
 ```
 
+### Wykres słupkowy
+
+Wykres słupkowy (ang. *bar plot*) przedstawia liczebność kolejnych grup.
+
+```{r 03-eksp-analiza-danych-13, fig.cap = "Wykres słupkowy zmiennej clc z obiektu punkty."}
+ggplot(punkty, aes(clc)) + geom_bar()
+```
+
 ## Porównanie zmiennych
 
 Wybór odpowiedniej metody porównania zmiennych zależy od szeregu cech, między innymi liczby zmiennych, ich typu, rozkładu wartości, etc.
@@ -159,7 +176,7 @@ Wielkość samej kowariancji uzależniona jest od przyjętej skali zmiennej (jed
 Inne wyniku uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wysokości terenu w metrach i temperatury w stopniach Celsjusza a inne dla wysokości terenu w metrach i temperatury w stopniach Fahrenheita. 
 Do wyliczania kowariancji w R służy funkcja `cov()`. 
 
-```{r 03-eksp-analiza-danych-14 }
+```{r 03-eksp-analiza-danych-14, echo=FALSE, eval=FALSE}
 cov(punkty$temp, punkty$ndvi)
 ```
 
@@ -170,9 +187,10 @@ Ten współczynnik jest uzyskiwany poprzez podzielenie wartości kowariancji prz
 Z racji unormowania nie jest ona uzależniona od jednostki.
 Korelację można wyliczyć dzięki funkcji `cor()` (rycina \@ref(fig:03-eksp-analiza-danych-15a)).
 Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego obiektu zawierającego zmienne numeryczne.
+Za pomocą argumentu `method` można również wybrać jedną z trzech dostępnych miar korelacji: `"pearson"` przeznaczoną dla zmiennych o rozkładzie normalnym oraz `"spearman"` i `"kendall"` używaną dla zmiennych o rozkładzie różnym od normalnego.
 
 ```{r 03-eksp-analiza-danych-15 }
-cor(punkty$temp, punkty$ndvi)
+cor(punkty$temp, punkty$ndvi, method = "spearman")
 ```
 
 ```{r 03-eksp-analiza-danych-15a, fig.cap = "Wykres rozrzutu reprezentujący relację pomiędzy zmienną temp i ndvi z obiektu punkty."}
@@ -180,10 +198,9 @@ ggplot(punkty, aes(temp, ndvi)) + geom_point()
 ```
 
 Dodatkowo funkcja `cor.test()` służy do testowania istotności korelacji.
-Za pomocą argumentu `method` można również wybrać jedną z trzech dostępnych miar korelacji.
 
 ```{r 03-eksp-analiza-danych-16 }
-cor.test(punkty$temp, punkty$ndvi)
+cor.test(punkty$temp, punkty$ndvi, method = "spearman")
 ```
 
 <!-- W przypadku posiadania co najmniej kilku par zmiennych, można również skorzystać z funkcji `corrplot()` z pakietu **corrplot**. -->
@@ -238,64 +255,19 @@ plot(tukey, las = 1)
 Transformacja danych może mieć na celu ułatwienie porównywania różnych zmiennych, zniwelowanie skośności rozkładu lub też zmniejszenie wpływu danych odstających.
 W efekcie transformacja danych ułatwia przeprowadzenie analiz (geo-)statystycznych i polepsza wyniki prognoz z modeli.
 
-### Centrowanie
+Redukcja skośności może być przeprowadzona z użyciem:
 
-Centrowanie danych polega na wybraniu przeciętnej wartości predyktora, a następnie odjęciu wybranej wcześniej wartości od wszystkich wartości predyktorów 
-(rycina \@ref(fig:03-eksp-analiza-danych-22)).
+- Logarytmizacji
+- Pierwiastkowania
+- Innych
 
-```{r 03-eksp-analiza-danych-21, eval=FALSE}
-ggplot(punkty, aes(temp)) + geom_density()
-punkty$temp_center = punkty$temp - mean(punkty$temp)
-ggplot(punkty, aes(temp_center)) + geom_density()
+### Testowanie normalności rozkładu
+
+Test Shapiro-Wilka pozwala na sprawdzenie normalności rozkładu wybranej zmiennej.
+
+```{r}
+shapiro.test(punkty$temp)
 ```
-
-```{r 03-eksp-analiza-danych-22, eval=TRUE, echo=FALSE, fig.cap = "Porównania wartości zmiennej temp przed i po centrowaniu."}
-p1 = ggplot(punkty, aes(temp)) + geom_density()
-punkty$temp_center = punkty$temp - mean(punkty$temp)
-p2 = ggplot(punkty, aes(temp_center)) + geom_density()
-gridExtra::grid.arrange(p1, p2, ncol = 1)
-```
-
-### Skalowanie
-
-Skalowanie danych to dzielenie każdej wartości predyktora przez jego odchylenie standardowe (rycina \@ref(fig:03-eksp-analiza-danych-24)).
-
-```{r 03-eksp-analiza-danych-23, eval=FALSE}
-ggplot(punkty, aes(temp)) + geom_density()
-punkty$temp_scale = punkty$temp / sd(punkty$temp)
-ggplot(punkty, aes(temp_scale)) + geom_density()
-```
-
-```{r 03-eksp-analiza-danych-24, eval=TRUE, echo=FALSE, fig.cap = "Porównania wartości zmiennej temp przed i po skalowaniu."}
-punkty$temp_scale = punkty$temp / sd(punkty$temp)
-p3 = ggplot(punkty, aes(temp_scale)) + geom_density()
-gridExtra::grid.arrange(p1, p3, ncol = 1)
-```
-
-### Standaryzacja
-
-Do standaryzacji (centrowanie i skalowanie) służy funkcja `scale()` (rycina \@ref(fig:03-eksp-analiza-danych-26)).
-<!-- Wadą tego podejścia jest główne zmniejszenie interpretowalności pojedynczych wartości. -->
-
-```{r 03-eksp-analiza-danych-25, eval=FALSE}
-ggplot(punkty, aes(temp)) + geom_density()
-punkty$temp_standard = as.numeric(scale(punkty$temp))
-ggplot(punkty, aes(temp_standard)) + geom_density()
-```
-
-```{r 03-eksp-analiza-danych-26, eval=TRUE, echo=FALSE, fig.cap = "Porównania wartości zmiennej temp przed i po standaryzacji."}
-punkty$temp_standard = as.numeric(scale(punkty$temp))
-p4 = ggplot(punkty, aes(temp_standard)) + geom_density()
-gridExtra::grid.arrange(p1, p4, ncol = 1)
-```
-
-### Redukcja skośności
-
-Redukcja skośności:
-
-- Logarytmizacja
-- Pierwiastkowanie
-- Inne    
 
 ### Logarytmizacja
 
