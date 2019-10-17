@@ -157,7 +157,7 @@ ggplot(punkty, aes(temp)) + stat_ecdf()
 
 Wykres słupkowy (ang. *bar plot*) przedstawia liczebność kolejnych grup.
 
-```{r 03-eksp-analiza-danych-13, fig.cap = "Wykres słupkowy zmiennej clc z obiektu punkty."}
+```{r 03-eksp-analiza-danych-13b, fig.cap = "Wykres słupkowy zmiennej clc z obiektu punkty."}
 ggplot(punkty, aes(clc)) + geom_bar()
 ```
 
