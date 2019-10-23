@@ -12,7 +12,7 @@ library(ggplot2)
 library(geostatbook)
 data(punkty)
 data(siatka)
-paleta = hcl.colors(40, palette = "ag_Sunset")
+paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 ```{r 12-ocena-2, echo=FALSE}

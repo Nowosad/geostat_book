@@ -13,7 +13,7 @@ library(geostatbook)
 data(punkty)
 data(siatka)
 data(granica)
-paleta = hcl.colors(40, palette = "ag_Sunset")
+paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 ```{r 05-interpolacje-2, echo=FALSE}

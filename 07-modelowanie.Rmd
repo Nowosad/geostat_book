@@ -9,7 +9,7 @@ library(stars)
 library(gstat)
 library(geostatbook)
 data(punkty)
-paleta = hcl.colors(40, palette = "ag_Sunset")
+paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 ```{r 07-modelowanie-2, echo=FALSE}

@@ -11,6 +11,7 @@ library(geostatbook)
 data(punkty)
 data(punkty_ndvi)
 data(siatka)
+paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 ```{r 10-kokriging-2, echo=FALSE}
