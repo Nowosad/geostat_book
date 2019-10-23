@@ -18,13 +18,14 @@ par(mar = c(rep(0, 4)))
 
 ## Mapy 
 
-### Podstawowe terminy | Kontekst przestrzenny
+### Podstawowe terminy
 
 - Populacja - cały obszar, dla którego chcemy określić wybrane właściwości, np. temperatura powietrza.
 - Próba - zbiór obserwacji, dla których mamy informacje, np. pomiary ze stacji meteorologicznych.
 Inaczej, próba to podzbiór populacji. 
+
 Zazwyczaj niemożliwe (lub bardzo kosztowne) jest zdobycie informacji o całej populacji. 
-Z tego powodu bardzo cenne jest odpowiednie wykorzystanie informacji z próby.
+Z tego powodu bardzo cenne jest odpowiednie wykorzystanie informacji z próby, a następnie wnioskowanie na jej podstawie o populacji.
 
 ### Mapy punktowe
 
@@ -37,7 +38,7 @@ Eksploracyjna analiza danych przestrzennych w przypadku danych punktowych ma na 
 
 ## Sprawdzenie poprawności współrzędnych {#popr-wsp}
 
-Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()`.
+Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()` (rycina \@ref(fig:04-eksp-przestrzenna-3)).
 
 ```{r 04-eksp-przestrzenna-3, fig.cap = "Lokalizacja punktów pomiarowych na tle granicy obszaru badań."}
 plot(st_geometry(granica), axes = TRUE)
@@ -46,9 +47,9 @@ plot(st_geometry(punkty), add = TRUE)
 
 ## Dane lokalnie odstające {#dane-odst}
 
-Dane lokalnie odstające oznaczają nietypowe przestrzennie wartości danej cechy.
-Inaczej mówiąc, może to być niska wartość otoczona wysokimi wartościami lub też wysoka wartość otoczona niskimi wartościami.
-Dane lokalnie ostające mogą oznaczać zarówno błąd w danych albo wpływ innego czynnika na analizowaną cechę. 
+Dane lokalnie odstające oznaczają nietypowe przestrzennie wartości danej cechy; nie zawsze możliwe jest ich określenie używając statystyk opisowych czy histogramów.
+Daną lokalnie odstającą może być przykładowo niska wartość otoczona wysokimi wartościami lub też wysoka wartość otoczona niskimi wartościami.
+Może to oznaczać zarówno błąd w danych albo wpływ innego czynnika na analizowaną cechę. 
 Przyjrzenie się wartościom analizowanej cechy można wykonać z użyciem funkcji `plot()`. 
 Na poniższym przykładzie wyświetlona jest zmienna `temp` oznaczająca średnią temperaturę dobową (rycina \@ref(fig:04-eksp-przestrzenna-8)).
 
@@ -77,7 +78,7 @@ Funkcja `st_sample()` z pakietu **sf** pozwala na stworzenie kilku typów próbk
 
 ### Regularny typ próbowania
 
-W regularnym typie próbkowania, kolejne punkty rozłożone są równomiernie na badanym obszarze.
+W regularnym typie próbkowania, kolejne punkty rozłożone są równomiernie na badanym obszarze (rycina \@ref(fig:04-eksp-przestrzenna-4)).
 
 ```{r 04-eksp-przestrzenna-4, echo=FALSE, fig.cap = "Przykład próbkowania regularnego."}
 set.seed(225)
@@ -88,7 +89,7 @@ plot(regularny)
 ### Losowy typ próbowania
 
 W losowym typie próbkowania każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia. 
-Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych.
+Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych  (rycina \@ref(fig:04-eksp-przestrzenna-5)).
 
 ```{r 04-eksp-przestrzenna-5, echo=FALSE, fig.cap = "Przykład próbkowania losowego."}
 set.seed(301)
@@ -98,7 +99,7 @@ plot(losowy)
 
 ### Losowy stratyfikowany typ próbowania
 
-Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu.
+Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu (rycina \@ref(fig:04-eksp-przestrzenna-6)).
 
 ```{r 04-eksp-przestrzenna-6b, error = TRUE, echo=FALSE, fig.cap = "Przykład próbkowania losowego stratyfikowanego."}
 set.seed(125)
@@ -114,7 +115,7 @@ plot(strat)
 
 ### Preferencyjny typ próbowania
 
-W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbowane niż inne.
+W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbowane niż inne (rycina \@ref(fig:04-eksp-przestrzenna-7)).
 
 ```{r 04-eksp-przestrzenna-7b, error = TRUE, echo=FALSE, fig.cap = "Przykład próbkowania preferencyjnego."}
 set.seed(425)
