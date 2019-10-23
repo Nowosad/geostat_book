@@ -20,8 +20,8 @@ paleta = hcl.colors(12, palette = "ag_Sunset")
 # par(mar = c(rep(0, 4)))
 ```
 
-Przez przejściem do interpolacji geostatystycznych warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania do stworzenia estymacji przestrzennych. 
-Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne oraz modele statystyczne.
+Przez przejściem do interpolacji geostatystycznych, którymi są poświęcona kolejne rozdziały, warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania do stworzenia estymacji przestrzennych. 
+Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne (\@ref(modele-deterministyczne) oraz modele statystyczne (\@ref(modele-statystyczne).
 
 ## Tworzenie siatek
 
