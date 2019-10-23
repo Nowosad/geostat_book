@@ -58,25 +58,25 @@ rgdal::writeOGR(moje_punkty, "dane/moje_punkty.gpkg", layer = "moje_punkty",
 ## Analiza geostatystyczna
 
 Analiza geostatystyczna jest złożonym procesem, często wymagającym sprawdzenia jakości danych i ich korekcji oraz wypróbowania wielu możliwości modelowania.
-Poniższy suplement skupia się na pokazaniu przykładu uproszczonej analizy geostatystycznej, w której głównym celem jest estymacja średniej wartości temperatury.
+Poniższy appendiks skupia się na pokazaniu przykładu uproszczonej analizy geostatystycznej, w której głównym celem jest estymacja średniej wartości temperatury.
 
 ## Przygotowanie danych
 
 Pierwszym krokiem analizy geostatystycznej jest załadowanie pakietów, które zostaną użyte.
-Oczywiście, brakujące pakiety można załadować także w trakcie analizy geostatystycznej.
+Brakujące pakiety można także załadować także w trakcie analizy geostatystycznej.
 
 ```{r 18-przyklad-2}
 library(sf)
 library(stars)
 library(gstat)
 library(ggplot2)
-paleta = hcl.colors(40, palette = "ag_Sunset")
+paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 Kolejnym krokiem jest wczytanie danych oraz sprawdzenie ich jakości.
 
 ```{r 18-przyklad-3}
-moje_punkty = st_read("dane/moje_punkty.gpkg")
+moje_punkty = read_sf("dane/moje_punkty.gpkg")
 summary(moje_punkty)
 ```
 
@@ -91,7 +91,7 @@ ggplot(moje_punkty, aes(tavg)) + geom_histogram()
 plot(moje_punkty)
 ```
 
-Można w ten sposób zauważyć, że występują co najmniej dwie wartości odstające.
+Pozwala to na zauważenie, że w badanej zmiennej występują co najmniej dwie wartości odstające.
 
 ```{r 18-przyklad-5}
 moje_punkty[moje_punkty$tavg == max(moje_punkty$tavg), ]
@@ -162,7 +162,7 @@ plot(moja_mapa, threshold = 30,
 
 Uzyskana mapa nie pozwala na jednoznaczne stwierdzenie kierunkowej zmienności podobieństwa badanej cechy, w związku z tym można skupić się na modelowaniu izotropowym.
 Kolejnym etapem jest stworzenie semiwariogramu oraz jego modelowanie.
-Optymalnie tworzonych jest więcej niż model semiwariogramu, co pozwala na porównanie uzyskanych wyników i wybór lepszego modelu.
+Optymalnie tworzy się więcej niż jeden model semiwariogramu, co pozwala na porównanie uzyskanych wyników i wybór lepszego modelu.
 Do tego przykładu zostały stworzone dwa modele semiwariogramu.
 Pierwszy z nich używa tylko zmiennej `tavg` oraz modelu ręcznego o wybranych parametrach (ryciny \@ref(fig:18-przyklad-13), \@ref(fig:18-przyklad-14), \@ref(fig:18-przyklad-15), \@ref(fig:18-przyklad-16)).
 
@@ -200,7 +200,7 @@ plot(moj_semiwar2, moj_model2)
 ## Ocena jakości semiwariancji
 
 Aby porównać oba modele należy przyjąć metodę walidacji oraz współczynnik jakości estymacji.
-W tym przykładzie użyto kroswalidacji metodą LOO (funkcja `krige.cv`) oraz pierwiastek średniego błędu kwadratowego (RMSE) jako miary jakości.
+W tym przykładzie użyto kroswalidacji metodą LOO (funkcja `krige.cv`) oraz pierwiastek średniego błędu kwadratowego (RMSE) jako miarę jakości.
 
 ```{r 18-przyklad-17}
 ocena1 = krige.cv(tavg ~ 1,
@@ -227,6 +227,7 @@ RMSE2
 ## Stworzenie siatki
 
 Przedostatnim krokiem jest utworzenie siatki do estymacji.
+Do niej zostaną wpisane wartości uzyskane z modelu semiwariogramu.
 
 ```{r 18-przyklad-20}
 punkty_bbox = st_bbox(moje_punkty)
