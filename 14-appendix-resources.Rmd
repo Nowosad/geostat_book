@@ -6,10 +6,11 @@
 
 - [Elementarz programisty: Wstęp do programowania używając R](https://nowosad.github.io/elp/) [@nowosadElementarz2019]
 - [Przewodnik po pakiecie R](http://www.biecek.pl/R/) [@biecekPrzewodnikPoPakiecie2014]
-- http://www.gagolewski.com/publications/programowanier/ [@gagolewski2016programowanie]
-- https://r4ds.had.co.nz/ - https://helion.pl/ksiazki/jezyk-r-kompletny-zestaw-narzedzi-dla-analitykow-danych-hadley-wickham-garrett-grolemund,jezrko.htm#format/d [@wickham2016r]
-- https://csgillespie.github.io/efficientR/ - https://helion.pl/ksiazki/wydajne-programowanie-w-r-praktyczny-przewodnik-po-lepszym-programowaniu-gillespie-colin-lovelace-robin,a_0491.htm#format/d [@gillespie2016efficient]
-- http://www.enwo.pl/przetwarzanie/index.html [@czerneckiMetodyPrzetwarzaniaDanych2018]
+- [Programowanie w języku R Analiza Danych. Obliczenia. Symulacje](http://www.gagolewski.com/publications/programowanier/) [@gagolewski2016programowanie]
+- R for Data Science - https://r4ds.had.co.nz/ - https://helion.pl/ksiazki/jezyk-r-kompletny-zestaw-narzedzi-dla-analitykow-danych-hadley-wickham-garrett-grolemund,jezrko.htm#format/d [@wickham2016r]
+- Efficient R programming - https://csgillespie.github.io/efficientR/ - https://helion.pl/ksiazki/wydajne-programowanie-w-r-praktyczny-przewodnik-po-lepszym-programowaniu-gillespie-colin-lovelace-robin,a_0491.htm#format/d [@gillespie2016efficient]
+- Metody przetwarzania danych meteorologicznych w języku programowania R
+ - http://www.enwo.pl/przetwarzanie/index.html [@czerneckiMetodyPrzetwarzaniaDanych2018]
 
 ## Analizy przestrzenne w R
 
