@@ -131,7 +131,7 @@ grid.arrange(ip1, ip2, ip3, ncol = 3)
 <!-- grid.arrange(p1, p2, ncol = 1) -->
 <!-- ``` -->
 
-## Prosty kriging ze zmiennymi średnimi lokalnymi (LVM)
+## Prosty kriging ze zmiennymi średnimi lokalnymi (LVM) {#SKlm}
 
 ### Prosty kriging ze zmiennymi średnimi lokalnymi (LVM) (ang. *Simple kriging with varying local means*)
 
