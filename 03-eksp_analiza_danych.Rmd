@@ -118,7 +118,7 @@ Histogram należy do typów wykresów najczęściej używanych w eksploracyjnej 
 ggplot(punkty, aes(temp)) + geom_histogram()
 ```
 
-Został on stworzony przez Karla Pearsona i jest graficzną reprezentacją rozkładu danych.
+Jest on graficzną reprezentacją rozkładu danych.
 Wartości danych są łączone w przedziały (na osi poziomej) a na osi pionowej jest ukazana liczba punktów (obserwacji) w każdym przedziale.
 Co ważne, różny dobór przedziałów może dawać inną informację - w pakiecie **ggplot2** domyślnie przedział jest ustalany poprzez podzielenie zakresu wartości przez 30.
 
@@ -155,7 +155,7 @@ ggplot(punkty, aes(temp)) + stat_ecdf()
 
 ### Wykres słupkowy
 
-Wykres słupkowy (ang. *bar plot*) przedstawia liczebność kolejnych grup.
+Wykres słupkowy (ang. *bar plot*) przedstawia liczebność kolejnych grup (rycina \@ref(fig:03-eksp-analiza-danych-13b)).
 
 ```{r 03-eksp-analiza-danych-13b, fig.cap = "Wykres słupkowy zmiennej clc z obiektu punkty."}
 ggplot(punkty, aes(clc)) + geom_bar()
@@ -170,15 +170,10 @@ Wybór odpowiedniej metody porównania zmiennych zależy od szeregu cech, międz
 Kowariancja jest nieunormowaną miarą zależności liniowej pomiędzy dwiema zmiennymi. 
 Kowariancja dwóch zmiennych $x$ i $y$ pokazuje jak dwie zmienne są ze sobą liniowo powiązane.
 Dodatnia kowariancja wskazuje na pozytywną relację liniową pomiędzy zmiennymi, podczas gdy ujemna kowariancja świadczy o odwrotnej sytuacji.
-Jeżeli zmienne nie są ze sobą liniowo powiązane, wartość kowariancji jest bliska zeru. 
-Inaczej mówiąc, kowariancja stanowi miarę wspólnej zmienności dwóch zmiennych.
+Jeżeli zmienne nie są ze sobą liniowo powiązane, wartość kowariancji jest bliska zeru; inaczej mówiąc, kowariancja stanowi miarę wspólnej zmienności dwóch zmiennych.
 Wielkość samej kowariancji uzależniona jest od przyjętej skali zmiennej (jednostki).
-Inne wyniku uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wysokości terenu w metrach i temperatury w stopniach Celsjusza a inne dla wysokości terenu w metrach i temperatury w stopniach Fahrenheita. 
+Inne wyniki uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wysokości terenu w metrach i temperatury w stopniach Celsjusza a inne dla wysokości terenu w metrach i temperatury w stopniach Fahrenheita. 
 Do wyliczania kowariancji w R służy funkcja `cov()`. 
-
-```{r 03-eksp-analiza-danych-14, echo=FALSE, eval=FALSE}
-cov(punkty$temp, punkty$ndvi)
-```
 
 ### Współczynnik korelacji
 
@@ -226,13 +221,13 @@ ggplot(punkty, aes(x = clc, y = temp)) + geom_boxplot()
 
 Analiza wariancji (ang. *Analysis of Variance* - ANOVA) służy do testowania istotności różnic między średnimi w wielu grupach. 
 Metoda ta służy do oceny czy średnie wartości cechy $Y$ różnią się istotnie pomiędzy grupami wyznaczonymi przez zmienną $X$.
-ANOVA nie pozwala na stwierdzenie między którymi grupami występują różnice.
+ANOVA nie pozwala natomiast na stwierdzenie między którymi grupami występują różnice.
 Aby to stwierdzić konieczne jest wykonanie porównań wielokrotnych (*post-hoc*). 
 ANOVĘ można wykonać za pomocą funkcji `aov()` definiując zmienną zależną oraz zmienną grupującą oraz zbiór danych.
 
 ```{r 03-eksp-analiza-danych-18 }
 punkty$clc = as.factor(punkty$clc)
-aov_test = aov(temp~clc, data = punkty)
+aov_test = aov(temp ~ clc, data = punkty)
 summary(aov_test)
 ```
 
@@ -254,11 +249,12 @@ plot(tukey, las = 1)
 
 Transformacja danych może mieć na celu ułatwienie porównywania różnych zmiennych, zniwelowanie skośności rozkładu lub też zmniejszenie wpływu danych odstających.
 W efekcie transformacja danych ułatwia przeprowadzenie analiz (geo-)statystycznych i polepsza wyniki prognoz z modeli.
+Przykładowo, możliwe jest stworzenie modelu i estymacji używając logarytmu badanej zmiennej, a następnie przywrócenie oryginalnej jednostki danych.
 
 Redukcja skośności może być przeprowadzona z użyciem:
 
-- Logarytmizacji
-- Pierwiastkowania
+- Logarytmizacji oraz funkcji wykładniczej
+- Pierwiastkowania oraz potęgowania
 - Innych
 
 ### Testowanie normalności rozkładu
@@ -269,8 +265,9 @@ Test Shapiro-Wilka pozwala na sprawdzenie normalności rozkładu wybranej zmienn
 shapiro.test(punkty$temp)
 ```
 
-### Logarytmizacja
+### Logarytmizacja i funkcja wykładnicza
 
+Jedną grupą technik służących redukcji skośności jest logarytmizacja i funkcja wykładnicza.
 Logarytmizacja w R może odbyć się za pomocą funkcji `log()`. 
 Transformację logarytmiczną można odwrócić używając funkcji `exp()` (rycina \@ref(fig:03-eksp-analiza-danych-28)).
 
@@ -291,8 +288,11 @@ p6 = ggplot(punkty, aes(exp_tpz)) + geom_density()
 gridExtra::grid.arrange(p1, p5, p6, ncol = 1)
 ```
 
-### Pierwiastkowanie
+Możliwe jest też wykonanie odwrotnej operacji - redukcję skośności używając funkcji wykładniczej, a następnie przywrócenie oryginalnej jednostki używając logarytmizacji.
 
+### Pierwiastkowanie i potęgowanie
+
+Druga grupą technik służących redukcji skośności jest pierwiastkowanie i potęgowanie.
 Pierwiastkowanie w R może odbyć się za pomocą funkcji `sqrt()`. 
 Odwrócenie tej transformacji odbywa się poprzez podniesienie wartości do potęgi (`^2`) (rycina \@ref(fig:03-eksp-analiza-danych-30)).
 
@@ -311,6 +311,8 @@ punkty$pow_tpz = punkty$sqrt_tpz ^ 2
 p8 = ggplot(punkty, aes(pow_tpz)) + geom_density()
 gridExtra::grid.arrange(p1, p7, p8, ncol = 1)
 ```
+
+Podobnie jak w poprzednim przypadku możliwe jest też wykonanie odwrotnej operacji - redukcję skośności używając potęgowania, a następnie przywrócenie oryginalnej jednostki używając pierwiastkowania.
 
 <!--
 Transformacja danych | Rodzina transformacji Boxa Coxa
