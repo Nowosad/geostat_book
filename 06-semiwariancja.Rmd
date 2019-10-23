@@ -198,7 +198,7 @@ Tę semiwariancję można zaprezentować na wykresie zwanym chmurą semiwariogra
 Do jej wyliczenia służy funkcja `variogram()` z argumentem `cloud = TRUE`.
 
 ```{r 06-semiwariancja-7, fig.cap = "Chmura semiwariogramu zmiennej temp."}
-vario_cloud = variogram(temp~1, locations = punkty, 
+vario_cloud = variogram(temp ~ 1, locations = punkty, 
                          cloud = TRUE)
 plot(vario_cloud)
 ```
@@ -246,10 +246,10 @@ plot(vario_par, plot.numbers = FALSE)
 ### Tworzenie semiwariogramu
 
 Stworzenie podstawowego semiwariogramu w pakiecie **gstat** odbywa się z użyciem funkcji `variogram()`. 
-Należy w niej zdefiniować analizowaną zmienną (w tym przykładzie `temp~1`) oraz zbiór punktowy (`punkty`).
+Należy w niej zdefiniować analizowaną zmienną (w tym przykładzie `temp ~ 1`) oraz zbiór punktowy (`punkty`).
 
 ```{r 06-semiwariancja-11 }
-vario_par = variogram(temp~1, locations = punkty)
+vario_par = variogram(temp ~ 1, locations = punkty)
 vario_par
 ```
 
@@ -260,7 +260,7 @@ Można również dodać informację o liczbie par punktów, jaka posłużyła do
 plot(vario_par, plot.numbers = TRUE)
 ```
 
-### Rules of thumb
+### Parametry semiwariogramu
 
 Przy ustalaniu parametrów semiwariogramu powinno się stosować do kilku utartych zasad (tzw. *rules of thumb*):
 
@@ -323,7 +323,7 @@ Maksymalny zasięg semiwariogramu (ang. *cutoff distance*) jest domyślnie wylic
 Można jednak tę wartość zmodyfikować używając argumentu `cutoff` (rycina \@ref(fig:06-semiwariancja-18)).
 
 ```{r 06-semiwariancja-18, fig.cap="Semiwariogram empiryczny zmiennej temp używając ręcznie ustalonej wartości maksymalnego zasięgu semiwariogramu."}
-vario_par = variogram(temp~1, locations = punkty,
+vario_par = variogram(temp ~ 1, locations = punkty,
                       cutoff = 4000)
 plot(vario_par)
 ```
@@ -332,7 +332,7 @@ Dodatkowo, domyślnie w pakiecie **gstat** odległość między przedziałami (a
 Można to oczywiście zmienić używając zarówno argumentu `cutoff`, jak i argumentu `width` mówiącego o szerokości odstępów (rycina \@ref(fig:06-semiwariancja-19)).
 
 ```{r 06-semiwariancja-19, fig.cap="Semiwariogram empiryczny zmiennej temp używając ręcznie ustalonej wartości szerokości odstępów."}
-vario_par = variogram(temp~1, locations = punkty,
+vario_par = variogram(temp ~ 1, locations = punkty,
                       cutoff = 4000, width = 100)
 plot(vario_par)
 ```
@@ -383,7 +383,7 @@ Następnie można ją wyświetlić używając funkcji `plot()` (rycina \@ref(fig
 Warto w tym wypadku użyć dodatkowego argumentu `threshold`, który powoduje, że niepewna wartość semiwariancji (wyliczona na małej liczbie punktów) nie jest wyświetlana.
 
 ```{r 06-semiwariancja-21, fig.cap="Mapa semiwariogramu zmiennej temp."}
-vario_map = variogram(temp~1, locations = punkty, 
+vario_map = variogram(temp ~ 1, locations = punkty, 
                       cutoff = 4000, width = 400, map = TRUE)
 # co najmniej 30 par punktów
 plot(vario_map, threshold = 30,
@@ -407,7 +407,7 @@ Dla argumentu `alpha = c(0, 45, 90, 135)` wybrane cztery główne kierunki to 0,
 Oznacza to, że przykładowo dla kierunku 45 stopni brane pod uwagę będą wszystkie pary punktów pomiędzy 22,5 a 67,5 stopnia.
 
 ```{r 06-semiwariancja-22, fig.cap = "Semiwariogramy kierunkowe dla zmiennej temp."}
-vario_kier = variogram(temp~1, locations = punkty, 
+vario_kier = variogram(temp ~ 1, locations = punkty, 
                         alpha = c(0, 45, 90, 135))
 plot(vario_kier)
 ```
