@@ -2,3 +2,7 @@ book_filename: "geostatystyka-w-r-nowosad-2019"
 new_session: yes
 before_chapter_script: ["code/before_script.R"]
 delete_merged_file: yes
+language:
+  label:
+    fig: 'Rycina '
+    tab: 'Tabela '
