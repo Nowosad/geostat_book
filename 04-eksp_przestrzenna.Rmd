@@ -99,7 +99,7 @@ plot(losowy)
 
 ### Losowy stratyfikowany typ próbowania
 
-Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu (rycina \@ref(fig:04-eksp-przestrzenna-6)).
+Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu (rycina \@ref(fig:04-eksp-przestrzenna-6b)).
 
 ```{r 04-eksp-przestrzenna-6b, error = TRUE, echo=FALSE, fig.cap = "Przykład próbkowania losowego stratyfikowanego."}
 set.seed(125)
@@ -115,7 +115,7 @@ plot(strat)
 
 ### Preferencyjny typ próbowania
 
-W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbowane niż inne (rycina \@ref(fig:04-eksp-przestrzenna-7)).
+W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbowane niż inne (rycina \@ref(fig:04-eksp-przestrzenna-7b)).
 
 ```{r 04-eksp-przestrzenna-7b, error = TRUE, echo=FALSE, fig.cap = "Przykład próbkowania preferencyjnego."}
 set.seed(425)

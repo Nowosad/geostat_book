@@ -97,7 +97,7 @@ p2 = p1_base + geom_stars(data = sk["var1.var"]) +
 grid.arrange(p1, p2, ncol = 1)
 ```
 
-## Kriging zwykły 
+## Kriging zwykły {#kriging-zwykly}
 
 ### Kriging zwykły (ang. *Ordinary kriging*)
 
