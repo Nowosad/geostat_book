@@ -160,17 +160,17 @@ fitted_ind12 = fit.variogram(vario_ind12,
 ```
 
 ```{r 11-dane-kodowane-11, message=FALSE}
-ik20 = krige(I(temp < 20)~1,
+ik20 = krige(I(temp < 20) ~ 1,
               locations = punkty,
               newdata = siatka,
               model = fitted_ind20, 
               nmax = 30)
-ik16 = krige(I(temp < 16)~1,
+ik16 = krige(I(temp < 16) ~ 1,
               locations = punkty,
               newdata = siatka,
               model = fitted_ind16, 
               nmax = 30)
-ik12 = krige(I(temp < 12)~1,
+ik12 = krige(I(temp < 12) ~ 1,
               locations = punkty,
               newdata = siatka,
               model = fitted_ind12, 
