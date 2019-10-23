@@ -3,21 +3,18 @@
 ## Co to?
 
 Powtarzalny przykład oznacza fragment kodu, który może być odtworzony przez inną osobę na innym komputerze/przez siebie samego w przyszłości.
-
-Powtarzalny przykład może służyć pokazaniu poprawnego rozwiązania, wskazaniu na błędy w funkcjach, lub też jako załącznik do prośby o pomoc z kodem.
-
+Może on służyć pokazaniu poprawnego rozwiązania, wskazaniu na błędy w funkcjach, lub też jako załącznik do prośby o pomoc z kodem.
 Powtarzalny przykład powinien składać się przynajmniej z:
 
-- Z małego zbioru danych wystarczającego do odtworzenia obliczeń
-- Krótkiego kodu, który może być uruchomiony na powyższym zbiorze danych
-- Czasem ważne są dodatkowe informacje o używanej wersji R, posiadanym systemie operacyjnym, wersjach używanych pakietów, etc. 
-Można do tego użyć funkcji `sessionInfo()` 
+- Z małego zbioru danych wystarczającego do odtworzenia obliczeń.
+- Krótkiego kodu, który może być uruchomiony na powyższym zbiorze danych.
 
-Źródło: [stackoverflow.com](https://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example)
+Czasem ważne są też dodatkowe informacje o używanej wersji R, posiadanym systemie operacyjnym, wersjach używanych pakietów, etc. 
+Można do tego użyć funkcji `sessionInfo()` 
 
 ## Pakiet **reprex**
 
-Stworzenie powtarzalnego przykładu w R może zostać ułatwione poprzez stosowanie pakietu **reprex**. 
+Stworzenie powtarzalnego przykładu w R może zostać ułatwione używając pakietu **reprex**. 
 Ten pakiet uruchamia wybraną część kodu, wykonuje kolejne operacje, a następnie zapisuje uzyskany wynik do schowka.
 
 Pakiet **reprex** można zainstalować poprzez funkcję `install.packages()`:
@@ -27,7 +24,7 @@ install.packages("reprex")
 ```
 
 Główną funkcją w tym pakiecie jest `reprex()`.
-Funkcję `reprex()` można też użyć poprzez wpisanie kodu wewnątrz tej funkcji lub też poprzez wybranie opcji `Reprex selection` z meny Addins w RStudio.
+Funkcję `reprex()` można też użyć poprzez wpisanie kodu wewnątrz tej funkcji lub też poprzez wybranie opcji `Reprex selection` z menu Addins w RStudio.
 Możliwe jest również stworzenie powtarzalnego przykładu na podstawie skryptu R:
 
 ```{r 17-appendix-reprex-2, eval=FALSE}
@@ -74,7 +71,7 @@ Powyższy kod ma dwa problemy - czy jesteś w stanie je wskazać?
 
 Odpowiedź - ten kod nie jest w pełni samowystarczalny - brakuje tam dołączenia pakietu **geostatbook**, który zawiera zbiór danych `punkty`.
 Drugi problem to użyta zmienna do wizualizacji - `"temperatura"` nie istnieje w zbiorze danych `punkty`. 
-Zamiast niej powinna być użyta poprawna nazwa zmiennej - `temp`.
+Zamiast niej powinna być użyta poprawna nazwa zmiennej - `"temp"`.
 Naprawiona wersja tego kodu znajduje się poniżej:
 
 ```{r 17-appendix-reprex-5, eval=FALSE}
