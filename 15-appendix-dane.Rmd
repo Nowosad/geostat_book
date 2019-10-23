@@ -22,13 +22,11 @@ Dodatkowo, przy instalacji pakietu **geostatbook** pobierane są wszystkie inne 
 remotes::install_github("nowosad/geostatbook@3")
 ```
 
-## Zbiory danych w pakiecie **geostatbook**
-
 ```{r 15-appendix-dane-3}
 library(geostatbook)
 ```
 
-### `punkty`
+## `punkty`
 
 ```{r 15-appendix-dane-4}
 data("punkty")
@@ -49,7 +47,7 @@ Zmienne:
 plot(punkty)
 ```
 
-### `punkty_ndvi`
+## `punkty_ndvi`
 
 ```{r 15-appendix-dane-6}
 data("punkty_ndvi")
@@ -65,7 +63,7 @@ Zmienna:
 plot(punkty_ndvi)
 ```
 
-### `punkty_pref`
+## `punkty_pref`
 
 ```{r 15-appendix-dane-8}
 data("punkty_pref")
@@ -87,7 +85,7 @@ Zmienna:
 plot(punkty_pref)
 ```
 
-### `granica`
+## `granica`
 
 ```{r 15-appendix-dane-10}
 data("granica")
@@ -100,7 +98,7 @@ Granica Suwalskiego Parku Krajobrazowego.
 plot(granica)
 ```
 
-### `siatka`
+## `siatka`
 
 ```{r 15-appendix-dane-12}
 data("siatka")
@@ -114,7 +112,7 @@ Zawiera ona ona 127 wierszy i 96 kolumn.
 plot(siatka)
 ```
 
-### `dane_uzup`
+## `dane_uzup`
 
 ```{r 15-appendix-dane-14}
 data("dane_uzup")
