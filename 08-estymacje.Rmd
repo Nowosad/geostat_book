@@ -29,15 +29,15 @@ Waga nadawana każdej z obserwacji jest zależna od stopnia (przestrzennej) kore
 
 Istnieje szereg meteod krigingu, w tym:
 
-- Kriging prosty (ang. *Simple kriging*)
-- Kriging zwykły (ang. *Ordinary kriging*)
-- Kriging z trendem (ang. *Kriging with a trend*)
-- Kriging danych kodowanych (ang. *Indicator kriging*)
+- Kriging prosty (ang. *Simple kriging*) (sekcja \@ref(kriging-prosty))
+- Kriging zwykły (ang. *Ordinary kriging*) (sekcja \@ref(kriging-zwykly))
+- Kriging z trendem (ang. *Kriging with a trend*) (sekcja \@ref(kriging-z-trendem))
+- Kriging danych kodowanych (ang. *Indicator kriging*) (sekcja \@ref(modele-statystyczne))
 - Kriging stratyfikowany (ang. *Kriging within strata* – KWS)
-- Kriging prosty ze zmiennymi średnimi lokalnymi (ang. *Simple kriging with varying local means* - SKlm)
-- Kriging z zewnętrznym trendem/Uniwersalny kriging (ang.*Kriging with an external trend/Universal kriging*)
-- Kokriging (ang. *Co-kriging*)
-- Kriging danych kodowanych (ang. *Indicator kriging*)
+- Kriging prosty ze zmiennymi średnimi lokalnymi (ang. *Simple kriging with varying local means* - SKlm) (sekcja \@ref(SKlm))
+- Kriging z zewnętrznym trendem/Uniwersalny kriging (ang.*Kriging with an external trend/Universal kriging*) (sekcja \@ref(kriging-uniwersalny))
+- Kokriging (ang. *Co-kriging*) (sekcja \@ref(kokriging))
+- Kriging danych kodowanych (ang. *Indicator kriging*) (sekcja \@ref(kriging-danych-kodowanych))
 - Inne
 
 ## Kriging prosty
@@ -48,7 +48,7 @@ Kriging prosty zakłada, że średnia jest znana i stała na całym obszarze.
 W poniższym przykładzie po stworzeniu semiwariogramu empirycznego, dopasowano model semiwariogramu składający się z funkcji sferycznej o zasięgu 4000 metrów i wartości nuggetu równej 0,5 (rycina \@ref(fig:08-estymacje-3)).
 
 ```{r 08-estymacje-3, fig.cap="Model złożony z modelu nuggetowego i sferycznego dla zmiennej temp."}
-vario = variogram(temp~1, locations = punkty)
+vario = variogram(temp ~ 1, locations = punkty)
 model = vgm(10, model = "Sph", range = 4000, nugget = 0.5)
 model
 plot(vario, model = model)
@@ -66,11 +66,11 @@ mean(punkty$temp)
 ```
 
 ```{r 08-estymacje-6}
-sk = krige(temp~1, 
+sk = krige(temp ~ 1, 
             locations = punkty,
             newdata = siatka,
             model = model,
-            beta = 16)
+            beta = 15)
 ```
 
 Wynik krigingu prostego, jak i każdy inny uzyskany z użyciem pakietu **gstat**, można podejrzeć używając funkcji `summary()`.
@@ -109,12 +109,12 @@ Parametry ruchomego okna można określić za pomocą jednego z dwóch argument�
 - `maxdist` - użyte zostaną jedynie obserwacje w zadanej odległości.
 
 ```{r 08-estymacje-8 }
-# ok = krige(temp~1,
+# ok = krige(temp ~ 1,
 #             locations = punkty,
 #             newdata = siatka, 
 #             model = model, 
 #             nmax = 30)
-ok = krige(temp~1,
+ok = krige(temp ~ 1,
             locations = punkty,
             newdata = siatka, 
             model = model, 
@@ -188,8 +188,12 @@ kzt = krige(temp ~ x + y,
              model = fitted_kzt)
 ```
 
+Uzyskany wynik jest wpisywany w regularną siatkę.
+Możemy go przyciąć do badanego obszaru poprzez wpisanie wartości `NA` w miejscach poza naszym obszarem.
+
 ```{r 08-estymacje-14}
-kzt
+kzt$var1.pred[is.na(siatka$X2)] = NA
+kzt$var1.var[is.na(siatka$X2)] = NA
 ```
 
 ```{r plotsy1kzt, eval=FALSE}
