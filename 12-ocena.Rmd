@@ -35,11 +35,11 @@ set.seed(224)
 punkty_podzial = initial_split(punkty, prop = 0.75, strata = temp)
 train = training(punkty_podzial)
 test = testing(punkty_podzial)
-vario = variogram(temp~1, data = train)
+vario = variogram(temp ~ 1, data = train)
 model = vgm(10, model = "Sph", range = 4000, nugget = 0.5)
 fitted = fit.variogram(vario, model)
-test_sk = krige(temp~1, train, newdata = test, 
-                 model = fitted, beta = 16, debug.level = 0)
+test_sk = krige(temp ~ 1, train, newdata = test, 
+                 model = fitted, beta = 15, debug.level = 0)
 blad_estymacji_sk = test$temp - test_sk$var1.pred
 test_sk$blad_estymacji_sk = blad_estymacji_sk
 test_sk$true = test$temp
@@ -171,7 +171,7 @@ test = testing(punkty_podzial)
 Dalszym krokiem jest stworzenie semiwariogramu empirycznego oraz jego modelowanie w oparciu o zbiór treningowy (rycina \@ref(fig:12-ocena-9)).
 
 ```{r 12-ocena-9, fig.cap = "Model semiwariogramu w oparciu o zbiór testowy."}
-vario = variogram(temp~1, locations = train)
+vario = variogram(temp ~ 1, locations = train)
 model = vgm(model = "Sph", nugget = 0.5)
 fitted = fit.variogram(vario, model)
 plot(vario, model = fitted)
@@ -183,11 +183,11 @@ W tym przypadku jednak chcemy porównać wynik estymacji i testowy zbiór punkto
 Dlatego też, zamiast obiektu siatki definiujemy obiekt zawierający zbiór testowy (`test`).
 
 ```{r 12-ocena-10}
-test_sk = krige(temp~1, 
+test_sk = krige(temp ~ 1, 
                  locations = train,
                  newdata = test,
                  model = fitted,
-                 beta = 16)
+                 beta = 15)
 summary(test_sk)
 ```
 
@@ -230,11 +230,11 @@ ggplot(test_sk, aes(var1.pred, true)) +
 W sytuacji, gdy uzyskany model jest wystarczająco dobry, możemy również uzyskać estymację dla całego obszaru z użyciem funkcji `krige()`, tym razem jednak podając obiekt siatki (rycina \@ref(fig:12-ocena-15)).
 
 ```{r 12-ocena-15, fig.cap="Estymacja uzyskana dla całego obszaru."}
-test_sk = krige(temp~1,
+test_sk = krige(temp ~ 1,
                 locations = train,
                 newdata = siatka,
                 model = fitted,
-                beta = 16)
+                beta = 15)
 plot(test_sk["var1.pred"], col = paleta)
 ```
 
@@ -254,13 +254,13 @@ W pakiecie **gstat**, kroswalidacja LOO jest dostępna w funkcjach `krige.cv()` 
 Działają one bardzo podobnie jak funkcje `krige()` oraz `gstat()`, jednak w przeciwieństwie do nich nie wymagają podania obiektu siatki.
 
 ```{r loovv, eval=FALSE}
-vario = variogram(temp~1, data = punkty)
+vario = variogram(temp ~ 1, data = punkty)
 model = vgm(model = "Sph", nugget = 0.5)
 fitted = fit.variogram(vario, model)
 cv_sk = krige.cv(temp ~ 1,
                  locations = punkty,
                  model = fitted,
-                 beta = 16)
+                 beta = 15)
 summary(cv_sk)
 ```
 
@@ -271,7 +271,7 @@ fitted = fit.variogram(vario, model)
 cv_sk = krige.cv(temp ~ 1,
                   locations = punkty,
                   model = fitted,
-                  beta = 16,
+                  beta = 15,
                   verbose = FALSE)
 summary(cv_sk)
 ```
@@ -312,18 +312,18 @@ ggplot(cv_sk, aes(var1.pred, observed)) +
 Podobnie jak w walidacji podzbiorem, gdy uzyskany model jest wystarczająco dobry, estymację dla całego obszaru uzyskuje się z użyciem funkcji `krige()` (rycina \@ref(fig:12-ocena-20)).
 
 ```{r 12-ocena-20, fig.cap="Estymacja uzyskana dla całego obszaru po oceneniu modelu używając kroswalidacji."}
-cv_skk = krige(temp~1, 
+cv_skk = krige(temp ~ 1, 
                 locations = punkty,
                 newdata = siatka, 
                 model = fitted, 
-                beta = 16)
+                beta = 15)
 plot(cv_skk["var1.pred"], col = paleta)
 ```
 
 <!-- 
 
 ```{r 12-ocena-21, eval=FALSE}
-# ok_loocv = krige.cv(temp~1, punkty, model=model_zl2)
+# ok_loocv = krige.cv(temp ~ 1, punkty, model=model_zl2)
 # summary(ok_loocv)
 ```
 
@@ -332,7 +332,7 @@ plot(cv_skk["var1.pred"], col = paleta)
 - wykresy porównujące
 
 ```{r 12-ocena-22, eval=FALSE}
-# ok_fit = gstat(formula=temp~1, data=punkty, model=model_zl2)
+# ok_fit = gstat(formula=temp ~ 1, data=punkty, model=model_zl2)
 # ok_loocv = gstat.cv(OK_fit, debug.level=0, random=FALSE)
 # spplot(pe[6])
 ```
@@ -348,7 +348,7 @@ plot(cv_skk["var1.pred"], col = paleta)
 krige.cv
 
 ```{r 12-ocena-23, eval=FALSE }
-# OK_fit = gstat(id="OK_fit", formula=temp~1, data=punkty, model=fitted)
+# OK_fit = gstat(id="OK_fit", formula=temp ~ 1, data=punkty, model=fitted)
 # pe = gstat.cv(OK_fit, debug.level=0, random=FALSE)
 # spplot(pe[6])
 #
