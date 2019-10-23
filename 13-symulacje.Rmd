@@ -62,7 +62,7 @@ Należy wprowadzić również informacje, że nie korzystamy z danych punktowych
 Ostatni argument (`nsim = 4`) informuje o liczbie symulacji do przeprowadzenia (Ryciny \@ref(fig:symbezw1-fig), \@ref(fig:symbezw2-fig)).
 
 ```{r sym_bezw1, cache=TRUE}
-sym_bezw1 = krige(formula = z~1, 
+sym_bezw1 = krige(formula = z ~ 1, 
                    model = vgm(psill = 0.025,
                                model = "Exp", 
                                range = 100), 
@@ -85,7 +85,7 @@ p1_base +
 ```
 
 ```{r sym_bezw2, cache=TRUE}
-sym_bezw2 = krige(formula = z~1, 
+sym_bezw2 = krige(formula = z ~ 1, 
                    model = vgm(psill = 0.025, model = "Exp", range = 1500), 
                    newdata = siatka, 
                    beta = 1,
@@ -106,11 +106,11 @@ p1_base +
 ```
 
 <!--
-sym_bezw_model3 = gstat(formula=~1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
+sym_bezw_model3 = gstat(formula= ~ 1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
 sym_bezw3 = predict(sym_bezw_model3, newdata=siatka, nsim=4)
 spplot(sym_bezw3, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=1500, model wykładniczy \ntrend na osi y = 0.005")
 
-sym_bezw_model4 = gstat(formula=~1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0.02,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
+sym_bezw_model4 = gstat(formula= ~ 1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0.02,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
 sym_bezw4 = predict(sym_bezw_model4, newdata=siatka, nsim=4)
 spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=500, model wykładniczy \ntrend na osi x = 0.02, trend na osi y = 0.005")
 -->
