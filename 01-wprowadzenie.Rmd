@@ -40,7 +40,7 @@ var = variogram(temp~1, data = punkty)
 plot(var)
 ```
 
-Opisuje on przestrzenną zmienność badanej cechy i za jego pomocą możemy stwierdzić jak szybko to zjawisko zmienia się w przestrzeni.
+**Semiwariogram** opisuje przestrzenną zmienność badanej cechy i za jego pomocą możemy stwierdzić jak to zjawisko zmienia się w przestrzeni.
 Dodatkowo za pomocą **mapy semiwariogramu** (rycina \@ref(fig:01-wprowadzenie-5)) możliwe jest stwierdzenie czy istnieją jakieś kierunki w których ta cecha zmienia się zmienia bardziej dynamicznie, a w których ta zmiana jest wolniejsza.
 
 ```{r 01-wprowadzenie-5, echo=FALSE, fig.cap = "Mapa semiwariogramu reprezentująca niepodobieństwo wartości wraz z odległością i kierunkiem."}
