@@ -21,11 +21,11 @@ paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 Przez przejściem do interpolacji geostatystycznych, którymi są poświęcona kolejne rozdziały, warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania do stworzenia estymacji przestrzennych. 
-Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne (\@ref(modele-deterministyczne) oraz modele statystyczne (\@ref(modele-statystyczne).
+Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne (sekcja \@ref(modele-deterministyczne) oraz modele statystyczne (sekcja \@ref(modele-statystyczne).
 
 ## Tworzenie siatek
 
-W większości przypadków analiz geostatystycznych konieczne jest stworzenie siatki interpolacyjnej (pustego rastra).
+Większość metod interpolacji wymaga stworzenia siatki interpolacyjnej (pustego rastra).
 Istnieją dwa podstawowe rodzaje takich siatek - siatki regularne oraz siatki nieregularne.
 
 ### Siatki regularne
@@ -50,23 +50,13 @@ plot(nowa_siatka)
 
 <!-- siatka by hand -->
 
-### Siatki regularne - wizualizacja
-
-Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić za pomocą funkcji `plot()`. 
-W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add` (rycina \@ref(fig:05-interpolacje-6)).
-
-```{r 05-interpolacje-6, fig.cap = "Wizualizacja regularnej siatki z nałożonym położeniem obserwacji punktowych."}
-plot(nowa_siatka, reset = FALSE)
-plot(st_geometry(punkty), add = TRUE)
-```
-
 ### Siatki nieregularne
 
 Siatki nieregularne mają zazwyczaj kształt wieloboku obejmującego analizowany obszar. 
 Mogą one powstać, np. w oparciu o wcześniej istniejące granice.
 
 W poniższym przypadku odczytywana jest granica badanego obszaru z pliku w formacie GeoPackage.
-Taki obiekt można np. stworzyć za pomocą oprogramowania GISowego takiego jak [QGIS](http://www.qgis.org/pl/site/).
+Taki obiekt można np. stworzyć za pomocą oprogramowania GIS takiego jak [QGIS](http://www.qgis.org/pl/site/).
 Następnie tworzony jest nowy obiekt `nowa_siatka_n` poprzez wybranie tylko tych oczek siatki, które znajdują się wewnątrz zadanych granic.
 
 ```{r siatkan}
@@ -84,23 +74,33 @@ plot(nowa_siatka_n)
 zip("dane3.zip", files = "dane")
 ```
 
+### Siatki regularne - wizualizacja
+
+Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić za pomocą funkcji `plot()`. 
+W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add` (rycina \@ref(fig:05-interpolacje-6)).
+
+```{r 05-interpolacje-6, fig.cap = "Wizualizacja regularnej siatki z nałożonym położeniem obserwacji punktowych."}
+plot(nowa_siatka, reset = FALSE)
+plot(st_geometry(punkty), add = TRUE)
+```
+
 ## Modele deterministyczne
 
 Modele deterministyczne charakteryzują się tym, że ich parametry są zazwyczaj ustalane w oparciu o funkcję odległości lub powierzchni. 
 W tych modelach brakuje szacunków na temat oceny błędu modelu.
-Zaletą tych modeli jest ich prosta oraz krótki czas obliczeń. 
+Zaletą tych modeli jest ich prostota oraz krótki czas obliczeń. 
 Do modeli deterministycznych należą, między innymi:
 
-- Metoda diagramów Voronoi'a (ang.  *Voronoi diagram*) (sekcja \@ref(voronoi))
-- Metoda średniej ważonej odległością (ang. *Inverse Distance Weighted - IDW*)  (sekcja \@ref(idw))
-- Funkcje wielomianowe (ang. *Polynomials*)  (sekcja \@ref(funkcje-wielomianowe))
-- Funkcje sklejane (ang. *Splines*)  (sekcja \@ref(funkcje sklejane))
+- Metoda diagramów Woronoja (ang.  *Voronoi diagram*) (sekcja \@ref(voronoi))
+- Metoda średniej ważonej odległością (ang. *Inverse Distance Weighted - IDW*) (sekcja \@ref(idw))
+- Funkcje wielomianowe (ang. *Polynomials*) (sekcja \@ref(funkcje-wielomianowe))
+- Funkcje sklejane (ang. *Splines*) (sekcja \@ref(funkcje-sklejane))
 
 <!--http://neondataskills.org/Data-Workshops/ESA15-Going-On-The-Grid-Spatial-Interpolation-Basics/-->
 
 ### Diagramy Woronoja {#voronoi}
 
-Metoda diagramów Woronoja polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego punktu. 
+Metoda diagramów Woronoja polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego mu punktu. 
 Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji `voronoi()` z pakietu **dismo** (rycina \@ref(fig:05-interpolacje-10)).
 
 ```{r 05-interpolacje-9 }
@@ -119,7 +119,7 @@ plot(voronoi_interp["temp"],
 
 Metoda średniej ważonej odległością (IDW) wylicza wartość dla każdej komórki na podstawie wartości punktów obokległych ważonych odwrotnością ich odległości. 
 W efekcie, czym bardziej jest punkt oddalony, tym mniejszy jest jego wpływ na interpolowaną wartość. 
-Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (idp, ang. *inverse distance weighting power*) (rycina \@ref(fig:05-interpolacje-11)).
+Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (`idp`, ang. *inverse distance weighting power*) (rycina \@ref(fig:05-interpolacje-11)).
 
 ```{r 05-interpolacje-12, echo=FALSE, warning=FALSE, fig.cap = "Relacja pomiędzy argumentem wykładnika potęgowego a wpływem wartości punktów wraz z odległością."}
 library(tidyr)
@@ -133,7 +133,8 @@ ggplot(df_idw, aes(x = distance, y = value,
         geom_path(size = 2) + 
         scale_color_brewer(type = "qual", 
                            name = "idp") +
-        labs(x = "Odległość", y = "Waga")
+        labs(x = "Odległość", y = "Waga") +
+  theme_bw()
 ```
 
 W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`) (rycina \@ref(fig:05-interpolacje-11)).
@@ -185,6 +186,7 @@ Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**
 ```{r 05-interpolacje-16, fig.cap="Interpolacja zmiennej temp z użyciem funkcji sklejanych."}
 tps = Tps(st_coordinates(punkty), punkty$temp)
 siatka$tps_pred = predict(tps, st_coordinates(siatka))
+siatka$tps_pred[is.na(siatka$X2)] = NA
 plot(siatka["tps_pred"], 
      main = "Funkcje sklejane", col = paleta)
 ```
@@ -228,8 +230,8 @@ grid.arrange(p1, p2, p3, p4, ncol = 2)
 
 ## Modele statystyczne
 
-Modele statystyczne charakteryzują się tym, że ich parametry określane są w oparciu o teorię prawdopodobieństwa.
-Dodatkowo wynik estymacji zawiera także oszacowanie błędu, jednak te metody zazwyczaj wymagają większych zasobów sprzętowych.
+Modele statystyczne charakteryzują się tym, że ich parametry określane są w oparciu o teorię prawdopodobieństwa, dodatkowo wynik estymacji zawiera także oszacowanie błędu.
+Te metody jednak zazwyczaj wymagają większych zasobów sprzętowych.
 Do modeli statystycznych należą, między innymi:
 
 - Kriging
@@ -237,7 +239,7 @@ Do modeli statystycznych należą, między innymi:
 - Modele bayesowskie
 - Modele hybrydowe
 
-W kolejnych rozdziałach można znaleźć omówienie kilku podstawowych typów pierwszej z tych metod - krigingu.
+W kolejnych rozdziałach znajduje się omówienie kilku podstawowych typów pierwszej z tych metod - krigingu.
 
 ## Zadania {#z5}
 
@@ -251,4 +253,3 @@ W kolejnych rozdziałach można znaleźć omówienie kilku podstawowych typów p
 Czym różnią się powyższe metody?
 4. Wykonaj interpolację zmiennej `temp` metodą IDW sprawdzając różne parametry argumentu `idp`. 
 W jaki sposób wpływa on na uzyskaną interpolację?
-
