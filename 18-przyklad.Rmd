@@ -251,3 +251,4 @@ plot(moja_estymacja[1], col = paleta)
 plot(moja_estymacja[2], col = paleta)
 ```
 
+Wynikiem uproszczonej analizy geostatystycznej jest mapa estymowanych wartości temperatury dla całego badanego obszaru oraz mapa przedstawiająca wariancję estymacji temperatury.
