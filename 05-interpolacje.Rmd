@@ -43,8 +43,8 @@ Tworzy ona nowy obiekt na podstawie obwiedni istniejącego obiektu punktowego or
 ```{r 05-interpolacje-4, fig.cap = "Wizualizacja regularnej siatki."}
 punkty_bbox = st_bbox(punkty)
 nowa_siatka = st_as_stars(punkty_bbox, 
-                          deltax = 500,
-                          deltay = 500)
+                          dx = 500,
+                          dy = 500)
 plot(nowa_siatka)
 ```
 
