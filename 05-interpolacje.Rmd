@@ -74,7 +74,7 @@ plot(nowa_siatka_n)
 zip("dane3.zip", files = "dane")
 ```
 
-### Siatki regularne - wizualizacja
+### Siatki - wizualizacja
 
 Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić za pomocą funkcji `plot()`. 
 W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add` (rycina \@ref(fig:05-interpolacje-6)).
@@ -140,7 +140,7 @@ ggplot(df_idw, aes(x = distance, y = value,
 W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`) (rycina \@ref(fig:05-interpolacje-11)).
 
 ```{r 05-interpolacje-11, fig.cap = "Interpolacja zmiennej temp używając metody średniej ważonej odległością (IDW)."}
-idw_interp = idw(temp~1, locations = punkty,
+idw_interp = idw(temp ~ 1, locations = punkty,
                  newdata = siatka, idp = 2)
 plot(idw_interp["var1.pred"], main = "IDW", col = paleta)
 ```
@@ -154,7 +154,7 @@ Porównanie wielomianów pierwszego, drugiego i trzeciego stopnia można znaleź
 
 ```{r 05-interpolacje-13, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu pierwszego stopnia."}
 # wielomian 1 stopnia
-wielomian_1 = gstat(formula = temp~1, locations = punkty,
+wielomian_1 = gstat(formula = temp ~ 1, locations = punkty,
                     degree = 1)
 wielomian_1_pred = predict(wielomian_1, newdata = siatka)
 plot(wielomian_1_pred["var1.pred"], 
@@ -163,7 +163,7 @@ plot(wielomian_1_pred["var1.pred"],
 
 ```{r 05-interpolacje-14, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu drugiego stopnia."}
 # wielomian 2 stopnia
-wielomian_2 = gstat(formula = temp~1, locations = punkty,
+wielomian_2 = gstat(formula = temp ~ 1, locations = punkty,
                     degree = 2)
 wielomian_2_pred = predict(wielomian_2, newdata = siatka)
 plot(wielomian_2_pred["var1.pred"],
@@ -172,7 +172,7 @@ plot(wielomian_2_pred["var1.pred"],
 
 ```{r 05-interpolacje-15, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu trzeciego stopnia."}
 # wielomian 3 stopnia
-wielomian_3 = gstat(formula = temp~1, locations = punkty,
+wielomian_3 = gstat(formula = temp ~ 1, locations = punkty,
                     degree = 3)
 wielomian_3_pred = predict(wielomian_3, newdata = siatka)
 plot(wielomian_3_pred["var1.pred"],
