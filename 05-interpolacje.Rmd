@@ -183,10 +183,13 @@ plot(wielomian_3_pred["var1.pred"],
 
 Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**) dopasowuje krzywą powierzchnię do wartości analizowanych punktów (rycina \@ref(fig:05-interpolacje-16)).
 
-```{r 05-interpolacje-16, fig.cap="Interpolacja zmiennej temp z użyciem funkcji sklejanych."}
+```{r 05-interpolacje-16a, fig.cap="Interpolacja zmiennej temp z użyciem funkcji sklejanych."}
 tps = Tps(st_coordinates(punkty), punkty$temp)
 siatka$tps_pred = predict(tps, st_coordinates(siatka))
 siatka$tps_pred[is.na(siatka$X2)] = NA
+```
+
+```{r 05-interpolacje-16, fig.cap="Interpolacja zmiennej temp z użyciem funkcji sklejanych."}
 plot(siatka["tps_pred"], 
      main = "Funkcje sklejane", col = paleta)
 ```
