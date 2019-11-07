@@ -310,7 +310,7 @@ sqrt(pow_pr)
 ```
 
 Ostatnim obliczeniem pomocniczym jest określenie połowy pierwiastka powierzchni.
-Może być ono następnie użyte do ustalenia maksymalnegp zasięgu semiwariogramu.
+Może być ono następnie użyte do ustalenia maksymalnego zasięgu semiwariogramu.
 
 ```{r 06-semiwariancja-17 }
 pow = st_area(granica)
