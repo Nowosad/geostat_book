@@ -32,7 +32,6 @@ Istnieje szereg meteod krigingu, w tym:
 - Kriging prosty (ang. *Simple kriging*) (sekcja \@ref(kriging-prosty))
 - Kriging zwykły (ang. *Ordinary kriging*) (sekcja \@ref(kriging-zwykly))
 - Kriging z trendem (ang. *Kriging with a trend*) (sekcja \@ref(kriging-z-trendem))
-- Kriging danych kodowanych (ang. *Indicator kriging*) (sekcja \@ref(modele-statystyczne))
 - Kriging stratyfikowany (ang. *Kriging within strata* – KWS)
 - Kriging prosty ze zmiennymi średnimi lokalnymi (ang. *Simple kriging with varying local means* - SKlm) (sekcja \@ref(SKlm))
 - Kriging z zewnętrznym trendem/Uniwersalny kriging (ang.*Kriging with an external trend/Universal kriging*) (sekcja \@ref(kriging-uniwersalny))
@@ -73,7 +72,7 @@ sk = krige(temp ~ 1,
             beta = 15)
 ```
 
-Wynik krigingu prostego, jak i każdy inny uzyskany z użyciem pakietu **gstat**, można podejrzeć używając funkcji `summary()`.
+Wynik krigingu prostego, jak i każdy inny uzyskany z użyciem pakietu **gstat**, można podejrzeć wpisując nazwę wynikowego obiektu.
 Szczególnie ważne są dwie, nowe zmienne - `var1.pred` oraz `var1.var`.
 Pierwsza z nich oznacza wartość estymowaną dla każdego oczka siatki, druga zaś mówi o wariancji estymacji. 
 
@@ -121,7 +120,7 @@ ok = krige(temp ~ 1,
             maxdist = 1500)
 ```
 
-Podobnie jak w przypadku krigingu prostego, można przyjrzeć się wynikom estymacji używając funkcji `summary()` oraz wyświetlić je używając funkcji `plot()` (rycina \@ref(fig:plotsy2ok2)).
+Podobnie jak w przypadku krigingu prostego, można przyjrzeć się wynikom estymacji podając nazwę wynikowego obiektu oraz wyświetlić je używając funkcji `plot()` (rycina \@ref(fig:plotsy2ok2)).
 
 ```{r 08-estymacje-9}
 ok
@@ -164,6 +163,14 @@ siatka$x = st_coordinates(siatka)[, 1]
 siatka$y = st_coordinates(siatka)[, 2]
 ```
 
+Współrzędne dodawane są do całej (regularnej) siatki.
+Możemy przyciąć je do badanego obszaru poprzez wpisanie wartości `NA` w miejscach poza naszym obszarem zainteresowań.
+
+```{r 08-estymacje-14}
+siatka$x[is.na(siatka$X2)] = NA
+siatka$y[is.na(siatka$X2)] = NA
+```
+
 Następnie pierwszy z argumentów w funkcji `variogram()` musi przyjąć postać `temp ~ x + y`, co oznacza, że uwzględniamy liniowy trend zależny od współrzędnej `x` oraz `y` (rycina \@ref(fig:08-estymacje-11)).
 
 ```{r 08-estymacje-11, fig.cap="Semiwariogram zmiennej temp uwzględniający współrzędne x i y."}
@@ -188,13 +195,7 @@ kzt = krige(temp ~ x + y,
              model = fitted_kzt)
 ```
 
-Uzyskany wynik jest wpisywany w regularną siatkę.
-Możemy go przyciąć do badanego obszaru poprzez wpisanie wartości `NA` w miejscach poza naszym obszarem.
-
-```{r 08-estymacje-14}
-kzt$var1.pred[is.na(siatka$X2)] = NA
-kzt$var1.var[is.na(siatka$X2)] = NA
-```
+Wyświelenie wyników odbywa się używając funkcji `plot()`.
 
 ```{r plotsy1kzt, eval=FALSE}
 plot(kzt["var1.pred"], col = paleta)
@@ -223,7 +224,18 @@ est = st_redimension(est)
 
 p1_base + 
         geom_stars(data = est) + 
-        facet_wrap(~new_dim)
+        facet_wrap(~ new_dim)
+```
+
+```{r ploty-trzy, echo=FALSE, message=FALSE, fig.asp=0.25, fig.cap="Porównanie wariancji estymacji używając metody krigingu prostego (SK), krigingu zwykłego (OK) i krigingu z trendem (KZT)."}
+war = c(sk, ok, kzt)
+war = war[c(2, 4, 6)]
+names(war) = c("Wariancja estymacji SK", "Wariancja estymacji OK", "Wariancja estymacji KZT")
+war = st_redimension(war)
+
+p1_base + 
+        geom_stars(data = war) + 
+        facet_wrap(~ new_dim)
 ```
 
 ## Zadania {#z8}
@@ -254,3 +266,7 @@ Sprawdź jak wygląda wynik estymacji uwzględniając (i) 10 najbliższych obser
 4. Używając krigingu z trendem, stwórz optymalne modele zmiennej `srtm` dla dwóch zbiorów danych - `punkty_pref1` oraz `punkty_pref3`.
 5. Porównaj graficznie zarówno mapy estymacji jak i mapy wariancji dla krigingu prostego, zwykłego oraz z trendem dla danych `punkty_pref3`. 
 Jakie można zauważyć podobieństwa a jakie różnice?
+6. Dla zmiennej `temp` z obiektu `punkty_pref1` stwórz mapę semiwariogramu. 
+Czy ta zmienna wykazuje anizotropię przestrzenną? 
+Jeżeli tak to stwórz semiwariogramy kierunkowe i ich modele, a następnie estymację zmiennej `temp`.
+
