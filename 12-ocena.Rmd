@@ -27,7 +27,7 @@ Do oceny przestrzennej jakości estymacji można zastosować mapę przestawiają
 Wyliczenie błędów estymacji odbywa się poprzez odjęcie od estymacji wartości obserwowanej.
 
 ```{r 12-ocena-3, eval=FALSE}
-blad_predykcji = obserwowane - estymacja
+blad_estymacji = obserwowane - estymacja
 ```
 
 ```{r mapa, echo=FALSE, message=FALSE, fig.cap = "Mapa przedstawiająca rozkład przestrzenny błędów estymacji."}
