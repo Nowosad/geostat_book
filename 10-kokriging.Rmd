@@ -199,16 +199,16 @@ data("meuse.all")
 meuse = st_as_sf(meuse.all, coords = c("x", "y"))
 ```
 
-Na jego podstawie wydziel dwa obiekty - `meuse164` zawierający tylko zmienną `lead` (ołów) dla 164 punktów, oraz `meuse60` zawierający tylko zmienną `copper` (miedź) dla 60 punktów.
+Na jego podstawie wydziel dwa obiekty - `meuse164` zawierający tylko zmienną `cadmium` (kadm) dla 164 punktów, oraz `meuse60` zawierający tylko zmienną `copper` (miedź) dla 60 punktów.
 
 ```{r 10-kokriging-12}
 set.seed(431)
-meuse164 = meuse["lead"]
+meuse164 = meuse["cadmium"]
 meuse60 = meuse[sample(nrow(meuse), 60), "copper"]
 ```
 
 1. Stwórz siatkę interpolacyjną o rozdzielczości 100 jednostek dla obszaru, w którym znajdują się punkty `meuse`.
-2. Zbuduj optymalne modele semiwariogramu zmiennej `lead` dla obiektu `meuse164` oraz zmiennej `copper` dla obiektu `meuse60`.
+2. Zbuduj optymalne modele semiwariogramu zmiennej `cadmium` dla obiektu `meuse164` oraz zmiennej `copper` dla obiektu `meuse60`.
 Porównaj graficznie uzyskane modele.
 3. Korzystając z obiektów `meuse164` oraz `meuse60` stwórz krossemiwariogram.
 4. Zbuduj ręczny model uzyskanego krossemiwariogramu.
