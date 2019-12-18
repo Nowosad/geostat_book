@@ -61,17 +61,17 @@ plot(punkty_ndvi["ndvi"])
 ```
 
 Tworzenie krossemiwariogramów odbywa się z użyciem funkcji `gstat()`. Na początku definiujemy pierwszy obiekt `g`. 
-Składa się on z obiektu pustego (`NULL`), nazwy pierwszej zmiennej (nazwa może być dowolna), wzoru (w przykładzie `savi~1`), oraz pierwszego zbioru punktowego. 
+Składa się on z obiektu pustego (`NULL`), nazwy pierwszej zmiennej (nazwa może być dowolna), wzoru (w przykładzie `savi ~ 1`), oraz pierwszego zbioru punktowego. 
 Następnie do pierwszego obiektu `g` dodajemy nowe informacje również poprzez funkcję `gstat()`. Jest to nazwa obiektu (`g`), nazwa drugiej zmiennej, wzór, oraz drugi zbiór punktowy.
 
 ```{r 10-kokriging-5, krosssemi}
 g = gstat(NULL, 
           id = "SAVI", 
-          form = savi~1, 
+          form = savi ~ 1, 
           data = punkty)
 g = gstat(g, 
           id = "NDVI", 
-          form = ndvi~1, 
+          form = ndvi ~ 1, 
           data = punkty_ndvi)
 g
 ```
@@ -91,7 +91,7 @@ Ten ostatni parametr powoduje, że model dodawany jest do wszystkich elementów 
 
 ```{r 10-kokriging-7}
 g_model = vgm(0.006, model = "Sph",
-              range = 2000, nugget = 0.001)
+              range = 1200, nugget = 0.001)
 g = gstat(g, model = g_model, fill.all = TRUE)
 g
 ```
@@ -139,12 +139,12 @@ plot(ck["SAVI.pred"], col = paleta)
 plot(ck["SAVI.var"], col = paleta)
 ```
 
-```{r kokriging-predicted, echo=FALSE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody kokrigingu (CK)."}
+```{r kokriging-predicted, echo=FALSE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji zmiennej savi używając metody kokrigingu (CK)."}
 library(gridExtra)
 p1 = p1_base + geom_stars(data = ck["SAVI.pred"]) +
-        ggtitle("Estymacja CK")
+        ggtitle("Estymacja CK zmiennej savi")
 p2 = p1_base + geom_stars(data = ck["SAVI.var"]) + 
-        ggtitle("Wariancja estymacji CK")
+        ggtitle("Wariancja estymacji CK zmiennej savi")
 grid.arrange(p1, p2, ncol = 1)
 ```
 
@@ -199,7 +199,7 @@ data("meuse.all")
 meuse = st_as_sf(meuse.all, coords = c("x", "y"))
 ```
 
-Na jego podstawie wydziel dwa obiekty - `meuse155` zawierający tylko zmienną `lead` dla 164 punktów, oraz `meuse60` zawierający tylko zmienną `copper` dla 60 punktów.
+Na jego podstawie wydziel dwa obiekty - `meuse164` zawierający tylko zmienną `lead` (ołów) dla 164 punktów, oraz `meuse60` zawierający tylko zmienną `copper` (miedź) dla 60 punktów.
 
 ```{r 10-kokriging-12}
 set.seed(431)
@@ -208,10 +208,12 @@ meuse60 = meuse[sample(nrow(meuse), 60), "copper"]
 ```
 
 1. Stwórz siatkę interpolacyjną o rozdzielczości 100 jednostek dla obszaru, w którym znajdują się punkty `meuse`.
-2. Zbuduj optymalne modele semiwariogramu zmiennej `lead` dla obiektu `meuse155` oraz zmiennej `copper` dla obiektu `meuse60`.
+2. Zbuduj optymalne modele semiwariogramu zmiennej `lead` dla obiektu `meuse164` oraz zmiennej `copper` dla obiektu `meuse60`.
 Porównaj graficznie uzyskane modele.
-3. Korzystając z obiektów `meuse155` oraz `meuse60` stwórz krossemiwariogram.
+3. Korzystając z obiektów `meuse164` oraz `meuse60` stwórz krossemiwariogram.
 4. Zbuduj ręczny model uzyskanego krossemiwariogramu.
 Następnie stwórz model automatyczny.
 Porównaj uzyskane wyniki.
 5. Stwórz estymację zmiennej `copper` w nowo utworzonej siatce korzystając z kokrigingu.
+6. Dodatkowe: stwórz estymację zmiennej `savi` z obiektu `punkty` używając krigingu zwykłego. 
+Porównaj uzyskaną estymację z estymacją przedstawioną w tym rozdziale, stworzoną używając kokrigingu.
