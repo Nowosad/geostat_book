@@ -19,7 +19,7 @@ par(mar = c(rep(0, 4)))
 ```
 
 W wielu przypadkach, oprócz konkretnych pomiarów, istnieje również informacja na temat zmienności innych cech na analizowanym obszarze. 
-W sytuacji, gdy dodatkowe zmienne są skorelowane ze zmienną analizowaną można wykorzystać jedną z metod krigingu wykorzystującą dane uzupełniające, tj. kriging stratyfikowany, prosty kriging ze zmiennymi średnimi lokalnymi, czy kriging uniwersalny.
+W sytuacji, gdy dodatkowe zmienne są skorelowane ze zmienną analizowaną można wykorzystać jedną z metod krigingu wykorzystującą dane uzupełniające, tj. kriging stratyfikowany, kriging prosty ze zmiennymi średnimi lokalnymi, czy kriging uniwersalny.
 
 ```{r 09-dane-uzupelniajace-3, message=FALSE, fig.asp=0.25, echo=FALSE}
 dane_uzup$clc = as.factor(dane_uzup$clc)
@@ -131,11 +131,11 @@ grid.arrange(ip1, ip2, ip3, ncol = 3)
 <!-- grid.arrange(p1, p2, ncol = 1) -->
 <!-- ``` -->
 
-## Prosty kriging ze zmiennymi średnimi lokalnymi (LVM) {#SKlm}
+## Kriging prosty ze zmiennymi średnimi lokalnymi (LVM) {#SKlm}
 
-### Prosty kriging ze zmiennymi średnimi lokalnymi (LVM) (ang. *Simple kriging with varying local means*)
+### Kriging prosty ze zmiennymi średnimi lokalnymi (LVM) (ang. *Simple kriging with varying local means*)
 
-Prosty kriging ze zmiennymi średnimi lokalnymi zamiast znanej (stałej) stacjonarnej średniej wykorzystuje zmienne średnie lokalne uzyskane na podstawie innej informacji. 
+Kriging prosty ze zmiennymi średnimi lokalnymi zamiast znanej (stałej) stacjonarnej średniej wykorzystuje zmienne średnie lokalne uzyskane na podstawie innej informacji. 
 
 Lokalna średnia może być uzyskana za pomocą wyliczenia regresji liniowej pomiędzy zmienną badaną a zmienną dodatkową. 
 W takiej sytuacji konieczne jest użycie funkcji `lm()`.
@@ -271,7 +271,7 @@ data(punkty)
 
 <!-- 1. Używając krigingu stratyfikowanego, stwórz optymalne modele zmiennej `ndvi` dla trzech typów pokrycia terenu (zmienna `clc`). Bazując na stworzonych modelach, stwórz estymacje zmiennej `ndvi` dla trzech typów pokrycia terenu. -->
 <!-- Połącz uzyskane estymacje w jedną mapę. -->
-1. Zastosuj prosty kriging ze zmiennymi średnimi lokalnymi do stworzenia estymacji zmiennej `ndvi` używając jej relacji ze zmienną `savi`.
+1. Zastosuj kriging prosty ze zmiennymi średnimi lokalnymi do stworzenia estymacji zmiennej `ndvi` używając jej relacji ze zmienną `savi`.
 2. Stwórz estymację krigingu uniwersalnego dla zmiennej `ndvi` używając jej relacji ze zmienną `savi`.
 3. Stwórz estymację krigingu uniwersalnego dla zmiennej `ndvi` używając jej relacji ze zmiennymi `clc`, `srtm`, `temp` i `savi`.
 4. Porównaj graficznie trzy powyższe estymacje. 
