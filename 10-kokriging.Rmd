@@ -99,10 +99,14 @@ g
 W przypadku semiwariogramów funkcja `fit.variogram()` służyła dopasowaniu parametrów modelu do semiwariogramu empirycznego. 
 Podobną rolę w krossemiwariogramach spełnia funkcja `fit.lmc()` - dopasowuje ona liniowy model koregionalizacji do semiwariogramów wielozmienych (rycina \@ref(fig:10-kokriging-8)).
 Funkcja `fit.lmc()` oczekuje co najmniej dwóch elementów, krossemiwariogramu oraz modelów krossemiwariancji. 
-W poniższym przykładzie dodatkowo użyto parametru `correct.diagonal = 1.01`, z uwagi na to że analizowane zmienne wykazywały bardzo silną korelację.
+W poniższym przykładzie dodatkowo użyto parametru `correct.diagonal = 1.01`, z uwagi na to że analizowane zmienne wykazywały bardzo silną korelację oraz parametru `fit.method`.
+Ten ostatni parametr określa, która z użytych metod automatycznego dopasowania semiwariogramów jest używana.
+Pakiet **gstat** ma domyślnie ustawione `fit.method = 7`, co daje największe znaczenie parom punktów o najmniejszym zasięgu. 
+Ta opcja nie jest zazwyczaj optymalna w przypadku krossemiwariogramów - tutaj częściej stosuje się `fit.method = 6` (wagi nie są nadawane) lub `fit.method = 1` (wagi proporcjonalne do liczby par punktów w każdym przedziale).
 
 ```{r 10-kokriging-8, fig.cap="Modele krossemiwariogramu zmiennych savi i ndvi."}
-g_fit = fit.lmc(v, g, correct.diagonal = 1.01)
+g_fit = fit.lmc(v, g, correct.diagonal = 1.01,
+                fit.method = 6)
 g_fit
 plot(v, g_fit)
 ```
@@ -127,8 +131,8 @@ W efekcie otrzymujemy pięć zmiennych:
 1. `SAVI.pred` - estymacja zmiennej `savi`
 2. `SAVI.var` - wariancja zmiennej `savi`
 3. `NDVI.pred` - estymacja zmiennej `ndvi`
-4. `NDVI.var` - wariancje zmiennej `ndvi`
-5. `cov.SAVI.NDVI` - kowariancje zmiennych `savi` oraz `ndvi`
+4. `NDVI.var` - wariancja zmiennej `ndvi`
+5. `cov.SAVI.NDVI` - kowariancja zmiennych `savi` oraz `ndvi`
 
 ```{r 10-kokriging-10}
 ck
