@@ -86,7 +86,9 @@ p1_base +
 
 ```{r sym_bezw2, cache=TRUE}
 sym_bezw2 = krige(formula = z ~ 1, 
-                   model = vgm(psill = 0.025, model = "Exp", range = 1500), 
+                   model = vgm(psill = 0.025,
+                               model = "Exp", 
+                               range = 1500), 
                    newdata = siatka, 
                    beta = 1,
                    nmax = 30, 
