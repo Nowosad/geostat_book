@@ -31,3 +31,5 @@ bookdown::pdf_book:
   toc_appendix: yes
   quote_footer: ["\\VA{", "}{}"]
 bookdown::epub_book: default
+bookdown::html_chapters:
+  css: [css/style.css]
