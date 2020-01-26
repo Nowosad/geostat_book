@@ -30,7 +30,8 @@ is_html = knitr::is_html_output()
 knitr::include_graphics("Rfigs/book_cover2.png", dpi = NA)
 ```
 
-**Skrypt jest obecnie aktualizowany do celów trzeciego wydania.**
+**Skrypt jest obecnie aktualizowany do celów trzeciego wydania, planowanego na luty 2021.**
+**Wersje PDF wydania pierwszego i drugiego można znaleźć pod adresem https://nowosad.github.io/publications/.**
 
 Masz przed sobą skrypt zawierający materiały do ćwiczeń z geostatystyki.
 Składa się ona z kilkunastu rozdziałów pokazujących jak: wygląda geostatystyczna analiza danych (rozdział \@ref(wprowadzenie)), dodawać i wizualizować dane przestrzenne w R (rozdział \@ref(r-a-dane-przestrzenne)), wykonywać wstępną eksplorację danych nieprzestrzennych (rozdział \@ref(eksploracja-analiza-danych-nieprzestrzennych)), wstępnie analizować dane przestrzenne (rozdział \@ref(eksploracyjna-analiza-danych-przestrzennych)), wykorzystywać deterministyczne metody interpolacji (rozdział \@ref(metody-interpolacji)), rozumieć i wykorzystywać przestrzenne miary podobieństwa i niepodobieństwa (rozdział \@ref(geostatystyka-prolog)), modelować semiwariogramy bezkierunkowe i kierunkowe (rozdział \@ref(modelowanie-matematycznie-autokorelacji-przestrzennej)), tworzyć estymacje jednozmienne (rozdział \@ref(estymacje-jednozmienne)), estymacje wykorzystujące dane uzupełniające (rozdział \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych)), estymacje wielozmienne (rozdział \@ref(estymacje-wielozmienne)), estymacje danych kodowanych (rozdział \@ref(estymacja-lokalnego-rozkadu-prawdopodobienstwa)), oceniać jakość wykonanych estymacji (rozdział \@ref(ocena-jakosci-estymacji)) oraz budować symulacje przestrzenne (rozdział \@ref(symulacje)).
