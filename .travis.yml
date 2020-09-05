@@ -20,10 +20,10 @@ before_install:
   - chmod +x _build.sh _publish.sh
 
 install:
-  - R -e "install.packages('devtools')"
+  - R -e "install.packages('remotes')"
   - R -e "install.packages('tinytex')"
   - R -e "tinytex::install_tinytex()"
-  - R -e "devtools::install_github('nowosad/geostatbook')"
+  - R -e "remotes::install_github('nowosad/geostatbook')"
   - R -e "install.packages('sp')"
 
 script:
