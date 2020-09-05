@@ -23,11 +23,8 @@ install:
   - R -e "install.packages('remotes')"
   - R -e "install.packages('tinytex')"
   - R -e "tinytex::install_tinytex()"
-  #- R -e "remotes::install_github('nowosad/geostatbook')"
+  - R -e "remotes::install_github('nowosad/geostatbook')"
   #- R -e "install.packages('sp')"
-
-r_github_packages:
-  - nowosad/geostatbook
 
 script:
   - ./_build.sh
