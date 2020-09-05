@@ -1,3 +1,4 @@
+
 # Wprowadzenie
 
 ## Geostatystyczna analiza danych
