@@ -52,22 +52,6 @@ Inaczej mówiąc, celem geostatystyki nie musi być tylko interpolacja (estymacj
 <!-- Geostatystyczna analiza danych może przyjmować różną postać w zależności od postawionego celu analizy.  -->
 <!-- Poniższa rycina przestawia uproszczoną ścieżkę postępowania geostatystycznego.  -->
 
-```{r diagram, echo=FALSE, eval=FALSE}
-library(DiagrammeR)
-# library('trelliscope')
-p = DiagrammeR::mermaid("
-                graph TB;
-                hw((Dane pomiarowe)) -->Analiza[<center>Analiza <br>i interpretacja <br>struktury przestrzennej</center>];
-                Analiza -->Modelowanie[<center>Modelowanie matematyczne <br>struktury przestrzennej</center>]
-                Modelowanie -->Estymacja;
-                Modelowanie -->Optymalizacja;
-                Modelowanie -->Symulacja;
-                ")
-```
-
-<!-- ```{r, echo=FALSE, fig.width=8} -->
-<!-- knitr::include_graphics("figs/diag.png") -->
-<!-- ``` -->
 
 ### Podstawowe etapy
 
@@ -101,12 +85,36 @@ Oprócz ograniczeń dotyczących danych wejściowych, istnieją również dwa za
 
 ### Podstawowe symbole
 
-Podstawowe symbole w określaniu przestrzennej zmienności to:
+Podstawowe symbole w określaniu przestrzennej zmienności (rycina \@ref(fig:headtail)) to:
 
-- $s$ - wektor współrzędnych.
-- $z(s)$ - badana zmienna jako funkcja położenia - inaczej określany jako ogon (ang. *tail*).
+- $u_{\alpha}$ - wektor współrzędnych.
+- $z(u_{\alpha})$ - badana zmienna jako funkcja położenia - inaczej określany jako ogon (ang. *tail*).
 - $h$ - lag - odstęp pomiędzy dwoma lokalizacjami.
-- $z(s+h)$ - wartość badanej zmiennej odległej o odstęp $h$ - inaczej określany jako głowa (ang. *head*).
+- $z(u_{\alpha}+h)$ - wartość badanej zmiennej odległej o odstęp $h$ - inaczej określany jako głowa (ang. *head*).
+
+```{r headtail, fig.cap="Wizualizacja relacji pomiędzy wartością ogona a głowy odległymi od siebie o wektor h."}
+library(ggplot2)
+library(latex2exp)
+df = data.frame(x = c(1, 4),
+                y = c(1, 2))
+arrow_plot = ggplot(df, aes(x, y)) +
+  geom_point(size = 10) +
+  annotate("segment", x = 1, y = 1, xend = 4,
+           yend = 2, arrow = arrow(type = "closed", length = unit(0.02, "npc")), color = "#A31308", size = 2) +
+  annotate("text", x = 1, y = 1.4, label = "ogon\n(tail)", size = 10) +
+  annotate("text", x = 4, y = 2.4, label = "głowa\n(head)", size = 10) +
+  annotate("text", x = 1, y = 0.8, 
+           label = TeX("$u_\u03B1$", output = "character"),
+           parse = TRUE, size = 10) +
+  annotate("text", x = 4, y = 1.8, 
+           label = TeX("$u_{\\alpha} + h$", output = "character"),
+           parse = TRUE, size = 10) +
+  annotate("text", x = 2.5, y = 1.7, label = "h", size = 10, color = "#A31308") +
+  scale_x_continuous(limits = c(0.7, 4.3)) +
+  scale_y_continuous(limits = c(0.7, 2.6)) +
+  theme_void()
+```
+
 
 ## Przestrzenna kowariancja i korelacja
 
@@ -178,7 +186,7 @@ Jednocześnie warto zdawać sobie sprawę, że kowarancja i korelacja przestrzen
 Zmienność przestrzenna analizowanej cechy może być określona za pomocą semiwariancji.
 Jest to połowa średniej kwadratu różnicy pomiędzy wartościami badanej zmiennej ($z$) w dwóch lokalizacjach odległych o wektor $h$:
 
-$$ \gamma(h) = \frac{1}{2}[(z(s) - z(s+h))]^2 $$
+$$\gamma(h) = \frac{1}{2}(z(u_{\alpha}) - z(u_{\alpha} + h))^2$$
 
 Przykładowo, aby wyliczyć wartość semiwariancji (`gamma`) pomiędzy dwoma punktami musimy znać wartość pierwszego z nich (w przykładzie jest to ok. 13,85 stopni Celsjusza) oraz drugiego z nich (ok. 15,48 stopni Celsjusza).
 Korzystając z wzoru na semiwariację otrzymujemy wartość równą ok. 1,33.
@@ -232,7 +240,7 @@ knitr::include_graphics("figs/points_sel.png")
 Semiwariogram jest wykresem pokazującym relację pomiędzy odległością a semiwariancją (rycina \@ref(fig:06-semiwariancja-10)).
 Inaczej mówiąc, dla kolejnych odstępów (lagów) wartość semiwariancji jest uśredniana i przestawiania w odniesieniu do odległości. 
 
-$$ \hat{\gamma}(h) = \frac{1}{2N(h)}\sum_{i=1}^{N(h)}(z(s_i) - z(s_i+h))^2 $$
+$$\hat{\gamma}(h) = \frac{1}{2N(h)}\sum_{\alpha=1}^{N(h)}(z(u_{\alpha}) - z(u_{\alpha}+h))^2$$
 
 , gdzie $N(h)$ oznacza liczbę par punktów w odstępie $h$.
 
