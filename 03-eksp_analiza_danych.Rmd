@@ -251,11 +251,8 @@ Transformacja danych może mieć na celu ułatwienie porównywania różnych zmi
 W efekcie transformacja danych ułatwia przeprowadzenie analiz (geo-)statystycznych i polepsza wyniki prognoz z modeli.
 Przykładowo, możliwe jest stworzenie modelu i estymacji używając logarytmu badanej zmiennej, a następnie przywrócenie oryginalnej jednostki danych.
 
-Redukcja skośności może być przeprowadzona z użyciem:
-
-- Logarytmizacji oraz funkcji wykładniczej
-- Pierwiastkowania oraz potęgowania
-- Innych
+Redukcja skośności może być przeprowadzona z na wiele sposób.
+Jednym z najpopularniejszych jest użycie transformacji logarytmicznej.
 
 ### Testowanie normalności rozkładu
 
@@ -265,54 +262,93 @@ Test Shapiro-Wilka pozwala na sprawdzenie normalności rozkładu wybranej zmienn
 shapiro.test(punkty$temp)
 ```
 
-### Logarytmizacja i funkcja wykładnicza
+### Logarytmizacja
 
-Jedną grupą technik służących redukcji skośności jest logarytmizacja i funkcja wykładnicza.
-Logarytmizacja w R może odbyć się za pomocą funkcji `log()`. 
-Transformację logarytmiczną można odwrócić używając funkcji `exp()` (rycina \@ref(fig:03-eksp-analiza-danych-28)).
+Jedną grupą technik służących redukcji skośności jest logarytmizacja.
+Logarytmizacja w R może odbyć się za pomocą funkcji `log()` (rycina \@ref(fig:03-eksp-analiza-danych-28)).
 
-```{r 03-eksp-analiza-danych-27, eval = FALSE}
-ggplot(punkty, aes(temp)) + geom_density()
+```{r}
 punkty$log_tpz = log(punkty$temp)
-ggplot(punkty, aes(log_tpz)) + geom_density()
-punkty$exp_tpz = exp(punkty$log_tpz)
-ggplot(punkty, aes(exp_tpz)) + geom_density()
 ```
 
 ```{r 03-eksp-analiza-danych-28, eval=TRUE, echo=FALSE, fig.cap = "Porównania wartości zmiennej temp przed i po transformacji logaritmicznej."}
 p1 = ggplot(punkty, aes(temp)) + geom_density()
 punkty$log_tpz = log(punkty$temp)
 p5 = ggplot(punkty, aes(log_tpz)) + geom_density()
-punkty$exp_tpz = exp(punkty$log_tpz)
-p6 = ggplot(punkty, aes(exp_tpz)) + geom_density()
+gridExtra::grid.arrange(p1, p5, ncol = 1)
+```
+
+### Transformacja odwrotna
+
+Przywrócenie wartości do oryginalnej jednostki, np. po estymacji, wymaga zastosowania odpowiedniej metody transformacji wstecznej [(Yamamoto, 2007)](https://link.springer.com/article/10.1007/s10596-007-9046-x).
+
+$$y = k_0 \cdot exp[ln(\hat{y}_{OK})+\frac{\sigma^2_{OK}}{2}]$$
+
+, gdzie:
+- $k_0$ - współczynnik korekcyjny (iloraz średniej oryginalnej i średniej po transformacji wstecznej)
+- $exp$ - funkcja wykładnicza
+- $ln$ - funkcja logarytmiczna
+- $\hat{y}_{OK}$ - estymacja krigingu zwykłego
+- $\sigma^2_{OK}$ - wariacja krigingu zwykłego
+
+Zobaczmy to na uproszczonym przykładzie.
+Poniższy blok kodu tworzy model semiwariogramy, a następnie estymację dla badanego obszaru.
+Wyjaśnienie działania poniższych linii kodu można znaleźć w rozdziałach \@ref(geostatystyka-prolog), \@ref(modelowanie-matematycznie-autokorelacji-przestrzennej) i \@ref(estymacje-jednozmienne).
+
+```{r}
+library(gstat)
+data(siatka)
+vario = variogram(log_tpz ~ 1, locations = punkty)
+model = fit.variogram(vario, vgm(model = "Sph", nugget = 0.5))
+ok = krige(log_tpz ~ 1,
+            locations = punkty,
+            newdata = siatka, 
+            model = model)
+```
+
+Wynik, obiekt `ok` jest rastrem zawierającym dwie warstwy: `var1.pred` i `var1.var`. 
+Pierwsza z nich, `var1.pred`, zawiera estymowane wartości dla każdego oczka siatki, jednak ich jednostkami jest logarytm oryginalnej jednostki ($ln(\hat{y}_{OK})$). 
+Druga warstwa, `var1.var`, opisuje wariancję (niepewność) pomiaru w każdym oczku siatki ($\sigma^2_{OK}$). 
+
+Wartości z obu tych warstw możemy podstawić do powyższego wzoru.
+
+```{r}
+bt = exp(ok$var1.pred + (ok$var1.var / 2))
+```
+
+W kolejnym kroku musimy wyliczyć, $k_0$, współczynnik korekcyjny.
+Jest to iloraz średniej oryginalnej i średniej po transformacji wstecznej.
+
+```{r}
+mu_bt = mean(bt, na.rm = TRUE)
+mu_original = mean(punkty$temp, na.rm = TRUE)
+k0 = mu_original / mu_bt
+```
+
+Do otrzymania wynikowych wartości w oryginalnej jednostce musimy teraz pomnożyć wartości po transformacji wstecznej ze współczynnikiem korekcyjnym (rycina \@ref(fig:03-eksp-analiza-danych-28b)).
+
+```{r}
+btt = bt * k0
+```
+
+```{r 03-eksp-analiza-danych-28b, eval=TRUE, echo=FALSE, fig.cap = "Porównania wartości zmiennej temp przed, po transformacji logaritmicznej, oraz po transformacji odwrotnej."}
+p1 = ggplot(punkty, aes(temp)) + geom_density()
+punkty$log_tpz = log(punkty$temp)
+p5 = ggplot(punkty, aes(log_tpz)) + geom_density()
+ok$var1.pred2 = btt   
+p6 = ggplot(data.frame(val = c(ok$var1.pred2)), aes(val)) + geom_density()
 gridExtra::grid.arrange(p1, p5, p6, ncol = 1)
 ```
 
-Możliwe jest też wykonanie odwrotnej operacji - redukcję skośności używając funkcji wykładniczej, a następnie przywrócenie oryginalnej jednostki używając logarytmizacji.
+Finalnie możliwe jest też wpisanie wartości po transformacji odwrotnej do siatki.
 
-### Pierwiastkowanie i potęgowanie
-
-Druga grupą technik służących redukcji skośności jest pierwiastkowanie i potęgowanie.
-Pierwiastkowanie w R może odbyć się za pomocą funkcji `sqrt()`. 
-Odwrócenie tej transformacji odbywa się poprzez podniesienie wartości do potęgi (`^2`) (rycina \@ref(fig:03-eksp-analiza-danych-30)).
-
-```{r 03-eksp-analiza-danych-29, eval=FALSE}
-ggplot(punkty, aes(temp)) + geom_density()
-punkty$sqrt_tpz = sqrt(punkty$temp)
-ggplot(punkty, aes(sqrt_tpz)) + geom_density()
-punkty$pow_tpz = punkty$sqrt_tpz ^ 2
-ggplot(punkty, aes(pow_tpz)) + geom_density()
+```{r}
+ok$var1.pred2 = btt   
 ```
 
-```{r 03-eksp-analiza-danych-30, eval=TRUE, echo=FALSE, fig.cap = "Porównania wartości zmiennej temp przed i po pierwiastkowaniu."}
-punkty$sqrt_tpz = sqrt(punkty$temp)
-p7 = ggplot(punkty, aes(sqrt_tpz)) + geom_density()
-punkty$pow_tpz = punkty$sqrt_tpz ^ 2
-p8 = ggplot(punkty, aes(pow_tpz)) + geom_density()
-gridExtra::grid.arrange(p1, p7, p8, ncol = 1)
-```
-
-Podobnie jak w poprzednim przypadku możliwe jest też wykonanie odwrotnej operacji - redukcję skośności używając potęgowania, a następnie przywrócenie oryginalnej jednostki używając pierwiastkowania.
+<!-- - Logarytmizacji oraz funkcji wykładniczej -->
+<!-- - Pierwiastkowania oraz potęgowania -->
+<!-- - Innych -->
 
 <!--
 Transformacja danych | Rodzina transformacji Boxa Coxa
@@ -349,6 +385,5 @@ Czym charakteryzuje się ten rozkład?
 Czy jest ona istotna statystycznie?
 6. Zbuduj wykres pokazujący zmienność `ndvi` w zależności od klasy pokrycia terenu. 
 Czy istnieje istotna statystycznie różnica w wartościach `ndvi` względem klas pokrycia terenu?
-7. Wypróbuj różne metody transformacji danych w celu redukcji skośności rozkładu zmiennej `ndvi`.
-Która metoda działa w tym przypadku najlepiej?
-8. Stwórz powtarzalny przykład (więcej informacji w appendiksie \@ref(reprex)) używając pakietu **reprex** w oparciu o kod stworzony do rozwiązania poprzedniego zadania.
+7. Wypróbuj logarytmizację danych na zmiennej `ndvi`.
+Czy poprawiła ona właściwości rozkładu tej zmiennej?
