@@ -68,21 +68,20 @@ GDAL to biblioteka zawierająca funkcje służące do odczytywania i zapisywania
 
 ### PROJ
 
-Dane przestrzenne powinny być zawsze powiązane z układem współrzędnych. 
-W ten sposób możliwe jest określenie gdzie są one położone, a także jak wykonywane są na nich operacje przestrzenne.
+Dane przestrzenne powinny być zawsze powiązane z układem współrzędnych - w ten sposób możliwe jest określenie gdzie są one położone, a także jak wykonywane są na nich operacje przestrzenne.
 Biblioteka [PROJ](https://proj.org/) jest używana przez pakiety **sf** i **stars** do określania i konwersji układów współrzędnych.
-Układy współrzędnych mogą być opisywane na szereg sposobów, np. poprzez:
+Układy współrzędnych mogą być opisywane na szereg sposobów, np. poprzez systemy kodów.
+Najpopularniejszym z nich jest system kodów EPSG (ang. *European Petroleum Survey Group*), który pozwala on na łatwe identyfikowanie układów współrzędnych. 
+Przykładowo, układ PL 1992 może być określony jako `"EPSG:2180"`.
+Taki sposób określania układów współrzędnych wymaga jedynie znajomości odpowiedniego numery dla danego obszaru.
 
-- Reprezentację **proj4string** - określa ona własności układu współrzędnych
-- Kod EPSG (ang. *European Petroleum Survey Group*) - pozwala on na łatwe identyfikowanie układów współrzędnych
+Dane przestrzenne przechowują też opis tego układu współrzędnych w bardziej złożny sposób nazwany WKT2.
+Zawiera on opis elementów związanych z konkretnym układem współrzędnych, takich jak jednostka, elipsoida odwzorowania, itd.
 
-Przykładowo, układ PL 1992 może być określony jako:
+`r st_crs(2180)$wtk`
 
-`"+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"`
-
-...lub też za pomocą kodu EPSG jako:
-    
-`2180`
+Warto też wiedzież, że przez wiele lat główną rolę pełniła reprezentacja **proj4string**, np. `"+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"`, która określała własności układu współrzędnych. 
+Współcześnie jednak ta reprezentacja nie jest zalecana do użycia.
 
 Strona http://www.spatialreference.org/ zawiera bazę danych układów współrzędnych.
 
