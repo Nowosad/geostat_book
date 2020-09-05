@@ -34,7 +34,7 @@ Eksploracyjna analiza danych przestrzennych w przypadku danych punktowych ma na 
 - Sprawdzenie poprawności współrzędnych (sekcja \@ref(popr-wsp)).
 - Sprawdzenie poprawności danych, w tym między innymi określenie danych odstających lokalnie (sekcja \@ref(dane-odst)).
 - Wgląd w typ próbkowania danych (sekcja \@ref(probkowanie)).
-- Identyfikacja głównych cech struktury przestrzennej zjawiska (np. trend) (rozdział \@ref(metody-interpolacji)).
+- Ogólny pogląd na zmienność przestrzenną, wykorzystanie prostej automatycznej procedury interpolacji (rozdział \@ref(metody-interpolacji)).
 
 ## Sprawdzenie poprawności współrzędnych {#popr-wsp}
 
