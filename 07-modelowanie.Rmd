@@ -47,8 +47,67 @@ Są to:
 - **Sill** - semiwariancja progowa - oznacza wariancję badanej zmiennej.
 - **Range** - zasięg - to odległość do której istnieje przestrzenna korelacja.
 
+```{r, fig.height=6, fig.width=11, eval=FALSE}
+punkty$x = st_coordinates(punkty)[,1]
+punkty$y = st_coordinates(punkty)[,2]
+vario_par = variogram(temp~x + y, locations = punkty)
+vario_par$gamma = vario_par$gamma + 1
+plot(vario_par, 
+     plot.numbers = FALSE,
+     xlab = "Odstęp - h (m)",
+     ylab = "Semiwariancja",
+     ylim = c(0, 11))
+library(lattice)
+png("figs/variogram.png", width = 600, height = 326, res = 72)
+plot(vario_par, 
+     plot.numbers = FALSE,
+     xlab = "Odstęp - h (m)",
+     ylab = "Semiwariancja",
+     ylim = c(0, 11))
+dev.off()
+```
+
+```{r, eval=FALSE}
+png("figs/variogram_text.png", width = 600, height = 326, res = 72)
+
+library(gridExtra)
+library(grid)
+arrow_style = arrow(angle = 30, 
+                    length = unit(0.25, "inches"),
+                    ends = "last", type = "open")
+arrow_style2 = arrow(angle = 30, 
+                    length = unit(0.05, "inches"),
+                    ends = "both", type = "open")
+nugget = segmentsGrob(x0 = 0.2, x1 = 0.11, y0 = 0.3, y1 = 0.255,
+                     arrow = arrow_style)
+nuggetline = segmentsGrob(x0 = 0.2, x1 = 0.09, 
+                          y0 = 0.45, y1 = 0.24,
+                     gp = gpar(lty = 3, lwd = 2))
+varianceline = segmentsGrob(x0 = 0.1, x1 = 0.95, 
+                          y0 = 0.74, y1 = 0.74,
+                     gp = gpar(lty = 3, lwd = 2))
+range = segmentsGrob(x0 = 0.4, x1 = 0.4, y0 = 0.5, y1 = 0.67,
+                     arrow = arrow_style)
+sill = segmentsGrob(x0 = 0.3, x1 = 0.4, y0 = 0.7, y1 = 0.7,
+                     arrow = arrow_style)
+my_v = grid::rasterGrob(png::readPNG("figs/variogram.png"))
+grid.draw(my_v)
+grid.draw(nuggetline)
+grid.draw(nugget)
+grid.text("Semiwariancja nuggetowa\n (nugget)", x = 0.2, y = 0.3,
+          just = "left")
+grid.draw(varianceline)
+grid.draw(range)
+grid.text("Zasięg autokorelacji (range))", x = 0.42, y = 0.55,
+          just = "left")
+grid.draw(sill)
+grid.text("Semiwariancja\nprogowa\n(sill)", x = 0.1, y = 0.7,
+          just = "left")
+dev.off()
+```
+
 ```{r 07-modelowanie-4, echo=FALSE, fig.cap = "Podstawowe elementy modelu semiwariogramu."}
-knitr::include_graphics("figs/model_semiwariogramu.png")
+knitr::include_graphics("figs/variogram_text.png")
 ```
 
 ### Model nuggetowy
