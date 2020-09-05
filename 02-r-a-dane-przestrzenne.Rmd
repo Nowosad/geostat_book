@@ -12,10 +12,11 @@ Do wbudowanych typów obiektów należą:<!--ref JN-->
     - liczbowe (ang. *integer*, *numeric*) - `c(1, 2, 3)` i `c(1.21, 3.32, 4.43)`
     - znakowe (ang. *character*) - `c("jeden", "dwa", "trzy")`
     - logiczne (ang. *logical*) - `c(TRUE, FALSE)`
-    - czynnikowe (ang. *factor*) - `c("jeden", "dwa", "trzy", "jeden")`
 - Ramki danych (ang. *data.frame*) - to zbiór zmiennych (kolumn) oraz obserwacji (wierszy) zawierających różne typy danych
 - Macierze (ang. *matrix*) - to zbiór kolumn oraz wierszy zawierających wektory jednego typu
 - Listy (ang. *list*) - to sposób przechowywania obiektów o różnych typach i różnej długości
+
+Dokładniejsze wyjaśnienie powyższych typów obiektów można znaleźć w rozdziałach 5 i 7 książki [Elementarz programisty: Wstęp do programowania używając R](https://nowosad.github.io/elp/).
 
 ### Pakiety
 
