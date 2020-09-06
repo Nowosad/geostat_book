@@ -201,13 +201,12 @@ siatka_n = st_make_grid(granica, cellsize = 500)
 siatka_n = st_as_sf(siatka_n)
 punkty_pref$liczebnosc = 0
 st_crs(siatka_n) = st_crs(punkty_pref)
-siatka_nr = aggregate(punkty_pref["liczebnosc"], 
-                      by = siatka_n,
-                      FUN = length)
+siatka_nr = aggregate(punkty_pref["liczebnosc"], by = siatka_n, FUN = length)
 # siatka_nr$odw_licz = 1 / siatka_nr$liczebnosc
 punkty_pref$liczebnosc = NULL
 punkty_pref = st_join(punkty_pref, siatka_nr)
-punkty_pref$waga_rk = ((1 / punkty_pref$liczebnosc) / sum(!is.na(siatka_nr$liczebnosc))) * nrow(punkty_pref)
+punkty_pref$waga_rk = ((1 / punkty_pref$liczebnosc) / sum(!is.na(siatka_nr$liczebnosc))) *
+        nrow(punkty_pref)
 ```
 
 ```{r}
@@ -223,9 +222,9 @@ srednia_wazona_rk
 
 ### Porównanie metod rozgrupowania
 
-Średnia wartość temperatury dla badanego obszaru wynosiła 15,59 stopni Celsjusza, jednak w preferencyjnej próbie ta wartość wynosiła 14,28 stopni Celsjusza.
-Porównując trzy zastosowane metody próbkowania warto zauważyć, że najbliższy wynik uzyskano korzystając z pierwszego rodzaju rozgrupowania komórkowego, która nieznacznie zaniżyła rzeczywistą wartość temperatury.
-Rozgrupowanie komórkowe II oraz rozgrupowanie poligonowe były w tym przypadku mniej dokładne, wyraźnie zawyżając wartości temperatury.
+Średnia wartość temperatury dla badanego obszaru wynosiła `r gsub("\\.", "\\,", round(srednia_arytmetyczna_pop, 2))` stopni Celsjusza, jednak w preferencyjnej próbie ta wartość wynosiła `r gsub("\\.", "\\,", round(srednia_arytmetyczna, 2))` stopni Celsjusza.
+Porównując dwie zastosowane metody rozgrupowania warto zauważyć, że najbliższy wynik uzyskano korzystając z rozgrupowania poligonalnego, które nieznacznie zawyżyło rzeczywistą wartość temperatury.
+Rozgrupowanie komórkowe było w tym przypadku mniej dokładne, wyraźnie zawyżając wartości temperatury.
 
 ```{r tab_dec_1, echo=FALSE}
 srednia_arytmetyczna_pop = 15.5912781
