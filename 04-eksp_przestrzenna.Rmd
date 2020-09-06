@@ -222,12 +222,15 @@ srednia_wazona_rk
 
 ### Porównanie metod rozgrupowania
 
+```{r, echo=FALSE}
+srednia_arytmetyczna_pop = 15.5912781
+```
+
 Średnia wartość temperatury dla badanego obszaru wynosiła `r gsub("\\.", "\\,", round(srednia_arytmetyczna_pop, 2))` stopni Celsjusza, jednak w preferencyjnej próbie ta wartość wynosiła `r gsub("\\.", "\\,", round(srednia_arytmetyczna, 2))` stopni Celsjusza.
 Porównując dwie zastosowane metody rozgrupowania warto zauważyć, że najbliższy wynik uzyskano korzystając z rozgrupowania poligonalnego, które nieznacznie zawyżyło rzeczywistą wartość temperatury.
 Rozgrupowanie komórkowe było w tym przypadku mniej dokładne, wyraźnie zawyżając wartości temperatury.
 
 ```{r tab_dec_1, echo=FALSE}
-srednia_arytmetyczna_pop = 15.5912781
 df = data.frame(sa = c(srednia_arytmetyczna_pop, 
                        srednia_arytmetyczna, 
                        srednia_wazona_rp,
