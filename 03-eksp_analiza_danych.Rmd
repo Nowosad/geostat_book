@@ -336,7 +336,7 @@ p1 = ggplot(punkty, aes(temp)) + geom_density()
 punkty$log_tpz = log(punkty$temp)
 p5 = ggplot(punkty, aes(log_tpz)) + geom_density()
 ok$var1.pred2 = btt   
-p6 = ggplot(data.frame(val = c(ok$var1.pred2)), aes(val)) + geom_density()
+p6 = ggplot(data.frame(btt = c(ok$var1.pred2)), aes(btt)) + geom_density()
 gridExtra::grid.arrange(p1, p5, p6, ncol = 1)
 ```
 
