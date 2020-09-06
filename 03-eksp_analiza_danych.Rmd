@@ -366,6 +366,8 @@ Funkcja `rev_trans()` przyjmuje trzy argumenty:
 - `var` - wariancja kolejnych estymacji 
 - `obs` - wartości pomiarów w punktach w oryginalnej jednostce
 
+Dla ułatwienia funkcja `rev_trans()` znajduje się też w pakiecie **geostatbook**.
+
 <!-- - Logarytmizacji oraz funkcji wykładniczej -->
 <!-- - Pierwiastkowania oraz potęgowania -->
 <!-- - Innych -->
