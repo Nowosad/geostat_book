@@ -38,12 +38,14 @@ Składa się ona z kilkunastu rozdziałów pokazujących jak: wygląda geostatys
 Począwszy od drugiego, każdy rozdział kończy się również szeregiem zadań, które pozwalają na sprawdzenie umiejętności i ich utrwalenie.
 
 Dodatkowo załączone są cztery appendiksy. 
-W appendiksie \@ref(zrodla-wiedzy) można znaleźć odnośniki do innych materiałów związanych z geostatystyką i R, appendiks \@ref(dane-app) opisuje dane użyte w tym skrypcie, appendiks \@ref(reprex) wprowadza pojęcie powtarzalnego przykładu i tłumaczy jak taki przykład stworzyć, a appendiks \@ref(przyklad) pokazuje uproszczony przykład analizy geostatystycznej.
+W appendiksie \@ref(zrodla-wiedzy) można znaleźć odnośniki do innych materiałów związanych z geostatystyką i R, appendiks \@ref(dane-app) opisuje dane użyte w tym skrypcie, a appendiks \@ref(przyklad) pokazuje uproszczony przykład analizy geostatystycznej.
 
 <!--co nowego w trzecim wydaniu-->
 <!-- sp -> sf + stars -->
 <!-- fig captions -->
 <!-- updated references -->
+<!-- improved transformation -->
+<!-- added rozgrupowanie -->
 <!-- rewrite to many sections of the book -->
 <!-- improved/changed figures -->
 
