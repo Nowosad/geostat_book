@@ -11,7 +11,7 @@ bookdown::gitbook:
         <li><a href="./">Geostatystyka w R</a></li>
       after: |
         <li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencja Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a></li>
-        <li><a href="https://nowosad.github.io" target="blank">Jakub Nowosad 2019</a></li>
+        <li><a href="https://nowosad.github.io" target="blank">Jakub Nowosad 2020</a></li>
     edit:
       link: https://github.com/nowosad/geostat_book/edit/master/%s
       text: "Edytuj"
