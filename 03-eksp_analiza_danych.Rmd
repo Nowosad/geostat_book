@@ -285,6 +285,7 @@ Przywrócenie wartości do oryginalnej jednostki, np. po estymacji, wymaga zasto
 $$y = k_0 \cdot exp[ln(\hat{y}_{OK})+\frac{\sigma^2_{OK}}{2}]$$
 
 , gdzie:
+
 - $k_0$ - współczynnik korekcyjny (iloraz średniej oryginalnej i średniej po transformacji wstecznej)
 - $exp$ - funkcja wykładnicza
 - $ln$ - funkcja logarytmiczna
@@ -345,6 +346,25 @@ Finalnie możliwe jest też wpisanie wartości po transformacji odwrotnej do sia
 ```{r}
 ok$var1.pred2 = btt   
 ```
+
+Aby uprościć sobie transformacje odwrotne w przyszłości, możemy powyższy kod przepisać do postaci funkcji `rev_trans()`:
+
+```{r}
+rev_trans = function(pred, var, obs){
+        bt = exp(pred + (var / 2))
+        mu_bt = mean(bt, na.rm = TRUE)
+        mu_original = mean(obs, na.rm = TRUE)
+        k0 = mu_original / mu_bt
+        btt = bt * k0
+        return(btt)
+}
+```
+
+Funkcja `rev_trans()` przyjmuje trzy argumenty:
+
+- `pred` - estymowane wartości, których jednostką jest logarytm oryginalnej jednostki
+- `var` - wariancja kolejnych estymacji 
+- `obs` - wartości pomiarów w punktach w oryginalnej jednostce
 
 <!-- - Logarytmizacji oraz funkcji wykładniczej -->
 <!-- - Pierwiastkowania oraz potęgowania -->
