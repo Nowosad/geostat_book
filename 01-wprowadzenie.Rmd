@@ -22,6 +22,7 @@ library(sf)
 library(stars)
 library(geostatbook)
 library(gstat)
+library(ggplot2)
 data(punkty)
 data(granica)
 data(siatka)
@@ -31,6 +32,13 @@ paleta = hcl.colors(40, palette = "ag_Sunset")
 ```{r 01-wprowadzenie-3, echo=FALSE, fig.cap = "Przykładowe dane reprezentujące pomiary punktowe zmiennej numerycznej."}
 plot(punkty["temp"], reset = FALSE, main = NA)
 plot(st_geometry(granica), add = TRUE)
+```
+
+Dane należy poddać eksploracji w celu ich lepszego poznania, wyszukania relacji między zmiennymi, czy znalezienia potencjalnych błędów (rycina \@ref(fig:01-wprowadzenie-3b)).
+
+```{r 01-wprowadzenie-3b, echo=FALSE, fig.cap = "Rozkład wartości zmiennej numerycznej."}
+ggplot(punkty, aes(temp)) + geom_histogram() +
+        labs(x = "Wartości badanej zmiennej", y = "Liczebność")
 ```
 
 Na ich podstawie chcemy zrozumieć zmienność przestrzenną analizowanej cechy.
