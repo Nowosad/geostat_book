@@ -47,7 +47,7 @@ Są to:
 - **Sill** - semiwariancja progowa - oznacza wariancję badanej zmiennej.
 - **Range** - zasięg - to odległość do której istnieje przestrzenna korelacja.
 
-```{r, fig.height=6, fig.width=11, eval=FALSE}
+```{r, fig.height=6, fig.width=11, eval=FALSE, echo=FALSE}
 punkty$x = st_coordinates(punkty)[,1]
 punkty$y = st_coordinates(punkty)[,2]
 vario_par = variogram(temp~x + y, locations = punkty)
@@ -67,7 +67,7 @@ plot(vario_par,
 dev.off()
 ```
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 png("figs/variogram_text.png", width = 600, height = 326, res = 72)
 
 library(gridExtra)
