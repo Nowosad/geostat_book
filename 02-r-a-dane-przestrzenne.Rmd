@@ -78,7 +78,7 @@ Taki sposób określania układów współrzędnych wymaga jedynie znajomości o
 Dane przestrzenne przechowują też opis tego układu współrzędnych w bardziej złożny sposób nazwany WKT2.
 Zawiera on opis elementów związanych z konkretnym układem współrzędnych, takich jak jednostka, elipsoida odwzorowania, itd.
 
-`r sf::st_crs(2180)$wkt`
+`r sf::st_as_text(sf::st_crs(2180), pretty = TRUE)`
 
 Warto też wiedzież, że przez wiele lat główną rolę pełniła reprezentacja **proj4string**, np. `"+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"`, która określała własności układu współrzędnych. 
 Współcześnie jednak ta reprezentacja nie jest zalecana do użycia.
