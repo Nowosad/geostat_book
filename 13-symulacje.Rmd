@@ -176,11 +176,24 @@ sym_ok = krige(temp_log ~ 1,
 plot(sym_ok, col = paleta)
 ```
 
-Wyniki symulacji można przetworzyć do pierwotnej jednostki z użyciem funkcji wykładniczej (`exp`) (rycina \@ref(fig:13-symulacje-7)).
+Wyniki symulacji można przetworzyć do pierwotnej jednostki z użyciem funkcji `rev_trans()`, którą stworzyliśmy w sekcji \@ref(transformacja-odwrotna).
+Potrzebuje ona jednak najpierw określenia wariancji symulacji (rycina \@ref(fig:13-symulacje-7a)).
+Do jej wyliczenia używamy kombinacji funkcji `st_apply()` oraz `var()`. 
+W funkcji `st_apply()` konieczne tutaj jest określenie argumentu `MARGIN = c("x", "y")`, co oznacza że funkcja `var` będzie wykonana dla każdej komórki niezależnie.
+W efekcie tej operacji otrzymujemy tylko jedną warstwę.
+
+```{r 13-symulacje-7a, fig.cap = "Wariancja symulacji warunkowej."}
+sym_ok_var = st_apply(sym_ok, MARGIN = c("x", "y"), FUN = var)
+plot(sym_ok_var)
+```
+
+Teraz możliwe jest przywrócenie oryginalnej jednostki dla wszystkich symulacji z użyciem funkcji `st_apply()` i `rev_trans()`.
+(rycina \@ref(fig:13-symulacje-7))
 
 ```{r 13-symulacje-7, fig.cap = "Symulacja warunkowa po przeskalowaniu do oryginalnych wartości."}
-sym_ok_rescaled = st_apply(sym_ok, 1:2, exp)
-sym_ok_rescaled
+# sym1 = rev_trans(sym_ok$var1[ , , 3], sym_ok_var$var, punkty$temp)
+sym_ok_rescaled = st_apply(sym_ok, 3, rev_trans,
+                           sym_ok_var$var, punkty$temp)
 plot(sym_ok_rescaled, col = paleta)
 ```
 
@@ -197,20 +210,21 @@ sym_sk = krige(temp_log ~ 1,
 ```
 
 Uzyskane wyniki należy przeliczyć do oryginalnej jednostki, a następnie wyliczyć odchylenie standardowe ich wartości.
-Można to zrobić korzystając dwukrotnie z funkcji `st_apply()`.
-Przywrócenie oryginalnej jednostki odbywa się poprzez argumenty `MARGIN = c("x", "y")` oraz `FUN = exp`.
-Oznacza on, że funkcja `exp()` będzie wykonana dla każdej komórki (kombinacji wierszy i kolumn).
-W efekcie tej operacji liczba warstw nie ulega zmianie.
+Można to zrobić korzystając trzykrotnie z funkcji `st_apply()`.
+Przywrócenie oryginalnej jednostki odbywa się poprzez wyliczenie wariancji symulacji, a następnie użycie funkcji `rev_trans()`.
 
 ```{r unitsexp}
+# wyliczenie wariancji (jedostka log)
+sym_sk_var = st_apply(sym_sk, MARGIN = c("x", "y"), FUN = var)
 # przywrócenie oryginalnej jednostki
-sym_sk_rescaled = st_apply(sym_sk, MARGIN = c("x", "y"), FUN = exp)
+sym_sk_rescaled = st_apply(sym_sk, 3, rev_trans,
+                           sym_sk_var$var, punkty$temp)
 sym_sk_rescaled
 ```
 
 Wyliczenie odchylenia standardowego odbywa się poprzez argumenty `MARGIN = c("x", "y")` oraz `FUN = sd`.
 W ten sposób funkcja `sd()` będzie wykonana niezależnie dla każdej komórki dla wszystkich warstw.
-W efekcie tej operacji otrzymuje się tylko jedną kolumnę.
+W efekcie tej operacji otrzymuje się tylko jedną warstwę.
 
 ```{r unitsexp2}
 # wyliczenie odchylenia standardowego
