@@ -25,6 +25,7 @@ install:
   - R -e "tinytex::install_tinytex()"
   - R -e "remotes::install_github('nowosad/geostatbook')"
   - R -e "install.packages('curl')"
+  - R -e "install.packages('latex2exp')"
 
 script:
   - ./_build.sh
