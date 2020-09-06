@@ -390,5 +390,12 @@ Dlaczego?
 4. Porównaj uzyskane modele używając kroswalidacji. 
 Jak wygląda rozkład reszt z uzyskanych estymacji?
 Który model można uznać za najlepszy oglądając rozkłady reszt?
+5. Stwórz optymalne modele zmiennej `temp` ze zbioru treningowego używając krigingu zwykłego, kokrigingu oraz krigingu uniwersalnego, ale tym razem wcześniej transformując wartości tej zmiennej używając metod opisanych w sekcji \@ref(trans-danych). 
+Wykonaj estymacje korzystając z powyższych modeli.
+Porównaj uzyskane estymacje korzystając ze statystyk jakości estymacji oraz wizualizacji jakości estymacji i używając zbioru testowego. 
+Który ze stworzonych modeli można uznać za najlepszy?
+Dlaczego?
+Czy któryś z uzyskanych modeli dla zmiennej po transformacji jest lepszy niż dla zmiennej przed transformacją?
+
 <!-- jedno zadanie używające wcześniej używanych technik estymacji -->
 
