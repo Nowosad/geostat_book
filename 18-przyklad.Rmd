@@ -98,7 +98,7 @@ moje_punkty[moje_punkty$tavg == max(moje_punkty$tavg), ]
 moje_punkty[moje_punkty$tavg == min(moje_punkty$tavg), ]
 ```
 
-Jedna z nich ma wartość ok. -3.5 °C i jest znacznie niższa od pozostałych, druga natomiast jest znacznie wyższa od pozostałych i ma wartość ok. 9.2 °C.
+Jedna z nich ma wartość ok. -3,5 °C i jest znacznie niższa od pozostałych, druga natomiast jest znacznie wyższa od pozostałych i ma wartość ok. 9,2 °C.
 Należy w tym momencie zastanowić się czy te wartości odstające są prawidłowymi wartościami, czy też są one błędne. 
 W tej sytuacji, nie posiadając zewnętrznej informacji, bezpieczniej jest usunąć te dwa pomiary.
 Można to zrobić wyszukując id punktów za pomocą pakietu **mapview**.
