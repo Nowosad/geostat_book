@@ -13,3 +13,5 @@ RnwWeave: knitr
 LaTeX: pdfLaTeX
 
 BuildType: Website
+
+SpellingDictionary: pl_PL
