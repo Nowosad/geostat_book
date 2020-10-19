@@ -1,7 +1,7 @@
 language: r
 cache: packages
 latex: false
-dist: focal
+dist: bionic
 sudo: required
 
 addons:
@@ -9,6 +9,7 @@ addons:
     sources:
       - sourceline: 'ppa:ubuntugis/ubuntugis-unstable'
     packages:
+      - pandoc
       - libudunits2-dev
       - libproj-dev
       - libgeos-dev
