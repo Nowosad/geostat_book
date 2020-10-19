@@ -106,7 +106,7 @@ data("siatka")
 ```
 
 Siatka badanego obszaru dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
-Zawiera ona ona 127 wierszy i 96 kolumn.
+Zawiera ona 96 wierszy i 127 kolumn.
 
 ```{r 15-appendix-dane-13}
 plot(siatka)
@@ -120,7 +120,7 @@ data("dane_uzup")
 ```
 
 Siatka badanego obszaru dla obszaru Suwalskiego Parku Krajobrazowego i okolic zawierająca zmienne dodatkowe.
-Zawiera ona ona 127 wierszy i 96 kolumn oraz 4 zmienne:
+Zawiera ona 96 wierszy i 127 kolumn oraz 4 zmienne:
 
 - `srtm` - wysokość w metrach n.p.m. pozyskana z numerycznego modelu terenu z misji SRTM
 - `clc` - uproszczona kategoria pokrycia terenu z bazy Corine Land Cover. 
