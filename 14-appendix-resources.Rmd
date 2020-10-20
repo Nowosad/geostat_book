@@ -4,7 +4,7 @@
 
 ## Podstawy R
 
-- [Elementarz programisty: Wstęp do programowania używając R](https://nowosad.github.io/elp/) [@nowosadElementarz2019]
+- [Elementarz programisty: Wstęp do programowania używając R](https://nowosad.github.io/elp/) [@nowosadElementarz2020]
 - [Przewodnik po pakiecie R](http://www.biecek.pl/R/) [@biecekPrzewodnikPoPakiecie2014]
 - [Programowanie w języku R Analiza Danych. Obliczenia. Symulacje](http://www.gagolewski.com/publications/programowanier/) [@gagolewski2016programowanie]
 - R for Data Science - https://r4ds.had.co.nz/ - https://helion.pl/ksiazki/jezyk-r-kompletny-zestaw-narzedzi-dla-analitykow-danych-hadley-wickham-garrett-grolemund,jezrko.htm#format/d [@wickham2016r]
