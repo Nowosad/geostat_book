@@ -25,8 +25,6 @@ install:
   - R -e "install.packages('tinytex')"
   - R -e "tinytex::install_tinytex()"
   - R -e "remotes::install_github('nowosad/geostatbook')"
-  - R -e "remotes::install_github('r-spatial/stars')"
-  - R -e "remotes::install_github('r-spatial/sf')"
   - R -e "install.packages('curl')"
   - R -e "install.packages('latex2exp')"
 
