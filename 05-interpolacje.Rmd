@@ -45,6 +45,7 @@ punkty_bbox = st_bbox(punkty)
 nowa_siatka = st_as_stars(punkty_bbox, 
                           dx = 500,
                           dy = 500)
+nowa_siatka = st_set_crs(nowa_siatka, 2180)
 plot(nowa_siatka)
 ```
 
