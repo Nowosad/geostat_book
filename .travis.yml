@@ -9,7 +9,6 @@ addons:
     sources:
       - sourceline: 'ppa:ubuntugis/ubuntugis-unstable'
     packages:
-      - pandoc
       - libudunits2-dev
       - libproj-dev
       - libgeos-dev
@@ -19,6 +18,8 @@ before_install:
   - sudo cp fonts/ -r /usr/local/share/fonts
   - sudo fc-cache -f -v
   - chmod +x _build.sh _publish.sh
+  - wget https://github.com/jgm/pandoc/releases/download/2.11.0.2/pandoc-2.11.0.2-1-amd64.deb
+  - sudo dpkg -i pandoc-2.11.0.2-1-amd64.deb
 
 install:
   - R -e "install.packages('remotes')"
