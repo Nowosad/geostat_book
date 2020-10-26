@@ -374,3 +374,21 @@ plot(dwie_stars[1, 20:50, 1:20], col = paleta)
 1. Wczytaj dane z pliku `punkty_ndvi.csv` i przetwórz je do postaci obiektu przestrzennego `ndvi_p`.
 2. Stwórz mapę zmiennej `ndvi` z nowo utworzonego obiektu. (Dodatkowo: zapisz mapę do pliku graficznego `punkty_ndvi.png`).
 3. Zapisz obiekt `ndvi_p` do formatu GeoPackage oraz do formatu ESRI Shapefile.
+4. Wczytaj ten nowy plik w formacie ESRI Shapefile do R.
+Przejrzyj ten obiekt. 
+Jaki typ geometrii on przechowuje? 
+Ile obiektów on zawiera?
+Ile ma on atrybutów (zmiennych)?
+Jaki ma on układ współrzędnych?
+5. Nadaj powyższemu obiektowi układ współrzędnych PL1992 (`EPSG:2180`).
+6. Wczytaj dane z pliku `srtm.tif` do R jako obiekt `srtm`. 
+Jakiego rodzaju jest wynikowy obiekt? 
+Jaki typ danych on przechowuje?
+Jakie ma wymiary?
+Ile ma on atrybutów (zmiennych)?
+Jaki ma on układ współrzędnych?
+Stwórz prostą mapę z nowo utworzonego obiektu.
+7. Dla punktów z obiektu `ndvi_p` wydobądź wartości z obiektu `srtm`.
+8. Stwórz mapę pokazującą punkty z obiektu `ndvi_p`, gdzie kolory będą obrazowały wartości wyciągnięte z obiektu `srtm`. 
+(Dodatkowo: spróbuj do tego użyć pakietu **tmap**).
+
