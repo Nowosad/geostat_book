@@ -18,8 +18,8 @@ before_install:
   - sudo cp fonts/ -r /usr/local/share/fonts
   - sudo fc-cache -f -v
   - chmod +x _build.sh _publish.sh
-  #- wget https://github.com/jgm/pandoc/releases/download/2.9.2/pandoc-2.9.2-1-amd64.deb
-  #- sudo dpkg -i pandoc-2.9.2-1-amd64.deb
+  - wget https://github.com/jgm/pandoc/releases/download/2.9.2/pandoc-2.9.2-1-amd64.deb
+  - sudo dpkg -i pandoc-2.9.2-1-amd64.deb
 
 install:
   - R -e "install.packages('remotes')"
