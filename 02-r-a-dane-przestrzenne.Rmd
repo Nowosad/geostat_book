@@ -24,7 +24,7 @@ R zawiera także wiele funkcji pozwalających na przetwarzanie, wizualizację i 
 Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi:
 
 - Obsługa danych przestrzennych - **sf**, **stars**, **raster**, **terra**, **sp**, **rgdal**, **rgeos**
-- Geostatystyka - **gstat**, **geoR**, **geoRglm**
+- Geostatystyka - **gstat**, **geoR**
 
 Więcej szczegółów na ten temat pakietów R służących do analizy przestrzennej można znaleźć pod adresem https://cran.r-project.org/web/views/Spatial.html.
 
