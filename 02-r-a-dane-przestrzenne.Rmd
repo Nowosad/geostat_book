@@ -390,5 +390,6 @@ Jaki ma on układ współrzędnych?
 Stwórz prostą mapę z nowo utworzonego obiektu.
 7. Dla punktów z obiektu `ndvi_p` wydobądź wartości z obiektu `srtm`.
 8. Stwórz mapę pokazującą punkty z obiektu `ndvi_p`, gdzie kolory będą obrazowały wartości wyciągnięte z obiektu `srtm`. 
-(Dodatkowo: spróbuj do tego użyć pakietu **tmap**).
+W tle tej mapy przedstaw obiekt `srtm`.
+(Dodatkowo: spróbuj do tego użyć pakietu **tmap** lub **ggplot2**).
 
