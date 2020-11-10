@@ -16,7 +16,7 @@ data(granica)
 par(mar = c(rep(0, 4)))
 ```
 
-## Mapy 
+## Aspekt przestrzenny 
 
 ### Podstawowe terminy
 
@@ -428,9 +428,12 @@ http://gaa.org.au/pdf/DeclusterDebias-CCG.pdf
 
 ## Zadania {#z4}
 
-1. Określ i opisz typ próbkowania danych `punkty`.
-2. Wykonaj mapę pokazującą przestrzenny rozkład wartości NDVI w zbiorze `punkty`. 
+1. Wykonaj mapę pokazującą przestrzenny rozkład wartości NDVI w zbiorze `punkty`. 
 (Dodatkowo: spróbuj użyć do tego pakietu **tmap** - `install.packages("tmap")`).
-3. Porównaj średnią arytmetyczną zmiennej `srtm` z obiektu `punkty_pref` ze średnimi uzyskanymi metodami rozgupowania poligonalnego i rozgrupowanie komórkowego.
+2. Stwórz nowy obiekt `punkty4326`, który będzie zawierać pomiary z obiektu `punkty`, ale będzie w układzie odwzorowania WGS 84.
+Wykonaj mapę pokazującą przestrzenny rozkład wartości NDVI w zbiorze `punkty4326`. 
+Czy dostrzegasz jakieś różnice?
+3. Określ i opisz typ próbkowania danych `punkty` oraz danych `punkty_pref`.
+4. Porównaj średnią arytmetyczną zmiennej `srtm` z obiektu `punkty_pref` ze średnimi uzyskanymi metodami rozgupowania poligonalnego i rozgrupowanie komórkowego.
 (Dodatkowo: sprawdź różne wielkości oczka siatki w rozgrupowaniu komórkowym).
 
