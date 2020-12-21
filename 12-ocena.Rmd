@@ -380,7 +380,7 @@ krige.cv
 
 ## Zadania {#z12}
 
-1. Wydziel obiekt `punkty` w taki sposób aby 70% danych należało zbioru treningowy, a 30 % danych do zbioru testowego.
+1. Wydziel obiekt `punkty` w taki sposób aby 70% danych należało zbioru treningowego, a 30 % danych do zbioru testowego.
 Zwizualizuj oba nowe zbiory danych.
 2. Stwórz optymalne modele zmiennej `temp` ze zbioru treningowego używając krigingu zwykłego, kokrigingu oraz krigingu uniwersalnego.
 3. Wykonaj estymacje korzystając z powyższych modeli.
