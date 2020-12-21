@@ -148,7 +148,7 @@ coef
 
 Wykorzystując relację pomiędzy tymi dwoma zmiennymi tworzony jest semiwariogram empiryczny, który następnie jest modelowany (rycina \@ref(fig:09-dane-uzupelniajace-5)).
 
-```{r 09-dane-uzupelniajace-5, fig.cap = "Model semiwariogramy zmiennej temp używając zmiennej srtm."}
+```{r 09-dane-uzupelniajace-5, fig.cap = "Model semiwariogramu zmiennej temp używając zmiennej srtm."}
 vario = variogram(temp ~ srtm, location = punkty)
 model_sim = vgm(model = "Sph", nugget = 1)
 fitted_sim = fit.variogram(vario, model_sim)
@@ -191,7 +191,7 @@ W krigingu uniwersalnym możemy stosować zarówno zmienne jakościowe, jak i il
 
 W pierwszym przykładzie, kriging uniwersalny służy stworzeniu semiwariogramu, modelowaniu oraz estymacji temperatury powietrza z użyciem zmiennej pokrycia terenu (ryciny \@ref(fig:09-dane-uzupelniajace-7), \@ref(fig:09-dane-uzupelniajace-8), \@ref(fig:plotsy4uk1)).
 
-```{r 09-dane-uzupelniajace-7, fig.cap = "Model semiwariogramy zmiennej temp używając zmiennej clc."}
+```{r 09-dane-uzupelniajace-7, fig.cap = "Model semiwariogramu zmiennej temp używając zmiennej clc."}
 punkty$clc = as.factor(punkty$clc)
 vario_uk1 = variogram(temp ~ clc, location = punkty)
 # vario_uk1
@@ -230,7 +230,7 @@ grid.arrange(p1, p2, ncol = 1)
 
 W kolejnym przykładzie zastosowane są już dwie zmienne uzupełniające - wartość wskaźnika wegetacji (`ndvi`) oraz wysokość nad poziomem morza (`srtm`) (ryciny \@ref(fig:09-dane-uzupelniajace-10), \@ref(fig:plotsy4KU)).
 
-```{r 09-dane-uzupelniajace-10, fig.cap = "Model semiwariogramy zmiennej temp używając zmiennych ndvi i srtm."}
+```{r 09-dane-uzupelniajace-10, fig.cap = "Model semiwariogramu zmiennej temp używając zmiennych ndvi i srtm."}
 vario_uk2 = variogram(temp ~ ndvi + srtm, location = punkty)
 # vario_uk2
 # plot(vario_uk2)
