@@ -85,10 +85,10 @@ plot(v)
 
 ## Modelowanie krossemiwariogramów
 
-Modelowanie krossemiwariogramów, podobnie jak ich tworzenie, odbywa się używając funkcji `gstat()`.
-Istnieją dwie podstawowe podejścia modelowania krossemiwariogramów: (1) wspólne modelowanie semiwariogramów i krossemiwariogramów lub (2) modelowanie każdego semiwariogramu i krossemiwariogramu oddzielnie.
-
-W pierwszym podejściu podaje się wcześniejszy obiekt `g`, model, oraz argument `fill.all = TRUE`. 
+Modelowanie krossemiwariogramów, podobnie jak ich tworzenie, odbywa się używając funkcji `gstat()`,
+<!-- Istnieją dwie podstawowe podejścia modelowania krossemiwariogramów: (1) wspólne modelowanie semiwariogramów i krossemiwariogramów lub (2) modelowanie każdego semiwariogramu i krossemiwariogramu oddzielnie. -->
+<!-- W pierwszym podejściu  -->
+gdzie podaje się wcześniejszy obiekt `g`, model, oraz argument `fill.all = TRUE`. 
 Ten ostatni parametr powoduje, że model dodawany jest do wszystkich elementów krossemiwariogramu.
 
 ```{r 10-kokriging-7}
@@ -121,39 +121,45 @@ plot(variogram(g, alpha = c(60, 105, 150, 195)))
 ```
 -->   
 
-Drugie podejście polega na modelowaniu każdego semiwariogramu i krossemiwariogramu oddzielnie za pomocą funkcji `gstat()` oraz poprzez podanie za każdym razem odpowiedniego `id`.
+<!-- Drugie podejście polega na modelowaniu każdego semiwariogramu i krossemiwariogramu oddzielnie za pomocą funkcji `gstat()` oraz poprzez podanie za każdym razem odpowiedniego `id`. -->
 
-```{r}
-model_savi = vgm(0.005, model = "Sph", 
-                 range = 1200, nugget = 0.001)
-g3 = gstat(g, 
-          id = "SAVI", 
-          model = model_savi)
+<!-- ```{r} -->
+<!-- model_savi = vgm(0.005, model = "Sph",  -->
+<!--                  range = 1200, nugget = 0.001) -->
+<!-- g3 = gstat(g,  -->
+<!--           id = "SAVI",  -->
+<!--           model = model_savi) -->
 
-model_ndvi = vgm(0.007, model = "Sph", 
-                 range = 1200, nugget = 0.002)
-g3 = gstat(g3, 
-          id = "NDVI", 
-          model = model_ndvi)
-g3
-```
+<!-- model_ndvi = vgm(0.007, model = "Sph",  -->
+<!--                  range = 1200, nugget = 0.002) -->
+<!-- g3 = gstat(g3,  -->
+<!--           id = "NDVI",  -->
+<!--           model = model_ndvi) -->
+<!-- g3 -->
+<!-- ``` -->
 
-W przypadku semiwariogramów, odpowiednie `id` są zgodne z tymi podanymi podczas tworzenia krossemiwariogramu, natomiast modelowanie krossemiwariogramu polega na podaniu wektora dwóch `id`.
+<!-- W przypadku semiwariogramów, odpowiednie `id` są zgodne z tymi podanymi podczas tworzenia krossemiwariogramu, natomiast modelowanie krossemiwariogramu polega na podaniu wektora dwóch `id`. -->
 
-```{r}
-model_kros = vgm(0.005, model = "Sph",
-                      range = 1200, nugget = 0.002)
-g3 = gstat(g3,
-          id = c("SAVI", "NDVI"),
-          model = model_kros)
-g3
-```
+<!-- ```{r} -->
+<!-- model_kros = vgm(0.0051, model = "Sph", -->
+<!--                       range = 1200, nugget = 0.002) -->
+<!-- g3 = gstat(g3, -->
+<!--           id = c("SAVI", "NDVI"), -->
+<!--           model = model_kros) -->
+<!-- g3 -->
+<!-- ``` -->
 
-Efekt takiego modelowanie można zobaczyć na rycinie \@ref(fig:kros-model-hand).
+<!-- Efekt takiego modelowanie można zobaczyć na rycinie \@ref(fig:kros-model-hand). -->
 
-```{r kros-model-hand, fig.cap="Ręcznie dopasowane modele krossemiwariogramu zmiennych savi i ndvi. "}
-plot(v, g3)
-```
+<!-- ```{r kros-model-hand, fig.cap="Ręcznie dopasowane modele krossemiwariogramu zmiennych savi i ndvi. "} -->
+<!-- plot(v, g4) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- g4 = fit.lmc(v, g3, -->
+<!--              fit.sills = FALSE, -->
+<!--              correct.diagonal = 1.01) -->
+<!-- ``` -->
 
 
 ## Kokriging 
@@ -161,7 +167,7 @@ plot(v, g3)
 Posiadając dopasowane modele oraz siatkę można uzyskać wynik używając funkcji `predict()` (rycina \@ref(fig:kokriging-predicted)). 
 
 ```{r kokriging_predict, cache=TRUE}
-ck = predict(g3, newdata = siatka)
+ck = predict(g2, newdata = siatka)
 ```
 
 W efekcie otrzymujemy pięć zmiennych:
