@@ -20,6 +20,8 @@ before_install:
   - chmod +x _build.sh _publish.sh
   - wget https://github.com/jgm/pandoc/releases/download/2.9.2/pandoc-2.9.2-1-amd64.deb
   - sudo dpkg -i pandoc-2.9.2-1-amd64.deb
+  - wget http://security.ubuntu.com/ubuntu/pool/main/i/icu/libicu55_55.1-7_amd64.deb
+  - sudo dpkg -i libicu55_55.1-7_amd64.deb
 
 install:
   - R -e "install.packages('remotes')"
