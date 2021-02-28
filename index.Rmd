@@ -30,7 +30,7 @@ is_html = knitr::is_html_output()
 knitr::include_graphics("Rfigs/book_cover2.png", dpi = NA)
 ```
 
-**Skrypt jest obecnie aktualizowany do celów trzeciego wydania, planowanego na luty 2021.**
+**Skrypt jest obecnie aktualizowany do celów trzeciego wydania, planowanego na wiosnę 2021.**
 **Wersje PDF wydania pierwszego i drugiego można znaleźć pod adresem https://nowosad.github.io/publications/.**
 
 Masz przed sobą skrypt zawierający materiały do ćwiczeń z geostatystyki.
