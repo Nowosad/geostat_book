@@ -232,8 +232,8 @@ Do niej zostaną wpisane wartości uzyskane z modelu semiwariogramu.
 ```{r 18-przyklad-20}
 punkty_bbox = st_bbox(moje_punkty)
 moja_siatka = st_as_stars(punkty_bbox, 
-                          deltax = 100,
-                          deltay = 100)
+                          dx = 100,
+                          dy = 100)
 moja_siatka$X = st_coordinates(moja_siatka)[, 1]
 moja_siatka$Y = st_coordinates(moja_siatka)[, 2]
 ```
