@@ -78,7 +78,7 @@ W momencie, gdy trzeba określić jakość estymacji lub porównać wyniki pomi�
 Do podstawowych statystyk ocen jakości estymacji należą:
 
 - Średni błąd estymacji (MPE, ang. *mean prediction error*).
-- Pierwiastek średniego błędu kwadratowego (RMSE, ang. *root mean square error*).
+- Pierwiastek błędu średniokwadratowego (RMSE, ang. *root mean square error*).
 - Współczynnik determinacji (R^2^, ang. *coefficient of determination*).
     
 Idealna estymacja dawałaby brak błędu oraz współczynnik determinacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1. 
@@ -100,9 +100,9 @@ MPE = mean(obserwowane - estymacja)
 
 Optymalnie wartość średniego błędu estymacji powinna być jak najbliżej 0.
 
-### Pierwiastek średniego błędu kwadratowego
+### Pierwiastek błędu średniokwadratowego
 
-Pierwiastek średniego błędu kwadratowego (RMSE) jest możliwy do wyliczenia poprzez wzór:
+Pierwiastek błędu średniokwadratowego (RMSE) jest możliwy do wyliczenia poprzez wzór:
 
 $$ RMSE=\sqrt{\frac{\sum_{i=1}^{n}(v_i-\hat{v}_i)^2}{n}} $$     
 , gdzie $v_i$ to wartość obserwowana a $\hat{v}_i$ to wartość estymowana.
@@ -113,7 +113,7 @@ RMSE można też wyliczyć w R.
 RMSE = sqrt(mean((obserwowane - estymacja) ^ 2))
 ```
 
-Optymalnie wartość pierwiastka średniego błędu kwadratowego powinna być jak najmniejsza.
+Optymalnie wartość pierwiastka błędu średniokwadratowego powinna być jak najmniejsza.
 
 ### Współczynnik determinacji
 

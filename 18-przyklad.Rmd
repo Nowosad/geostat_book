@@ -200,7 +200,7 @@ plot(moj_semiwar2, moj_model2)
 ## Ocena jakości modeli
 
 Aby porównać oba modele należy przyjąć metodę walidacji oraz współczynnik jakości estymacji.
-W tym przykładzie użyto kroswalidacji metodą LOO (funkcja `krige.cv`) oraz pierwiastek średniego błędu kwadratowego (RMSE) jako miarę jakości.
+W tym przykładzie użyto kroswalidacji metodą LOO (funkcja `krige.cv`) oraz pierwiastek błędu średniokwadratowego (RMSE) jako miarę jakości.
 
 ```{r 18-przyklad-17}
 ocena1 = krige.cv(tavg ~ 1,
