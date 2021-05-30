@@ -191,9 +191,8 @@ Teraz możliwe jest przywrócenie oryginalnej jednostki dla wszystkich symulacji
 (rycina \@ref(fig:13-symulacje-7))
 
 ```{r 13-symulacje-7, fig.cap = "Symulacja warunkowa po przeskalowaniu do oryginalnych wartości."}
-# sym1 = rev_trans(sym_ok$var1[ , , 3], sym_ok_var$var, punkty$temp)
-sym_ok_rescaled = st_apply(sym_ok, 3, rev_trans,
-                           sym_ok_var$var, punkty$temp)
+sym_ok_rescaled = st_apply(sym_ok, 3, rev_trans, 
+                           var = sym_ok_var$var, obs = punkty$temp)
 plot(sym_ok_rescaled, col = paleta)
 ```
 
@@ -218,7 +217,7 @@ Przywrócenie oryginalnej jednostki odbywa się poprzez wyliczenie wariancji sym
 sym_sk_var = st_apply(sym_sk, MARGIN = c("x", "y"), FUN = var)
 # przywrócenie oryginalnej jednostki
 sym_sk_rescaled = st_apply(sym_sk, 3, rev_trans,
-                           sym_sk_var$var, punkty$temp)
+                           var = sym_sk_var$var, obs = punkty$temp)
 sym_sk_rescaled
 ```
 
