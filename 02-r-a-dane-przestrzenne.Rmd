@@ -270,7 +270,6 @@ Posiadając dwa obiekty, jeden punktowy a drugi rastrowy, dotyczące tego samego
 <!-- toDo -->
 
 ```{r 02-r-a-dane-przestrzenne-15}
-# https://github.com/r-spatial/stars/issues/197
 dane_punktowe_sf2 = st_join(dane_punktowe_sf, st_as_sf(dwie_stars))
 ```
 

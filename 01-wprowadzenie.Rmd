@@ -82,7 +82,7 @@ plot(sk["var1.pred"], main = "Estymacja",
 
 Rolą symulacji (rycina \@ref(fig:01-wprowadzenie-8)) jest natomiast generowanie równie prawdopodobne możliwości rozkładu badanej cechy.
 
-```{r 01-wprowadzenie-8, echo=FALSE, message=FALSE, fig.cap = "Przykłady symulowanych wartości badanej zmiennej dla całego obszaru."}
+```{r 01-wprowadzenie-8, echo=FALSE, message=FALSE, fig.cap = "Przykłady symulowanych wartości badanej zmiennej dla całego obszaru.", results='hide'}
 sym_ok = krige(temp~1, 
                 locations = punkty,
                 newdata = siatka, 
