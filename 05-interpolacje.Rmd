@@ -60,8 +60,9 @@ W poniższym przypadku odczytywana jest granica badanego obszaru z pliku w forma
 Taki obiekt można np. stworzyć za pomocą oprogramowania GIS takiego jak [QGIS](http://www.qgis.org/pl/site/).
 Następnie tworzony jest nowy obiekt `nowa_siatka_n` poprzez wybranie tylko tych oczek siatki, które znajdują się wewnątrz zadanych granic.
 
-```{r siatkan}
+```{r siatkan, warning=FALSE}
 granica = read_sf("dane/granica.gpkg")
+st_crs(granica) = st_crs(nowa_siatka)
 nowa_siatka_n = nowa_siatka[granica]
 ```
 
