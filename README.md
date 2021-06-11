@@ -10,4 +10,4 @@ Jeżeli używasz tego skryptu, zacytuj go jako:
 - Nowosad, J., (2021). Geostatystyka w R. Poznań: Space A. ISBN 978-83-953296-2-3. Online:
 https://bookdown.org/nowosad/Geostatystyka/
 
-<a href="https://bookdown.org/nowosad/Geostatystyka/" rel="">![Cover](https://raw.githubusercontent.com/Nowosad/geostat_book/master/Rfigs/book_cover3.png)</a>
+<a href="https://bookdown.org/nowosad/Geostatystyka/" rel="">![Cover](https://raw.githubusercontent.com/Nowosad/geostat_book/master/Rfigs/book_cover3s.png)</a>
