@@ -2,6 +2,7 @@ language: r
 cache: packages
 latex: false
 sudo: required
+dist: focal
 
 addons:
   apt:
