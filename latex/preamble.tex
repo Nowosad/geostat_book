@@ -6,6 +6,13 @@
 \usepackage{unicode-math}
 \setmathfont{latinmodern-math.otf}
 
+\AtBeginDocument{%
+\renewcommand*{\figurename}{Rycina}
+}
+\AtBeginDocument{%
+\renewcommand*{\tablename}{Tabela}
+}
+
 % creates links in pdf
 \usepackage[hyphens]{url}
 \usepackage{hyperref}
