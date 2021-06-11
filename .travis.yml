@@ -1,7 +1,6 @@
 language: r
 cache: packages
 latex: false
-dist: focal
 sudo: required
 
 addons:
