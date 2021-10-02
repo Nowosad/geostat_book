@@ -9,11 +9,11 @@ library(stars)
 library(gstat)
 library(geostatbook)
 data(punkty)
-paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 ```{r 07-modelowanie-2, echo=FALSE}
 par(mar = c(rep(0, 4)))
+library(tmap)
 ```
 
 ## Modelowanie matematycznie autokorelacji przestrzennej
@@ -218,7 +218,10 @@ k_sph = krige(values ~ 1,
                newdata = nowa_siatka,
                model = model_sph,
                debug.level = 0)
-plot(k_sph[1], col = paleta, main = "", key.pos = NULL)
+tm_shape(k_sph[1]) +
+        tm_raster(palette = "-Spectral",
+                  style = "cont",
+                  legend.show = FALSE)
 ```
 
 Stworzenie takiego modelu dla zmiennej `temp` polega najpierw na zbudowaniu semiwariogramu empirycznego używając funkcji `variogram()` (rycina \@ref(fig:07-modelowanie-11)).
@@ -268,7 +271,10 @@ k_exp = krige(values ~ 1,
                newdata = nowa_siatka,
                model = model_exp,
                debug.level = 0)
-plot(k_exp[1], col = paleta, main = "", key.pos = NULL)
+tm_shape(k_exp[1]) +
+        tm_raster(palette = "-Spectral",
+                  style = "cont",
+                  legend.show = FALSE)
 ```
 
 Proces tworzenia tego modelu jest bardzo podobny do przedstawionego powyżej - budowany jest semiwariogram empiryczny, a następnie ustalany jest model poprzez podanie kilku jego parametrów (rycina \@ref(fig:07-modelowanie-17)).
@@ -304,7 +310,11 @@ k_gau = krige(values ~ 1,
                newdata = nowa_siatka,
                model = model_gau,
                debug.level = 0)
-plot(k_gau[1], col = paleta, main = "", key.pos = NULL)
+tm_shape(k_gau[1]) +
+        tm_raster(palette = "-Spectral",
+                  style = "cont",
+                  midpoint = NA,
+                  legend.show = FALSE)
 ```
 
 Zdefiniowanie modelu gaussowskiego odbywa się używając skrótu `"Gau"` (rycina \@ref(fig:07-modelowanie-21)).
@@ -340,7 +350,11 @@ k_pow = krige(values ~ 1,
                newdata = nowa_siatka,
                model = model_pow,
                debug.level = 0)
-plot(k_pow[1], col = paleta, main = "", key.pos = NULL)
+
+tm_shape(k_pow[1]) +
+        tm_raster(palette = "-Spectral",
+                  style = "cont",
+                  legend.show = FALSE)
 ```
 
 Model potęgowy jest określany skrótem `"Pow"` (ryciny \@ref(fig:07-modelowanie-25) i  \@ref(fig:07-modelowanie-26)).
@@ -371,9 +385,9 @@ names(modl) = c("Model sferyczny", "Model wykładniczny",
                 "Model gaussowski", "Model potęgowy")
 modl = st_redimension(modl)
 
-p1_base + 
-        geom_stars(data = modl) + 
-        facet_wrap(~new_dim)
+tm_shape(modl) +
+        tm_raster(midpoint = NA, style = "cont", palette = "-Spectral",
+                  title = "", n = 6)
 ```
 
 ### Modele złożone I
