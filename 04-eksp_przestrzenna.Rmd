@@ -6,7 +6,7 @@ Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietó
 ```{r 04-eksp-przestrzenna-1, interpolate_init, message=FALSE, warning=FALSE}
 library(sf)
 library(stars)
-library(mapview)
+library(tmap)
 library(geostatbook)
 data(punkty)
 data(granica)
@@ -42,8 +42,11 @@ Eksploracyjna analiza danych przestrzennych w przypadku danych punktowych ma na 
 Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji `plot()` (rycina \@ref(fig:04-eksp-przestrzenna-3)).
 
 ```{r 04-eksp-przestrzenna-3, fig.cap = "Lokalizacja punktów pomiarowych na tle granicy obszaru badań."}
-plot(st_geometry(granica), axes = TRUE)
-plot(st_geometry(punkty), add = TRUE)
+tm_shape(granica) +
+        tm_polygons() +
+        tm_shape(punkty) +
+        tm_symbols() +
+        tm_grid()
 ```
 
 ## Dane lokalnie odstające {#dane-odst}
@@ -55,14 +58,25 @@ Przyjrzenie się wartościom analizowanej cechy można wykonać z użyciem funkc
 Na poniższym przykładzie wyświetlona jest zmienna `temp` oznaczająca średnią temperaturę dobową (rycina \@ref(fig:04-eksp-przestrzenna-8)).
 
 ```{r 04-eksp-przestrzenna-8, fig.cap = "Wizualizacja zmiennej temp pozwalająca na wyszukanie wartości lokalnie odstających."}
-plot(punkty["temp"], reset = FALSE)
-plot(st_geometry(granica), add = TRUE)
+tm_shape(granica) +
+        tm_polygons() +
+        tm_shape(punkty) +
+        tm_symbols(col = "temp", n = 10) +
+        tm_layout(legend.outside = TRUE)
 ```
 
-Dodatkowo można wykorzystać pakiet **mapview** do interaktywnego określania wartości oraz numeru punktu (numer wiersza w tabeli atrybutów).
+Dodatkowo można wykorzystać tryb `view` w pakiecie **tmap** do interaktywnego określania wartości oraz numeru punktu (numer wiersza w tabeli atrybutów).
 
 ```{r klik, eval=FALSE}
-mapview(punkty["temp"])
+tmap_mode("view")
+tm_shape(punkty) +
+        tm_symbols(col = "temp", n = 10)
+```
+
+Aby powrócić do trybu statycznego, trzeba użyć funkcji `tmap_mode("plot")`. 
+
+```{r klik2, eval=FALSE}
+tmap_mode("plot")
 ```
 
 ## Próbkowanie {#probkowanie}
@@ -145,7 +159,8 @@ W tym zbiorze gęściej opróbkowane są niskie wartości temperatury, co powodu
 
 ```{r }
 data(punkty_pref)
-plot(punkty_pref["temp"])
+tm_shape(punkty_pref) +
+        tm_symbols(col = "temp", n = 10)
 ```
 
 ```{r}
@@ -175,8 +190,11 @@ punkty_pref = merge(punkty_pref, v_df, by = "id")
 ```
 
 ```{r}
-plot(v["temp"], reset = FALSE)
-plot(st_geometry(punkty_pref), add = TRUE)
+tm_shape(v) +
+        tm_polygons(col = "temp", n = 10) +
+        tm_shape(punkty_pref) +
+        tm_dots() +
+        tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
@@ -210,15 +228,17 @@ punkty_pref$waga_rk = ((1 / punkty_pref$liczebnosc) / sum(!is.na(siatka_nr$licze
 ```
 
 ```{r}
-plot(siatka_nr["liczebnosc"], reset = FALSE)
-plot(st_geometry(punkty_pref), add = TRUE)
+tm_shape(siatka_nr) +
+        tm_polygons(col = "liczebnosc", n = 10, textNA = "brak") +
+        tm_shape(punkty_pref) +
+        tm_dots() +
+        tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
 srednia_wazona_rk = mean(punkty_pref$temp * punkty_pref$waga_rk, na.rm = TRUE)
 srednia_wazona_rk
 ```
-
 
 ### Porównanie metod rozgrupowania
 
