@@ -7,10 +7,10 @@ Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietó
 library(sf)
 library(stars)
 library(gstat)
+library(tmap)
 library(geostatbook)
 data(punkty)
 data(siatka)
-paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 ```{r 08-estymacje-2, echo=FALSE}
@@ -80,20 +80,14 @@ Pierwsza z nich oznacza wartość estymowaną dla każdego oczka siatki, druga z
 sk
 ```
 
-Obie uzyskane zmienne można wyświetlić z użyciem funkcji `plot()` (rycina \@ref(fig:plotsy2)).
+Obie uzyskane zmienne można wyświetlić z użyciem pakietu **tmap** (rycina \@ref(fig:plotsy2)).
 
-```{r plotsy1, eval=FALSE}
-plot(sk["var1.pred"], col = paleta)
-plot(sk["var1.var"], col = paleta)
-```
-
-```{r plotsy2, echo=FALSE, eval=TRUE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody krigingu prostego (SK)."}
-library(gridExtra)
-p1 = p1_base + geom_stars(data = sk["var1.pred"]) +
-        ggtitle("Estymacja SK")
-p2 = p1_base + geom_stars(data = sk["var1.var"]) + 
-        ggtitle("Wariancja estymacji SK")
-grid.arrange(p1, p2, ncol = 1)
+```{r plotsy2, eval=TRUE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody krigingu prostego (SK)."}
+tm_shape(sk) +
+        tm_raster(col = c("var1.pred", "var1.var"),
+                  style = "cont", 
+                  palette = list("-Spectral", "viridis")) +
+        tm_layout(legend.frame = TRUE)
 ```
 
 ## Kriging zwykły {#kriging-zwykly}
@@ -120,32 +114,19 @@ ok = krige(temp ~ 1,
             maxdist = 1500)
 ```
 
-Podobnie jak w przypadku krigingu prostego, można przyjrzeć się wynikom estymacji podając nazwę wynikowego obiektu oraz wyświetlić je używając funkcji `plot()` (rycina \@ref(fig:plotsy2ok2)).
+Podobnie jak w przypadku krigingu prostego, można przyjrzeć się wynikom estymacji podając nazwę wynikowego obiektu oraz wyświetlić je używając funkcji `tm_shape()` and `tm_raster()` (rycina \@ref(fig:plotsy2ok2)).
 
 ```{r 08-estymacje-9}
 ok
 ```
 
-```{r plotsy1ok2, eval=FALSE}
-plot(ok["var1.pred"], col = paleta)
-plot(ok["var1.var"], col = paleta)
+```{r plotsy2ok2, eval=TRUE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody krigingu zwykłego (OK)."}
+tm_shape(ok) +
+        tm_raster(col = c("var1.pred", "var1.var"),
+                  style = "cont", 
+                  palette = list("-Spectral", "viridis")) +
+        tm_layout(legend.frame = TRUE)
 ```
-
-```{r plotsy2ok2, echo=FALSE, eval=TRUE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody krigingu zwykłego (OK)."}
-library(gridExtra)
-p1 = p1_base + geom_stars(data = ok["var1.pred"]) +
-        ggtitle("Estymacja OK")
-p2 = p1_base + geom_stars(data = ok["var1.var"]) + 
-        ggtitle("Wariancja estymacji OK")
-grid.arrange(p1, p2, ncol = 1)
-```
-
-<!--
-```{r , include=FALSE, eval=FALSE}
-spplot(ok, "var1.pred", sp.layout = list(as(punkty, "Spatial"), pch = 21, col = "white"))
-spplot(ok, "var1.var", sp.layout = list(as(punkty, "Spatial"), pch = 21, col = "white"))
-```
--->
 
 ## Kriging z trendem
 
@@ -195,20 +176,14 @@ kzt = krige(temp ~ x + y,
              model = fitted_kzt)
 ```
 
-Wyświelenie wyników odbywa się używając funkcji `plot()`.
+Wyświelenie wyników odbywa się używając pakietu **tmap**.
 
-```{r plotsy1kzt, eval=FALSE}
-plot(kzt["var1.pred"], col = paleta)
-plot(kzt["var1.var"], col = paleta)
-```
-
-```{r plotsy2kzt, echo=FALSE, eval=TRUE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody krigingu z trendem (KZT)."}
-library(gridExtra)
-p1 = p1_base + geom_stars(data = kzt["var1.pred"]) +
-        ggtitle("Estymacja KZT")
-p2 = p1_base + geom_stars(data = kzt["var1.var"]) + 
-        ggtitle("Wariancja estymacji KZT")
-grid.arrange(p1, p2, ncol = 1)
+```{r plotsy2kzt, eval=TRUE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody krigingu z trendem (KZT)."}
+tm_shape(kzt) +
+        tm_raster(col = c("var1.pred", "var1.var"),
+                  style = "cont", 
+                  palette = list("-Spectral", "viridis")) +
+        tm_layout(legend.frame = TRUE)
 ```
 
 ## Porównanie wyników SK, OK i KZT
@@ -222,9 +197,12 @@ est = est[c(1, 3, 5)]
 names(est) = c("Estymacja SK", "Estymacja OK", "Estymacja KZT")
 est = st_redimension(est)
 
-p1_base + 
-        geom_stars(data = est) + 
-        facet_wrap(~ new_dim)
+tm_shape(est) +
+        tm_raster(style = "cont", 
+                  palette = "-Spectral",
+                  title = "",
+                  n = 6) +
+        tm_facets(nrow = 1)
 ```
 
 ```{r ploty-trzy-w, echo=FALSE, message=FALSE, fig.asp=0.25, fig.cap="Porównanie wariancji estymacji używając metody krigingu prostego (SK), krigingu zwykłego (OK) i krigingu z trendem (KZT)."}
@@ -233,9 +211,12 @@ war = war[c(2, 4, 6)]
 names(war) = c("Wariancja estymacji SK", "Wariancja estymacji OK", "Wariancja estymacji KZT")
 war = st_redimension(war)
 
-p1_base + 
-        geom_stars(data = war) + 
-        facet_wrap(~ new_dim)
+tm_shape(war) +
+        tm_raster(style = "cont", 
+                  palette = "viridis",
+                  title = "",
+                  n = 6) +
+        tm_facets(nrow = 1)
 ```
 
 ## Zadania {#z8}
