@@ -2,13 +2,13 @@
 library("methods")
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = '\\textwidth')
 options(scipen = 99 * 99)
-
 ```
 # Dane {#dane-app}
 
 ```{r 15-appendix-dane-2, echo=FALSE}
 library(sf)
 library(stars)
+library(tmap)
 ```
 
 Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu **geostatbook** (dla kolejnych rozdziałów). 
@@ -44,7 +44,9 @@ Zmienne:
 - `savi` - wskaźnik wegetacji mniej podatny na wpływ jasności gleby na uzyskane wyniki (ang. *Soil Adjusted Vegetation Index*)
 
 ```{r 15-appendix-dane-5}
-plot(punkty)
+tm_shape(punkty) +
+        tm_symbols(col = c("srtm", "clc", "temp", "ndvi", "savi")) +
+        tm_layout(legend.frame = TRUE)
 ```
 
 ## `punkty_ndvi`
@@ -60,7 +62,9 @@ Zmienna:
 - `ndvi` - znormalizowany różnicowy wskaźnik wegetacji (ang. *Normalized Difference Vegetation Index*)
 
 ```{r 15-appendix-dane-7}
-plot(punkty_ndvi)
+tm_shape(punkty_ndvi) +
+        tm_symbols(col = "ndvi") +
+        tm_layout(legend.frame = TRUE)
 ```
 
 ## `punkty_pref`
@@ -82,7 +86,9 @@ Zmienna:
 - `savi` - wskaźnik wegetacji mniej podatny na wpływ jasności gleby na uzyskane wyniki (ang. *Soil Adjusted Vegetation Index*)
 
 ```{r 15-appendix-dane-9}
-plot(punkty_pref)
+tm_shape(punkty_pref) +
+        tm_symbols(col = c("srtm", "clc", "temp", "ndvi", "savi")) +
+        tm_layout(legend.frame = TRUE)
 ```
 
 ## `granica`
@@ -95,7 +101,8 @@ data("granica")
 Granica Suwalskiego Parku Krajobrazowego.
 
 ```{r 15-appendix-dane-11}
-plot(granica)
+tm_shape(granica) + 
+        tm_polygons()
 ```
 
 ## `siatka`
@@ -109,7 +116,8 @@ Siatka badanego obszaru dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
 Zawiera ona 96 wierszy i 127 kolumn.
 
 ```{r 15-appendix-dane-13}
-plot(siatka)
+tm_shape(siatka) + 
+        tm_raster()
 ```
 
 ## `dane_uzup`
@@ -129,6 +137,8 @@ Zawiera ona 96 wierszy i 127 kolumn oraz 4 zmienne:
 - `savi` - wskaźnik wegetacji mniej podatny na wpływ jasności gleby na uzyskane wyniki (ang. *Soil Adjusted Vegetation Index*)
 
 ```{r 15-appendix-dane-15}
-plot(st_redimension(dane_uzup))
+tm_shape(dane_uzup) + 
+        tm_raster() +
+        tm_layout(legend.frame = TRUE)
 ```
 
