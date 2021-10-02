@@ -22,16 +22,19 @@ library(sf)
 library(stars)
 library(geostatbook)
 library(gstat)
+library(tmap)
 library(ggplot2)
 data(punkty)
 data(granica)
 data(siatka)
-paleta = hcl.colors(40, palette = "ag_Sunset")
 ```
 
 ```{r 01-wprowadzenie-3, echo=FALSE, fig.cap = "Przykładowe dane reprezentujące pomiary punktowe zmiennej numerycznej."}
-plot(punkty["temp"], reset = FALSE, main = NA)
-plot(st_geometry(granica), add = TRUE)
+tm_shape(punkty) +
+        tm_symbols(col = "temp", palette = "-Spectral", n = 10) +
+        tm_shape(granica) +
+        tm_borders() +
+        tm_layout(legend.outside = TRUE)
 ```
 
 Dane należy poddać eksploracji w celu ich lepszego poznania, wyszukania relacji między zmiennymi, czy znalezienia potencjalnych błędów (rycina \@ref(fig:01-wprowadzenie-3b)).
@@ -76,8 +79,9 @@ sk = krige(temp~1,
             model = fitted_sph,
             beta = 16, 
             debug.level = 0)
-plot(sk["var1.pred"], main = "Estymacja",
-     col = paleta)
+tm_shape(sk) +
+        tm_raster(col = "var1.pred", style = "cont", palette = "-Spectral") +
+        tm_layout(main.title = "Estymacja")
 ```
 
 Rolą symulacji (rycina \@ref(fig:01-wprowadzenie-8)) jest natomiast generowanie równie prawdopodobne możliwości rozkładu badanej cechy.
@@ -90,7 +94,9 @@ sym_ok = krige(temp~1,
                 nmax = 30, 
                 nsim = 4, 
                 debug.level = 0)
-plot(sym_ok, col = paleta)
+tm_shape(sym_ok) +
+        tm_raster(style = "cont", palette = "-Spectral") +
+        tm_layout(main.title = "Symulacje")
 ```
 
 Każdy z powyższych elementów geostatystycznej analizy danych zostanie rozwinięty w dalszych rozdziałach tego skryptu.
