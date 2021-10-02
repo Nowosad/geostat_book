@@ -7,11 +7,11 @@ Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietó
 library(sf)
 library(stars)
 library(gstat)
+library(tmap)
 library(geostatbook)
 data(punkty)
 data(punkty_ndvi)
 data(siatka)
-paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 ```{r 10-kokriging-2, echo=FALSE}
@@ -53,11 +53,13 @@ Wyliczając krossemiwariogram otrzymujemy empiryczne semiwariogramy dla dwóch b
 W poniższym przykładzie istnieją dwie zmienne, `savi` ze zbioru `punkty` pomierzona w 242 lokalizacjach oraz `ndvi` ze zbioru `punkty_ndvi` pomierzona w 992 punktach (ryciny \@ref(fig:10-kokriging-3) i \@ref(fig:10-kokriging-3)).
 
 ```{r 10-kokriging-3, fig.cap="Mapa wartości zmiennej savi."}
-plot(punkty["savi"])
+tm_shape(punkty) +
+        tm_symbols(col = "savi")
 ```
 
 ```{r 10-kokriging-4, fig.cap="Mapa wartości zmiennej ndvi."}
-plot(punkty_ndvi["ndvi"])
+tm_shape(punkty) +
+        tm_symbols(col = "ndvi")
 ```
 
 Tworzenie krossemiwariogramów odbywa się z użyciem funkcji `gstat()`. Na początku definiujemy pierwszy obiekt `g`. 
@@ -182,18 +184,12 @@ W efekcie otrzymujemy pięć zmiennych:
 ck
 ```
 
-```{r plotsyck1, eval=FALSE}
-plot(ck["SAVI.pred"], col = paleta)
-plot(ck["SAVI.var"], col = paleta)
-```
-
-```{r kokriging-predicted, echo=FALSE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji zmiennej savi używając metody kokrigingu (CK)."}
-library(gridExtra)
-p1 = p1_base + geom_stars(data = ck["SAVI.pred"]) +
-        ggtitle("Estymacja CK zmiennej savi")
-p2 = p1_base + geom_stars(data = ck["SAVI.var"]) + 
-        ggtitle("Wariancja estymacji CK zmiennej savi")
-grid.arrange(p1, p2, ncol = 1)
+```{r kokriging-predicted, fig.height=8, fig.cap = "Estymacja i wariancja estymacji zmiennej savi używając metody kokrigingu (CK)."}
+tm_shape(ck) +
+        tm_raster(col = c("SAVI.pred", "SAVI.var"),
+                  style = "cont", 
+                  palette = list("-Spectral", "viridis")) +
+        tm_layout(legend.frame = TRUE)
 ```
 
 ```{r kokriging_predict_anizotropia, echo=FALSE, cache=TRUE, eval=FALSE}
