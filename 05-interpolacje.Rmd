@@ -7,13 +7,13 @@ Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietó
 library(sf)
 library(stars)
 library(gstat)
+library(tmap)
 library(dismo)
 library(fields)
 library(geostatbook)
 data(punkty)
 data(siatka)
 data(granica)
-paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 ```{r 05-interpolacje-2, echo=FALSE}
@@ -38,15 +38,20 @@ st_bbox(punkty)
 ```
 
 Do stworzenia siatki można wykorzystać funkcję `st_as_stars()`.
-Tworzy ona nowy obiekt na podstawie obwiedni istniejącego obiektu punktowego oraz zadanej rozdzielczości (rycina \@ref(fig:05-interpolacje-4)).^[Możliwe jest też ręczne określenie granic obszaru poprzez wpisanie zakresów współrzędnych w funkcji `st_bbox()`.]
+Tworzy ona nowy obiekt na podstawie obwiedni istniejącego obiektu punktowego oraz zadanej rozdzielczości (rycina \@ref(fig:05-interpolacje-4b)).^[Możliwe jest też ręczne określenie granic obszaru poprzez wpisanie zakresów współrzędnych w funkcji `st_bbox()`.]
 
-```{r 05-interpolacje-4, fig.cap = "Wizualizacja regularnej siatki."}
+```{r 05-interpolacje-4}
 punkty_bbox = st_bbox(punkty)
 nowa_siatka = st_as_stars(punkty_bbox, 
                           dx = 500,
                           dy = 500)
 nowa_siatka = st_set_crs(nowa_siatka, 2180)
-plot(nowa_siatka)
+```
+
+```{r, 05-interpolacje-4b, fig.cap = "Wizualizacja regularnej siatki z oczkiem o boku 500 na 500 metrów."}
+tm_shape(st_as_sf(nowa_siatka)) + 
+        tm_polygons() +
+        tm_layout(frame = FALSE)
 ```
 
 <!-- siatka by hand -->
@@ -65,10 +70,12 @@ granica = read_sf("dane/granica.gpkg")
 nowa_siatka_n = nowa_siatka[granica]
 ```
 
-Wynik przetworzenia można zobaczyć z użyciem funkcji `plot()` (rycina \@ref(fig:05-interpolacje-7)).
+Wynik przetworzenia można zobaczyć na rycinie \@ref(fig:05-interpolacje-7).
 
-```{r 05-interpolacje-7, fig.cap = "Wizualizacja nieregularnej siatki."}
-plot(nowa_siatka_n)
+```{r, 05-interpolacje-7, fig.cap = "Wizualizacja nieregularnej siatki z oczkiem o boku 500 na 500 metrów."}
+tm_shape(st_as_sf(nowa_siatka_n)) + 
+        tm_polygons() +
+        tm_layout(frame = FALSE)
 ```
 
 ```{r 05-interpolacje-8, echo=FALSE, eval=FALSE}
@@ -77,12 +84,13 @@ zip("dane3.zip", files = "dane")
 
 ### Siatki - wizualizacja
 
-Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić za pomocą funkcji `plot()`. 
-W poniższym przykładzie, pierwszy wiersz służy wyświetleniu siatki, a drugi dodaje dane punktowe z użyciem argumentu `add` (rycina \@ref(fig:05-interpolacje-6)).
+Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić z pomocą pakietu **tmap** (rycina \@ref(fig:05-interpolacje-6)).
 
 ```{r 05-interpolacje-6, fig.cap = "Wizualizacja regularnej siatki z nałożonym położeniem obserwacji punktowych."}
-plot(nowa_siatka, reset = FALSE)
-plot(st_geometry(punkty), add = TRUE)
+tm_shape(nowa_siatka) +
+        tm_raster(legend.show = FALSE) +
+        tm_shape(punkty) +
+        tm_dots()
 ```
 
 ## Modele deterministyczne
@@ -111,9 +119,10 @@ voronoi_interp$temp = punkty$temp
 ```
 
 ```{r 05-interpolacje-10, fig.cap = "Interpolacja zmiennej temp używając metody diagramów Woronoja."}
-plot(voronoi_interp["temp"],
-     main = "Diagramy Woronoja - temperatura",
-     pal = hcl.colors(10, palette = "ag_Sunset"))
+tm_shape(voronoi_interp) +
+        tm_polygons(col = "temp", n = 10, palette = "-Spectral",
+                    title = "Diagramy Woronoja:\ntemperatura") +
+        tm_layout(legend.outside = TRUE)
 ```
 
 ### IDW
@@ -143,7 +152,10 @@ W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje ana
 ```{r 05-interpolacje-11, fig.cap = "Interpolacja zmiennej temp używając metody średniej ważonej odległością (IDW)."}
 idw_interp = idw(temp ~ 1, locations = punkty,
                  newdata = siatka, idp = 2)
-plot(idw_interp["var1.pred"], main = "IDW", col = paleta)
+tm_shape(idw_interp) +
+        tm_raster(col = "var1.pred", n = 10, palette = "-Spectral",
+                  style = "cont", title = "IDW") +
+        tm_layout(legend.outside = TRUE)
 ```
 
 ### Funkcje wielomianowe
@@ -158,8 +170,10 @@ Porównanie wielomianów pierwszego, drugiego i trzeciego stopnia można znaleź
 wielomian_1 = gstat(formula = temp ~ 1, locations = punkty,
                     degree = 1)
 wielomian_1_pred = predict(wielomian_1, newdata = siatka)
-plot(wielomian_1_pred["var1.pred"], 
-     main = "Wielomian pierwszego stopnia", col = paleta)
+tm_shape(wielomian_1_pred) +
+        tm_raster(col = "var1.pred", n = 10, palette = "-Spectral",
+                  style = "cont", title = "Wielomian pierwszego stopnia") +
+        tm_layout(legend.outside = TRUE)
 ```
 
 ```{r 05-interpolacje-14, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu drugiego stopnia."}
@@ -167,8 +181,10 @@ plot(wielomian_1_pred["var1.pred"],
 wielomian_2 = gstat(formula = temp ~ 1, locations = punkty,
                     degree = 2)
 wielomian_2_pred = predict(wielomian_2, newdata = siatka)
-plot(wielomian_2_pred["var1.pred"],
-     main = "Wielomian drugiego stopnia", col = paleta)
+tm_shape(wielomian_2_pred) +
+        tm_raster(col = "var1.pred", n = 10, palette = "-Spectral",
+                  style = "cont", title = "Wielomian drugiego stopnia") +
+        tm_layout(legend.outside = TRUE)
 ```
 
 ```{r 05-interpolacje-15, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu trzeciego stopnia."}
@@ -176,8 +192,10 @@ plot(wielomian_2_pred["var1.pred"],
 wielomian_3 = gstat(formula = temp ~ 1, locations = punkty,
                     degree = 3)
 wielomian_3_pred = predict(wielomian_3, newdata = siatka)
-plot(wielomian_3_pred["var1.pred"],
-     main = "Wielomian trzeciego stopnia", col = paleta)
+tm_shape(wielomian_3_pred) +
+        tm_raster(col = "var1.pred", n = 10, palette = "-Spectral",
+                  style = "cont", title = "Wielomian trzeciego stopnia") +
+        tm_layout(legend.outside = TRUE)
 ```
 
 ### Funkcje sklejane
@@ -191,8 +209,10 @@ siatka$tps_pred[is.na(siatka$X2)] = NA
 ```
 
 ```{r 05-interpolacje-16, fig.cap="Interpolacja zmiennej temp z użyciem funkcji sklejanych."}
-plot(siatka["tps_pred"], 
-     main = "Funkcje sklejane", col = paleta)
+tm_shape(siatka) +
+        tm_raster(col = "tps_pred", n = 10, palette = "-Spectral",
+                  style = "cont", title = "Funkcje sklejane") +
+        tm_layout(legend.outside = TRUE)
 ```
 
 ### Porównanie modeli deterministycznych
@@ -202,34 +222,33 @@ Na rycinie \@ref(fig:05-interpolacje-17) można wizualnie porównać wyniki uzys
 ```{r 05-interpolacje-17, echo=FALSE, message=FALSE, fig.cap="Porównanie czterech metod interpolacji dla zmiennej temp używając jednolitej skali wartości."}
 max_val = max(voronoi_interp$temp, idw_interp[["var1.pred"]],
               wielomian_3_pred[["var1.pred"]], siatka[["tps_pred"]],
-              na.rm = TRUE)
+              na.rm = TRUE) + 0.5
 min_val = min(voronoi_interp$temp, idw_interp[["var1.pred"]],
               wielomian_3_pred[["var1.pred"]], siatka[["tps_pred"]],
               na.rm = TRUE)
 
-library(gridExtra)
-p1 = p1_base + 
-  geom_sf(data = voronoi_interp, aes(fill = temp)) +
-  ggtitle("Poligony Voronoia") +
-        rcartocolor::scale_fill_carto_c(palette = "ag_Sunset",
-                                        na.value = "#ffffff",
-                                        limits = c(min_val, max_val))
-p2 = p1_base + geom_stars(data = idw_interp["var1.pred"]) + 
-        ggtitle("IDW") +
-        rcartocolor::scale_fill_carto_c(palette = "ag_Sunset",
-                                        na.value = "#ffffff",
-                                        limits = c(min_val, max_val))
-p3 = p1_base + geom_stars(data = wielomian_3_pred["var1.pred"]) +
-        ggtitle("Wielomiany") +
-        rcartocolor::scale_fill_carto_c(palette = "ag_Sunset",
-                                        na.value = "#ffffff",
-                                        limits = c(min_val, max_val))
-p4 = p1_base + geom_stars(data = siatka["tps_pred"]) + 
-        ggtitle("Funkcje sklejane") +
-        rcartocolor::scale_fill_carto_c(palette = "ag_Sunset",
-                                        na.value = "#ffffff",
-                                        limits = c(min_val, max_val))
-grid.arrange(p1, p2, p3, p4, ncol = 2)
+tm1 = tm_shape(voronoi_interp) +
+        tm_polygons(col = "temp", palette = "-Spectral",
+                    title = "Diagramy Woronoja:\ntemperatura",
+                    style = "cont",
+                    breaks = seq(min_val, max_val, by = 2)) +
+        tm_layout(legend.outside = TRUE)
+tm2 = tm_shape(idw_interp) +
+        tm_raster(col = "var1.pred", palette = "-Spectral",
+                  style = "cont", title = "IDW",
+                    breaks = seq(min_val, max_val, by = 2)) +
+        tm_layout(legend.outside = TRUE)
+tm3 = tm_shape(wielomian_3_pred) +
+        tm_raster(col = "var1.pred", palette = "-Spectral",
+                  style = "cont", title = "Wielomian\ntrzeciego stopnia",
+                    breaks = seq(min_val, max_val, by = 2)) +
+        tm_layout(legend.outside = TRUE)
+tm4 = tm_shape(siatka) +
+        tm_raster(col = "tps_pred", palette = "-Spectral",
+                  style = "cont", title = "Funkcje\nsklejane",
+                    breaks = seq(min_val, max_val, by = 2)) +
+        tm_layout(legend.outside = TRUE)
+tmap_arrange(tm1, tm2, tm3, tm4, ncol = 2)
 ```
 
 ## Modele statystyczne
