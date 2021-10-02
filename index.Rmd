@@ -26,7 +26,7 @@ is_html = knitr::is_html_output()
 
 # O skrypcie {-}
 
-```{r index-2, fig.align='center', eval=is_html, echo=FALSE, out.width='30%'}
+```{r index-2, fig.align='center', eval=FALSE, echo=FALSE, out.width='30%'}
 #eval=is_html
 knitr::include_graphics("Rfigs/book_cover3.png", dpi = NA)
 ```
