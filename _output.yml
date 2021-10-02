@@ -20,7 +20,7 @@ bookdown::bs4_book:
     in_header: css/ga.html
   template: css/bs4_book.html
 bookdown::gitbook:
-  dev: CairoPNG
+  # dev: CairoPNG
   css: style.css
   split_bib: false    
   config:
