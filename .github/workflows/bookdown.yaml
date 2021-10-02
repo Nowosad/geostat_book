@@ -11,6 +11,9 @@ jobs:
     runs-on: macOS-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      APP_DIR: "_book"
+      RSCONNECT_URL: ${{ secrets.RSCONNECT_URL }}
+      RSCONNECT_APIKEY: ${{ secrets.RSCONNECT_APIKEY }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -57,8 +60,23 @@ jobs:
       - name: Build site
         run: |
           ./_build.sh
-          
-      - name: Publish site
+
+      - name: Generate manifest.json
         run: |
-          ./_publish.sh
+          rsconnect::writeManifest(appDir = "${{ env.APP_DIR }}")
+        shell: Rscript {0}
+
+      - name: Deploy to RStudio Connect
+        uses: rstudio/actions/connect-publish@main
+        with:
+          url: https://${{ env.RSCONNECT_APIKEY }}@${{ env.RSCONNECT_URL }}
+          access-type: logged_in
+          show-logs: true
+          force: true
+          dir: ${{ env.APP_DIR }}
+          require-vanity-path: true
+          
+      # - name: Publish site
+      #   run: |
+      #     ./_publish.sh
   
