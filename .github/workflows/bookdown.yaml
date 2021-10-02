@@ -43,6 +43,7 @@ jobs:
       - name: Install packages
         run: |
           R -e "install.packages('remotes')"
+          R -e "install.packages('rsconnect')"
           R -e "install.packages('tinytex')"
           R -e "install.packages('rmarkdown')"
           R -e "tinytex::install_tinytex()"
