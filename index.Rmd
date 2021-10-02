@@ -9,7 +9,7 @@ link-citations: yes
 documentclass: scrbook
 classoption: "paper=6in:9in,pagesize=pdftex,headinclude=on,footinclude=on,10pt"
 geometry: "top=1.6cm, bottom=2cm, left=2cm, right=2cm"
-monofont: "Source Code Pro"
+# monofont: "Source Code Pro"
 monofontoptions: "Scale=0.7"
 graphics: yes
 description: "Introduction to geostatistics with R (in Polish). Skrypt ma na celu wprowadzenie do analiz przestrzennych (GIS) używająć języka programowania R, a następnie zastosowanie uzyskanej wiedzy do wykonania estymacji (interpolacji) oraz symulacji geostatystycznych."
