@@ -12,7 +12,7 @@ jobs:
     env:
       APP_NAME: "Geostatystyka"
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      APP_DIR: "_book"
+      APP_DIR: "Geostatystyka"
       RSCONNECT_URL: ${{ secrets.RSCONNECT_URL }}
       RSCONNECT_APIKEY: ${{ secrets.RSCONNECT_APIKEY }}
     steps:
