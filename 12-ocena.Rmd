@@ -7,12 +7,12 @@ Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietó
 library(sf)
 library(stars)
 library(gstat)
+library(tmap)
 library(rsample)
 library(ggplot2)
 library(geostatbook)
 data(punkty)
 data(siatka)
-paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 ```{r 12-ocena-2, echo=FALSE}
@@ -45,7 +45,9 @@ test_sk$blad_estymacji_sk = blad_estymacji_sk
 test_sk$true = test$temp
 
 cuts = c(-5, -3, -1, 1, 3, 5)
-plot(test_sk["blad_estymacji_sk"], main = "Błąd estymacji", breaks = cuts)
+tm_shape(test_sk) +
+        tm_symbols(col = "blad_estymacji_sk", breaks = cuts, title.col = "") +
+        tm_layout(main.title = "Błąd estymacji", legend.outside = TRUE)
 ```
 
 ### Histogram
@@ -209,7 +211,9 @@ R2
 
 ```{r 12-ocena-12, fig.cap = "Mapa przedstawiająca rozkład przestrzenny błędów estymacji uzyskanych używając krigingu prostego."}
 test_sk$blad_estymacji_sk = blad_estymacji_sk
-plot(test_sk["blad_estymacji_sk"], breaks = c(-5, -3, -1, 1, 3, 5))
+tm_shape(test_sk) +
+        tm_symbols(col = "blad_estymacji_sk", title.col = "") +
+        tm_layout(main.title = "Błąd estymacji", legend.outside = TRUE)
 ```
 
 ```{r 12-ocena-13, fig.cap="Rozkład wartości błędów estymacji uzyskanych używając krigingu prostego."}
@@ -235,7 +239,8 @@ test_sk = krige(temp ~ 1,
                 newdata = siatka,
                 model = fitted,
                 beta = 15)
-plot(test_sk["var1.pred"], col = paleta)
+tm_shape(test_sk) +
+        tm_raster("var1.pred", style = "cont", palette = "-Spectral")
 ```
 
 ### Kroswalidacja
@@ -292,7 +297,10 @@ R2
 ```
 
 ```{r 12-ocena-17, fig.cap = "Mapa przedstawiająca rozkład przestrzenny błędów estymacji uzyskanych używając krigingu prostego i kroswalidacji."}
-plot(cv_sk["residual"], breaks = c(-10, -5, -3, -1, 1, 3, 5, 10))
+tm_shape(cv_sk) +
+        tm_symbols(col = "residual", title.col = "",
+                   breaks = c(-10, -5, -3, -1, 1, 3, 5, 10)) +
+        tm_layout(main.title = "Błąd estymacji", legend.outside = TRUE)
 ```
 
 ```{r 12-ocena-18, fig.cap="Rozkład wartości błędów estymacji uzyskanych używając krigingu prostego i kroswalidacji."}
@@ -317,7 +325,8 @@ cv_skk = krige(temp ~ 1,
                 newdata = siatka, 
                 model = fitted, 
                 beta = 15)
-plot(cv_skk["var1.pred"], col = paleta)
+tm_shape(cv_skk) +
+        tm_raster("var1.pred", style = "cont", palette = "-Spectral")
 ```
 
 <!-- 
