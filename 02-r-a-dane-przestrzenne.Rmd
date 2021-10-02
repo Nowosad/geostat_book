@@ -33,17 +33,6 @@ Więcej szczegółów na ten temat pakietów R służących do analizy przestrze
 Dane przestrzenne mogą być reprezentowane w R poprzez wiele różnych klas obiektów z użyciem różnych pakietów R. 
 Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klasy `Spatial*` z pakietu **sp** oraz obiekty klasy `sf` z pakietu **sf**.
 
-<!-- Wszystkie obiekty klasy `Spatial*` z pakietu **sp** zawierają tablę atrybutów oraz dwie dodatkowe informacje: -->
-
-<!-- - bounding box (`bbox`) - obwiednia - określa zasięg danych -->
-<!-- - CRS (`proj4string`) - układ współrzędnych -->
-
-<!-- Ten pakiet definiuje klasę obiektów - sposób reprezentacji danych. -->
-<!-- Najczęściej stosowane obiekty klasy `Spatial*` to `SpatialPointsDataFrame`, `SpatialPolygonsDataFrame` oraz `SpatialGridDataFrame`.  -->
-<!-- Ostatnia klasa reprezentuje dane rastrowe.   -->
-<!-- Dodatkowo ten pakiet współpracuje z pakietami **rgdal** służącym do wczytywania i zapisywania danych oraz **rgeos** służącym do przetwarzania danych przestrzennych. -->
-<!-- W oparciu o pakiet **sp** powstało kilkaset dodatkowych pakietów R do analizy danych przestrzennych. -->
-
 Pakiet **sf** oparty jest o standard OGC o nazwie Simple Features.
 Łączy on możliwości zarówno pakietu **sp** jak i pakietów **rgdal** i **rgeos**.
 Więkość jego funkcji zaczyna się od prefiksu `st_`.
@@ -53,8 +42,7 @@ Pakiet **sf** jest używany przez kilkadziesiąt dodatkowych pakietów R, jednak
 Porównanie funkcji dostępnych w pakietach **sp** i **sf** można znaleźć pod adresem https://github.com/r-spatial/sf/wiki/Migrating.
 Więcej o pakiecie **sf** można przeczytać w [rozdziale drugim](https://geocompr.robinlovelace.net/spatial-class.html) książki Geocomputation with R.
 
-Dane rastrowe są reprezentowane między innymi poprzez klasę `SpatialGridDataFrame` z pakietu **sp**, obiekty klasy `Raster*` z pakietu **raster**, oraz klasę `stars` z pakietu **stars**.
-<!-- toDo -->
+Dane rastrowe są reprezentowane między innymi poprzez klasę `SpatialGridDataFrame` z pakietu **sp**, obiekty klasy `Raster*` z pakietu **raster**, `SpatRaster` z pakietu **terra**, oraz klasę `stars` z pakietu **stars**.
 
 Pakiet **stars** (*scalable, spatiotemporal tidy arrays*) pozwala na obsługę różnorodnych danych przestrzennych i czasoprzestrzennych reprezentowanych jako kostka danych (ang. *data cubes*).
 Obejmuje to, między innymi, regularne i nieregularne dane rastrowe, ale także czasoprzestrzenne dane wektorowe.
@@ -83,7 +71,7 @@ Zawiera on opis elementów związanych z konkretnym układem współrzędnych, t
 Warto też wiedzież, że przez wiele lat główną rolę pełniła reprezentacja **proj4string**, np. `"+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"`, która określała własności układu współrzędnych. 
 Współcześnie jednak ta reprezentacja nie jest zalecana do użycia.
 
-Strona http://www.spatialreference.org/ zawiera bazę danych układów współrzędnych.
+Strona https://epsg.org/ zawiera bazę danych układów współrzędnych.
 
 ### Układy współrzędnych
 
@@ -300,72 +288,107 @@ write_stars(siatka_stars, dsn = "dane/nowa_siatka.tif")
 ## Wizualizacja danych 2D
 
 Do wizualizacji danych przestrzennych w R służy co najmniej kilkanaście różnych pakietów. 
-Poniżej pokazane są przykłady standardowej funkcji `plot()`.
-Więcej o wizualizacji danych przestrzennych można przeczytać w rozdziale [Making maps with R](https://geocompr.robinlovelace.net/adv-map.html) książki Geocomputation with R.
+Poniżej pokazane są przykłady użycia pakietu **tmap**.
+
+Poniższy blok kodu tworzy złożoną wizualizację przestrzenną (rycina \@ref(fig:02-r-a-dane-przestrzenne-1-bis)) składającą się z cyfrowego modelu wysokościowego, którego różne wartości są oddane poprzez kolejne kolory (`tm_raster()`) i legendę z prawej strony (`tm_layout()`); granic Suwalskiego Parku Krajobrazowego (`tm_borders()`); kropek przedstawiających dane punktowe (`tm_dots()`); podziałki liniowej (`tm_scale_bar()`); strzałki północy (`tm_compass`).
+
+```{r 02-r-a-dane-przestrzenne-1-bis, fig.cap="Przykład wizualizacji danych 2D stworzonej z użyciem pakietu tmap."}
+library(tmap)
+tm_shape(dwie_stars) +
+        tm_raster("srtm.tif", style = "cont", title = "[m npm]") +
+        tm_shape(granica_sf) +
+        tm_borders() +
+        tm_shape(dane_punktowe_sf) +
+        tm_dots() +
+        tm_scale_bar() +
+        tm_compass(position = c("left", "top")) +
+        tm_layout(legend.outside = TRUE)
+```
+
+Główna idea stojąca za pakietem **tmap** mówi o łączeniu kolejnych linii kodu znakiem `+`, i te kolejne elementy będą wyświetlane po sobie.
+Podstawową funkcją tego pakietu jest `tm_shape()`, która pozwala na zdefiniowanie jaki obiekt przestrzenny chcemy zwizualizować.
+Następnie, w zależności od tego jakiego rodzaju jest nasz obiekt (np. czy to punkt czy raster), możemy zdefiniować różne typy wizualizacji.
+Dla danych punktowych może to być `tm_dots()` czy `tm_symbols()`, dla poligonów - `tm_borders()` czy `tm_polygons()`, a dla rastrów - `tm_raster()`.
+Każda z powyższych funkcji jest też łatwo modyfikowalna, pozwalając na wybranie zmiennej do przestawienia na mapie, stylu legendy, jej tytułu, itd.
+Dodatkowo, **tmap** daje możliwość umieszczenia innych elementów map, takich jak podziałka liniowa (`tm_scale_bar()`) i strzałka północy (`tm_compass`).
+
+Więcej o wizualizacji danych przestrzennych można przeczytać w książce [Elegant and informative maps with tmap](https://r-tmap.github.io/tmap-book/) oraz rozdziale [Making maps with R](https://geocompr.robinlovelace.net/adv-map.html) książki Geocomputation with R.
 
 ### Dane punktowe
 
-Funkcja `plot()` idealnie nadaje się do szybkiego przyjrzenia się, np. rodzajowi próbkowania danych.
-Domyślnie wyświetla ona szereg map - po jednej dla każdej zmiennej (rycina \@ref(fig:02-r-a-dane-przestrzenne-16)).
+Pakiet **tmap** posiada szereg funkcji dla różnych typów danych wejściowych.
+W przypadku danych punktowych, najczęściej używane są `tm_symbols()` i `tm_dots()`.
+Gdy są one używane bez podania dodatkowych argumentów, wówczas otrzymujemy jedynie wizualizację geometrii naszych danych (rycina \@ref(fig:02-r-a-dane-przestrzenne-2-bis)).
 
-```{r 02-r-a-dane-przestrzenne-16, fig.cap = "Użycie funkcji plot na danych punktowych klasy sf."}
-plot(dane_punktowe_sf)
+```{r 02-r-a-dane-przestrzenne-2-bis, fig.cap = "Użycie pakietu plot do wyświetlenia geometrii obiektu klasy sf."}
+tm_shape(dane_punktowe_sf) +
+        tm_symbols()
 ```
 
-Do wyświetlenia tylko geometrii (np. punktów) bez atrybutów służy funkcja `plot()` połączona z funkcją `st_geometry()` (rycina \@ref(fig:02-r-a-dane-przestrzenne-17)).
+Kiedy jednak chcemy przedstawić konkretną zmienną, musimy zadeklarować w jaki sposób ma być przedstawiona, przykładowo `col = "temp"` pokoloruje nasze punkty w zależności od wartości zmiennej `"temp"` i automatycznie doda odpowiednią legendę.
+W takiej sytuacji możemy dodatkowo, np. dodać tytuł legendy (`title.col = "Temperatura [*C]")`) czy sposób opisu brakujących wartości `textNA = "Brak danych"` (rycina \@ref(fig:02-r-a-dane-przestrzenne-3-bis)).
 
-```{r 02-r-a-dane-przestrzenne-17, fig.cap = "Użycie funkcji plot do wyświetlenia geometrii obiektu klasy sf."}
-plot(st_geometry(dane_punktowe_sf))
+```{r 02-r-a-dane-przestrzenne-3-bis, fig.cap="Użycie pakietu tmap do wizualizacji zmiennej temp w danych punktowych."}
+tm_shape(dane_punktowe_sf) +
+        tm_symbols(col = "temp", 
+                   title.col = "Temperatura [*C]",
+                   textNA = "Brak danych")
 ```
 
-Aby wyświetlić tylko jedną zmienną należy ją zadeklarować poprzez nawias kwadratowy.
-Poniżej można zobaczyć przykłady dla zmiennej `srtm` (rycina \@ref(fig:02-r-a-dane-przestrzenne-19)).
+Inne możliwe modyfikacje obejmują zmianę domyślnej palety kolorystycznej (`palette = "-Spectral"`) czy też tego w jaki sposób kolejne wartości są przedstawiane  (rycina \@ref(fig:02-r-a-dane-przestrzenne-4-bis)). 
+Automatycznie używany jest podział wartości na kilka równych przedziałów, ale możliwe są również inne podejścia do tego zadania.
+Przykładowo, `style = "cont"` tworzy ciągłą legendę.
 
-```{r 02-r-a-dane-przestrzenne-19, fig.cap = "Użycie funkcji plot do wyświetlenia zmiennej numerycznej obiektu klasy sf."}
-plot(dane_punktowe_sf["srtm"])
+```{r 02-r-a-dane-przestrzenne-4-bis, fig.cap="Bardziej złożone zastosowanie pakietu tmap do wizualizacji zmiennej temp w danych punktowych."}
+tm_shape(dane_punktowe_sf) +
+        tm_symbols(col = "temp", 
+                   title.col = "Temperatura [*C]",
+                   textNA = "Brak danych",  
+                   palette = "-Spectral",
+                   style = "cont")
 ```
 
 ### Dane punktowe - kategorie
 
 Nie zawsze dane mają postać ciągłych wartości - bywają one również określeniami różnych klas. 
-W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci kategoryzowanej (`as.factor()`).
-Następnie można je wyświetlić za pomocą funkcji `plot()` (rycina \@ref(fig:02-r-a-dane-przestrzenne-20)).
+W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci kategoryzowanej (`as.factor()`) lub zmienić sposób przedstawiana wartości na `"cat"` (rycina \@ref(fig:02-r-a-dane-przestrzenne-5-bis)).
 
-```{r 02-r-a-dane-przestrzenne-20, fig.cap = "Użycie funkcji plot do wyświetlenia zmiennej kategoryzowanej obiektu klasy sf."}
-dane_punktowe_sf$clc = as.factor(dane_punktowe_sf$clc)
-plot(dane_punktowe_sf["clc"])
+```{r 02-r-a-dane-przestrzenne-5-bis, fig.cap = "Użycie funkcji plot do wyświetlenia zmiennej kategoryzowanej obiektu klasy sf."}
+tm_shape(dane_punktowe_sf) +
+        tm_symbols(col = "clc", 
+                   title.col = "Kategoria pokrycia terenu",
+                   style = "cat",
+                   textNA = "Brak danych")
 ```
 
 ### Rastry
 
-Wyświetlanie danych w formacie rastrowym może również odbyć się z użyciem funkcji `plot()`.
-Domyślnie wyświetla ona pierwszą zmienną (lub warstwę) znajdującą się w obiekcie klasy `stars` (rycina \@ref(fig:02-r-a-dane-przestrzenne-21)).
+Pakiet **tmap** pozwala również na wyświetlanie danych rastrowych -- tym razem używając funkcji `tm_raster()`. 
+Domyślnie wyświetla ona wszystkie zmienne (lub warstwy znajdujące się w obiekcie klasy `stars` (rycina \@ref(fig:02-r-a-dane-przestrzenne-6-bis)).
 
-```{r 02-r-a-dane-przestrzenne-21, fig.cap = "Użycie funkcji plot do wyświetlenia pierwszej zmiennej obiektu klasy stars."}
-plot(dwie_stars)
+```{r 02-r-a-dane-przestrzenne-6-bis, fig.cap = "Użycie funkcji tmap do wyświetlenia obiektu klasy stars."}
+tm_shape(dwie_stars) +
+        tm_raster()
 ```
 
-Zmiana kolorów mapy odbywa się poprzez podanie wektora kolorów (palety) w argumencie `col` (rycina \@ref(fig:02-r-a-dane-przestrzenne-21a)).
+Wybranie jednej zmiennej ma miejscie w argumencie `col`. 
+Przykładowo, `col = "srtm.tif"` wyświetli pierwszą zmienną (rycina \@ref(fig:02-r-a-dane-przestrzenne-7-bis)), a `col = "clc.tif"` drugą.
+Wynik wizualizacji możemy też modyfikować podobnie jak w przykładach dla danych punktowych powyżej.
 
-```{r 02-r-a-dane-przestrzenne-21a, fig.cap = "Użycie funkcji plot do wyświetlenia pierwszej zmiennej obiektu klasy stars wraz z zadaną paletą kolorów."}
-paleta = hcl.colors(12, palette = "ag_Sunset")
-plot(dwie_stars, col = paleta)
+```{r 02-r-a-dane-przestrzenne-7-bis}
+tm_shape(dwie_stars) +
+        tm_raster(col = "srtm.tif", style = "cont", title = "m npm")
 ```
 
-Aby wyświetlić tylko wybraną zmienną należy ją zadeklarować poprzez indeksowanie.
+Wyświetlenie wybrannej zmiennej może też mieć miejsce poprzez indeksowanie.
 Opiera się to o kilka indeksów, np. dla obiektu `siatka_stars` są to `[indeks atrybutu, indeksy kolumn, indeksy wierszy]`^[Liczba indeksów zależy od złożoności obiektu klasy `stars`. Przykładowo dla obiektów posiadających trzy wymiary, np. wielokanałowe dane satelitarne, mogą to być `[indeks atrybutu, indeksy kolumn, indeksy wierszy, indeksy kanału]`.].
-Przykładowo indeks `[2, , ]` pozwala na wyświetlenie drugiego atrybutu.
-Możliwe jest tutaj również użycie uproszczonej formy `dwie_stars[2]` (rycina \@ref(fig:02-r-a-dane-przestrzenne-22)).
-
-```{r 02-r-a-dane-przestrzenne-22, fig.cap = "Użycie funkcji plot do wyświetlenia wybranej zmiennej obiektu klasy stars."}
-plot(dwie_stars[2], col = c("#d9d40c", "#416422", "#0c6cae"))
-```
-
+Przykładowo indeks `dwie_stars[2, , ]` pozwala na wyświetlenie drugiego atrybutu -- możliwe jest tutaj również użycie uproszczonej formy `dwie_stars[2]`.
 Indeksowanie pozwala też na wyświetlenie fragmentu danych rastrowych.
-Na przykład, indeks `[1, 2:50, 1:20]` pozwala na wyświetlenie pierwszej zmiennej, ale tylko dla kolumn od 20 do 50 i wierszy od 1 do 20 (rycina \@ref(fig:02-r-a-dane-przestrzenne-23)).
+Na przykład, indeks `[1, 2:50, 1:20]` pozwala na wyświetlenie pierwszej zmiennej, ale tylko dla kolumn od 20 do 50 i wierszy od 1 do 20 (rycina \@ref( 02-r-a-dane-przestrzenne-8-bis)).
 
-```{r 02-r-a-dane-przestrzenne-23, fig.cap = "Użycie funkcji plot do wyświetlenia wybranej zmiennej obiektu klasy stars dla wybranego zasięgu przestrzennego."}
-plot(dwie_stars[1, 20:50, 1:20], col = paleta)
+```{r 02-r-a-dane-przestrzenne-8-bis, fig.cap = "Użycie pakietu tmap do wyświetlenia wybranej zmiennej obiektu klasy stars dla wybranego zasięgu przestrzennego."}
+tm_shape(dwie_stars[1, 20:50, 1:20]) +
+        tm_raster()
 ```
 
 ## Zadania {#z2}
