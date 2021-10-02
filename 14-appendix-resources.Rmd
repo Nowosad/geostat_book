@@ -14,7 +14,7 @@
 ## Analizy przestrzenne w R
 
 - [Geocomputation with R](https://geocompr.robinlovelace.net/) [@lovelace2019geocomputation]
-- [Elegant and informative maps with tmap](https://r-tmap.github.io/tmap-book/) <!--toDo-->
+- [Elegant and informative maps with tmap](https://r-tmap.github.io/tmap-book/) [@tennekes_elegant_2022]
 - [Applied Spatial Dala Analysis with R](http://www.asdar-book.org/) [@bivand2014applied]
 - [Spatial Data Science](https://www.r-spatial.org/book/) [@pebesma2020spatial]
 - [CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html)
