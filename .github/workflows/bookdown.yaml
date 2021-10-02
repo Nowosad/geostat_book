@@ -10,6 +10,7 @@ jobs:
   build:
     runs-on: macOS-latest
     env:
+      APP_NAME: "Geostatystyka"
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       APP_DIR: "_book"
       RSCONNECT_URL: ${{ secrets.RSCONNECT_URL }}
