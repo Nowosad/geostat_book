@@ -7,11 +7,11 @@ Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietó
 library(sf)
 library(stars)
 library(gstat)
+library(tmap)
 library(geostatbook)
 data(punkty)
 data(siatka)
 data(dane_uzup)
-paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 ```{r 09-dane-uzupelniajace-2, echo=FALSE}
@@ -23,15 +23,16 @@ W sytuacji, gdy dodatkowe zmienne są skorelowane ze zmienną analizowaną możn
 
 ```{r 09-dane-uzupelniajace-3, message=FALSE, fig.asp=0.25, echo=FALSE}
 dane_uzup$clc = as.factor(dane_uzup$clc)
-library(gridExtra)
-ip1 = p1_base + geom_stars(data = dane_uzup["clc"]) +
-        scale_fill_manual(values = c("#d9d40c", "#416422", "#0c6cae")) + 
-        ggtitle("clc")
-ip2 = p1_base + geom_stars(data = dane_uzup["srtm"]) + 
-        ggtitle("srtm")
-ip3 = p1_base + geom_stars(data = dane_uzup["ndvi"]) + 
-        ggtitle("ndvi")
-grid.arrange(ip1, ip2, ip3, ncol = 3)
+tm1 = tm_shape(dane_uzup["clc"]) +
+        tm_raster(palette = c("#d9d40c", "#416422", "#0c6cae"), title = "", legend.is.portrait = FALSE) +
+        tm_layout(legend.width = 1)
+tm2 = tm_shape(dane_uzup["srtm"]) +
+        tm_raster(style = "cont", title = "", palette = "YlOrBr", legend.is.portrait = FALSE) +
+        tm_layout(legend.width = 1)
+tm3 = tm_shape(dane_uzup["ndvi"]) +
+        tm_raster(style = "cont", title = "", palette = "PiYG", legend.is.portrait = FALSE) +
+        tm_layout(legend.width = 1)
+tmap_arrange(tm1, tm2, tm3, nrow = 1)
 ```
 
 <!-- ## Kriging stratyfikowany -->
@@ -168,18 +169,13 @@ sk_lvm = krige(temp ~ srtm,
 sk_lvm
 ```
 
-```{r plotsylvm1, eval=FALSE}
-plot(sk_lvm["var1.pred"], col = paleta)
-plot(sk_lvm["var1.var"], col = paleta)
-```
 
-```{r plotsylvm2, echo=FALSE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody prostego krigingu ze zmiennymi średnimi lokalnymi (LVM)."}
-library(gridExtra)
-p1 = p1_base + geom_stars(data = sk_lvm["var1.pred"]) +
-        ggtitle("Estymacja SK LVM")
-p2 = p1_base + geom_stars(data = sk_lvm["var1.var"]) + 
-        ggtitle("Wariancja estymacji SK LVM")
-grid.arrange(p1, p2, ncol = 1)
+```{r plotsylvm2, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody prostego krigingu ze zmiennymi średnimi lokalnymi (LVM)."}
+tm_shape(sk_lvm) +
+        tm_raster(col = c("var1.pred", "var1.var"),
+                  style = "cont", 
+                  palette = list("-Spectral", "viridis")) +
+        tm_layout(legend.frame = TRUE)
 ```
 
 ## Kriging uniwersalny 
@@ -204,7 +200,8 @@ plot(vario_uk1, vario_fit_uk1)
 
 ```{r 09-dane-uzupelniajace-8, fig.cap = "Rozkład przestrzenny wartości zmiennej clc używanej w modelu."}
 dane_uzup$clc = as.factor(dane_uzup$clc)
-plot(dane_uzup["clc"], col = c("#d9d40c", "#416422", "#0c6cae"))
+tm_shape(dane_uzup["clc"]) +
+        tm_raster(palette = c("#d9d40c", "#416422", "#0c6cae"))
 ```
 
 ```{r 09-dane-uzupelniajace-9 }
@@ -214,18 +211,12 @@ uk1 = krige(temp ~ clc,
             model = vario_fit_uk1)
 ```
 
-```{r plotsy3uk1, eval=FALSE}
-plot(uk1["var1.pred"], col = paleta)
-plot(uk1["var1.var"], col = paleta)
-```
-
-```{r plotsy4uk1, echo=FALSE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając zmiennej clc i metody krigingu uniwersalnego (KU)."}
-library(gridExtra)
-p1 = p1_base + geom_stars(data = uk1["var1.pred"]) +
-        ggtitle("Estymacja KU")
-p2 = p1_base + geom_stars(data = uk1["var1.var"]) + 
-        ggtitle("Wariancja estymacja KU")
-grid.arrange(p1, p2, ncol = 1)
+```{r plotsy4uk1, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając zmiennej clc i metody krigingu uniwersalnego (KU)."}
+tm_shape(uk1) +
+        tm_raster(col = c("var1.pred", "var1.var"),
+                  style = "cont", 
+                  palette = list("-Spectral", "viridis")) +
+        tm_layout(legend.frame = TRUE)
 ```
 
 W kolejnym przykładzie zastosowane są już dwie zmienne uzupełniające - wartość wskaźnika wegetacji (`ndvi`) oraz wysokość nad poziomem morza (`srtm`) (ryciny \@ref(fig:09-dane-uzupelniajace-10), \@ref(fig:plotsy4KU)).
@@ -247,18 +238,13 @@ uk2 = krige(temp ~ ndvi + srtm,
              model = vario_fit_uk2)
 ```
 
-```{r plotsy3KU, eval=FALSE}
-plot(uk2["var1.pred"], col = paleta)
-plot(uk2["var1.var"], col = paleta)
-```
 
-```{r plotsy4KU, echo=FALSE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając zmiennych ndvi i srtm i metody krigingu uniwersalnego (KU)."}
-library(gridExtra)
-p1 = p1_base + geom_stars(data = uk2["var1.pred"]) +
-        ggtitle("Estymacja KU")
-p2 = p1_base + geom_stars(data = uk2["var1.var"]) + 
-        ggtitle("Wariancja estymacja KU")
-grid.arrange(p1, p2, ncol = 1)
+```{r plotsy4KU, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając zmiennych ndvi i srtm i metody krigingu uniwersalnego (KU)."}
+tm_shape(uk2) +
+        tm_raster(col = c("var1.pred", "var1.var"),
+                  style = "cont", 
+                  palette = list("-Spectral", "viridis")) +
+        tm_layout(legend.frame = TRUE)
 ```
 
 ## Zadania {#z11}
