@@ -69,8 +69,8 @@ Brakujące pakiety można także załadować także w trakcie analizy geostatyst
 library(sf)
 library(stars)
 library(gstat)
+library(tmap)
 library(ggplot2)
-paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 Kolejnym krokiem jest wczytanie danych oraz sprawdzenie ich jakości.
@@ -88,7 +88,8 @@ ggplot(moje_punkty, aes(tavg)) + geom_histogram()
 ```
 
 ```{r 18-przyklad-4a, fig.cap="Rozkład przestrzenny wartości zmiennej tavg."}
-plot(moje_punkty)
+tm_shape(moje_punkty) + 
+        tm_symbols(col = "tavg")
 ```
 
 Pozwala to na zauważenie, że w badanej zmiennej występują co najmniej dwie wartości odstające.
@@ -101,11 +102,14 @@ moje_punkty[moje_punkty$tavg == min(moje_punkty$tavg), ]
 Jedna z nich ma wartość ok. -3,5 °C i jest znacznie niższa od pozostałych, druga natomiast jest znacznie wyższa od pozostałych i ma wartość ok. 9,2 °C.
 Należy w tym momencie zastanowić się czy te wartości odstające są prawidłowymi wartościami, czy też są one błędne. 
 W tej sytuacji, nie posiadając zewnętrznej informacji, bezpieczniej jest usunąć te dwa pomiary.
-Można to zrobić wyszukując id punktów za pomocą pakietu **mapview**.
+Można to zrobić wyszukując id punktów za pomocą pakietu **tmap**.
 
 ```{r 18-przyklad-6, echo=FALSE, eval=FALSE}
-library(mapview)
-mapview(moje_punkty)
+tmap_mode("view")
+moje_punkty$id = 1:nrow(moje_punkty)
+tm_shape(moje_punkty) + 
+        tm_symbols(col = "tavg", popup.vars = c("id", "tavg"))
+tmap_mode("plot")
 ```
 
 Teraz id punktów można użyć do ich wybrania i zastąpienia potencjalnie błędnych wartości wartościami `NA`.
@@ -136,7 +140,8 @@ ggplot(moje_punkty, aes(tavg)) + geom_histogram()
 ```
 
 ```{r 18-przyklad-10a, fig.cap="Rozkład przestrzenny wartości zmiennej tavg po usunięciu wartości odstających."}
-plot(moje_punkty)
+tm_shape(moje_punkty) + 
+        tm_symbols(col = "tavg")
 ```
 
 Można dodatkowo stworzyć chmurę semiwariogramu w celu wyszukania potencjalnych wartości lokalnie odstających (rycina \@ref(fig:18-przyklad-11)).
@@ -247,8 +252,11 @@ moja_estymacja = krige(tavg ~ X + Y,
                        locations = moje_punkty,
                        newdata = moja_siatka,
                        model = moj_model2)
-plot(moja_estymacja[1], col = paleta)
-plot(moja_estymacja[2], col = paleta)
+
+tm_shape(moja_estymacja) +
+        tm_raster(col = "var1.pred", style = "cont", palette = "-Spectral")
+tm_shape(moja_estymacja) +
+        tm_raster(col = "var1.var", style = "cont", palette = "viridis")
 ```
 
 Wynikiem uproszczonej analizy geostatystycznej jest mapa estymowanych wartości temperatury dla całego badanego obszaru oraz mapa przedstawiająca wariancję estymacji temperatury.
