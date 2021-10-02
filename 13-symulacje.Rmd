@@ -7,11 +7,11 @@ Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietó
 library(sf)
 library(stars)
 library(gstat)
+library(tmap)
 library(ggplot2)
 library(geostatbook)
 data(punkty)
 data(siatka)
-paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 ```{r 13-symulacje-2, echo=FALSE}
@@ -74,14 +74,9 @@ sym_bezw1 = krige(formula = z ~ 1,
                    nsim = 4)
 ```
 
-```{r sym_bezw1a, eval=FALSE}
-plot(sym_bezw1, col = paleta)
-```
-
-```{r symbezw1-fig, fig.cap = "Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 100, oraz modelu wykładniczego", echo=FALSE}
-p1_base + 
-  geom_stars(data = sym_bezw1) +
-  facet_wrap(~ sample)
+```{r symbezw1-fig, fig.cap = "Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 100, oraz modelu wykładniczego"}
+tm_shape(sym_bezw1) +
+        tm_raster(title = "", style = "cont")
 ```
 
 ```{r sym_bezw2, cache=TRUE}
@@ -97,14 +92,9 @@ sym_bezw2 = krige(formula = z ~ 1,
                    nsim = 4)
 ```
 
-```{r sym_bezw2a, eval=FALSE}
-plot(sym_bezw2, col = paleta)
-```
-
-```{r symbezw2-fig, fig.cap = "Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 1500, oraz modelu wykładniczego", echo=FALSE}
-p1_base + 
-  geom_stars(data = sym_bezw2) +
-  facet_wrap(~ sample)
+```{r symbezw2-fig, fig.cap = "Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 1500, oraz modelu wykładniczego"}
+tm_shape(sym_bezw2) +
+        tm_raster(title = "", style = "cont")
 ```
 
 <!--
@@ -173,7 +163,8 @@ sym_ok = krige(temp_log ~ 1,
 ```
 
 ```{r 13-symulacje-6, fig.cap = "Symulacja warunkowa zmiennej temp po logaritmizacji."}
-plot(sym_ok, col = paleta)
+tm_shape(sym_ok) +
+        tm_raster(title = "", style = "cont")
 ```
 
 Wyniki symulacji można przetworzyć do pierwotnej jednostki z użyciem funkcji `rev_trans()`, którą stworzyliśmy w sekcji \@ref(transformacja-odwrotna).
@@ -184,7 +175,8 @@ W efekcie tej operacji otrzymujemy tylko jedną warstwę.
 
 ```{r 13-symulacje-7a, fig.cap = "Wariancja symulacji warunkowej."}
 sym_ok_var = st_apply(sym_ok, MARGIN = c("x", "y"), FUN = var)
-plot(sym_ok_var)
+tm_shape(sym_ok_var) +
+        tm_raster(style = "cont", palette = "Purples")
 ```
 
 Teraz możliwe jest przywrócenie oryginalnej jednostki dla wszystkich symulacji z użyciem funkcji `st_apply()` i `rev_trans()`.
@@ -193,7 +185,8 @@ Teraz możliwe jest przywrócenie oryginalnej jednostki dla wszystkich symulacji
 ```{r 13-symulacje-7, fig.cap = "Symulacja warunkowa po przeskalowaniu do oryginalnych wartości."}
 sym_ok_rescaled = st_apply(sym_ok, 3, rev_trans, 
                            var = sym_ok_var$var, obs = punkty$temp)
-plot(sym_ok_rescaled, col = paleta)
+tm_shape(sym_ok_rescaled) +
+        tm_raster(title = "", style = "cont")
 ```
 
 Symulacje geostatystyczne pozwalają również na przedstawianie niepewności interpolacji. 
@@ -235,7 +228,8 @@ Finalnie otrzymujemy mapę odchylenia standardowego symulowanych wartości  (ryc
 Można na niej odczytać obszary o najpewniejszych (najmniej zmiennych) wartościach (niebieski kolor) oraz obszary o największej zmienności cechy (kolor żółty).
 
 ```{r 13-symulacje-8, fig.cap = "Mapa odchylenia standardowego symulowanych wartości."}
-plot(sym_sk_sd, col = paleta)
+tm_shape(sym_sk_sd) +
+        tm_raster(title = "", style = "cont", palette = "YlGnBu")
 ```
 
 ### Sekwencyjna symulacja danych kodowanych
@@ -275,8 +269,9 @@ Wynik symulacji danych kodowanych znacząco różni się od wyniku krigingu dany
 W przeciwieństwie do tej drugiej metody, w rezultacie symulacji nie otrzymujemy prawdopodobieństwa zajścia danej klasy, ale konkretne wartości `1` lub `0` (rycina \@ref(fig:13-symulacje-11)).
 
 ```{r 13-symulacje-11, fig.cap="Przykłady symulacji danych kodowanych."}
-plot(sym_ind, main = "Symulacja warunkowa", 
-     col = c("#88CCEE", "#CC6677"))
+tm_shape(sym_ind) +
+        tm_raster(title = "", style = "cat", palette = c("#88CCEE", "#CC6677")) +
+        tm_layout(main.title = "Symulacja warunkowa")
 ```
 
 <!--
