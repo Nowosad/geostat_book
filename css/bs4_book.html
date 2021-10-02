@@ -52,16 +52,16 @@
     <a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
 
     <div class="d-flex align-items-start justify-content-between">
-      <h1>
+      <h2>
         <a href="index.html" title="$subtitle$">$title$</a>$if(subtitle)$:
         <small class="text-muted">$subtitle$</small>$endif$
-      </h1>
+      </h2>
       <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
     </div>
 
     <div id="main-nav" class="collapse-lg">
       <form role="search">
-        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
       </form>
 
       <nav aria-label="Table of contents">
@@ -69,8 +69,7 @@
         <div id="book-toc"></div>
 
         <div class="book-extra">
-          <!--<p><a id="book-repo" href="#">View book source <i class="fab fa-github"></i></a></li></p>-->
-          <p><a href="https://bookdown.org/nowosad/Geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="#">Kod źródłowy książki <i class="fab fa-github"></i></a></li></p>
         </div>
       </nav>
     </div>
@@ -90,14 +89,14 @@ $endfor$
   </main>
 
   <div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
-    <nav id="toc" data-toggle="toc" aria-label="W tym rozdziale:">
-      <h2>On this page</h2>
+    <nav id="toc" data-toggle="toc" aria-label="On this page">
+      <h2>W tym rozdziale:</h2>
       <div id="book-on-this-page"></div>
 
       <div class="book-extra">
         <ul class="list-unstyled">
-          <!--<li><a id="book-source" href="#">View source <i class="fab fa-github"></i></a></li>-->
-          <!--<li><a id="book-edit" href="#">Edit this page <i class="fab fa-github"></i></a></li>-->
+          <li><a id="book-source" href="#">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="#">Edytuj <i class="fab fa-github"></i></a></li>
         </ul>
       </div>
     </nav>
@@ -110,16 +109,15 @@ $endfor$
   <div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>$title$</strong>$if(subtitle)$: $subtitle$$endif$". Autor: $for(author)$$author$$sep$, $endfor$. $if(date)$It was last built on $date$.$endif$</p>
+    <p>"<strong>$title$</strong>$if(subtitle)$: $subtitle$$endif$", autor: $for(author)$$author$$sep$, $endfor$. $if(date)$It was last built on $date$.$endif$</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
-    <p>Ta książka została zbudowana używając pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
   </div>
 
 </div></div>
 </footer>
-
 
 $if(math)$
 <!-- dynamically load mathjax for compatibility with self-contained -->
