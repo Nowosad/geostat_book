@@ -7,11 +7,11 @@ Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietó
 library(sf)
 library(stars)
 library(gstat)
+library(tmap)
 library(ggplot2)
 library(geostatbook)
 data(punkty)
 data(siatka)
-paleta = hcl.colors(12, palette = "ag_Sunset")
 ```
 
 ```{r 11-dane-kodowane-2, echo=FALSE}
@@ -93,18 +93,12 @@ ik = krige(temp_ind ~ 1,
 
 W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopni Celsjusza) oraz uzyskaną wariancję estymacji (rycina \@ref(fig:plotsy2ok)).
 
-```{r plotsy1ok, eval=FALSE}
-plot(ik["var1.pred"], col = paleta)
-plot(ik["var1.var"], col = paleta)
-```
-
-```{r plotsy2ok, echo=FALSE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody krigingu danych kodowanych (IK)."}
-library(gridExtra)
-p1 = p1_base + geom_stars(data = ik["var1.pred"]) +
-        ggtitle("Prawdopodobieństwo Temp > 20")
-p2 = p1_base + geom_stars(data = ik["var1.var"]) + 
-        ggtitle("Wariancja estymacji IK")
-grid.arrange(p1, p2, ncol = 1)
+```{r plotsy2ok, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody krigingu danych kodowanych (IK)."}
+tm_shape(ik) +
+        tm_raster(col = c("var1.pred", "var1.var"),
+                  style = "cont", 
+                  palette = list("-Spectral", "viridis")) +
+        tm_layout(legend.frame = TRUE)
 ```
 
 ### Tworzenie mapy binarnej
@@ -127,18 +121,10 @@ ik$prog2 = ik$var1.pred > 0.75
 
 W wyniku otrzymuje się binarne mapy, dla których stwierdza się obszary powyżej lub poniższej zadanego prawdopodobieństwa (rycina \@ref(fig:plotsy2ik2)).
 
-```{r plotsy2ik1, eval=FALSE}
-plot(ik["prog1"], col = c("#88CCEE", "#CC6677"))
-plot(ik["prog2"], col = c("#88CCEE", "#CC6677"))
-```
-
-```{r plotsy2ik2, echo=FALSE, fig.height=8, message=FALSE, fig.cap = "Binarne mapy dla progu ustalonego na 0.1 oraz 0.75."}
-library(gridExtra)
-p1p = p1_base + geom_stars(data = ik["prog1"]) +
-        ggtitle("Próg: 0.1") + scale_fill_carto_d(palette = "Safe")
-p2p = p1_base + geom_stars(data = ik["prog2"]) +
-        ggtitle("Próg: 0.75") + scale_fill_carto_d(palette = "Safe")
-grid.arrange(p1p, p2p, ncol = 1)
+```{r plotsy2ik2, fig.height=8, message=FALSE, fig.cap = "Binarne mapy dla progu ustalonego na 0.1 oraz 0.75."}
+tm_shape(ik) +
+        tm_raster(col = c("prog1", "prog2")) +
+        tm_layout(legend.frame = TRUE)
 ```
 
 ### Alternatywne użycie funkcji
@@ -178,14 +164,16 @@ ik12 = krige(I(temp < 12) ~ 1,
 ```
 
 ```{r ploty-trzyik, echo=FALSE, fig.height=12, fig.cap = "Estymacje używając metody krigingu danych kodowanych (IK) dla różnych progów prawdopodobieństwa."}
-library(gridExtra)
-p1i = p1_base + geom_stars(data = ik20["var1.pred"]) +
-        ggtitle("Prawdopodobieństwo Temp < 20")
-p2i = p1_base + geom_stars(data = ik16["var1.pred"]) + 
-        ggtitle("Prawdopodobieństwo Temp < 16")
-p3i = p1_base + geom_stars(data = ik12["var1.pred"]) + 
-        ggtitle("Prawdopodobieństwo Temp < 12")
-grid.arrange(p1i, p2i, p3i, ncol = 1)
+tm1 = tm_shape(ik20["var1.pred"]) +
+        tm_raster(breaks = seq(0, 1, by = 0.2)) +
+        tm_layout(main.title = "Prawdopodobieństwo Temp < 20")
+tm2 = tm_shape(ik16["var1.pred"]) + 
+        tm_raster(breaks = seq(0, 1, by = 0.2)) +
+        tm_layout(main.title = "Prawdopodobieństwo Temp < 16")
+tm3 = tm_shape(ik12["var1.pred"]) + 
+        tm_raster(breaks = seq(0, 1, by = 0.2)) +
+        tm_layout(main.title = "Prawdopodobieństwo Temp < 12")
+tmap_arrange(tm1, tm2, tm3, ncol = 1)
 ```
 
 ## Zadania {#z9}
