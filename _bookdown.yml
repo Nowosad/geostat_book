@@ -3,8 +3,8 @@ output_dir: "Geostatystyka"
 new_session: yes
 before_chapter_script: ["code/before_script.R"]
 delete_merged_file: yes
-rmd_files: 
-    - "index.Rmd"
+# rmd_files: 
+#     - "index.Rmd"
 language:
   label:
     fig: 'Rycina '
