@@ -13,7 +13,7 @@ geometry: "top=1.6cm, bottom=2cm, left=2cm, right=2cm"
 monofontoptions: "Scale=0.7"
 graphics: yes
 description: "Introduction to geostatistics with R (in Polish). Skrypt ma na celu wprowadzenie do analiz przestrzennych (GIS) używająć języka programowania R, a następnie zastosowanie uzyskanej wiedzy do wykonania estymacji (interpolacji) oraz symulacji geostatystycznych."
-url: 'https\://bookdown.org/nowosad/Geostatystyka/'
+url: 'https\://bookdown.org/nowosad/geostatystyka/'
 github-repo: "nowosad/geostat_book"
 cover-image: "Rfigs/book_cover3.png"
 toc-title: "Spis treści"
@@ -51,12 +51,12 @@ Główne zmiany względem drugiego wydania to:
 
 Wszystkie zaprezentowane metody i analizy zawierają również kod w języku R.
 Skrypt został stworzony w R [@R-base] z wykorzystaniem pakietów **bookdown** [@R-bookdown], **rmarkdown** [@R-rmarkdown], **knitr** [@R-knitr] oraz programu [Pandoc](http://pandoc.org/). 
-Aktualna wersja skryptu znajduje się pod adresem https://bookdown.org/nowosad/Geostatystyka/. 
+Aktualna wersja skryptu znajduje się pod adresem https://bookdown.org/nowosad/geostatystyka/. 
 
 Jeżeli używasz skryptu, zacytuj go jako:
 
 - Nowosad, J., (2021). Geostatystyka w R. Poznań: Space A. ISBN 978-83-953296-2-3. Online:
-https://bookdown.org/nowosad/Geostatystyka/
+https://bookdown.org/nowosad/geostatystyka/
 
 Zachęcam do zgłaszania wszelkich uwag, błędów, pomysłów oraz komentarzy na stronie https://github.com/Nowosad/geostat_book/issues.
 
