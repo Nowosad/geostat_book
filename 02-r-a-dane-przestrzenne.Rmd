@@ -366,7 +366,7 @@ tm_shape(dane_punktowe_sf) +
 Pakiet **tmap** pozwala również na wyświetlanie danych rastrowych -- tym razem używając funkcji `tm_raster()`. 
 Domyślnie wyświetla ona wszystkie zmienne (lub warstwy znajdujące się w obiekcie klasy `stars` (rycina \@ref(fig:02-r-a-dane-przestrzenne-6-bis)).
 
-```{r 02-r-a-dane-przestrzenne-6-bis, fig.cap = "Użycie funkcji tmap do wyświetlenia obiektu klasy stars."}
+```{r 02-r-a-dane-przestrzenne-6-bis, fig.cap = "Użycie pakietu tmap do wyświetlenia obiektu klasy stars."}
 tm_shape(dwie_stars) +
         tm_raster()
 ```
@@ -375,7 +375,7 @@ Wybranie jednej zmiennej ma miejscie w argumencie `col`.
 Przykładowo, `col = "srtm.tif"` wyświetli pierwszą zmienną (rycina \@ref(fig:02-r-a-dane-przestrzenne-7-bis)), a `col = "clc.tif"` drugą.
 Wynik wizualizacji możemy też modyfikować podobnie jak w przykładach dla danych punktowych powyżej.
 
-```{r 02-r-a-dane-przestrzenne-7-bis}
+```{r 02-r-a-dane-przestrzenne-7-bis, fig.cap = "Wizualizacja zmiennej srtm.tif obiektu klasy stars."}
 tm_shape(dwie_stars) +
         tm_raster(col = "srtm.tif", style = "cont", title = "m npm")
 ```
