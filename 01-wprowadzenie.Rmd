@@ -80,7 +80,8 @@ sk = krige(temp~1,
             beta = 16, 
             debug.level = 0)
 tm_shape(sk) +
-        tm_raster(col = "var1.pred", style = "cont", palette = "-Spectral") +
+        tm_raster(col = "var1.pred", style = "cont", 
+                  palette = "-Spectral", title = "") +
         tm_layout(main.title = "Estymacja")
 ```
 
@@ -95,7 +96,8 @@ sym_ok = krige(temp~1,
                 nsim = 4, 
                 debug.level = 0)
 tm_shape(sym_ok) +
-        tm_raster(style = "cont", palette = "-Spectral") +
+        tm_raster(style = "cont", palette = "-Spectral",
+                  title = "") +
         tm_layout(main.title = "Symulacje")
 ```
 
