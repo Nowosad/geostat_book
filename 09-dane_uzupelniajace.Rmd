@@ -21,7 +21,7 @@ par(mar = c(rep(0, 4)))
 W wielu przypadkach, oprócz konkretnych pomiarów, istnieje również informacja na temat zmienności innych cech na analizowanym obszarze. 
 W sytuacji, gdy dodatkowe zmienne są skorelowane ze zmienną analizowaną można wykorzystać jedną z metod krigingu wykorzystującą dane uzupełniające, tj. kriging stratyfikowany, kriging prosty ze zmiennymi średnimi lokalnymi, czy kriging uniwersalny.
 
-```{r 09-dane-uzupelniajace-3, message=FALSE, fig.asp=0.25, echo=FALSE}
+```{r 09-dane-uzupelniajace-3, message=FALSE, fig.asp=0.4, echo=FALSE}
 dane_uzup$clc = as.factor(dane_uzup$clc)
 tm1 = tm_shape(dane_uzup["clc"]) +
         tm_raster(palette = c("#d9d40c", "#416422", "#0c6cae"), title = "", legend.is.portrait = FALSE) +
@@ -237,7 +237,6 @@ uk2 = krige(temp ~ ndvi + srtm,
              newdata = dane_uzup,
              model = vario_fit_uk2)
 ```
-
 
 ```{r plotsy4KU, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając zmiennych ndvi i srtm i metody krigingu uniwersalnego (KU)."}
 tm_shape(uk2) +
