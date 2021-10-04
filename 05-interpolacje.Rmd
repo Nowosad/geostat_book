@@ -131,6 +131,10 @@ Metoda średniej ważonej odległością (IDW) wylicza wartość dla każdej kom
 W efekcie, czym bardziej jest punkt oddalony, tym mniejszy jest jego wpływ na interpolowaną wartość. 
 Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (`idp`, ang. *inverse distance weighting power*) (rycina \@ref(fig:05-interpolacje-11)).
 
+```{r, include=FALSE}
+dev.off() 
+```
+
 ```{r 05-interpolacje-12, echo=FALSE, warning=FALSE, fig.cap = "Relacja pomiędzy argumentem wykładnika potęgowego a wpływem wartości punktów wraz z odległością."}
 library(tidyr)
 library(ggplot2)
