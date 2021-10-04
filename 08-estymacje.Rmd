@@ -191,7 +191,7 @@ tm_shape(kzt) +
 Poniższe porównanie krigingu prostego (SK), zwykłego (OK) i z trendem (KZT) wykazuje niewielkie różnice w uzyskanych wynikach (rycina \@ref(fig:ploty-trzy)).
 W rozdziałach \@ref(estymacje-wielozmienne) oraz \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych) pokazane będą uzyskane wyniki interpolacji temperatury powietrza korzystając z innych metod krigingu.
 
-```{r ploty-trzy, echo=FALSE, message=FALSE, fig.asp=0.25, fig.cap="Porównanie wyników estymacji używając metody krigingu prostego (SK), krigingu zwykłego (OK) i krigingu z trendem (KZT)."}
+```{r ploty-trzy, echo=FALSE, message=FALSE, fig.asp=0.25, fig.cap="Porównanie wyników estymacji używając metody krigingu prostego (SK), krigingu zwykłego (OK) i krigingu z trendem (KZT).", fig.width=10}
 est = c(sk, ok, kzt)
 est = est[c(1, 3, 5)]
 names(est) = c("Estymacja SK", "Estymacja OK", "Estymacja KZT")
@@ -205,7 +205,7 @@ tm_shape(est) +
         tm_facets(nrow = 1)
 ```
 
-```{r ploty-trzy-w, echo=FALSE, message=FALSE, fig.asp=0.25, fig.cap="Porównanie wariancji estymacji używając metody krigingu prostego (SK), krigingu zwykłego (OK) i krigingu z trendem (KZT)."}
+```{r ploty-trzy-w, echo=FALSE, message=FALSE, fig.asp=0.25, fig.cap="Porównanie wariancji estymacji używając metody krigingu prostego (SK), krigingu zwykłego (OK) i krigingu z trendem (KZT).", fig.width=10}
 war = c(sk, ok, kzt)
 war = war[c(2, 4, 6)]
 names(war) = c("Wariancja estymacji SK", "Wariancja estymacji OK", "Wariancja estymacji KZT")
