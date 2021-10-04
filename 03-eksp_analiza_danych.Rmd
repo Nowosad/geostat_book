@@ -114,6 +114,10 @@ table(punkty$clc)
 
 Histogram należy do typów wykresów najczęściej używanych w eksploracyjnej analizie danych (rycina \@ref(fig:03-eksp-analiza-danych-9)).
 
+```{r, include=FALSE}
+dev.off() 
+```
+
 ```{r 03-eksp-analiza-danych-9, fig.cap = "Histogram reprezentujący wartości zmiennej temp z obiektu punkty."}
 ggplot(punkty, aes(temp)) + geom_histogram()
 ```
