@@ -225,7 +225,7 @@ sym_sk_sd
 ```
 
 Finalnie otrzymujemy mapę odchylenia standardowego symulowanych wartości  (rycina \@ref(fig:13-symulacje-8)).
-Można na niej odczytać obszary o najpewniejszych (najmniej zmiennych) wartościach (niebieski kolor) oraz obszary o największej zmienności cechy (kolor żółty).
+Można na niej odczytać obszary o najpewniejszych (najmniej zmiennych) wartościach (jasny kolor) oraz obszary o największej zmienności cechy (kolor niebieski).
 
 ```{r 13-symulacje-8, fig.cap = "Mapa odchylenia standardowego symulowanych wartości."}
 tm_shape(sym_sk_sd) +
