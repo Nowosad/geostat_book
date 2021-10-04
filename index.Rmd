@@ -49,6 +49,10 @@ Główne zmiany względem drugiego wydania to:
 - Poprawienie sekcji o transformacjach danych
 - Dodanie sekcji o rozgrupowaniu danych
 
+<!--4ed:
+- tmap
+-->
+
 Wszystkie zaprezentowane metody i analizy zawierają również kod w języku R.
 Skrypt został stworzony w R [@R-base] z wykorzystaniem pakietów **bookdown** [@R-bookdown], **rmarkdown** [@R-rmarkdown], **knitr** [@R-knitr] oraz programu [Pandoc](http://pandoc.org/). 
 Aktualna wersja skryptu znajduje się pod adresem https://bookdown.org/nowosad/geostatystyka/. 
