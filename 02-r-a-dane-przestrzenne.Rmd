@@ -120,7 +120,7 @@ dane_punktowe_sf
 Ważne, ale nie wymagane, jest także dodanie informacji o układzie przestrzennym danych za pomocą funkcji `st_set_crs()`. 
 
 ```{r 02-r-a-dane-przestrzenne-4}
-dane_punktowe_sf = st_set_crs(dane_punktowe_sf, value = 2180)
+dane_punktowe_sf = st_set_crs(dane_punktowe_sf, value = "EPSG:2180")
 ```
 
 Proste wizualizacje uzyskanych danych klasy przestrzennej, np. `sf` czy `stars`, można uzyskać za pomocą funkcji `plot()` (rycina \@ref(fig:02-r-a-dane-przestrzenne-5) i \@ref(fig:02-r-a-dane-przestrzenne-7a)).
@@ -366,7 +366,7 @@ tm_shape(dane_punktowe_sf) +
 Pakiet **tmap** pozwala również na wyświetlanie danych rastrowych -- tym razem używając funkcji `tm_raster()`. 
 Domyślnie wyświetla ona wszystkie zmienne (lub warstwy znajdujące się w obiekcie klasy `stars` (rycina \@ref(fig:02-r-a-dane-przestrzenne-6-bis)).
 
-```{r 02-r-a-dane-przestrzenne-6-bis, fig.cap = "Użycie pakietu tmap do wyświetlenia obiektu klasy stars."}
+```{r 02-r-a-dane-przestrzenne-6-bis, fig.cap = "Użycie pakietu tmap do wyświetlenia obiektu klasy stars.", fig.asp=0.6}
 tm_shape(dwie_stars) +
         tm_raster()
 ```
@@ -388,7 +388,7 @@ Na przykład, indeks `[1, 2:50, 1:20]` pozwala na wyświetlenie pierwszej zmienn
 
 ```{r 02-r-a-dane-przestrzenne-8-bis, fig.cap = "Użycie pakietu tmap do wyświetlenia wybranej zmiennej obiektu klasy stars dla wybranego zasięgu przestrzennego."}
 tm_shape(dwie_stars[1, 20:50, 1:20]) +
-        tm_raster()
+        tm_raster(col = "srtm.tif", style = "cont", title = "m npm")
 ```
 
 ## Zadania {#z2}
