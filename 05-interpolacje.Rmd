@@ -45,10 +45,10 @@ punkty_bbox = st_bbox(punkty)
 nowa_siatka = st_as_stars(punkty_bbox, 
                           dx = 500,
                           dy = 500)
-nowa_siatka = st_set_crs(nowa_siatka, 2180)
+nowa_siatka = st_set_crs(nowa_siatka, "EPSG:2180")
 ```
 
-```{r, 05-interpolacje-4b, fig.cap = "Wizualizacja regularnej siatki z oczkiem o boku 500 na 500 metrów."}
+```{r, 05-interpolacje-4b, fig.cap = "Wizualizacja regularnej siatki z oczkiem o boku 500 na 500 metrów.", echo=FALSE}
 tm_shape(st_as_sf(nowa_siatka)) + 
         tm_polygons() +
         tm_layout(frame = FALSE)
@@ -72,7 +72,7 @@ nowa_siatka_n = nowa_siatka[granica]
 
 Wynik przetworzenia można zobaczyć na rycinie \@ref(fig:05-interpolacje-7).
 
-```{r, 05-interpolacje-7, fig.cap = "Wizualizacja nieregularnej siatki z oczkiem o boku 500 na 500 metrów."}
+```{r, 05-interpolacje-7, fig.cap = "Wizualizacja nieregularnej siatki z oczkiem o boku 500 na 500 metrów.", echo=FALSE}
 tm_shape(st_as_sf(nowa_siatka_n)) + 
         tm_polygons() +
         tm_layout(frame = FALSE)
@@ -149,7 +149,7 @@ ggplot(df_idw, aes(x = distance, y = value,
 
 W pakiecie **gstat** istnieje do tego celu funkcja `idw()`, która przyjmuje analizowaną cechę (`temp~1`), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument `idp`) (rycina \@ref(fig:05-interpolacje-11)).
 
-```{r 05-interpolacje-11, fig.cap = "Interpolacja zmiennej temp używając metody średniej ważonej odległością (IDW)."}
+```{r 05-interpolacje-11, fig.cap = "Interpolacja zmiennej temp używając metody średniej ważonej odległością (IDW).", fig.asp=0.7}
 idw_interp = idw(temp ~ 1, locations = punkty,
                  newdata = siatka, idp = 2)
 tm_shape(idw_interp) +
@@ -165,7 +165,7 @@ Wymaga ona podania trzech argumentów: `formula` określającego naszą analizow
 Następnie funkcja `predict()` przenosi nowe wartości na wcześniej stworzoną siatkę.
 Porównanie wielomianów pierwszego, drugiego i trzeciego stopnia można znaleźć na rycinach \@ref(fig:05-interpolacje-13), \@ref(fig:05-interpolacje-14) i \@ref(fig:05-interpolacje-15).
 
-```{r 05-interpolacje-13, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu pierwszego stopnia."}
+```{r 05-interpolacje-13, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu pierwszego stopnia.", fig.asp=0.7}
 # wielomian 1 stopnia
 wielomian_1 = gstat(formula = temp ~ 1, locations = punkty,
                     degree = 1)
@@ -176,7 +176,7 @@ tm_shape(wielomian_1_pred) +
         tm_layout(legend.outside = TRUE)
 ```
 
-```{r 05-interpolacje-14, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu drugiego stopnia."}
+```{r 05-interpolacje-14, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu drugiego stopnia.", fig.asp=0.7}
 # wielomian 2 stopnia
 wielomian_2 = gstat(formula = temp ~ 1, locations = punkty,
                     degree = 2)
@@ -187,7 +187,7 @@ tm_shape(wielomian_2_pred) +
         tm_layout(legend.outside = TRUE)
 ```
 
-```{r 05-interpolacje-15, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu trzeciego stopnia."}
+```{r 05-interpolacje-15, fig.cap="Powierzchnia trendu zmiennej temp określona używając wielomianu trzeciego stopnia.", fig.asp=0.7}
 # wielomian 3 stopnia
 wielomian_3 = gstat(formula = temp ~ 1, locations = punkty,
                     degree = 3)
@@ -202,13 +202,13 @@ tm_shape(wielomian_3_pred) +
 
 Interpolacja z użyciem funkcji sklejanych (funkcja `Tps()` z pakietu **fields**) dopasowuje krzywą powierzchnię do wartości analizowanych punktów (rycina \@ref(fig:05-interpolacje-16)).
 
-```{r 05-interpolacje-16a, fig.cap="Interpolacja zmiennej temp z użyciem funkcji sklejanych."}
+```{r 05-interpolacje-16a}
 tps = Tps(st_coordinates(punkty), punkty$temp)
 siatka$tps_pred = predict(tps, st_coordinates(siatka))
 siatka$tps_pred[is.na(siatka$X2)] = NA
 ```
 
-```{r 05-interpolacje-16, fig.cap="Interpolacja zmiennej temp z użyciem funkcji sklejanych."}
+```{r 05-interpolacje-16, fig.cap="Interpolacja zmiennej temp z użyciem funkcji sklejanych.", fig.asp=0.7}}
 tm_shape(siatka) +
         tm_raster(col = "tps_pred", n = 10, palette = "-Spectral",
                   style = "cont", title = "Funkcje sklejane") +
