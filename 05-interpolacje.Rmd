@@ -208,7 +208,7 @@ siatka$tps_pred = predict(tps, st_coordinates(siatka))
 siatka$tps_pred[is.na(siatka$X2)] = NA
 ```
 
-```{r 05-interpolacje-16, fig.cap="Interpolacja zmiennej temp z użyciem funkcji sklejanych.", fig.asp=0.7}}
+```{r 05-interpolacje-16, fig.cap="Interpolacja zmiennej temp z użyciem funkcji sklejanych.", fig.asp=0.7}
 tm_shape(siatka) +
         tm_raster(col = "tps_pred", n = 10, palette = "-Spectral",
                   style = "cont", title = "Funkcje sklejane") +
