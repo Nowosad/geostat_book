@@ -53,7 +53,7 @@ jobs:
           R -e "tinytex::install_tinytex()"
           R -e "remotes::install_github('nowosad/geostatbook')"
           R -e "install.packages('curl')"
-          R -e "install.packages('latex2exp')"
+          R -e "install.packages(c('latex2exp', 'Cairo'))"
           R -e "install.packages(c('bslib', 'downlit', 'xml2'))"
           R -e "install.packages('renv')"
           R -e "renv::restore()"
