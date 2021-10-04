@@ -223,8 +223,9 @@ siatka_nr = aggregate(punkty_pref["liczebnosc"], by = siatka_n, FUN = length)
 # siatka_nr$odw_licz = 1 / siatka_nr$liczebnosc
 punkty_pref$liczebnosc = NULL
 punkty_pref = st_join(punkty_pref, siatka_nr)
-punkty_pref$waga_rk = ((1 / punkty_pref$liczebnosc) / sum(!is.na(siatka_nr$liczebnosc))) *
-        nrow(punkty_pref)
+punkty_pref$waga_rk = ((1 / punkty_pref$liczebnosc) /
+                       sum(!is.na(siatka_nr$liczebnosc))) *
+                      nrow(punkty_pref)
 ```
 
 ```{r}
