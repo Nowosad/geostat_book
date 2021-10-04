@@ -415,6 +415,10 @@ W przypadku, gdy zjawisko wykazuje anizotropię przestrzenną, możliwe jest stw
 Dla argumentu `alpha = c(0, 45, 90, 135)` wybrane cztery główne kierunki to 0, 45, 90 i 135 stopni. 
 Oznacza to, że przykładowo dla kierunku 45 stopni brane pod uwagę będą wszystkie pary punktów pomiędzy 22,5 a 67,5 stopnia.
 
+```{r, include=FALSE}
+dev.off() 
+```
+
 ```{r 06-semiwariancja-22, fig.cap = "Semiwariogramy kierunkowe dla zmiennej temp."}
 vario_kier = variogram(temp ~ 1, locations = punkty, 
                         alpha = c(0, 45, 90, 135))
