@@ -71,7 +71,7 @@ jobs:
         uses: rstudio/actions/connect-publish@main
         with:
           url: https://${{ env.RSCONNECT_APIKEY }}@${{ env.RSCONNECT_URL }}
-          access-type: logged_in
+          access-type: all
           show-logs: true
           force: true
           dir: ${{ env.APP_DIR }}
