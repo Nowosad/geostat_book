@@ -384,7 +384,7 @@ Wyświetlenie wybrannej zmiennej może też mieć miejsce poprzez indeksowanie.
 Opiera się to o kilka indeksów, np. dla obiektu `siatka_stars` są to `[indeks atrybutu, indeksy kolumn, indeksy wierszy]`^[Liczba indeksów zależy od złożoności obiektu klasy `stars`. Przykładowo dla obiektów posiadających trzy wymiary, np. wielokanałowe dane satelitarne, mogą to być `[indeks atrybutu, indeksy kolumn, indeksy wierszy, indeksy kanału]`.].
 Przykładowo indeks `dwie_stars[2, , ]` pozwala na wyświetlenie drugiego atrybutu -- możliwe jest tutaj również użycie uproszczonej formy `dwie_stars[2]`.
 Indeksowanie pozwala też na wyświetlenie fragmentu danych rastrowych.
-Na przykład, indeks `[1, 2:50, 1:20]` pozwala na wyświetlenie pierwszej zmiennej, ale tylko dla kolumn od 20 do 50 i wierszy od 1 do 20 (rycina \@ref( 02-r-a-dane-przestrzenne-8-bis)).
+Na przykład, indeks `[1, 2:50, 1:20]` pozwala na wyświetlenie pierwszej zmiennej, ale tylko dla kolumn od 20 do 50 i wierszy od 1 do 20 (rycina \@ref(02-r-a-dane-przestrzenne-8-bis)).
 
 ```{r 02-r-a-dane-przestrzenne-8-bis, fig.cap = "Użycie pakietu tmap do wyświetlenia wybranej zmiennej obiektu klasy stars dla wybranego zasięgu przestrzennego."}
 tm_shape(dwie_stars[1, 20:50, 1:20]) +
