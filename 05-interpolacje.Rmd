@@ -132,16 +132,17 @@ W efekcie, czym bardziej jest punkt oddalony, tym mniejszy jest jego wpływ na i
 Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (`idp`, ang. *inverse distance weighting power*) (rycina \@ref(fig:05-interpolacje-11)).
 
 ```{r, include=FALSE}
-dev.off() 
-```
-
-```{r 05-interpolacje-12, echo=FALSE, warning=FALSE, fig.cap = "Relacja pomiędzy argumentem wykładnika potęgowego a wpływem wartości punktów wraz z odległością."}
 library(tidyr)
 library(ggplot2)
 d = 1:100
 df_idw = data.frame(distance = d, idp0.00 = d^-0, idp0.25 = d^-0.25, idp0.50 = d^-0.5, idp1.00 = d^-1, idp2.00 = d^-2)
 df_idw = gather(df_idw, "key", "value", idp0.00:idp2.00, -distance)
 df_idw$key = extract_numeric(df_idw$key)
+dev.off() 
+```
+
+```{r 05-interpolacje-12, echo=FALSE, warning=FALSE, fig.cap = "Relacja pomiędzy argumentem wykładnika potęgowego a wpływem wartości punktów wraz z odległością."}
+
 ggplot(df_idw, aes(x = distance, y = value, 
                    color = as.factor(key), group = key)) +
         geom_path(size = 2) + 
