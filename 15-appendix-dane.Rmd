@@ -1,8 +1,3 @@
-```{r 15-appendix-dane-1, include=FALSE, cache=FALSE}
-library("methods")
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = '\\textwidth')
-options(scipen = 99 * 99)
-```
 # Dane {#dane-app}
 
 ```{r 15-appendix-dane-2, echo=FALSE}
