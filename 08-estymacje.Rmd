@@ -92,7 +92,7 @@ tm_shape(sk) +
 
 ### Kriging prosty po transformacji danych
 
-Zrówno kriging prosty, jak i kolejne metody krigingowe opisane w tym skrypcie, mogą używać zmiennych wejściowych poddanych transformacjom, np. logaritmizacji (sekcja \@ref(transformacje-danych)).
+Zrówno kriging prosty, jak i kolejne metody krigingowe opisane w tym skrypcie, mogą używać zmiennych wejściowych poddanych transformacjom, np. logaritmizacji (sekcja \@ref(trans-danych)).
 Może to mieć na celu zniwelowanie skośności rozkładu i w efekcie uzyskanie pewniejszych wyników. 
 Tutaj konieczne jest pamiętanie o kilku koniecznych krokach: (1) wykonaniu transformacji przy budowaniu semiwariogramu, (2) wykonaniu transformacji przy tworzeniu estymacji, oraz (3) zastosowaniu transformacji odwrotnej na uzyskanych wynikach.
 Zobaczmy to na poniższym przykładzie.
