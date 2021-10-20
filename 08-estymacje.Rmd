@@ -267,7 +267,7 @@ tm_shape(est) +
 
 W rozdziałach \@ref(estymacje-wielozmienne) oraz \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych) pokazane będą uzyskane wyniki interpolacji temperatury powietrza korzystając z innych metod krigingu.
 
-```{r ploty-trzy-w, echo=FALSE, message=FALSE, fig.asp=0.25, fig.cap="Porównanie wariancji estymacji używając metody krigingu prostego (SK), krigingu zwykłego (OK) i krigingu z trendem (KZT).", fig.width=10, eval=FALSE}
+```{r ploty-trzy-w, echo=FALSE, message=FALSE, fig.cap="Porównanie wariancji estymacji używając metody krigingu prostego (SK), krigingu zwykłego (OK) i krigingu z trendem (KZT).", eval=FALSE}
 war = c(sk, ok, kzt)
 war = war[c(2, 4, 6)]
 names(war) = c("Wariancja estymacji SK", "Wariancja estymacji OK", "Wariancja estymacji KZT")
