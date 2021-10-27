@@ -123,6 +123,10 @@ Sekwencyjna symulacja gaussowska wymaga zmiennej posiadającej wartości o rozk�
 Można to sprawdzić poprzez wizualizacje danych (histogram, wykres kwantyl-kwantyl) lub też test statystyczny (test Shapiro-Wilka) (ryciny \@ref(fig:13-symulacje-3) i \@ref(fig:13-symulacje-3a)).
 Zmienna `temp` nie ma rozkładu zbliżonego do normalnego.
 
+```{r, include=FALSE}
+dev.off() 
+```
+
 ```{r 13-symulacje-3, fig.cap="Rozkład wartości zmiennej temp."}
 ggplot(punkty, aes(temp)) + geom_histogram()
 ```
