@@ -251,7 +251,7 @@ tm_shape(kzt) +
 
 Poniższe porównanie krigingu prostego (SK), krigingu prostego po zastosowaniu transformacji (SK trans), zwykłego (OK) i z trendem (KZT) wykazuje niewielkie różnice w uzyskanych wynikach (rycina \@ref(fig:ploty-trzy)).
 
-```{r ploty-trzy, echo=FALSE, message=FALSE, fig.asp=0.25, fig.cap="Porównanie wyników estymacji używając metody krigingu prostego (SK), krigingu zwykłego (OK) i krigingu z trendem (KZT).", fig.width=10}
+```{r ploty-trzy, echo=FALSE, message=FALSE, fig.cap="Porównanie wyników estymacji używając metody krigingu prostego (SK), krigingu zwykłego (OK) i krigingu z trendem (KZT)."}
 est = c(sk, sk_kp2, ok, kzt)
 est = est[c(1, 5, 6, 8)]
 names(est) = c("Estymacja SK", "Estymacja SK (trans)", "Estymacja OK", "Estymacja KZT")
