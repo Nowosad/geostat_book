@@ -87,7 +87,7 @@ W tych układach proporcje między współrzędną X a Y są równe 1:1, a wielk
 
 ### GEOS
 
-Pakiet  **sf** używa biblioteki [GEOS](http://geos.osgeo.org/) do wykonywania operacji przestrzennych. 
+Pakiet  **sf** używa biblioteki [GEOS](https://libgeos.org/) do wykonywania operacji przestrzennych. 
 Przykładowe funkcje tej biblioteki to tworzenie buforów, wyliczanie centroidów, określanie relacji topologicznych (np. przecina, zawiera, etc.) i wiele innych.
 
 ## Import danych
