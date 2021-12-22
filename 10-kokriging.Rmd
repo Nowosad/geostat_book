@@ -58,7 +58,7 @@ tm_shape(punkty) +
 ```
 
 ```{r 10-kokriging-4, fig.cap="Mapa wartości zmiennej ndvi."}
-tm_shape(punkty) +
+tm_shape(punkty_ndvi) +
         tm_symbols(col = "ndvi")
 ```
 
