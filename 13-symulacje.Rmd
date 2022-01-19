@@ -296,7 +296,7 @@ Następnie korzystając z wybranej metody krigingowej, poznanej w poprzednich ro
 5.  Wykonaj cztery symulacje warunkowe używając optymalnego modelu semiwariancji stworzonego w poprzednim zadaniu. 
 Porównaj uzyskaną estymację geostatystyczną z symulacjami geostatystycznymi. 
 Jakie można zaobserwować podobieństwa a jakie różnice?
-6.  Zbuduj optymalny model semiwariogramu empirycznego określający prawdopodobieństwo wystąpienia wartości `ndvi`  poniżej 0.1 dla zbioru `punkty`. 
+6.  Zbuduj optymalny model semiwariogramu empirycznego określający prawdopodobieństwo wystąpienia wartości `ndvi`  poniżej 0.4 dla zbioru `punkty`. 
 Wykonaj estymację metodą krigingu danych kodowanych. 
 Następnie używając tego samego modelu, wykonaj cztery symulacje warunkowe (symulacje danych kodowanych).
-Jakie wartości progowe prawdobodobieństwa przypominają uzyskane symulacje?
+Jakie wartości progowe prawdopodobieństwa przypominają uzyskane symulacje?
