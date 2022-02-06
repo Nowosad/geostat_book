@@ -5,7 +5,7 @@
 
 > Geostatystyka to gałąź statystyki skupiająca się na przestrzennych lub czasoprzestrzennych zbiorach danych
 
-Geostatystyka jest stosowana obecnie w wielu dyscyplinach, jakich jak geologia naftowa, oceanografia, geochemia, logistyka, leśnictwo, gleboznawstwo, hydrologia, meteorologia, czy epidemiologia.
+Geostatystyka jest stosowana obecnie w wielu dyscyplinach, takich jak geologia naftowa, oceanografia, geochemia, logistyka, leśnictwo, gleboznawstwo, hydrologia, meteorologia, czy epidemiologia.
 <!--refs-->
 
 Geostatystyczna analiza danych może przyjmować różną postać w zależności od postawionego celu analizy.
