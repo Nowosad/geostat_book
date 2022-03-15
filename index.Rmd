@@ -64,6 +64,8 @@ https://bookdown.org/nowosad/geostatystyka/
 
 Zachęcam do zgłaszania wszelkich uwag, błędów, pomysłów oraz komentarzy na stronie https://github.com/Nowosad/geostat_book/issues.
 
+<a rel="license" href="https://creativecommons.org/licenses/by/4.0/"><img alt="Licencja Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />Ta książka jest dostępna na <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">licencji Creative Commons Uznanie autorstwa 4.0 Międzynarodowe</a>.
+
 ## Wymagania wstępne {-}
 
 ### Oprogramowanie {-}
