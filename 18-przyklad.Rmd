@@ -155,6 +155,10 @@ plot(moja_chmura)
 
 Posiadając już poprawne dane można sprawdzić czy badane zjawisko wykazuje anizotropię przestrzenną poprzez stworzenie mapy semiwariogramu (rycina \@ref(fig:18-przyklad-12)).
 
+```{r, include=FALSE}
+dev.off() 
+```
+
 ```{r 18-przyklad-12, fig.cap="Mapa semiwariogramu zmiennej tavg."}
 moja_mapa = variogram(tavg ~ 1, 
                       locations = moje_punkty,
