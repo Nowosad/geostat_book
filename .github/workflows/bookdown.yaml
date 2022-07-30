@@ -51,7 +51,7 @@ jobs:
           R -e "install.packages('tinytex')"
           R -e "install.packages('rmarkdown')"
           R -e "tinytex::install_tinytex()"
-          R -e "remotes::install_github('nowosad/geostatbook', build = FALSE)"
+          R -e "remotes::install_github('nowosad/geostatbook', build = FALSE, type = 'mac.binary')"
           R -e "install.packages('curl')"
           R -e "install.packages('latex2exp')"
           R -e "install.packages(c('bslib', 'downlit', 'xml2', 'metathis'))"
