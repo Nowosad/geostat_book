@@ -24,6 +24,20 @@ is_online = curl::has_internet()
 is_html = knitr::is_html_output()
 ```
 
+```{r, echo = FALSE}
+# google scholar metadata
+library(metathis)
+if (is_html) {
+  meta() |> 
+    meta_google_scholar(
+      title = "Geostatystyka w R",
+      author = "Jakub Nowosad",
+      publication_date = "2021",
+      isbn = "978-83-953296-2-3"
+    ) 
+}
+```
+
 # O skrypcie {-}
 
 ```{r index-2, fig.align='center', eval=FALSE, echo=FALSE, out.width='30%'}
