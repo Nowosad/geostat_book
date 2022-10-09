@@ -53,7 +53,7 @@ Dodatkowo załączone są trzy appendiksy.
 W appendiksie \@ref(zrodla-wiedzy) można znaleźć odnośniki do innych materiałów związanych z geostatystyką i R, appendiks \@ref(dane-app) opisuje dane użyte w tym skrypcie, a appendiks \@ref(przyklad) pokazuje uproszczony przykład analizy geostatystycznej.
 
 Jest to trzecie wydanie tego skryptu.
-Wersje PDF wydania pierwszego i drugiego można znaleźć pod adresem https://nowosad.github.io/publications/.
+Wersje PDF wydania pierwszego i drugiego można znaleźć pod adresem https://jakubnowosad.com/publications.
 Główne zmiany względem drugiego wydania to:
 
 - Przejście ze stosowania pakietu **sp** na pakiety **sf** i **stars**
