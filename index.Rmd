@@ -65,6 +65,7 @@ Główne zmiany względem drugiego wydania to:
 
 <!--4ed:
 - tmap
+- removes mentions of rgdal and rgeos
 -->
 
 Wszystkie zaprezentowane metody i analizy zawierają również kod w języku R.
