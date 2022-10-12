@@ -151,7 +151,7 @@ plot(pref)
 ## Rozgrupowanie danych {#rozgrupowanie}
 
 Typ próbkowania może wpływać na wartości statystyk opisowych.
-W odpowiedzi na to istenieje szereg metod rozgrupowywania danych, wśród których można wymienić, między innymi, rozgrupowywanie poligonalne oraz rozgrupowywanie komórkowe.
+W odpowiedzi na to istnieje szereg metod rozgrupowywania danych, wśród których można wymienić, między innymi, rozgrupowywanie poligonalne oraz rozgrupowywanie komórkowe.
 Celem tych metod jest nadanie wag obserwacjom w celu zapewnienia reprezentatywności przestrzennej danych.
 
 Na potrzeby przykładów związanych z rozgrupowaniem danych w pakiecie **geostatbook** znajduje się zbiór danych `punkty_pref`.

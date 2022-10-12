@@ -247,7 +247,7 @@ fitted_sph
 plot(vario, model = fitted_sph)
 ```
 
-W niektórych przypadkach funkcja `fit.variogram()` da także zadawalające wyniki, gdy tylko zostanie podany typ modelu (rycina \@ref(fig:07-modelowanie-14)).
+W niektórych przypadkach funkcja `fit.variogram()` da także zadowalające wyniki, gdy tylko zostanie podany typ modelu (rycina \@ref(fig:07-modelowanie-14)).
 
 ```{r 07-modelowanie-14, fig.cap="Automatycznie dopasowany model sferyczny zmiennej temp używając jedynie wstępnie podanego typu modelu."}
 model_sph2 = vgm(model = "Sph")

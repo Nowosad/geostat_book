@@ -48,7 +48,7 @@ Właściwości symulacji geostatystycznych:
 
 ### Typy symulacji
 
-Istnieją dwa podstwowe typy symulacji geostatystycznych:
+Istnieją dwa podstawowe typy symulacji geostatystycznych:
 
 - Symulacje bezwarunkowe (ang. *Unconditional Simulations*) - wykorzystujące semiwariogram, żeby włączyć informację przestrzenną, ale wartości ze zmierzonych punktów nie są w niej wykorzystywane.
 - Symulacje warunkowe (ang. *Conditional Simulations*) - opiera się ona o średnią wartość, strukturę kowariancji oraz obserwowane wartości (w tym sekwencyjna symulacja danych kodowanych (ang. *Sequential indicator simulation*)).

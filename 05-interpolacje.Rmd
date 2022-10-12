@@ -273,7 +273,7 @@ W kolejnych rozdziałach znajduje się omówienie kilku podstawowych typów pier
 
 1. Stwórz siatkę interpolacyjną o rozdzielczości 200 metrów dla obszaru Suwalskiego Parku Krajobrazowego.
 2. Korzystając z danych `punkty` wykonaj interpolację zmiennej `srtm` używając:
-- Poligonów Voronoi'a
+- Poligonów Woronoja
 - Metody IDW
 - Funkcji wielomianowych
 - Funkcji sklejanych

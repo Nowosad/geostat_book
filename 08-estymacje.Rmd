@@ -57,7 +57,7 @@ plot(vario, model = model)
 # fitted = fit.variogram(vario, model)
 ```
 
-Następnie następuje estymacja wartości z użyciem metody kriginu prostego. 
+Następnie następuje estymacja wartości z użyciem metody krigingu prostego. 
 W funkcji `krige()` z pakietu **gstat**, użycie tej metody wymaga ustalenia średniej wartości cechy za pomocą argumentu `beta`. 
 
 ```{r 08-estymacje-5 }
@@ -92,7 +92,7 @@ tm_shape(sk) +
 
 ### Kriging prosty po transformacji danych
 
-Zrówno kriging prosty, jak i kolejne metody krigingowe opisane w tym skrypcie, mogą używać zmiennych wejściowych poddanych transformacjom, np. logaritmizacji (sekcja \@ref(trans-danych)).
+Zarówno kriging prosty, jak i kolejne metody krigingowe opisane w tym skrypcie, mogą używać zmiennych wejściowych poddanych transformacjom, np. logaritmizacji (sekcja \@ref(trans-danych)).
 Może to mieć na celu zniwelowanie skośności rozkładu i w efekcie uzyskanie pewniejszych wyników. 
 Tutaj konieczne jest pamiętanie o kilku koniecznych krokach: (1) wykonaniu transformacji przy budowaniu semiwariogramu, (2) wykonaniu transformacji przy tworzeniu estymacji, oraz (3) zastosowaniu transformacji odwrotnej na uzyskanych wynikach.
 Zobaczmy to na poniższym przykładzie.
@@ -110,7 +110,7 @@ plot(vario_kp2, model = model_kp2)
 # fitted_kp2 = fit.variogram(vario_kp2, model_kp2)
 ```
 
-Następnie, musimy określić logartym średniej wartości badanej zmiennej dla całego obszaru  oraz użyć logarytmu tej zmiennej do stworzenia estymacji.
+Następnie, musimy określić logarytm średniej wartości badanej zmiennej dla całego obszaru  oraz użyć logarytmu tej zmiennej do stworzenia estymacji.
 
 ```{r 08-estymacje-5b}
 mean(log(punkty$temp))
@@ -126,7 +126,7 @@ sk_kp2 = krige(log(temp) ~ 1,
 
 Wynik krigingu prostego zawiera dwie zmienne - `var1.pred` oraz `var1.var`.
 Co warte podkreślenia, pierwsza z nich określa wartość estymowaną dla każdego oczka siatki w logarytmie badanej jednostki. 
-Przykładowo, gdy nasza zmienna określała temperaturę w stopniach Celsjusza, to wynik jest przestawiony w logarytmie stopnii Celsjusza.
+Przykładowo, gdy nasza zmienna określała temperaturę w stopniach Celsjusza, to wynik jest przestawiony w logarytmie stopni Celsjusza.
 
 ```{r 08-estymacje-7b}
 sk_kp2
@@ -194,7 +194,7 @@ tm_shape(ok) +
 ### Kriging z trendem (ang. *Kriging with a trend*)
 
 Kriging z trendem, określany również jako kriging z wewnętrznym trendem, do estymacji wykorzystuje (oprócz zmienności wartości wraz z odległością) położenie analizowanych punktów.
-W pierwszym kroku konieczne jest dodanie współrzęnych do używanego obiektu i do używanej siatki.
+W pierwszym kroku konieczne jest dodanie współrzędnych do używanego obiektu i do używanej siatki.
 
 ```{r 08-estymacje-10}
 # dodanie współrzędnych do punktów
@@ -237,7 +237,7 @@ kzt = krige(temp ~ x + y,
              model = fitted_kzt)
 ```
 
-Wyświelenie wyników odbywa się używając pakietu **tmap**.
+Wyświetlenie wyników odbywa się używając pakietu **tmap**.
 
 ```{r plotsy2kzt, eval=TRUE, fig.height=8, fig.cap = "Estymacja i wariancja estymacji używając metody krigingu z trendem (KZT)."}
 tm_shape(kzt) +
