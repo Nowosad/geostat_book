@@ -8,7 +8,7 @@
 Skrypty i funkcje w języku R są zbudowane na podstawie szeregu obiektów nieprzestrzennych.
 Do wbudowanych typów obiektów należą:<!--ref JN-->
     
-- Wektory (ang. *vector*):
+- Wektory atomowe (ang. *vector*):
     - liczbowe (ang. *integer*, *numeric*) - `c(1, 2, 3)` i `c(1.21, 3.32, 4.43)`
     - znakowe (ang. *character*) - `c("jeden", "dwa", "trzy")`
     - logiczne (ang. *logical*) - `c(TRUE, FALSE)`
@@ -23,10 +23,10 @@ Dokładniejsze wyjaśnienie powyższych typów obiektów można znaleźć w rozd
 R zawiera także wiele funkcji pozwalających na przetwarzanie, wizualizację i analizowanie danych przestrzennych.
 Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi:
 
-- Obsługa danych przestrzennych - **sf**, **stars**, **raster**, **terra**, **sp**, **rgdal**, **rgeos**
+- Obsługa danych przestrzennych - **sf**, **stars**, **terra**, **raster**, **sp**
 - Geostatystyka - **gstat**, **geoR**
 
-Więcej szczegółów na ten temat pakietów R służących do analizy przestrzennej można znaleźć pod adresem https://cran.r-project.org/web/views/Spatial.html.
+Więcej szczegółów na ten temat pakietów R służących do analizy przestrzennej można znaleźć pod adresem https://cran.r-project.org/view=Spatial.
 
 ### Reprezentacja danych przestrzennych
 
@@ -34,8 +34,7 @@ Dane przestrzenne mogą być reprezentowane w R poprzez wiele różnych klas obi
 Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klasy `Spatial*` z pakietu **sp** oraz obiekty klasy `sf` z pakietu **sf**.
 
 Pakiet **sf** oparty jest o standard OGC o nazwie Simple Features.
-Łączy on możliwości zarówno pakietu **sp** jak i pakietów **rgdal** i **rgeos**.
-Więkość jego funkcji zaczyna się od prefiksu `st_`.
+Większość jego funkcji zaczyna się od prefiksu `st_`.
 Ten pakiet definiuje klasę obiektów `sf`, która jest sposobem reprezentacji przestrzennych danych wektorowych.
 Pozwala on na stosowanie dodatkowych typów danych wektorowych (np. poligon i multipoligon to dwie oddzielne klasy), łatwiejsze przetwarzanie danych, oraz obsługę przestrzennych baz danych takich jak PostGIS.
 Pakiet **sf** jest używany przez kilkadziesiąt dodatkowych pakietów R, jednak wiele metod i funkcji nadal wymaga obiektów klasy **sp**. 
@@ -63,12 +62,12 @@ Najpopularniejszym z nich jest system kodów EPSG (ang. *European Petroleum Surv
 Przykładowo, układ PL 1992 może być określony jako `"EPSG:2180"`.
 Taki sposób określania układów współrzędnych wymaga jedynie znajomości odpowiedniego numery dla danego obszaru.
 
-Dane przestrzenne przechowują też opis tego układu współrzędnych w bardziej złożny sposób nazwany WKT2.
+Dane przestrzenne przechowują też opis tego układu współrzędnych w bardziej złożony sposób nazwany WKT2.
 Zawiera on opis elementów związanych z konkretnym układem współrzędnych, takich jak jednostka, elipsoida odwzorowania, itd.
 
 `r cat("  wkt:\n", sf::st_crs(2180)$wkt, "\n", sep = "")`
 
-Warto też wiedzież, że przez wiele lat główną rolę pełniła reprezentacja **proj4string**, np. `"+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"`, która określała własności układu współrzędnych. 
+Warto też wiedzieć, że przez wiele lat główną rolę pełniła reprezentacja **proj4string**, np. `"+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"`, która określała własności układu współrzędnych. 
 Współcześnie jednak ta reprezentacja nie jest zalecana do użycia.
 
 Strona https://epsg.org/ zawiera bazę danych układów współrzędnych.
@@ -143,7 +142,7 @@ granica_sf = read_sf(dsn = "dane/granica.gpkg")
 ### Dane rastrowe
 
 Istnieje kilka sposobów odczytu danych rastrowych w R. 
-Do najpopularniejszych należą funkcje `readGDAL()` z pakietu **rgdal** oraz `raster()` z pakietu **raster**.
+Do najpopularniejszych należą funkcje `rast()` z pakietu **terra** i `raster()` z pakietu **raster**.
 W poniższym przykładzie użyjemy funkcji `read_stars()` z pakietu **stars**.
 Należy w niej jedynie podać ścieżkę do pliku rastrowego.
 
@@ -371,7 +370,7 @@ tm_shape(dwie_stars) +
         tm_raster()
 ```
 
-Wybranie jednej zmiennej ma miejscie w argumencie `col`. 
+Wybranie jednej zmiennej ma miejsce w argumencie `col`. 
 Przykładowo, `col = "srtm.tif"` wyświetli pierwszą zmienną (rycina \@ref(fig:02-r-a-dane-przestrzenne-7-bis)), a `col = "clc.tif"` drugą.
 Wynik wizualizacji możemy też modyfikować podobnie jak w przykładach dla danych punktowych powyżej.
 
@@ -380,11 +379,11 @@ tm_shape(dwie_stars) +
         tm_raster(col = "srtm.tif", style = "cont", title = "m npm")
 ```
 
-Wyświetlenie wybrannej zmiennej może też mieć miejsce poprzez indeksowanie.
+Wyświetlenie wybranej zmiennej może też mieć miejsce poprzez indeksowanie.
 Opiera się to o kilka indeksów, np. dla obiektu `siatka_stars` są to `[indeks atrybutu, indeksy kolumn, indeksy wierszy]`^[Liczba indeksów zależy od złożoności obiektu klasy `stars`. Przykładowo dla obiektów posiadających trzy wymiary, np. wielokanałowe dane satelitarne, mogą to być `[indeks atrybutu, indeksy kolumn, indeksy wierszy, indeksy kanału]`.].
 Przykładowo indeks `dwie_stars[2, , ]` pozwala na wyświetlenie drugiego atrybutu -- możliwe jest tutaj również użycie uproszczonej formy `dwie_stars[2]`.
 Indeksowanie pozwala też na wyświetlenie fragmentu danych rastrowych.
-Na przykład, indeks `[1, 2:50, 1:20]` pozwala na wyświetlenie pierwszej zmiennej, ale tylko dla kolumn od 20 do 50 i wierszy od 1 do 20 (rycina \@ref(02-r-a-dane-przestrzenne-8-bis)).
+Na przykład, indeks `[1, 2:50, 1:20]` pozwala na wyświetlenie pierwszej zmiennej, ale tylko dla kolumn od 20 do 50 i wierszy od 1 do 20 (rycina \@ref(fig:02-r-a-dane-przestrzenne-8-bis)).
 
 ```{r 02-r-a-dane-przestrzenne-8-bis, fig.cap = "Użycie pakietu tmap do wyświetlenia wybranej zmiennej obiektu klasy stars dla wybranego zasięgu przestrzennego."}
 tm_shape(dwie_stars[1, 20:50, 1:20]) +
