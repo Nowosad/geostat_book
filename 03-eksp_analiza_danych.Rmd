@@ -261,10 +261,13 @@ Jednym z najpopularniejszych jest użycie transformacji logarytmicznej.
 ### Testowanie normalności rozkładu
 
 Test Shapiro-Wilka pozwala na sprawdzenie normalności rozkładu wybranej zmiennej.
+Hipoteza zerowa tego testu mówi, że rozkład badanej zmiennej jest zbliżony do normalnego, natomiast hipoteza alternatywna stwierdza, że ten rozkład jest różny od normalnego.
 
 ```{r 03-eksp-analiza-danych-20b}
 shapiro.test(punkty$temp)
 ```
+
+W powyższym przypadku, *p-value* jest niskie, sugerując, że musimy odrzucić hipotezę zerową i przyjąć alternatywną: rozkład zmiennej `temp` jest różny od normalnego.
 
 ### Logarytmizacja
 
