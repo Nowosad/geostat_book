@@ -466,7 +466,7 @@ vario_map = variogram(srtm~1, locations = punkty_pref,
 plot(vario_map, threshold = 30, col.regions = viridisLite::viridis(n = 50))
 ```
 8. Co przedstawia stworzona mapa semiwariogramu?
-Czy badane zjawisko wykazuje izotropia czy anizotropia?
+Czy badane zjawisko wykazuje izotropię czy anizotropię?
 9. Jeżeli mapa semiwariogramu wykazuje anizotropię struktury przestrzennej to w jakim kierunku?
 Stwórz semiwariogramy dla wybranych kierunków.
 
