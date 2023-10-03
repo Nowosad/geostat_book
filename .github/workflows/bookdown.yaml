@@ -15,9 +15,10 @@ jobs:
       APP_DIR: "Geostatystyka"
       RSCONNECT_URL: ${{ secrets.RSCONNECT_URL }}
       RSCONNECT_APIKEY: ${{ secrets.RSCONNECT_APIKEY }}
+      RENV_PATHS_ROOT: ~/.local/share/renv
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         
       - name: Prep all
         run: |
@@ -31,14 +32,15 @@ jobs:
           brew install pandoc
 
       - name: Cache Renv packages
-        uses: actions/cache@v2
+        uses: actions/cache@v1
         with:
-          path: $HOME/.local/share/renv
-          key: r-${{ hashFiles('renv.lock') }}
-          restore-keys: r-
+          path: ${{ env.RENV_PATHS_ROOT }}
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-renv-
 
       - name: Cache bookdown results
-        uses: actions/cache@v2
+        uses: actions/cache@v1
         with:
           path: _bookdown_files
           key: bookdown-${{ hashFiles('**/*Rmd') }}
@@ -55,7 +57,7 @@ jobs:
           R -e "install.packages('curl')"
           R -e "install.packages('latex2exp')"
           R -e "install.packages(c('bslib', 'downlit', 'xml2', 'metathis'))"
-          R -e "install.packages('renv')"
+          R -e 'if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")'
           R -e "renv::restore()"
 
       - name: Build site
