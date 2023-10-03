@@ -31,14 +31,6 @@ jobs:
         run: |
           brew install pandoc
 
-      - name: Cache Renv packages
-        uses: actions/cache@v1
-        with:
-          path: ${{ env.RENV_PATHS_ROOT }}
-          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-renv-
-
       - name: Cache bookdown results
         uses: actions/cache@v1
         with:
@@ -46,11 +38,19 @@ jobs:
           key: bookdown-${{ hashFiles('**/*Rmd') }}
           restore-keys: bookdown-
 
-      - name: Restore packages
-        shell: Rscript {0}
+      - name: Install packages
         run: |
-          if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
-          renv::restore()
+          R -e "install.packages('remotes')"
+          R -e "install.packages('rsconnect')"
+          R -e "install.packages('tinytex')"
+          R -e "install.packages('rmarkdown')"
+          R -e "tinytex::install_tinytex()"
+          R -e "remotes::install_github('nowosad/geostatbook', build = FALSE, type = 'mac.binary')"
+          R -e "install.packages('curl')"
+          R -e "install.packages('latex2exp')"
+          R -e "install.packages(c('bslib', 'downlit', 'xml2', 'metathis'))"
+          R -e 'if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")'
+          R -e "renv::restore()"
 
       - name: Build site
         run: |
