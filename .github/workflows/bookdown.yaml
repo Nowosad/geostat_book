@@ -49,8 +49,6 @@ jobs:
           R -e "install.packages('curl')"
           R -e "install.packages('latex2exp')"
           R -e "install.packages(c('bslib', 'downlit', 'xml2', 'metathis'))"
-          R -e 'if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")'
-          R -e "renv::restore()"
 
       - name: Build site
         run: |
