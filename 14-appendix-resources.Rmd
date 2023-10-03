@@ -6,7 +6,7 @@
 
 - [Elementarz programisty: Wstęp do programowania używając R](https://nowosad.github.io/elp/) [@nowosadElementarz2020]
 - [Przewodnik po pakiecie R](http://www.biecek.pl/R/) [@biecekPrzewodnikPoPakiecie2014]
-- [Programowanie w języku R Analiza Danych. Obliczenia. Symulacje](http://www.gagolewski.com/publications/programowanier/) [@gagolewski2016programowanie]
+- [Programowanie w języku R Analiza Danych. Obliczenia. Symulacje](https://github.com/gagolews/Programowanie_w_jezyku_R) [@gagolewski2016programowanie]
 - R for Data Science - https://r4ds.had.co.nz/ - https://helion.pl/ksiazki/jezyk-r-kompletny-zestaw-narzedzi-dla-analitykow-danych-hadley-wickham-garrett-grolemund,jezrkv.htm#format/d [@wickham2016r]
 - Efficient R programming - https://csgillespie.github.io/efficientR/ - https://helion.pl/ksiazki/wydajne-programowanie-w-r-praktyczny-przewodnik-po-lepszym-programowaniu-colin-gillespie-robin-lovelace,e_1vi4.htm#format/e [@gillespie2016efficient]
 - Metody przetwarzania danych meteorologicznych w języku programowania R - http://enwo.pl/przetwarzanie [@czerneckiMetodyPrzetwarzaniaDanych2018]
@@ -23,7 +23,7 @@
 
 - [Praktyczny poradnik - jak szybko zrozumieć i wykorzystać geostatystykę w pracy badawczej](http://www.geoinfo.amu.edu.pl/staff/astach/www_geostat/programy/A_Stach_%20poradnik_geostatystyki.pdf) [@stachpraktyczny]
 - [An introduction to geostatistics with R/gstat](http://www.css.cornell.edu/faculty/dgr2/_static/files/R_PDF/gs_intro_20Mar2019.pdf) [@rossiter2016introduction]
-- [A Practical Guide to Geostatistical Mapping](https://library.wur.nl/isric/fulltext/isricu_i27272_001.pdf) [@hengl2009practical]
+- [A Practical Guide to Geostatistical Mapping](https://edepot.wur.nl/485517) [@hengl2009practical]
 - [gstat user's manual](http://www.gstat.org/gstat.pdf) [@pebesma2001gstat]
 - [Applied Geostatistics](https://books.google.pl/books?id=vC2dcXFLI3YC) [@isaaks1989applied]
 - [Statistics for spatial data](https://books.google.pl/books?id=4SdRAAAAMAAJ) [@cressie1992statistics]
