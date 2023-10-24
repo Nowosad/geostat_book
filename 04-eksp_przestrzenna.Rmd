@@ -148,6 +148,15 @@ plot(pref)
 
 <!-- https://www.youtube.com/watch?v=75IZVZBaLkQ -->
 
+<!-- Wskaźnik Clarka-Evansa (1954) to stosunek między rzeczywistą średnią odległością od najbliższego sąsiada, a oczekiwaną dla rozkładu losowego:
+
+- **Wartości niższe od 1** wskazują na występowanie skupień punktów
+- **Wartość równa 1** wskazuje na losowy rozkład punktów
+- **Wartości wyższe od 1** wskazują na bardziej regularny ich rozkład (np., dla regularnej siatki heksagonalnej wartość wskaźnika wynosi 2,15)
+
+- Wartość wskaźnika Clarka-Evansa (1954) dla poniższych danych wynosi `r p(round(clarkevans(as.ppp(punkty)), 2)[1])`
+- Oznacza to, że te dane były próbkowane w schemacie (układzie) zbliżonym do losowego -->
+
 ## Rozgrupowanie danych {#rozgrupowanie}
 
 Typ próbkowania może wpływać na wartości statystyk opisowych.
