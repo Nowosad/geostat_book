@@ -154,7 +154,7 @@ plot(pref)
 - **Wartość równa 1** wskazuje na losowy rozkład punktów
 - **Wartości wyższe od 1** wskazują na bardziej regularny ich rozkład (np., dla regularnej siatki heksagonalnej wartość wskaźnika wynosi 2,15)
 
-- Wartość wskaźnika Clarka-Evansa (1954) dla poniższych danych wynosi `r p(round(clarkevans(as.ppp(punkty)), 2)[1])`
+- Wartość wskaźnika Clarka-Evansa (1954) dla poniższych danych wynosi 
 - Oznacza to, że te dane były próbkowane w schemacie (układzie) zbliżonym do losowego -->
 
 ## Rozgrupowanie danych {#rozgrupowanie}
