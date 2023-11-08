@@ -24,7 +24,7 @@ par(mar = c(rep(0, 4)))
 ### Mapa
 
 Do oceny przestrzennej jakości estymacji można zastosować mapę przestawiającą błędy estymacji (rycina \@ref(fig:mapa)).
-Wyliczenie błędów estymacji odbywa się poprzez odjęcie od estymacji wartości obserwowanej.
+Wyliczenie błędów estymacji odbywa się poprzez odjęcie od obserwacji wartości estymowanej.
 
 ```{r 12-ocena-3, eval=FALSE}
 blad_estymacji = obserwowane - estymacja
