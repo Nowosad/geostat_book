@@ -1,74 +1,74 @@
-on:
-  push:
-    branches:
-      - main
-      - master
-
-name: bookdown
-
-jobs:
-  build:
-    runs-on: macOS-latest
-    env:
-      APP_NAME: "Geostatystyka"
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      APP_DIR: "Geostatystyka"
-      RSCONNECT_URL: ${{ secrets.RSCONNECT_URL }}
-      RSCONNECT_APIKEY: ${{ secrets.RSCONNECT_APIKEY }}
-      RENV_PATHS_ROOT: ~/.local/share/renv
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        
-      - name: Prep all
-        run: |
-          chmod +x _build.sh _publish.sh
-
-      - name: Setup R
-        uses: r-lib/actions/setup-r@v2
-
-      - name: Install pandoc
-        run: |
-          brew install pandoc
-
-      - name: Cache bookdown results
-        uses: actions/cache@v1
-        with:
-          path: _bookdown_files
-          key: bookdown-${{ hashFiles('**/*Rmd') }}
-          restore-keys: bookdown-
-
-      - name: Install packages
-        run: |
-          R -e "install.packages('rsconnect')"
-          R -e "install.packages('tinytex')"
-          R -e "install.packages('rmarkdown')"
-          R -e "tinytex::install_tinytex()"
-          R -e "install.packages('geostatbook', repos = c('https://nowosad.r-universe.dev', 'https://cloud.r-project.org'))"
-          R -e "install.packages('curl')"
-          R -e "install.packages('latex2exp')"
-          R -e "install.packages(c('bslib', 'downlit', 'xml2', 'metathis'))"
-
-      - name: Build site
-        run: |
-          ./_build.sh
-
-      - name: Generate manifest.json
-        run: |
-          rsconnect::writeManifest(appDir = "${{ env.APP_DIR }}")
-        shell: Rscript {0}
-
-      - name: Deploy to RStudio Connect
-        uses: rstudio/actions/connect-publish@main
-        with:
-          url: https://${{ env.RSCONNECT_APIKEY }}@${{ env.RSCONNECT_URL }}
-          access-type: all
-          show-logs: true
-          force: true
-          dir: ${{ env.APP_DIR }}
-          require-vanity-path: true
-          
-      # - name: Publish site
-      #   run: |
-      #     ./_publish.sh
-  
+# on:
+#   push:
+#     branches:
+#       - main
+#       - master
+# 
+# name: bookdown
+# 
+# jobs:
+#   build:
+#     runs-on: macOS-latest
+#     env:
+#       APP_NAME: "Geostatystyka"
+#       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+#       APP_DIR: "Geostatystyka"
+#       RSCONNECT_URL: ${{ secrets.RSCONNECT_URL }}
+#       RSCONNECT_APIKEY: ${{ secrets.RSCONNECT_APIKEY }}
+#       RENV_PATHS_ROOT: ~/.local/share/renv
+#     steps:
+#       - name: Checkout repo
+#         uses: actions/checkout@v3
+#         
+#       - name: Prep all
+#         run: |
+#           chmod +x _build.sh _publish.sh
+# 
+#       - name: Setup R
+#         uses: r-lib/actions/setup-r@v2
+# 
+#       - name: Install pandoc
+#         run: |
+#           brew install pandoc
+# 
+#       - name: Cache bookdown results
+#         uses: actions/cache@v1
+#         with:
+#           path: _bookdown_files
+#           key: bookdown-${{ hashFiles('**/*Rmd') }}
+#           restore-keys: bookdown-
+# 
+#       - name: Install packages
+#         run: |
+#           R -e "install.packages('rsconnect')"
+#           R -e "install.packages('tinytex')"
+#           R -e "install.packages('rmarkdown')"
+#           R -e "tinytex::install_tinytex()"
+#           R -e "install.packages('geostatbook', repos = c('https://nowosad.r-universe.dev', 'https://cloud.r-project.org'))"
+#           R -e "install.packages('curl')"
+#           R -e "install.packages('latex2exp')"
+#           R -e "install.packages(c('bslib', 'downlit', 'xml2', 'metathis'))"
+# 
+#       - name: Build site
+#         run: |
+#           ./_build.sh
+# 
+#       - name: Generate manifest.json
+#         run: |
+#           rsconnect::writeManifest(appDir = "${{ env.APP_DIR }}")
+#         shell: Rscript {0}
+# 
+#       - name: Deploy to RStudio Connect
+#         uses: rstudio/actions/connect-publish@main
+#         with:
+#           url: https://${{ env.RSCONNECT_APIKEY }}@${{ env.RSCONNECT_URL }}
+#           access-type: all
+#           show-logs: true
+#           force: true
+#           dir: ${{ env.APP_DIR }}
+#           require-vanity-path: true
+#           
+#       # - name: Publish site
+#       #   run: |
+#       #     ./_publish.sh
+#   
