@@ -33,7 +33,7 @@ jobs:
           R -e "install.packages('latex2exp')"
           R -e "install.packages(c('bslib', 'downlit', 'xml2', 'metathis'))"
           # R -e "tinytex::install_tinytex()"
-          R -e "tinytex::tlmgr_install('unicode-math')"
+          R -e "tinytex::tlmgr_install('collection-mathextra')"
           R -e "install.packages('geostatbook', repos = c('https://nowosad.r-universe.dev', 'https://cloud.r-project.org'))"
           Rscript -e 'bookdown::render_book("index.Rmd", output_format = "bookdown::pdf_book")'
           Rscript -e 'bookdown::render_book("index.Rmd", output_format = "bookdown::bs4_book", clean = FALSE)'
