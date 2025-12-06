@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>6 Miary relacji przestrzennych | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(pgirmess) library(ggplot2)...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="6 Miary relacji przestrzennych | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/geostatystyka-prolog.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(pgirmess) library(ggplot2)...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="6 Miary relacji przestrzennych | Geostatystyka w R">
+<meta name="twitter:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(pgirmess) library(ggplot2)...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="6 Miary relacji przestrzennych | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="active" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="geostatystyka-prolog" class="section level1" number="6">
+<h1>
+<span class="header-section-number">6</span> Miary relacji przestrzennych<a class="anchor" aria-label="anchor" href="#geostatystyka-prolog"><i class="fas fa-link"></i></a>
+</h1>
+<p>Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:</p>
+<div class="sourceCode" id="cb129"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/gstat/">gstat</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pgiraudoux/pgirmess">pgirmess</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bookdown.org/nowosad/geostatystyka/">geostatbook</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">siatka</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">granica</span><span class="op">)</span></span></code></pre></div>
+<!--
+http://www.inside-r.org/packages/cran/raster/docs/interpolate
+![](fig_skrypt/m_feat.png)
+-->
+<div id="geostatystyka" class="section level2" number="6.1">
+<h2>
+<span class="header-section-number">6.1</span> Geostatystyka<a class="anchor" aria-label="anchor" href="#geostatystyka"><i class="fas fa-link"></i></a>
+</h2>
+<div id="definicja" class="section level3" number="6.1.1">
+<h3>
+<span class="header-section-number">6.1.1</span> Definicja<a class="anchor" aria-label="anchor" href="#definicja"><i class="fas fa-link"></i></a>
+</h3>
+<p>Geostatystyka jest to zbiór narzędzi statystycznych uwzględniających w analizie danych ich przestrzenną i czasową lokalizację, a opartych o teorię funkcji losowych.</p>
+<!--
+### Geostatystyka a klasyczna statystyka
+- Istnieje informacja o lokalizacji obserwacji
+-->
+</div>
+<div id="funkcje-geostatystyki" class="section level3" number="6.1.2">
+<h3>
+<span class="header-section-number">6.1.2</span> Funkcje geostatystyki<a class="anchor" aria-label="anchor" href="#funkcje-geostatystyki"><i class="fas fa-link"></i></a>
+</h3>
+<p>Istnieją cztery główne funkcje geostatystyki:</p>
+<ol style="list-style-type: decimal">
+<li>Identyfikacja i modelowanie struktury przestrzennej/czasowej zjawiska.</li>
+<li>Estymacja - szacowanie wartości badanej zmiennej w nieopróbowanym miejscu i/lub momencie czasu.</li>
+<li>Symulacja - generowanie alternatywnych obrazów, które honorują wyniki pomiarów i strukturę przestrzenną/czasową zjawiska.</li>
+<li>Optymalizacja próbkowania/sieci pomiarowej.<!--https://cran.r-project.org/web/packages/geosample/vignettes/geosample-vignette.pdf-->
+</li>
+</ol>
+<p>Inaczej mówiąc, celem geostatystyki nie musi być tylko interpolacja (estymacja) przestrzenna, ale również zrozumienie zmienności przestrzennej lub czasowej zjawiska, symulowanie wartości, oraz optymalizacja sieci pomiarowej.</p>
+<!-- ### Geostatystyczna analiza danych -->
+<!-- Geostatystyczna analiza danych może przyjmować różną postać w zależności od postawionego celu analizy.  -->
+<!-- Poniższa rycina przestawia uproszczoną ścieżkę postępowania geostatystycznego.  -->
+</div>
+<div id="podstawowe-etapy" class="section level3" number="6.1.3">
+<h3>
+<span class="header-section-number">6.1.3</span> Podstawowe etapy<a class="anchor" aria-label="anchor" href="#podstawowe-etapy"><i class="fas fa-link"></i></a>
+</h3>
+<p>W przypadku estymacji geostatystycznej, zwanej inaczej interpolacją geostatystyczną, pełna ścieżka postępowania składa się z siedmiu elementów:</p>
+<ol style="list-style-type: decimal">
+<li>Zaprojektowanie sposobu (typu) próbkowania oraz organizacji zadań.</li>
+<li>Zebranie danych, analiza laboratoryjna.</li>
+<li>Wstępna eksploracja danych, ocena ich jakości.</li>
+<li>Modelowanie semiwariogramów na podstawie dostępnych danych.</li>
+<li>Estymacja badanej cechy.</li>
+<li>Porównanie i ocena modeli.</li>
+<li>Stworzenie wynikowego produktu i jego dystrybucja.</li>
+</ol>
+</div>
+<div id="dane-wejściowe" class="section level3" number="6.1.4">
+<h3>
+<span class="header-section-number">6.1.4</span> Dane wejściowe<a class="anchor" aria-label="anchor" href="#dane-wej%C5%9Bciowe"><i class="fas fa-link"></i></a>
+</h3>
+<p>Jedną z najważniejszych ograniczeń stosowania metod geostatystycznych jest spełnienie odpowiednich założeń dotyczących danych wejściowych.
+Muszą one:</p>
+<ul>
+<li>Zawierać wystarczająco dużą liczbę punktów (minimalnie &gt;30, ale zazwyczaj więcej niż 100/150).</li>
+<li>Być reprezentatywne.</li>
+<li>Być niezależne.</li>
+<li>Być stworzone używając stałej metodyki.</li>
+<li>Być wystarczająco dokładne.</li>
+</ul>
+</div>
+<div id="badane-zjawisko" class="section level3" number="6.1.5">
+<h3>
+<span class="header-section-number">6.1.5</span> Badane zjawisko<a class="anchor" aria-label="anchor" href="#badane-zjawisko"><i class="fas fa-link"></i></a>
+</h3>
+<p>Oprócz ograniczeń dotyczących danych wejściowych, istnieją również dwa założenia dotyczące analizowanej cechy (analizowanego zjawiska):</p>
+<ol style="list-style-type: decimal">
+<li>Przestrzennej ciągłości - przestrzenna korelacja między zmienny w dwóch lokalizacjach zależy tylko od ich odległości (oraz czasem kierunku), lecz nie od tego gdzie są one położone.</li>
+<li>Stacjonarności - średnia i wariancja są stałe na całym badanym obszarze.</li>
+</ol>
+</div>
+<div id="podstawowe-symbole" class="section level3" number="6.1.6">
+<h3>
+<span class="header-section-number">6.1.6</span> Podstawowe symbole<a class="anchor" aria-label="anchor" href="#podstawowe-symbole"><i class="fas fa-link"></i></a>
+</h3>
+<p>Podstawowe symbole w określaniu przestrzennej zmienności (rycina <a href="geostatystyka-prolog.html#fig:headtail">6.1</a>) to:</p>
+<ul>
+<li>
+<span class="math inline">\(u_{\alpha}\)</span> - wektor współrzędnych.</li>
+<li>
+<span class="math inline">\(z(u_{\alpha})\)</span> - badana zmienna jako funkcja położenia - inaczej określany jako ogon (ang. <em>tail</em>).</li>
+<li>
+<span class="math inline">\(h\)</span> - lag - odstęp pomiędzy dwoma lokalizacjami.</li>
+<li>
+<span class="math inline">\(z(u_{\alpha}+h)\)</span> - wartość badanej zmiennej odległej o odstęp <span class="math inline">\(h\)</span> - inaczej określany jako głowa (ang. <em>head</em>).</li>
+</ul>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:headtail"></span>
+<img src="06-semiwariancja_files/figure-html/headtail-1.png" alt="Wizualizacja relacji pomiędzy wartością ogona a głowy odległymi od siebie o wektor h." width="100%"><p class="caption">
+Rycina 6.1: Wizualizacja relacji pomiędzy wartością ogona a głowy odległymi od siebie o wektor h.
+</p>
+</div>
+</div>
+</div>
+<div id="przestrzenna-kowariancja-i-korelacja" class="section level2" number="6.2">
+<h2>
+<span class="header-section-number">6.2</span> Przestrzenna kowariancja i korelacja<a class="anchor" aria-label="anchor" href="#przestrzenna-kowariancja-i-korelacja"><i class="fas fa-link"></i></a>
+</h2>
+<div id="miary-podobieństwa" class="section level3" number="6.2.1">
+<h3>
+<span class="header-section-number">6.2.1</span> Miary podobieństwa<a class="anchor" aria-label="anchor" href="#miary-podobie%C5%84stwa"><i class="fas fa-link"></i></a>
+</h3>
+<p>Przestrzenna kowariancja, korelacja i semiwariancja to miary określające przestrzenną zmienność analizowanej cechy.</p>
+<ul>
+<li>Kowariancja i korelacja to miary podobieństwa pomiędzy dwoma zmiennymi.</li>
+<li>Przenosząc to na aspekt przestrzenny, badamy jedną zmienną, ale pomiędzy dwoma punktami odległymi od siebie o pewien dystans (określany jako lag).</li>
+<li>W efekcie otrzymujemy miarę podobieństwa pomiędzy wartością głowy i ogona (rycina <a href="geostatystyka-prolog.html#fig:zprzs0">6.2</a>).</li>
+</ul>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:zprzs0"></span>
+<img src="06-semiwariancja_files/figure-html/zprzs0-1.png" alt="Relacja między wartościami zmiennej temp w danym miejscu a wartościami zmiennej temp w odległości do 200 metrów." width="100%"><p class="caption">
+Rycina 6.2: Relacja między wartościami zmiennej temp w danym miejscu a wartościami zmiennej temp w odległości do 200 metrów.
+</p>
+</div>
+</div>
+<div id="wykres-rozrzutu-z-przesunięciem" class="section level3" number="6.2.2">
+<h3>
+<span class="header-section-number">6.2.2</span> Wykres rozrzutu z przesunięciem<a class="anchor" aria-label="anchor" href="#wykres-rozrzutu-z-przesuni%C4%99ciem"><i class="fas fa-link"></i></a>
+</h3>
+<p>Wykres rozrzutu z przesunięciem pokazuje korelację pomiędzy wartościami analizowanej cechy w pewnych grupach odległości.
+Taki wykres można stworzyć używając funkcji <code><a href="https://r-spatial.github.io/gstat/reference/hscat.html">hscat()</a></code> z pakietu <strong>gstat</strong> (rycina <a href="geostatystyka-prolog.html#fig:zprzs">6.3</a>).</p>
+<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/gstat/reference/hscat.html">hscat</a></span><span class="op">(</span><span class="va">temp</span><span class="op">~</span><span class="fl">1</span>, data <span class="op">=</span> <span class="va">punkty</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4000</span>, by <span class="op">=</span> <span class="fl">500</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:zprzs"></span>
+<img src="06-semiwariancja_files/figure-html/zprzs-1.png" alt="Wykres rozrzutu z przesunięciem dla zamiennej temp." width="100%"><p class="caption">
+Rycina 6.3: Wykres rozrzutu z przesunięciem dla zamiennej temp.
+</p>
+</div>
+<p>Przykładowo, na powyższym wykresie widać wartość cechy <code>temp</code> z kolejnymi przesunięciami - od 0 do 500 metrów, od 500 metrów do 1000 metrów, itd.
+W pierwszym przedziale wartość cechy <code>temp</code> z przesunięciem wykazuje korelację na poziomie 0,876, a następnie z każdym kolejnym przedziałem (odległością) ta wartość maleje.
+W przedziale 3500 do 4000 metrów osiąga jedynie 0,128.
+Pozwala to na stwierdzenie, że cecha <code>temp</code> wykazuje zmienność przestrzenną - podobieństwo jej wartości zmniejsza się wraz z odległością.</p>
+</div>
+<div id="autokowariancja" class="section level3" number="6.2.3">
+<h3>
+<span class="header-section-number">6.2.3</span> Autokowariancja<a class="anchor" aria-label="anchor" href="#autokowariancja"><i class="fas fa-link"></i></a>
+</h3>
+<p>Podobną informację jak wykres rozrzutu z przesunięciem daje autokowariancja (rycina <a href="geostatystyka-prolog.html#fig:06-semiwariancja-3">6.4</a>).
+Pokazuje ona jak mocno przestrzennie powiązane są wartości par obserwacji odległych od siebie o kolejne przedziały.
+Jej wyliczenie jest możliwe z użyciem funkcji <code><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram()</a></code> z pakietu <strong>gstat</strong>, gdzie definiuje się analizowaną zmienną, zbiór punktowy, oraz ustala się argument <code>covariogram</code> na <code>TRUE</code>.</p>
+<div class="sourceCode" id="cb131"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">kowario</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span><span class="op">~</span><span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>                    covariogram <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">kowario</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:06-semiwariancja-3"></span>
+<img src="06-semiwariancja_files/figure-html/06-semiwariancja-3-1.png" alt="Autokowariancja zmiennej temp." width="100%"><p class="caption">
+Rycina 6.4: Autokowariancja zmiennej temp.
+</p>
+</div>
+</div>
+<div id="autokorelacja" class="section level3" number="6.2.4">
+<h3>
+<span class="header-section-number">6.2.4</span> Autokorelacja<a class="anchor" aria-label="anchor" href="#autokorelacja"><i class="fas fa-link"></i></a>
+</h3>
+<p>Kolejną miarą przestrzennego podobieństwa jest autokorelacja (rycina <a href="geostatystyka-prolog.html#fig:06-semiwariancja-5">6.5</a>).
+Jej wykres (autokorelogram) pokazuje wartość jednej z miar autokorelacji (np. I Morana lub C Geary’ego) w stosunku do odległości.
+Na poniższym przykładzie, wartość statystyki I Morana jest wyliczana poprzez funkcję <code><a href="https://rdrr.io/pkg/pgirmess/man/correlog.html">correlog()</a></code> z pakietu <strong>pgirmess</strong>.</p>
+<div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">wsp</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">kor</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/pgirmess/man/correlog.html">correlog</a></span><span class="op">(</span><span class="va">wsp</span>, <span class="va">punkty</span><span class="op">$</span><span class="va">temp</span>, method <span class="op">=</span> <span class="st">"Moran"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">kor</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:06-semiwariancja-5"></span>
+<img src="06-semiwariancja_files/figure-html/06-semiwariancja-5-1.png" alt="Autokorelacja zmiennej temp." width="100%"><p class="caption">
+Rycina 6.5: Autokorelacja zmiennej temp.
+</p>
+</div>
+</div>
+</div>
+<div id="semiwariancja" class="section level2" number="6.3">
+<h2>
+<span class="header-section-number">6.3</span> Semiwariancja<a class="anchor" aria-label="anchor" href="#semiwariancja"><i class="fas fa-link"></i></a>
+</h2>
+<div id="miara-niepodobieństwa" class="section level3" number="6.3.1">
+<h3>
+<span class="header-section-number">6.3.1</span> Miara niepodobieństwa<a class="anchor" aria-label="anchor" href="#miara-niepodobie%C5%84stwa"><i class="fas fa-link"></i></a>
+</h3>
+<p>Trzecią miarę charakteryzującą relację między obserwacjami odległymi o kolejne odstępy jest semiwariancja.
+Z praktycznego punktu widzenia, semiwariogram jest preferowaną miarą relacji przestrzennej, ponieważ wykazuje tendencję do lepszego wygładzania danych niż funkcja kowariancji.
+Dodatkowo, semiwariogram jest mniej wymagający obliczeniowo.
+Jednocześnie warto zdawać sobie sprawę, że kowarancja i korelacja przestrzenna nadaje się nie gorzej niż semiwariancja dla potrzeb interpretacji relacji przestrzennych.</p>
+</div>
+<div id="wzór" class="section level3" number="6.3.2">
+<h3>
+<span class="header-section-number">6.3.2</span> Wzór<a class="anchor" aria-label="anchor" href="#wz%C3%B3r"><i class="fas fa-link"></i></a>
+</h3>
+<p>Zmienność przestrzenna analizowanej cechy może być określona za pomocą semiwariancji.
+Jest to połowa średniej kwadratu różnicy pomiędzy wartościami badanej zmiennej (<span class="math inline">\(z\)</span>) w dwóch lokalizacjach odległych o wektor <span class="math inline">\(h\)</span>:</p>
+<p><span class="math display">\[\gamma(h) = \frac{1}{2}(z(u_{\alpha}) - z(u_{\alpha} + h))^2\]</span></p>
+<p>Przykładowo, aby wyliczyć wartość semiwariancji (<code>gamma</code>) pomiędzy dwoma punktami musimy znać wartość pierwszego z nich (w przykładzie jest to ok. 13,85 stopni Celsjusza) oraz drugiego z nich (ok. 15,48 stopni Celsjusza).
+Korzystając z wzoru na semiwariację otrzymujemy wartość równą ok. 1,33.
+Znamy również odległość między punktami (ok. 3240,89 metra), więc możemy w uproszczeniu stwierdzić, że dla tej pary punktów odległych o 3240 metrów wartość semiwariancji wynosi około 1,33.</p>
+<div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">odl</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="op">]</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span><span class="va">gamma</span> <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">punkty</span><span class="op">$</span><span class="va">temp</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span></span>
+<span><span class="va">gamma</span></span></code></pre></div>
+<pre><code>## [1] 1.331691</code></pre>
+</div>
+<div id="chmura-semiwariogramu" class="section level3" number="6.3.3">
+<h3>
+<span class="header-section-number">6.3.3</span> Chmura semiwariogramu<a class="anchor" aria-label="anchor" href="#chmura-semiwariogramu"><i class="fas fa-link"></i></a>
+</h3>
+<p>Jeżeli w badanej próbie mamy <span class="math inline">\(n\)</span> obserwacji oznacza to, że możemy zaobserwować <span class="math inline">\(\frac{1}{2}n(n-1)\)</span> par obserwacji.
+Każda z tych par obserwacji daje nam informację o semiwariancji występującej wraz z odległością.
+Tę semiwariancję można zaprezentować na wykresie zwanym chmurą semiwariogramu (rycina <a href="geostatystyka-prolog.html#fig:06-semiwariancja-7">6.6</a>).
+Do jej wyliczenia służy funkcja <code><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram()</a></code> z argumentem <code>cloud = TRUE</code>.</p>
+<div class="sourceCode" id="cb135"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_cloud</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span>, </span>
+<span>                         cloud <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_cloud</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:06-semiwariancja-7"></span>
+<img src="06-semiwariancja_files/figure-html/06-semiwariancja-7-1.png" alt="Chmura semiwariogramu zmiennej temp." width="100%"><p class="caption">
+Rycina 6.6: Chmura semiwariogramu zmiennej temp.
+</p>
+</div>
+<p>Chmura semiwariogramu pozwala także na zauważenie par punktów, których wartości znacząco odstają.
+Aby zlokalizować te pary punktów, można zastosować funkcję <code><a href="https://rdrr.io/r/base/plot.html">plot()</a></code> z argumentem <code>digitize = TRUE</code>, a następnie za pomocą kilku kliknięć określić obszar zawierający nietypowe wartości (rycina <a href="geostatystyka-prolog.html#fig:06-semiwariancja-8">6.7</a>).
+Po skończonym wyborze należy nacisnąć klawisz Esc.</p>
+<div class="sourceCode" id="cb136"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_cloud_sel</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_cloud</span>, digitize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:06-semiwariancja-8"></span>
+<img src="figs/cloud_sel.png" alt="Przykład wyboru par odstających z chmury semiwariogramu zmiennej temp." width="100%"><p class="caption">
+Rycina 6.7: Przykład wyboru par odstających z chmury semiwariogramu zmiennej temp.
+</p>
+</div>
+<p>Następnie można wyświetlić wybrane pary punktów z użyciem funkcji <code><a href="https://rdrr.io/r/base/plot.html">plot()</a></code> (rycina <a href="geostatystyka-prolog.html#fig:06-semiwariancja-9">6.8</a>).</p>
+<div class="sourceCode" id="cb137"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_cloud_sel</span>, <span class="va">punkty</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:06-semiwariancja-9"></span>
+<img src="figs/points_sel.png" alt="Lokalizacja wybranych par obserwacji (czerwone linie)." width="100%"><p class="caption">
+Rycina 6.8: Lokalizacja wybranych par obserwacji (czerwone linie).
+</p>
+</div>
+</div>
+<div id="charakterystyka-struktury-przestrzennej" class="section level3" number="6.3.4">
+<h3>
+<span class="header-section-number">6.3.4</span> Charakterystyka struktury przestrzennej<a class="anchor" aria-label="anchor" href="#charakterystyka-struktury-przestrzennej"><i class="fas fa-link"></i></a>
+</h3>
+<p>Semiwariogram jest wykresem pokazującym relację pomiędzy odległością a semiwariancją (rycina <a href="geostatystyka-prolog.html#fig:06-semiwariancja-10">6.9</a>).
+Inaczej mówiąc, dla kolejnych odstępów (lagów) wartość semiwariancji jest uśredniana i przestawiania w odniesieniu do odległości.</p>
+<p><span class="math display">\[\hat{\gamma}(h) = \frac{1}{2N(h)}\sum_{\alpha=1}^{N(h)}(z(u_{\alpha}) - z(u_{\alpha}+h))^2\]</span></p>
+<p>, gdzie <span class="math inline">\(N(h)\)</span> oznacza liczbę par punktów w odstępie <span class="math inline">\(h\)</span>.</p>
+<p>W oparciu o semiwariogram empiryczny (czyli oparty na danych) możemy następnie dopasować do niego model/e.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:06-semiwariancja-10"></span>
+<img src="06-semiwariancja_files/figure-html/06-semiwariancja-10-1.png" alt="Semiwariogram empiryczny zmiennej temp." width="100%"><p class="caption">
+Rycina 6.9: Semiwariogram empiryczny zmiennej temp.
+</p>
+</div>
+</div>
+<div id="tworzenie-semiwariogramu" class="section level3" number="6.3.5">
+<h3>
+<span class="header-section-number">6.3.5</span> Tworzenie semiwariogramu<a class="anchor" aria-label="anchor" href="#tworzenie-semiwariogramu"><i class="fas fa-link"></i></a>
+</h3>
+<p>Stworzenie podstawowego semiwariogramu w pakiecie <strong>gstat</strong> odbywa się z użyciem funkcji <code><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram()</a></code>.
+Należy w niej zdefiniować analizowaną zmienną (w tym przykładzie <code>temp ~ 1</code>) oraz zbiór punktowy (<code>punkty</code>).</p>
+<div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_par</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">vario_par</span></span></code></pre></div>
+<pre><code>##      np      dist     gamma dir.hor dir.ver   id
+## 1   111  212.9356  1.203287       0       0 var1
+## 2   283  489.0804  2.639854       0       0 var1
+## 3   446  792.3222  4.226593       0       0 var1
+## 4   631 1116.0957  5.187903       0       0 var1
+## 5   815 1423.8256  6.352106       0       0 var1
+## 6   892 1739.7600  7.186529       0       0 var1
+## 7   943 2051.5149  7.598215       0       0 var1
+## 8  1078 2371.6198  8.453746       0       0 var1
+## 9  1218 2684.4065  9.826903       0       0 var1
+## 10 1155 3002.3276  9.626642       0       0 var1
+## 11 1242 3312.6962 11.642621       0       0 var1
+## 12 1285 3633.4536 11.357612       0       0 var1
+## 13 1302 3944.5241 11.635848       0       0 var1
+## 14 1362 4261.7974 14.460067       0       0 var1
+## 15 1409 4578.9006 15.480848       0       0 var1</code></pre>
+<p>Do wyświetlenia semiwariogramu służy funkcja <code><a href="https://rdrr.io/r/base/plot.html">plot()</a></code>.
+Można również dodać informację o liczbie par punktów, jaka posłużyła do wyliczenia semiwariancji dla kolejnych odstępów poprzez argument <code>plot.numbers = TRUE</code> (rycina <a href="geostatystyka-prolog.html#fig:06-semiwariancja-12">6.10</a>).</p>
+<div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_par</span>, plot.numbers <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:06-semiwariancja-12"></span>
+<img src="06-semiwariancja_files/figure-html/06-semiwariancja-12-1.png" alt="Semiwariogram empiryczny zmiennej temp wraz z zaznaczoną liczbą par dla każdego odstępu." width="100%"><p class="caption">
+Rycina 6.10: Semiwariogram empiryczny zmiennej temp wraz z zaznaczoną liczbą par dla każdego odstępu.
+</p>
+</div>
+</div>
+<div id="parametry-semiwariogramu" class="section level3" number="6.3.6">
+<h3>
+<span class="header-section-number">6.3.6</span> Parametry semiwariogramu<a class="anchor" aria-label="anchor" href="#parametry-semiwariogramu"><i class="fas fa-link"></i></a>
+</h3>
+<p>Przy ustalaniu parametrów semiwariogramu powinno się stosować do kilku utartych zasad (tzw. <em>rules of thumb</em>):</p>
+<ul>
+<li>W każdym odstępie powinno się znaleźć co najmniej 30 par punktów.</li>
+<li>Maksymalny zasięg semiwariogramu (ang. <em>cutoff distance</em>) to 1/2 pierwiastka z badanej powierzchni (inne źródła mówią o połowie z przekątnej badanego obszaru/jednej trzeciej).</li>
+<li>Liczba odstępów powinna nie być mniejsza niż 10.</li>
+<li>Optymalnie maksymalny zasięg semiwariogramu powinien być dłuższy o 10-15% od zasięgu zjawiska.</li>
+<li>Optymalnie odstępy powinny być jak najbliżej siebie i jednocześnie nie być chaotyczne.</li>
+<li>Warto metodą prób i błędów określić optymalne parametry semiwariogramu.</li>
+<li>Należy określić czy zjawisko wykazuje anizotropię przestrzenną.</li>
+</ul>
+</div>
+<div id="obliczenia-pomocnicze" class="section level3" number="6.3.7">
+<h3>
+<span class="header-section-number">6.3.7</span> Obliczenia pomocnicze<a class="anchor" aria-label="anchor" href="#obliczenia-pomocnicze"><i class="fas fa-link"></i></a>
+</h3>
+<p>W zrozumieniu danych oraz przy określaniu parametrów semiwariogramu może pomóc szereg obliczeń pomocniczych.
+Przykładowo, aby wyliczyć liczbę par obserwacji można użyć poniższego kodu.</p>
+<div class="sourceCode" id="cb141"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fl">0.5</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 29161</code></pre>
+<p><!--
+- Połowa przekątnej obszaru
+Twierdzenie Pitagorasa
+
+$$x^2 + y^2 = z^2$$
+
+
+``` r
+wierz = as.vector(extent(poligon))
+kraw_x = wierz[2] - wierz[1]
+kraw_y = wierz[4] - wierz[3]
+z_kwadrat = kraw_x ^ 2 + kraw_y ^ 2
+0.5 * sqrt(z_kwadrat)
+```
+--></p>
+<p>Powierzchnia zajmowana przez jedną próbkę jest osiągana poprzez podzielenie całej badanej powierzchni poprzez liczbę punktów.</p>
+<div class="sourceCode" id="cb143"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pow_pr</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_area</a></span><span class="op">(</span><span class="va">granica</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">pow_pr</span></span></code></pre></div>
+<pre><code>## 261886.9 [m^2]</code></pre>
+<p>Średnia odległość między punktami to wartość pierwiastka z powierzchni zajmowanej przez jedną próbkę.</p>
+<div class="sourceCode" id="cb145"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">pow_pr</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## 511.7489 [m]</code></pre>
+<p>Ostatnim obliczeniem pomocniczym jest określenie połowy pierwiastka powierzchni.
+Może być ono następnie użyte do ustalenia maksymalnego zasięgu semiwariogramu.</p>
+<div class="sourceCode" id="cb147"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pow</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_area</a></span><span class="op">(</span><span class="va">granica</span><span class="op">)</span></span>
+<span><span class="fl">0.5</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">pow</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## 3980.472 [m]</code></pre>
+</div>
+<div id="modyfikacja-semiwariogramu" class="section level3" number="6.3.8">
+<h3>
+<span class="header-section-number">6.3.8</span> Modyfikacja semiwariogramu<a class="anchor" aria-label="anchor" href="#modyfikacja-semiwariogramu"><i class="fas fa-link"></i></a>
+</h3>
+<p>Maksymalny zasięg semiwariogramu (ang. <em>cutoff distance</em>) jest domyślnie wyliczany w pakiecie <strong>gstat</strong> jako 1/3 z najdłuższej przekątnej badanego obszaru.
+Można jednak tę wartość zmodyfikować używając argumentu <code>cutoff</code> (rycina <a href="geostatystyka-prolog.html#fig:06-semiwariancja-18">6.11</a>).</p>
+<div class="sourceCode" id="cb149"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_par</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>                      cutoff <span class="op">=</span> <span class="fl">4000</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_par</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:06-semiwariancja-18"></span>
+<img src="06-semiwariancja_files/figure-html/06-semiwariancja-18-1.png" alt="Semiwariogram empiryczny zmiennej temp używając ręcznie ustalonej wartości maksymalnego zasięgu semiwariogramu." width="100%"><p class="caption">
+Rycina 6.11: Semiwariogram empiryczny zmiennej temp używając ręcznie ustalonej wartości maksymalnego zasięgu semiwariogramu.
+</p>
+</div>
+<p>Dodatkowo, domyślnie w pakiecie <strong>gstat</strong> odległość między przedziałami (ang. <em>interval width</em>) jest wyliczana jako maksymalny zasięg semiwariogramu podzielony przez 15.
+Można to oczywiście zmienić używając zarówno argumentu <code>cutoff</code>, jak i argumentu <code>width</code> mówiącego o szerokości odstępów (rycina <a href="geostatystyka-prolog.html#fig:06-semiwariancja-19">6.12</a>).</p>
+<div class="sourceCode" id="cb150"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_par</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>                      cutoff <span class="op">=</span> <span class="fl">4000</span>, width <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_par</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:06-semiwariancja-19"></span>
+<img src="06-semiwariancja_files/figure-html/06-semiwariancja-19-1.png" alt="Semiwariogram empiryczny zmiennej temp używając ręcznie ustalonej wartości szerokości odstępów." width="100%"><p class="caption">
+Rycina 6.12: Semiwariogram empiryczny zmiennej temp używając ręcznie ustalonej wartości szerokości odstępów.
+</p>
+</div>
+<!--
+## Wpływa danych odstających
+
+Tak jak inne statystyki typu wariancji, wartości kowariancji i semiwariogramu są bardzo czułe na występowanie danych ekstremalnych – potencjalnie błędnych. Stosuje się trzy sposoby aby ten problem rozwiązać:
+Transformację matematyczną danych (logarytmowanie, pierwiastkowanie itp.) , aby zredukować skośność ich histogramu,
+Usuwanie par danych, które zaburzają wartość semiwariancji dla określonych odstępów h. Procedura ta zwana jest czyszczeniem wykresu rozrzutu z przesunięciem („h-scattergram cleansing”).
+Używanie innych statystyk h-scattergramu, które są mniej czułe na występowanie danych ekstremalnych.
+### Rodogram/madogram
+
+
+``` r
+# library('SpatialExtremes')
+# n.site = 15
+# locations = matrix(runif(2*n.site, 0, 10), ncol = 2)
+# colnames(locations) = c("lon", "lat")
+#
+# ##Simulate a max-stable process - with unit Frechet margins
+# data = rmaxstab(40, locations, cov.mod = "whitmat", nugget = 0, range = 1,
+#                  smooth = 2)
+#
+# ##Compute the madogram
+# madogram(data, locations)
+# data2 = matrix(c(punkty$temp, punkty$X2002.08.20_NDVI), nrow=2)
+# locations2 = coordinates(punkty)
+# colnames(locations2) = c("lon", "lat")
+# madogram(data2, locations2)
+```
+
+-->
+</div>
+</div>
+<div id="anizotropia" class="section level2" number="6.4">
+<h2>
+<span class="header-section-number">6.4</span> Anizotropia<a class="anchor" aria-label="anchor" href="#anizotropia"><i class="fas fa-link"></i></a>
+</h2>
+<div id="anizotropia-struktury-przestrzennej" class="section level3" number="6.4.1">
+<h3>
+<span class="header-section-number">6.4.1</span> Anizotropia struktury przestrzennej<a class="anchor" aria-label="anchor" href="#anizotropia-struktury-przestrzennej"><i class="fas fa-link"></i></a>
+</h3>
+<p>W wielu sytuacjach, podobieństwo pomiędzy wartość cechy w punktach zależy nie tylko od odległości, ale także od kierunku.
+O takim zjawisku mówimy, że wykazuje ono anizotropię struktury przestrzennej.</p>
+</div>
+<div id="mapa-semiwariogramu" class="section level3" number="6.4.2">
+<h3>
+<span class="header-section-number">6.4.2</span> Mapa semiwariogramu<a class="anchor" aria-label="anchor" href="#mapa-semiwariogramu"><i class="fas fa-link"></i></a>
+</h3>
+<p>Mapa semiwariogramu (zwana inaczej powierzchnią semiwariogramu) służy do określenia czy struktura przestrzenna zjawiska posiada anizotropię, a jeżeli tak to w jakim kierunku.
+Na podstawie mapy semiwariogramu identyfikuje się także parametry potrzebne do zbudowania semiwariogramów kierunkowych.</p>
+<p>Stworzenie mapy semiwariogramu odbywa się poprzez dodanie kilku argumentów do funkcji <code><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram()</a></code>: oprócz argumentu zmiennej i zbioru punktowego, jest to <code>cutoff</code>, <code>width</code>, oraz <code>map = TRUE</code>.
+Następnie można ją wyświetlić używając funkcji <code><a href="https://rdrr.io/r/base/plot.html">plot()</a></code> (rycina <a href="geostatystyka-prolog.html#fig:06-semiwariancja-21">6.13</a>).
+Warto w tym wypadku użyć dodatkowego argumentu <code>threshold</code>, który powoduje, że niepewna wartość semiwariancji (wyliczona na małej liczbie punktów) nie jest wyświetlana.</p>
+<div class="sourceCode" id="cb151"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_map</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span>, </span>
+<span>                      cutoff <span class="op">=</span> <span class="fl">4000</span>, width <span class="op">=</span> <span class="fl">400</span>, map <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co"># co najmniej 30 par punktów</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_map</span>, threshold <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>     col.regions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html">hcl.colors</a></span><span class="op">(</span><span class="fl">40</span>, palette <span class="op">=</span> <span class="st">"ag_GrnYl"</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:06-semiwariancja-21"></span>
+<img src="06-semiwariancja_files/figure-html/06-semiwariancja-21-1.png" alt="Mapa semiwariogramu zmiennej temp." width="100%"><p class="caption">
+Rycina 6.13: Mapa semiwariogramu zmiennej temp.
+</p>
+</div>
+<!-- Mapie semiwariogramu można również się przyjrzeć interaktywnie używając funkcję `plot3D()` z pakietu **rasterVis**. -->
+<!-- ```{r mapa_semi, eval=FALSE, fig.width=6} -->
+<!-- plot3D(raster(vario_map$map), col = terrain.colors) -->
+<!-- ``` -->
+<!-- ```{r, echo=FALSE} -->
+<!-- knitr::include_graphics("figs/plot3D.png") -->
+<!-- ``` -->
+</div>
+<div id="semiwariogramy-kierunkowe" class="section level3" number="6.4.3">
+<h3>
+<span class="header-section-number">6.4.3</span> Semiwariogramy kierunkowe<a class="anchor" aria-label="anchor" href="#semiwariogramy-kierunkowe"><i class="fas fa-link"></i></a>
+</h3>
+<p>W przypadku, gdy zjawisko wykazuje anizotropię przestrzenną, możliwe jest stworzenie semiwariogramów dla różnych wybranych kierunków (rycina <a href="geostatystyka-prolog.html#fig:06-semiwariancja-22">6.14</a>).
+Dla argumentu <code>alpha = c(0, 45, 90, 135)</code> wybrane cztery główne kierunki to 0, 45, 90 i 135 stopni.
+Oznacza to, że przykładowo dla kierunku 45 stopni brane pod uwagę będą wszystkie pary punktów pomiędzy 22,5 a 67,5 stopnia.</p>
+<div class="sourceCode" id="cb152"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_kier</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span>, </span>
+<span>                        alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">45</span>, <span class="fl">90</span>, <span class="fl">135</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_kier</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:06-semiwariancja-22"></span>
+<img src="06-semiwariancja_files/figure-html/06-semiwariancja-22-1.png" alt="Semiwariogramy kierunkowe dla zmiennej temp." width="100%"><p class="caption">
+Rycina 6.14: Semiwariogramy kierunkowe dla zmiennej temp.
+</p>
+</div>
+</div>
+</div>
+<div id="z6" class="section level2" number="6.5">
+<h2>
+<span class="header-section-number">6.5</span> Zadania<a class="anchor" aria-label="anchor" href="#z6"><i class="fas fa-link"></i></a>
+</h2>
+<p>Przyjrzyj się danym z obiektu <code>punkty_pref</code>.
+Możesz go wczytać używając poniższego kodu:</p>
+<div class="sourceCode" id="cb153"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">)</span></span></code></pre></div>
+<ol style="list-style-type: decimal">
+<li><p>Stwórz wykres rozrzutu z przesunięciem dla zmiennej <code>srtm</code> dla odstępów od 0 do 5000 metrów co 625 metry.
+Co można odczytać z otrzymanego wykresu?</p></li>
+<li><p>Wylicz odległość oraz wartość semiwariancji dla zmiennej <code>srtm</code> pomiędzy pierwszym i drugim, pierwszym i trzecim, oraz drugim i trzecim punktem.
+Zwizualizuj te trzy punkty.
+W jaki sposób można zinterpretować otrzymane wyniki wartości semiwariancji?</p></li>
+<li><p>Twórz chmurę semiwariogramu dla zmiennej <code>temp</code>.
+W jaki sposób można zaobserwować na niej wartości odstające?
+Co one oznaczają?</p></li>
+<li><p>Jaka jest liczba par obserwacji, średnia powierzchnia zajmowana przez jedną próbkę (w km<sup>2</sup>) oraz średnia odległość między punktami (w km)?</p></li>
+<li><p>Stwórz semiwariogram zmiennej <code>srtm</code>.
+Ile par punktów posłużyło do wyliczenia pierwszego odstępu?</p></li>
+<li><p>Zmodyfikuj powyższy semiwariogram, żeby jego maksymalny zasięg wynosił 3,5 kilometra.</p></li>
+<li><p>Stwórz mapę semiwariogramu dla zmiennej <code>srtm</code>.
+Sprawdź różne wartości <code>cutoff</code> (od 3 do 5 km) oraz <code>width</code> (od 200 do 500 metrów).
+Zmień domyślną paletę kolorów w wizualizacji mapy semiwariogramu.
+(Dodatkowe: spróbuj do tego celu użyć pakietu <strong>viridisLite</strong>).</p></li>
+<li><p>Co przedstawia stworzona mapa semiwariogramu?
+Czy badane zjawisko wykazuje izotropię czy anizotropię?</p></li>
+<li><p>Jeżeli mapa semiwariogramu wykazuje anizotropię struktury przestrzennej to w jakim kierunku?
+Stwórz semiwariogramy dla wybranych kierunków.</p></li>
+</ol>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></div>
+<div class="next"><a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#geostatystyka-prolog"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li>
+<a class="nav-link" href="#geostatystyka"><span class="header-section-number">6.1</span> Geostatystyka</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#definicja"><span class="header-section-number">6.1.1</span> Definicja</a></li>
+<li><a class="nav-link" href="#funkcje-geostatystyki"><span class="header-section-number">6.1.2</span> Funkcje geostatystyki</a></li>
+<li><a class="nav-link" href="#podstawowe-etapy"><span class="header-section-number">6.1.3</span> Podstawowe etapy</a></li>
+<li><a class="nav-link" href="#dane-wej%C5%9Bciowe"><span class="header-section-number">6.1.4</span> Dane wejściowe</a></li>
+<li><a class="nav-link" href="#badane-zjawisko"><span class="header-section-number">6.1.5</span> Badane zjawisko</a></li>
+<li><a class="nav-link" href="#podstawowe-symbole"><span class="header-section-number">6.1.6</span> Podstawowe symbole</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#przestrzenna-kowariancja-i-korelacja"><span class="header-section-number">6.2</span> Przestrzenna kowariancja i korelacja</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#miary-podobie%C5%84stwa"><span class="header-section-number">6.2.1</span> Miary podobieństwa</a></li>
+<li><a class="nav-link" href="#wykres-rozrzutu-z-przesuni%C4%99ciem"><span class="header-section-number">6.2.2</span> Wykres rozrzutu z przesunięciem</a></li>
+<li><a class="nav-link" href="#autokowariancja"><span class="header-section-number">6.2.3</span> Autokowariancja</a></li>
+<li><a class="nav-link" href="#autokorelacja"><span class="header-section-number">6.2.4</span> Autokorelacja</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#semiwariancja"><span class="header-section-number">6.3</span> Semiwariancja</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#miara-niepodobie%C5%84stwa"><span class="header-section-number">6.3.1</span> Miara niepodobieństwa</a></li>
+<li><a class="nav-link" href="#wz%C3%B3r"><span class="header-section-number">6.3.2</span> Wzór</a></li>
+<li><a class="nav-link" href="#chmura-semiwariogramu"><span class="header-section-number">6.3.3</span> Chmura semiwariogramu</a></li>
+<li><a class="nav-link" href="#charakterystyka-struktury-przestrzennej"><span class="header-section-number">6.3.4</span> Charakterystyka struktury przestrzennej</a></li>
+<li><a class="nav-link" href="#tworzenie-semiwariogramu"><span class="header-section-number">6.3.5</span> Tworzenie semiwariogramu</a></li>
+<li><a class="nav-link" href="#parametry-semiwariogramu"><span class="header-section-number">6.3.6</span> Parametry semiwariogramu</a></li>
+<li><a class="nav-link" href="#obliczenia-pomocnicze"><span class="header-section-number">6.3.7</span> Obliczenia pomocnicze</a></li>
+<li><a class="nav-link" href="#modyfikacja-semiwariogramu"><span class="header-section-number">6.3.8</span> Modyfikacja semiwariogramu</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#anizotropia"><span class="header-section-number">6.4</span> Anizotropia</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#anizotropia-struktury-przestrzennej"><span class="header-section-number">6.4.1</span> Anizotropia struktury przestrzennej</a></li>
+<li><a class="nav-link" href="#mapa-semiwariogramu"><span class="header-section-number">6.4.2</span> Mapa semiwariogramu</a></li>
+<li><a class="nav-link" href="#semiwariogramy-kierunkowe"><span class="header-section-number">6.4.3</span> Semiwariogramy kierunkowe</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#z6"><span class="header-section-number">6.5</span> Zadania</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/06-semiwariancja.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/06-semiwariancja.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

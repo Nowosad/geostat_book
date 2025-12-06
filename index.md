@@ -1,0 +1,118 @@
+--- 
+title: "Geostatystyka w R"
+author: "Jakub Nowosad"
+# date: "2025-12-06"
+site: bookdown::bookdown_site
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+documentclass: scrbook
+classoption: "paper=6in:9in,pagesize=pdftex,headinclude=on,footinclude=on,10pt"
+geometry: "top=1.6cm, bottom=2cm, left=2cm, right=2cm"
+# monofont: "Source Code Pro"
+monofontoptions: "Scale=0.7"
+graphics: yes
+description: "Introduction to geostatistics with R (in Polish). Skrypt ma na celu wprowadzenie do analiz przestrzennych (GIS) używająć języka programowania R, a następnie zastosowanie uzyskanej wiedzy do wykonania estymacji (interpolacji) oraz symulacji geostatystycznych."
+url: 'https\://bookdown.org/nowosad/geostatystyka/'
+github-repo: "nowosad/geostat_book"
+cover-image: "Rfigs/book_cover3.png"
+toc-title: "Spis treści"
+---
+
+
+
+
+
+# O skrypcie {-}
+
+
+
+Masz przed sobą skrypt zawierający materiały do ćwiczeń z geostatystyki.
+Składa się ona z kilkunastu rozdziałów pokazujących jak: wygląda geostatystyczna analiza danych (rozdział \@ref(wprowadzenie)), dodawać i wizualizować dane przestrzenne w R (rozdział \@ref(r-a-dane-przestrzenne)), wykonywać wstępną eksplorację danych nieprzestrzennych (rozdział \@ref(eksploracja-analiza-danych-nieprzestrzennych)), wstępnie analizować dane przestrzenne (rozdział \@ref(eksploracyjna-analiza-danych-przestrzennych)), wykorzystywać deterministyczne metody interpolacji (rozdział \@ref(metody-interpolacji)), rozumieć i wykorzystywać przestrzenne miary podobieństwa i niepodobieństwa (rozdział \@ref(geostatystyka-prolog)), modelować semiwariogramy bezkierunkowe i kierunkowe (rozdział \@ref(modelowanie-matematycznie-autokorelacji-przestrzennej)), tworzyć estymacje jednozmienne (rozdział \@ref(estymacje-jednozmienne)), estymacje wykorzystujące dane uzupełniające (rozdział \@ref(wykorzystanie-do-estymacji-danych-uzupeniajacych)), estymacje wielozmienne (rozdział \@ref(estymacje-wielozmienne)), estymacje danych kodowanych (rozdział \@ref(estymacja-lokalnego-rozkadu-prawdopodobienstwa)), oceniać jakość wykonanych estymacji (rozdział \@ref(ocena-jakosci-estymacji)) oraz budować symulacje przestrzenne (rozdział \@ref(symulacje)).
+Począwszy od drugiego, każdy rozdział kończy się również szeregiem zadań, które pozwalają na sprawdzenie umiejętności i ich utrwalenie.
+
+Dodatkowo załączone są trzy appendiksy. 
+W appendiksie \@ref(zrodla-wiedzy) można znaleźć odnośniki do innych materiałów związanych z geostatystyką i R, appendiks \@ref(dane-app) opisuje dane użyte w tym skrypcie, a appendiks \@ref(przyklad) pokazuje uproszczony przykład analizy geostatystycznej.
+
+Jest to trzecie wydanie tego skryptu.
+Wersje PDF wydania pierwszego i drugiego można znaleźć pod adresem https://jakubnowosad.com/publications.
+Główne zmiany względem drugiego wydania to:
+
+- Przejście ze stosowania pakietu **sp** na pakiety **sf** i **stars**
+- Dodanie nowych rycin i poprawienie istniejących
+- Dodanie podpisów pod rycinami
+- Zaktualizowanie źródeł wiedzy
+- Poprawienie sekcji o transformacjach danych
+- Dodanie sekcji o rozgrupowaniu danych
+
+<!--4ed:
+- tmap
+- removes mentions of rgdal and rgeos
+-->
+
+Wszystkie zaprezentowane metody i analizy zawierają również kod w języku R.
+Skrypt został stworzony w R [@R-base] z wykorzystaniem pakietów **bookdown** [@R-bookdown], **rmarkdown** [@R-rmarkdown], **knitr** [@R-knitr] oraz programu [Pandoc](http://pandoc.org/). 
+Aktualna wersja skryptu znajduje się pod adresem https://bookdown.org/nowosad/geostatystyka/. 
+
+Jeżeli używasz skryptu, zacytuj go jako:
+
+- Nowosad, J., (2021). Geostatystyka w R. Poznań: Space A. ISBN 978-83-953296-2-3. Online:
+https://bookdown.org/nowosad/geostatystyka/
+
+Zachęcam do zgłaszania wszelkich uwag, błędów, pomysłów oraz komentarzy na stronie https://github.com/Nowosad/geostat_book/issues.
+
+<a rel="license" href="https://creativecommons.org/licenses/by/4.0/"><img alt="Licencja Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />Ta książka jest dostępna na <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">licencji Creative Commons Uznanie autorstwa 4.0 Międzynarodowe</a>.
+
+## Wymagania wstępne {-}
+
+### Oprogramowanie {-}
+
+Do odtworzenia przykładów użytych w poniższym skrypcie wystarczy podstawowa znajomość R. 
+Aby zainstalować R oraz RStudio można skorzystać z poniższych odnośników:
+
+- [R](https://www.r-project.org/) - https://cloud.r-project.org/
+- [RStudio](https://www.rstudio.com/) - https://www.rstudio.com/products/rstudio/download/
+
+Dodatkowo, użyte zostały poniższe pakiety R [@R-dismo;@R-fields;@R-ggplot2;@R-gridExtra;@R-gstat;@R-mapview;@R-pgirmess;@R-rcartocolor;@R-rsample;@R-sf;@R-stars].
+
+
+``` r
+pakiety = c(
+  "dismo", "fields", "ggplot2", "gridExtra", "gstat", "mapview", 
+  "pgirmess", "rcartocolor", "rsample", "sf", "stars", "tmap"
+)
+```
+
+
+
+Pakiety R używane w tym skrypcie można zainstalować za pomocą metapakietu **geostatbook** [@R-geostatbook]:
+
+
+``` r
+install.packages("remotes")
+remotes::install_github("nowosad/geostatbook@3")
+```
+
+<!-- Jest to również możliwe poprzez funkcję `install.packages()`: -->
+
+
+
+
+
+### Dane {-}
+
+Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału \@ref(r-a-dane-przestrzenne)) oraz korzystając z pakietu **geostatbook** (dla kolejnych rozdziałów). 
+<!--Dodatkowo, przy instalacji pakietu `geostatbook` pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w skrypcie.-->
+
+- [Archiwum zawierające dane do rozdziału drugiego](https://github.com/Nowosad/geostat_book/blob/master/dane3.zip?raw=true)
+- [Dane do kolejnych rozdziałów są zawarte w pakiecie geostatbook:](https://github.com/Nowosad/geostatbook)
+
+
+``` r
+# install.packages("remotes")
+remotes::install_github("nowosad/geostatbook@3")
+```
+
+Aby ułatwić korzystanie ze skryptu, rozdziały od \@ref(eksploracja-analiza-danych-nieprzestrzennych) do \@ref(symulacje) rozpoczynają się od wczytania wymaganych pakietów oraz zbiorów danych.
+
+<!-- add a licence (somewhere) -->

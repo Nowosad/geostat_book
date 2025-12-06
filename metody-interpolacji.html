@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>5 Metody interpolacji | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(dismo) library(fields)...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="5 Metody interpolacji | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/metody-interpolacji.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(dismo) library(fields)...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="5 Metody interpolacji | Geostatystyka w R">
+<meta name="twitter:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(dismo) library(fields)...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="5 Metody interpolacji | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="active" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="metody-interpolacji" class="section level1" number="5">
+<h1>
+<span class="header-section-number">5</span> Metody interpolacji<a class="anchor" aria-label="anchor" href="#metody-interpolacji"><i class="fas fa-link"></i></a>
+</h1>
+<p>Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:</p>
+<div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/gstat/">gstat</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster/sdm/">dismo</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dnychka/fieldsRPackage">fields</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bookdown.org/nowosad/geostatystyka/">geostatbook</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">siatka</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">granica</span><span class="op">)</span></span></code></pre></div>
+<p>Przez przejściem do interpolacji geostatystycznych, którymi są poświęcona kolejne rozdziały, warto zdać sobie sprawę, że nie jest to jedyna możliwa droga postępowania do stworzenia estymacji przestrzennych.
+Można wyróżnić dwie główne grupy modeli przestrzennych - modele deterministyczne (sekcja <a href="metody-interpolacji.html#modele-deterministyczne">5.2</a> oraz modele statystyczne (sekcja <a href="metody-interpolacji.html#modele-statystyczne">5.3</a>).</p>
+<div id="tworzenie-siatek" class="section level2" number="5.1">
+<h2>
+<span class="header-section-number">5.1</span> Tworzenie siatek<a class="anchor" aria-label="anchor" href="#tworzenie-siatek"><i class="fas fa-link"></i></a>
+</h2>
+<p>Większość metod interpolacji wymaga stworzenia siatki interpolacyjnej (pustego rastra).
+Istnieją dwa podstawowe rodzaje takich siatek - siatki regularne oraz siatki nieregularne.</p>
+<div id="siatki-regularne" class="section level3" number="5.1.1">
+<h3>
+<span class="header-section-number">5.1.1</span> Siatki regularne<a class="anchor" aria-label="anchor" href="#siatki-regularne"><i class="fas fa-link"></i></a>
+</h3>
+<p>Siatki regularne mają kształt prostokąta obejmującego cały analizowany obszar.
+Określenie granic obszaru można wykonać na podstawie zasięgu danych punktowych za pomocą funkcji <code><a href="https://r-spatial.github.io/sf/reference/st_bbox.html">st_bbox()</a></code> z pakietu <strong>sf</strong>.</p>
+<div class="sourceCode" id="cb108"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##     xmin     ymin     xmax     ymax 
+## 745592.5 712723.3 756967.8 721238.7</code></pre>
+<p>Do stworzenia siatki można wykorzystać funkcję <code><a href="https://r-spatial.github.io/stars/reference/st_as_stars.html">st_as_stars()</a></code>.
+Tworzy ona nowy obiekt na podstawie obwiedni istniejącego obiektu punktowego oraz zadanej rozdzielczości (rycina <a href="metody-interpolacji.html#fig:05-interpolacje-4b">5.1</a>).<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Możliwe jest też ręczne określenie granic obszaru poprzez wpisanie zakresów współrzędnych w funkcji &lt;code&gt;st_bbox()&lt;/code&gt;.&lt;/p&gt;"><sup>2</sup></a></p>
+<div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">punkty_bbox</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">nowa_siatka</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/stars/reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">punkty_bbox</span>, </span>
+<span>                          dx <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>                          dy <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span>
+<span><span class="va">nowa_siatka</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_set_crs</a></span><span class="op">(</span><span class="va">nowa_siatka</span>, <span class="st">"EPSG:2180"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:05-interpolacje-4b"></span>
+<img src="05-interpolacje_files/figure-html/05-interpolacje-4b-1.png" alt="Wizualizacja regularnej siatki z oczkiem o boku 500 na 500 metrów." width="100%"><p class="caption">
+Rycina 5.1: Wizualizacja regularnej siatki z oczkiem o boku 500 na 500 metrów.
+</p>
+</div>
+<!-- siatka by hand -->
+</div>
+<div id="siatki-nieregularne" class="section level3" number="5.1.2">
+<h3>
+<span class="header-section-number">5.1.2</span> Siatki nieregularne<a class="anchor" aria-label="anchor" href="#siatki-nieregularne"><i class="fas fa-link"></i></a>
+</h3>
+<p>Siatki nieregularne mają zazwyczaj kształt wieloboku obejmującego analizowany obszar.
+Mogą one powstać, np. w oparciu o wcześniej istniejące granice.</p>
+<p>W poniższym przypadku odczytywana jest granica badanego obszaru z pliku w formacie GeoPackage.
+Taki obiekt można np. stworzyć za pomocą oprogramowania GIS takiego jak <a href="http://www.qgis.org/pl/site/">QGIS</a>.
+Następnie tworzony jest nowy obiekt <code>nowa_siatka_n</code> poprzez wybranie tylko tych oczek siatki, które znajdują się wewnątrz zadanych granic.</p>
+<div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">granica</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf</a></span><span class="op">(</span><span class="st">"dane/granica.gpkg"</span><span class="op">)</span></span>
+<span><span class="va">nowa_siatka_n</span> <span class="op">=</span> <span class="va">nowa_siatka</span><span class="op">[</span><span class="va">granica</span><span class="op">]</span></span></code></pre></div>
+<p>Wynik przetworzenia można zobaczyć na rycinie <a href="metody-interpolacji.html#fig:05-interpolacje-7">5.2</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:05-interpolacje-7"></span>
+<img src="05-interpolacje_files/figure-html/05-interpolacje-7-1.png" alt="Wizualizacja nieregularnej siatki z oczkiem o boku 500 na 500 metrów." width="100%"><p class="caption">
+Rycina 5.2: Wizualizacja nieregularnej siatki z oczkiem o boku 500 na 500 metrów.
+</p>
+</div>
+</div>
+<div id="siatki---wizualizacja" class="section level3" number="5.1.3">
+<h3>
+<span class="header-section-number">5.1.3</span> Siatki - wizualizacja<a class="anchor" aria-label="anchor" href="#siatki---wizualizacja"><i class="fas fa-link"></i></a>
+</h3>
+<p>Sprawdzenie, czy uzyskana siatka oraz dane punktowe się na siebie nakładają można sprawdzić z pomocą pakietu <strong>tmap</strong> (rycina <a href="metody-interpolacji.html#fig:05-interpolacje-6">5.3</a>).</p>
+<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">nowa_siatka</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>legend.show <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_dots</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:05-interpolacje-6"></span>
+<img src="05-interpolacje_files/figure-html/05-interpolacje-6-1.png" alt="Wizualizacja regularnej siatki z nałożonym położeniem obserwacji punktowych." width="100%"><p class="caption">
+Rycina 5.3: Wizualizacja regularnej siatki z nałożonym położeniem obserwacji punktowych.
+</p>
+</div>
+</div>
+</div>
+<div id="modele-deterministyczne" class="section level2" number="5.2">
+<h2>
+<span class="header-section-number">5.2</span> Modele deterministyczne<a class="anchor" aria-label="anchor" href="#modele-deterministyczne"><i class="fas fa-link"></i></a>
+</h2>
+<p>Modele deterministyczne charakteryzują się tym, że ich parametry są zazwyczaj ustalane w oparciu o funkcję odległości lub powierzchni.
+W tych modelach brakuje szacunków na temat oceny błędu modelu.
+Zaletą tych modeli jest ich prostota oraz krótki czas obliczeń.
+Do modeli deterministycznych należą, między innymi:</p>
+<ul>
+<li>Metoda diagramów Woronoja (ang. <em>Voronoi diagram</em>) (sekcja <a href="metody-interpolacji.html#voronoi">5.2.1</a>)</li>
+<li>Metoda średniej ważonej odległością (ang. <em>Inverse Distance Weighted - IDW</em>) (sekcja <a href="metody-interpolacji.html#idw">5.2.2</a>)</li>
+<li>Funkcje wielomianowe (ang. <em>Polynomials</em>) (sekcja <a href="metody-interpolacji.html#funkcje-wielomianowe">5.2.3</a>)</li>
+<li>Funkcje sklejane (ang. <em>Splines</em>) (sekcja <a href="metody-interpolacji.html#funkcje-sklejane">5.2.4</a>)</li>
+</ul>
+<!--http://neondataskills.org/Data-Workshops/ESA15-Going-On-The-Grid-Spatial-Interpolation-Basics/--><div id="voronoi" class="section level3" number="5.2.1">
+<h3>
+<span class="header-section-number">5.2.1</span> Diagramy Woronoja<a class="anchor" aria-label="anchor" href="#voronoi"><i class="fas fa-link"></i></a>
+</h3>
+<p>Metoda diagramów Woronoja polega na stworzeniu nieregularnych poligonów na podstawie analizowanych punktów, a następnie wpisaniu w każdy poligon wartości odpowiadającego mu punktu.
+Na poniższym przykładzie ta metoda stosowana jest z użyciem funkcji <code><a href="https://rspatial.github.io/terra/reference/voronoi.html">voronoi()</a></code> z pakietu <strong>dismo</strong> (rycina <a href="metody-interpolacji.html#fig:05-interpolacje-10">5.4</a>).</p>
+<div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">voronoi_interp</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/voronoi.html">voronoi</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">voronoi_interp</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">voronoi_interp</span><span class="op">)</span></span>
+<span><span class="va">voronoi_interp</span><span class="op">$</span><span class="va">temp</span> <span class="op">=</span> <span class="va">punkty</span><span class="op">$</span><span class="va">temp</span></span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">voronoi_interp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_polygons</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"temp"</span>, n <span class="op">=</span> <span class="fl">10</span>, palette <span class="op">=</span> <span class="st">"-Spectral"</span>,</span>
+<span>                    title <span class="op">=</span> <span class="st">"Diagramy Woronoja:\ntemperatura"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:05-interpolacje-10"></span>
+<img src="05-interpolacje_files/figure-html/05-interpolacje-10-1.png" alt="Interpolacja zmiennej temp używając metody diagramów Woronoja." width="100%"><p class="caption">
+Rycina 5.4: Interpolacja zmiennej temp używając metody diagramów Woronoja.
+</p>
+</div>
+</div>
+<div id="idw" class="section level3" number="5.2.2">
+<h3>
+<span class="header-section-number">5.2.2</span> IDW<a class="anchor" aria-label="anchor" href="#idw"><i class="fas fa-link"></i></a>
+</h3>
+<p>Metoda średniej ważonej odległością (IDW) wylicza wartość dla każdej komórki na podstawie wartości punktów obokległych ważonych odwrotnością ich odległości.
+W efekcie, czym bardziej jest punkt oddalony, tym mniejszy jest jego wpływ na interpolowaną wartość.
+Wagę punktów ustala się z użyciem argumentu wykładnika potęgowego (<code>idp</code>, ang. <em>inverse distance weighting power</em>) (rycina <a href="metody-interpolacji.html#fig:05-interpolacje-11">5.6</a>).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:05-interpolacje-12"></span>
+<img src="05-interpolacje_files/figure-html/05-interpolacje-12-1.png" alt="Relacja pomiędzy argumentem wykładnika potęgowego a wpływem wartości punktów wraz z odległością." width="100%"><p class="caption">
+Rycina 5.5: Relacja pomiędzy argumentem wykładnika potęgowego a wpływem wartości punktów wraz z odległością.
+</p>
+</div>
+<p>W pakiecie <strong>gstat</strong> istnieje do tego celu funkcja <code><a href="https://r-spatial.github.io/gstat/reference/krige.html">idw()</a></code>, która przyjmuje analizowaną cechę (<code>temp~1</code>), zbiór punktowy, siatkę, oraz wartość wykładnika potęgowego (argument <code>idp</code>) (rycina <a href="metody-interpolacji.html#fig:05-interpolacje-11">5.6</a>).</p>
+<div class="sourceCode" id="cb115"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">idw_interp</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">idw</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>                 newdata <span class="op">=</span> <span class="va">siatka</span>, idp <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [inverse distance weighted interpolation]</code></pre>
+<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">idw_interp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"var1.pred"</span>, n <span class="op">=</span> <span class="fl">10</span>, palette <span class="op">=</span> <span class="st">"-Spectral"</span>,</span>
+<span>                  style <span class="op">=</span> <span class="st">"cont"</span>, title <span class="op">=</span> <span class="st">"IDW"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:05-interpolacje-11"></span>
+<img src="05-interpolacje_files/figure-html/05-interpolacje-11-1.png" alt="Interpolacja zmiennej temp używając metody średniej ważonej odległością (IDW)." width="100%"><p class="caption">
+Rycina 5.6: Interpolacja zmiennej temp używając metody średniej ważonej odległością (IDW).
+</p>
+</div>
+</div>
+<div id="funkcje-wielomianowe" class="section level3" number="5.2.3">
+<h3>
+<span class="header-section-number">5.2.3</span> Funkcje wielomianowe<a class="anchor" aria-label="anchor" href="#funkcje-wielomianowe"><i class="fas fa-link"></i></a>
+</h3>
+<p>Stosowanie funkcji wielomianowych w R może odbyć się z wykorzystaniem funkcji <code><a href="https://r-spatial.github.io/gstat/reference/gstat.html">gstat()</a></code> z pakietu <strong>gstat</strong>.
+Wymaga ona podania trzech argumentów: <code>formula</code> określającego naszą analizowaną cechę (<code>temp~1</code> mówi, że chcemy interpolować wartość temperatury zależnej od samej siebie), <code>data</code> określający analizowany zbiór danych, oraz <code>degree</code> określającą stopień wielomianu.
+Następnie funkcja <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> przenosi nowe wartości na wcześniej stworzoną siatkę.
+Porównanie wielomianów pierwszego, drugiego i trzeciego stopnia można znaleźć na rycinach <a href="metody-interpolacji.html#fig:05-interpolacje-13">5.7</a>, <a href="metody-interpolacji.html#fig:05-interpolacje-14">5.8</a> i <a href="metody-interpolacji.html#fig:05-interpolacje-15">5.9</a>.</p>
+<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># wielomian 1 stopnia</span></span>
+<span><span class="va">wielomian_1</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/gstat.html">gstat</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>                    degree <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">wielomian_1_pred</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">wielomian_1</span>, newdata <span class="op">=</span> <span class="va">siatka</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [ordinary or weighted least squares prediction]</code></pre>
+<div class="sourceCode" id="cb120"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">wielomian_1_pred</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"var1.pred"</span>, n <span class="op">=</span> <span class="fl">10</span>, palette <span class="op">=</span> <span class="st">"-Spectral"</span>,</span>
+<span>                  style <span class="op">=</span> <span class="st">"cont"</span>, title <span class="op">=</span> <span class="st">"Wielomian pierwszego stopnia"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:05-interpolacje-13"></span>
+<img src="05-interpolacje_files/figure-html/05-interpolacje-13-1.png" alt="Powierzchnia trendu zmiennej temp określona używając wielomianu pierwszego stopnia." width="100%"><p class="caption">
+Rycina 5.7: Powierzchnia trendu zmiennej temp określona używając wielomianu pierwszego stopnia.
+</p>
+</div>
+<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># wielomian 2 stopnia</span></span>
+<span><span class="va">wielomian_2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/gstat.html">gstat</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>                    degree <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">wielomian_2_pred</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">wielomian_2</span>, newdata <span class="op">=</span> <span class="va">siatka</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [ordinary or weighted least squares prediction]</code></pre>
+<div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">wielomian_2_pred</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"var1.pred"</span>, n <span class="op">=</span> <span class="fl">10</span>, palette <span class="op">=</span> <span class="st">"-Spectral"</span>,</span>
+<span>                  style <span class="op">=</span> <span class="st">"cont"</span>, title <span class="op">=</span> <span class="st">"Wielomian drugiego stopnia"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:05-interpolacje-14"></span>
+<img src="05-interpolacje_files/figure-html/05-interpolacje-14-1.png" alt="Powierzchnia trendu zmiennej temp określona używając wielomianu drugiego stopnia." width="100%"><p class="caption">
+Rycina 5.8: Powierzchnia trendu zmiennej temp określona używając wielomianu drugiego stopnia.
+</p>
+</div>
+<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># wielomian 3 stopnia</span></span>
+<span><span class="va">wielomian_3</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/gstat.html">gstat</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>                    degree <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">wielomian_3_pred</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">wielomian_3</span>, newdata <span class="op">=</span> <span class="va">siatka</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [ordinary or weighted least squares prediction]</code></pre>
+<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">wielomian_3_pred</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"var1.pred"</span>, n <span class="op">=</span> <span class="fl">10</span>, palette <span class="op">=</span> <span class="st">"-Spectral"</span>,</span>
+<span>                  style <span class="op">=</span> <span class="st">"cont"</span>, title <span class="op">=</span> <span class="st">"Wielomian trzeciego stopnia"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:05-interpolacje-15"></span>
+<img src="05-interpolacje_files/figure-html/05-interpolacje-15-1.png" alt="Powierzchnia trendu zmiennej temp określona używając wielomianu trzeciego stopnia." width="100%"><p class="caption">
+Rycina 5.9: Powierzchnia trendu zmiennej temp określona używając wielomianu trzeciego stopnia.
+</p>
+</div>
+</div>
+<div id="funkcje-sklejane" class="section level3" number="5.2.4">
+<h3>
+<span class="header-section-number">5.2.4</span> Funkcje sklejane<a class="anchor" aria-label="anchor" href="#funkcje-sklejane"><i class="fas fa-link"></i></a>
+</h3>
+<p>Interpolacja z użyciem funkcji sklejanych (funkcja <code><a href="https://rdrr.io/pkg/fields/man/Tps.html">Tps()</a></code> z pakietu <strong>fields</strong>) dopasowuje krzywą powierzchnię do wartości analizowanych punktów (rycina <a href="metody-interpolacji.html#fig:05-interpolacje-16">5.10</a>).</p>
+<div class="sourceCode" id="cb127"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tps</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/fields/man/Tps.html">Tps</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span>, <span class="va">punkty</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span></span>
+<span><span class="va">siatka</span><span class="op">$</span><span class="va">tps_pred</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">tps</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">siatka</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">siatka</span><span class="op">$</span><span class="va">tps_pred</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">siatka</span><span class="op">$</span><span class="va">X2</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="cn">NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">siatka</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"tps_pred"</span>, n <span class="op">=</span> <span class="fl">10</span>, palette <span class="op">=</span> <span class="st">"-Spectral"</span>,</span>
+<span>                  style <span class="op">=</span> <span class="st">"cont"</span>, title <span class="op">=</span> <span class="st">"Funkcje sklejane"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:05-interpolacje-16"></span>
+<img src="05-interpolacje_files/figure-html/05-interpolacje-16-1.png" alt="Interpolacja zmiennej temp z użyciem funkcji sklejanych." width="100%"><p class="caption">
+Rycina 5.10: Interpolacja zmiennej temp z użyciem funkcji sklejanych.
+</p>
+</div>
+</div>
+<div id="porównanie-modeli-deterministycznych" class="section level3" number="5.2.5">
+<h3>
+<span class="header-section-number">5.2.5</span> Porównanie modeli deterministycznych<a class="anchor" aria-label="anchor" href="#por%C3%B3wnanie-modeli-deterministycznych"><i class="fas fa-link"></i></a>
+</h3>
+<p>Na rycinie <a href="metody-interpolacji.html#fig:05-interpolacje-17">5.11</a> można wizualnie porównać wyniki uzyskane czterema metodami deterministycznymi.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:05-interpolacje-17"></span>
+<img src="05-interpolacje_files/figure-html/05-interpolacje-17-1.png" alt="Porównanie czterech metod interpolacji dla zmiennej temp używając jednolitej skali wartości." width="100%"><p class="caption">
+Rycina 5.11: Porównanie czterech metod interpolacji dla zmiennej temp używając jednolitej skali wartości.
+</p>
+</div>
+</div>
+</div>
+<div id="modele-statystyczne" class="section level2" number="5.3">
+<h2>
+<span class="header-section-number">5.3</span> Modele statystyczne<a class="anchor" aria-label="anchor" href="#modele-statystyczne"><i class="fas fa-link"></i></a>
+</h2>
+<p>Modele statystyczne charakteryzują się tym, że ich parametry określane są w oparciu o teorię prawdopodobieństwa, dodatkowo wynik estymacji zawiera także oszacowanie błędu.
+Te metody jednak zazwyczaj wymagają większych zasobów sprzętowych.
+Do modeli statystycznych należą, między innymi:</p>
+<ul>
+<li>Kriging</li>
+<li>Modele regresyjne</li>
+<li>Modele bayesowskie</li>
+<li>Modele hybrydowe</li>
+</ul>
+<p>W kolejnych rozdziałach znajduje się omówienie kilku podstawowych typów pierwszej z tych metod - krigingu.</p>
+</div>
+<div id="z5" class="section level2" number="5.4">
+<h2>
+<span class="header-section-number">5.4</span> Zadania<a class="anchor" aria-label="anchor" href="#z5"><i class="fas fa-link"></i></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li>Stwórz siatkę interpolacyjną o rozdzielczości 200 metrów dla obszaru Suwalskiego Parku Krajobrazowego.</li>
+<li>Korzystając z danych <code>punkty</code> wykonaj interpolację zmiennej <code>srtm</code> używając:</li>
+</ol>
+<ul>
+<li>Poligonów Woronoja</li>
+<li>Metody IDW</li>
+<li>Funkcji wielomianowych</li>
+<li>Funkcji sklejanych</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Porównaj uzyskane wyniki poprzez ich wizualizację.
+Czym różnią się powyższe metody?</li>
+<li>Wykonaj interpolację zmiennej <code>temp</code> metodą IDW sprawdzając różne parametry argumentu <code>idp</code>.
+W jaki sposób wpływa on na uzyskaną interpolację?</li>
+</ol>
+</div>
+</div>
+
+  <div class="chapter-nav">
+<div class="prev"><a href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></div>
+<div class="next"><a href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#metody-interpolacji"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li>
+<a class="nav-link" href="#tworzenie-siatek"><span class="header-section-number">5.1</span> Tworzenie siatek</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#siatki-regularne"><span class="header-section-number">5.1.1</span> Siatki regularne</a></li>
+<li><a class="nav-link" href="#siatki-nieregularne"><span class="header-section-number">5.1.2</span> Siatki nieregularne</a></li>
+<li><a class="nav-link" href="#siatki---wizualizacja"><span class="header-section-number">5.1.3</span> Siatki - wizualizacja</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#modele-deterministyczne"><span class="header-section-number">5.2</span> Modele deterministyczne</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#voronoi"><span class="header-section-number">5.2.1</span> Diagramy Woronoja</a></li>
+<li><a class="nav-link" href="#idw"><span class="header-section-number">5.2.2</span> IDW</a></li>
+<li><a class="nav-link" href="#funkcje-wielomianowe"><span class="header-section-number">5.2.3</span> Funkcje wielomianowe</a></li>
+<li><a class="nav-link" href="#funkcje-sklejane"><span class="header-section-number">5.2.4</span> Funkcje sklejane</a></li>
+<li><a class="nav-link" href="#por%C3%B3wnanie-modeli-deterministycznych"><span class="header-section-number">5.2.5</span> Porównanie modeli deterministycznych</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#modele-statystyczne"><span class="header-section-number">5.3</span> Modele statystyczne</a></li>
+<li><a class="nav-link" href="#z5"><span class="header-section-number">5.4</span> Zadania</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/05-interpolacje.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/05-interpolacje.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

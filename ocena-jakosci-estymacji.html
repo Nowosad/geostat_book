@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>12 Ocena jakości estymacji | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(rsample)...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="12 Ocena jakości estymacji | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/ocena-jakosci-estymacji.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(rsample)...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="12 Ocena jakości estymacji | Geostatystyka w R">
+<meta name="twitter:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(rsample)...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="12 Ocena jakości estymacji | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="active" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="ocena-jakosci-estymacji" class="section level1" number="12">
+<h1>
+<span class="header-section-number">12</span> Ocena jakości estymacji<a class="anchor" aria-label="anchor" href="#ocena-jakosci-estymacji"><i class="fas fa-link"></i></a>
+</h1>
+<p>Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:</p>
+<div class="sourceCode" id="cb311"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/gstat/">gstat</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rsample.tidymodels.org">rsample</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bookdown.org/nowosad/geostatystyka/">geostatbook</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">siatka</span><span class="op">)</span></span></code></pre></div>
+<div id="wizualizacja-jakości-estymacji" class="section level2" number="12.1">
+<h2>
+<span class="header-section-number">12.1</span> Wizualizacja jakości estymacji<a class="anchor" aria-label="anchor" href="#wizualizacja-jako%C5%9Bci-estymacji"><i class="fas fa-link"></i></a>
+</h2>
+<div id="mapa" class="section level3" number="12.1.1">
+<h3>
+<span class="header-section-number">12.1.1</span> Mapa<a class="anchor" aria-label="anchor" href="#mapa"><i class="fas fa-link"></i></a>
+</h3>
+<p>Do oceny przestrzennej jakości estymacji można zastosować mapę przestawiającą błędy estymacji (rycina <a href="ocena-jakosci-estymacji.html#fig:mapa">12.1</a>).
+Wyliczenie błędów estymacji odbywa się poprzez odjęcie od obserwacji wartości estymowanej.</p>
+<div class="sourceCode" id="cb312"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">blad_estymacji</span> <span class="op">=</span> <span class="va">obserwowane</span> <span class="op">-</span> <span class="va">estymacja</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:mapa"></span>
+<img src="12-ocena_files/figure-html/mapa-1.png" alt="Mapa przedstawiająca rozkład przestrzenny błędów estymacji." width="100%"><p class="caption">
+Rycina 12.1: Mapa przedstawiająca rozkład przestrzenny błędów estymacji.
+</p>
+</div>
+</div>
+<div id="histogram-1" class="section level3" number="12.1.2">
+<h3>
+<span class="header-section-number">12.1.2</span> Histogram<a class="anchor" aria-label="anchor" href="#histogram-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Błąd estymacji można również przedstawić na wykresach, między innymi, na histogramie (rycina <a href="ocena-jakosci-estymacji.html#fig:hist">12.2</a>).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:hist"></span>
+<img src="12-ocena_files/figure-html/hist-1.png" alt="Rozkład wartości błędów estymacji." width="100%"><p class="caption">
+Rycina 12.2: Rozkład wartości błędów estymacji.
+</p>
+</div>
+</div>
+<div id="wykres-rozrzutu" class="section level3" number="12.1.3">
+<h3>
+<span class="header-section-number">12.1.3</span> Wykres rozrzutu<a class="anchor" aria-label="anchor" href="#wykres-rozrzutu"><i class="fas fa-link"></i></a>
+</h3>
+<p>Do porównania pomiędzy wartością estymowaną a obserwowaną może również posłużyć wykres rozrzutu (rycina <a href="ocena-jakosci-estymacji.html#fig:point">12.3</a>).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:point"></span>
+<img src="12-ocena_files/figure-html/point-1.png" alt="Wykres rozrzutu porównujący rzeczywiste (obserwowane) wartości i wartości estymowane." width="100%"><p class="caption">
+Rycina 12.3: Wykres rozrzutu porównujący rzeczywiste (obserwowane) wartości i wartości estymowane.
+</p>
+</div>
+</div>
+</div>
+<div id="statystyki-jakości-estymacji" class="section level2" number="12.2">
+<h2>
+<span class="header-section-number">12.2</span> Statystyki jakości estymacji<a class="anchor" aria-label="anchor" href="#statystyki-jako%C5%9Bci-estymacji"><i class="fas fa-link"></i></a>
+</h2>
+<div id="podstawowe-statystyki" class="section level3" number="12.2.1">
+<h3>
+<span class="header-section-number">12.2.1</span> Podstawowe statystyki<a class="anchor" aria-label="anchor" href="#podstawowe-statystyki"><i class="fas fa-link"></i></a>
+</h3>
+<p>W momencie, gdy trzeba określić jakość estymacji lub porównać wyniki pomiędzy estymacjami należy zastosować tzw. statystyki jakości estymacji.
+Do podstawowych statystyk ocen jakości estymacji należą:</p>
+<ul>
+<li>Średni błąd estymacji (MPE, ang. <em>mean prediction error</em>).</li>
+<li>Pierwiastek błędu średniokwadratowego (RMSE, ang. <em>root mean square error</em>).</li>
+<li>Współczynnik determinacji (R<sup>2</sup>, ang. <em>coefficient of determination</em>).</li>
+</ul>
+<p>Idealna estymacja dawałaby brak błędu oraz współczynnik determinacji pomiędzy pomiarami (całą populacją) i szacunkiem równy 1.
+Należy jednak zdawać sobie sprawę, że dane wejściowe są obarczone błędem/niepewnością, dlatego też w praktyce idealna estymacja nie jest osiągana.
+Wysokie, pojedyncze wartości błędu mogą świadczyć, np. o wystąpieniu wartości odstających.</p>
+</div>
+<div id="średni-błąd-estymacji" class="section level3" number="12.2.2">
+<h3>
+<span class="header-section-number">12.2.2</span> Średni błąd estymacji<a class="anchor" aria-label="anchor" href="#%C5%9Bredni-b%C5%82%C4%85d-estymacji"><i class="fas fa-link"></i></a>
+</h3>
+<p>Średni błąd estymacji (MPE) można wyliczyć korzystając z poniższego wzoru:</p>
+<p><span class="math display">\[ MPE=\frac{\sum_{i=1}^{n}(v_i - \hat{v}_i)}{n} \]</span><br>
+, gdzie <span class="math inline">\(v_i\)</span> to wartość obserwowana a <span class="math inline">\(\hat{v}_i\)</span> to wartość estymowana.</p>
+<p>Średni błąd estymacji można też wyliczyć używając funkcji <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code> w R.</p>
+<div class="sourceCode" id="cb313"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">MPE</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">obserwowane</span> <span class="op">-</span> <span class="va">estymacja</span><span class="op">)</span></span></code></pre></div>
+<p>Optymalnie wartość średniego błędu estymacji powinna być jak najbliżej 0.</p>
+</div>
+<div id="pierwiastek-błędu-średniokwadratowego" class="section level3" number="12.2.3">
+<h3>
+<span class="header-section-number">12.2.3</span> Pierwiastek błędu średniokwadratowego<a class="anchor" aria-label="anchor" href="#pierwiastek-b%C5%82%C4%99du-%C5%9Bredniokwadratowego"><i class="fas fa-link"></i></a>
+</h3>
+<p>Pierwiastek błędu średniokwadratowego (RMSE) jest możliwy do wyliczenia poprzez wzór:</p>
+<p><span class="math display">\[ RMSE=\sqrt{\frac{\sum_{i=1}^{n}(v_i-\hat{v}_i)^2}{n}} \]</span><br>
+, gdzie <span class="math inline">\(v_i\)</span> to wartość obserwowana a <span class="math inline">\(\hat{v}_i\)</span> to wartość estymowana.</p>
+<p>RMSE można też wyliczyć w R.</p>
+<div class="sourceCode" id="cb314"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">RMSE</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">obserwowane</span> <span class="op">-</span> <span class="va">estymacja</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Optymalnie wartość pierwiastka błędu średniokwadratowego powinna być jak najmniejsza.</p>
+</div>
+<div id="współczynnik-determinacji" class="section level3" number="12.2.4">
+<h3>
+<span class="header-section-number">12.2.4</span> Współczynnik determinacji<a class="anchor" aria-label="anchor" href="#wsp%C3%B3%C5%82czynnik-determinacji"><i class="fas fa-link"></i></a>
+</h3>
+<p>Współczynnik determinacji (R<sup>2</sup>) jest możliwy do wyliczenia poprzez wzór:</p>
+<p><span class="math display">\[ R^2 = 1 - \frac{\sum_{i=1}^{n} (\hat v_i - v_i)^2}{\sum_{i=1}^{n} (v_i - \overline{v_i})^2} \]</span></p>
+<p>, gdzie <span class="math inline">\(v_i\)</span> to wartość obserwowana, <span class="math inline">\(\hat{v}_i\)</span> to wartość estymowana, a <span class="math inline">\(\overline{v}\)</span> średnia arytmetyczna wartości obserwowanych.</p>
+<p>R<sup>2</sup> można też wyliczyć w R.</p>
+<div class="sourceCode" id="cb315"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">R2</span> <span class="op">=</span> <span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">estymacja</span> <span class="op">-</span> <span class="va">obserwowane</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span> <span class="op">/</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">obserwowane</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">obserwowane</span><span class="op">)</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<p>lub</p>
+<div class="sourceCode" id="cb316"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">R2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">obserwowane</span>, <span class="va">estymacja</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span></span></code></pre></div>
+<p>Współczynnik determinacji przyjmuje wartości od 0 do 1, gdzie model jest lepszy im wartość tego współczynnika jest bliższa jedności.</p>
+</div>
+</div>
+<div id="jakość-wyników-estymacji" class="section level2" number="12.3">
+<h2>
+<span class="header-section-number">12.3</span> Jakość wyników estymacji<a class="anchor" aria-label="anchor" href="#jako%C5%9B%C4%87-wynik%C3%B3w-estymacji"><i class="fas fa-link"></i></a>
+</h2>
+<div id="walidacja-wyników-estymacji" class="section level3" number="12.3.1">
+<h3>
+<span class="header-section-number">12.3.1</span> Walidacja wyników estymacji<a class="anchor" aria-label="anchor" href="#walidacja-wynik%C3%B3w-estymacji"><i class="fas fa-link"></i></a>
+</h3>
+<p>Dokładne dopasowanie modelu do danych może w efekcie nie dawać najlepszych wyników.
+Szczególnie będzie to widoczne w przypadku modelowania, w którym dane obarczone są znacznym szumem (zawierają wyraźny błąd) lub też posiadają kilka wartości odstających.
+W efekcie ważne jest stosowanie metod pozwalających na wybranie optymalnego modelu.
+Do takich metod należy, między innymi, walidacja podzbiorem (ang. <em>jackknifing</em>) oraz kroswalidacja (ang. <em>crossvalidation</em>).</p>
+</div>
+<div id="walidacja-podzbiorem" class="section level3" number="12.3.2">
+<h3>
+<span class="header-section-number">12.3.2</span> Walidacja podzbiorem<a class="anchor" aria-label="anchor" href="#walidacja-podzbiorem"><i class="fas fa-link"></i></a>
+</h3>
+<p>Walidacja podzbiorem polega na podziale zbioru danych na dwa podzbiory - treningowy i testowy.
+Zbiór treningowy służy do stworzenia semiwariogramu empirycznego, zbudowania modelu oraz estymacji wartości.
+Następnie wynik estymacji porównywany jest z rzeczywistymi wartościami ze zbioru testowego.
+Zaletą tego podejścia jest stosowanie danych niezależnych od estymacji do oceny jakości modelu.
+Wadą natomiast jest konieczność posiadania (relatywnie) dużego zbioru danych.</p>
+<p>Na poniższym przykładzie zbiór danych dzielony jest używając funkcji <code><a href="https://rsample.tidymodels.org/reference/initial_split.html">initial_split()</a></code> z pakietu <strong>rsample</strong>.
+Użycie tej funkcji powoduje obiektu zawierającego wydzielony podzbiór treningowy i testowy.
+Ważną zaletą funkcji <code><a href="https://rsample.tidymodels.org/reference/initial_split.html">initial_split()</a></code> jest to, iż w zbiorze treningowym i testowym zachowane są podobne rozkłady wartości.
+W przykładzie użyto argumentu <code>prop = 0.75</code>, który oznacza, że 75% danych będzie należało do zbioru treningowego, a 25% do zbioru testowego.
+Następnie, korzystając ze stworzonego obiektu, budowane są dwa zbiory danych - treningowy (<code>train</code>) oraz testowy (<code>test</code>).</p>
+<div class="sourceCode" id="cb317"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">224</span><span class="op">)</span></span>
+<span><span class="va">punkty_podzial</span> <span class="op">=</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">initial_split</a></span><span class="op">(</span><span class="va">punkty</span>, prop <span class="op">=</span> <span class="fl">0.75</span>, strata <span class="op">=</span> <span class="va">temp</span><span class="op">)</span></span>
+<span><span class="va">train</span> <span class="op">=</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">training</a></span><span class="op">(</span><span class="va">punkty_podzial</span><span class="op">)</span></span>
+<span><span class="va">test</span> <span class="op">=</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">testing</a></span><span class="op">(</span><span class="va">punkty_podzial</span><span class="op">)</span></span></code></pre></div>
+<p>Dalszym krokiem jest stworzenie semiwariogramu empirycznego oraz jego modelowanie w oparciu o zbiór treningowy (rycina <a href="ocena-jakosci-estymacji.html#fig:12-ocena-9">12.4</a>).</p>
+<div class="sourceCode" id="cb318"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">train</span><span class="op">)</span></span>
+<span><span class="va">model</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Sph"</span>, nugget <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">fitted</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario</span>, <span class="va">model</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">fitted</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:12-ocena-9"></span>
+<img src="12-ocena_files/figure-html/12-ocena-9-1.png" alt="Model semiwariogramu w oparciu o zbiór testowy." width="100%"><p class="caption">
+Rycina 12.4: Model semiwariogramu w oparciu o zbiór testowy.
+</p>
+</div>
+<p>Do porównania wyników estymacji w stosunku do zbioru testowego posłuży funkcja <code><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige()</a></code>.
+Wcześniej wymagała ona podania wzoru, zbioru punktowego, siatki oraz modelu.
+W tym przypadku jednak chcemy porównać wynik estymacji i testowy zbiór punktowy.
+Dlatego też, zamiast obiektu siatki definiujemy obiekt zawierający zbiór testowy (<code>test</code>).</p>
+<div class="sourceCode" id="cb319"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">test_sk</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>                 locations <span class="op">=</span> <span class="va">train</span>,</span>
+<span>                 newdata <span class="op">=</span> <span class="va">test</span>,</span>
+<span>                 model <span class="op">=</span> <span class="va">fitted</span>,</span>
+<span>                 beta <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using simple kriging]</code></pre>
+<div class="sourceCode" id="cb321"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">test_sk</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##    var1.pred         var1.var               geometry 
+##  Min.   : 9.818   Min.   :0.8199   POINT        :62  
+##  1st Qu.:12.226   1st Qu.:1.5630   epsg:2180    : 0  
+##  Median :14.695   Median :2.1911   +proj=tmer...: 0  
+##  Mean   :15.255   Mean   :2.2243                     
+##  3rd Qu.:17.193   3rd Qu.:2.6707                     
+##  Max.   :22.345   Max.   :5.3092</code></pre>
+<p>Uzyskane w ten sposób wyniki możemy określić używając statystyk jakości estymacji lub też wykresów (ryciny <a href="ocena-jakosci-estymacji.html#fig:12-ocena-12">12.5</a>, <a href="ocena-jakosci-estymacji.html#fig:12-ocena-13">12.6</a>, <a href="ocena-jakosci-estymacji.html#fig:12-ocena-14">12.7</a>).</p>
+<div class="sourceCode" id="cb323"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">blad_estymacji_sk</span> <span class="op">=</span> <span class="va">test</span><span class="op">$</span><span class="va">temp</span> <span class="op">-</span> <span class="va">test_sk</span><span class="op">$</span><span class="va">var1.pred</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">blad_estymacji_sk</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+## -2.84080 -0.94748  0.02028  0.04646  0.96024  3.46009</code></pre>
+<div class="sourceCode" id="cb325"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">MPE</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">temp</span> <span class="op">-</span> <span class="va">test_sk</span><span class="op">$</span><span class="va">var1.pred</span><span class="op">)</span></span>
+<span><span class="va">MPE</span></span></code></pre></div>
+<pre><code>## [1] 0.04645957</code></pre>
+<div class="sourceCode" id="cb327"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">RMSE</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">temp</span> <span class="op">-</span> <span class="va">test_sk</span><span class="op">$</span><span class="va">var1.pred</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">RMSE</span></span></code></pre></div>
+<pre><code>## [1] 1.408219</code></pre>
+<div class="sourceCode" id="cb329"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">R2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">temp</span>, <span class="va">test_sk</span><span class="op">$</span><span class="va">var1.pred</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span></span>
+<span><span class="va">R2</span></span></code></pre></div>
+<pre><code>## [1] 0.9038962</code></pre>
+<div class="sourceCode" id="cb331"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">test_sk</span><span class="op">$</span><span class="va">blad_estymacji_sk</span> <span class="op">=</span> <span class="va">blad_estymacji_sk</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">test_sk</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"blad_estymacji_sk"</span>, title.col <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>main.title <span class="op">=</span> <span class="st">"Błąd estymacji"</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:12-ocena-12"></span>
+<img src="12-ocena_files/figure-html/12-ocena-12-1.png" alt="Mapa przedstawiająca rozkład przestrzenny błędów estymacji uzyskanych używając krigingu prostego." width="100%"><p class="caption">
+Rycina 12.5: Mapa przedstawiająca rozkład przestrzenny błędów estymacji uzyskanych używając krigingu prostego.
+</p>
+</div>
+<div class="sourceCode" id="cb332"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">test_sk</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">blad_estymacji_sk</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">"Błąd estymacji"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">"Liczebność"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:12-ocena-13"></span>
+<img src="12-ocena_files/figure-html/12-ocena-13-1.png" alt="Rozkład wartości błędów estymacji uzyskanych używając krigingu prostego." width="100%"><p class="caption">
+Rycina 12.6: Rozkład wartości błędów estymacji uzyskanych używając krigingu prostego.
+</p>
+</div>
+<div class="sourceCode" id="cb333"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">test_sk</span><span class="op">$</span><span class="va">true</span> <span class="op">=</span> <span class="va">test</span><span class="op">$</span><span class="va">temp</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">test_sk</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">var1.pred</span>, <span class="va">true</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">"Estymacja"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">"Obserwacja"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:12-ocena-14"></span>
+<img src="12-ocena_files/figure-html/12-ocena-14-1.png" alt="Wykres rozrzutu porównujący rzeczywiste (obserwowane) wartości i wartości estymowane uzyskane używając krigingu prostego." width="100%"><p class="caption">
+Rycina 12.7: Wykres rozrzutu porównujący rzeczywiste (obserwowane) wartości i wartości estymowane uzyskane używając krigingu prostego.
+</p>
+</div>
+<p>W sytuacji, gdy uzyskany model jest wystarczająco dobry, możemy również uzyskać estymację dla całego obszaru z użyciem funkcji <code><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige()</a></code>, tym razem jednak podając obiekt siatki (rycina <a href="ocena-jakosci-estymacji.html#fig:12-ocena-15">12.8</a>).</p>
+<div class="sourceCode" id="cb334"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">test_sk</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>,</span>
+<span>                locations <span class="op">=</span> <span class="va">train</span>,</span>
+<span>                newdata <span class="op">=</span> <span class="va">siatka</span>,</span>
+<span>                model <span class="op">=</span> <span class="va">fitted</span>,</span>
+<span>                beta <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using simple kriging]</code></pre>
+<div class="sourceCode" id="cb336"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">test_sk</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span><span class="st">"var1.pred"</span>, style <span class="op">=</span> <span class="st">"cont"</span>, palette <span class="op">=</span> <span class="st">"-Spectral"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:12-ocena-15"></span>
+<img src="12-ocena_files/figure-html/12-ocena-15-1.png" alt="Estymacja uzyskana dla całego obszaru." width="100%"><p class="caption">
+Rycina 12.8: Estymacja uzyskana dla całego obszaru.
+</p>
+</div>
+</div>
+<div id="kroswalidacja" class="section level3" number="12.3.3">
+<h3>
+<span class="header-section-number">12.3.3</span> Kroswalidacja<a class="anchor" aria-label="anchor" href="#kroswalidacja"><i class="fas fa-link"></i></a>
+</h3>
+<p>W przypadku kroswalidacji te same dane wykorzystywane są do budowy modelu, estymacji, a następnie do oceny prognozy.
+Procedura kroswalidacji LOO (ang. <em>leave-one-out cross-validation</em>) składa się z poniższych kroków:</p>
+<ol style="list-style-type: decimal">
+<li>Zbudowanie matematycznego modelu z dostępnych obserwacji.</li>
+<li>Dla każdej znanej obserwacji następuje:
+<ul>
+<li>Usunięcie jej ze zbioru danych.</li>
+<li>Użycie modelu do wykonania estymacji w miejscu tej obserwacji.</li>
+<li>Wyliczenie reszty (ang. <em>residual</em>), czyli różnicy pomiędzy znaną wartością a estymacją.</li>
+</ul>
+</li>
+<li>Podsumowanie otrzymanych wyników.</li>
+</ol>
+<p>W pakiecie <strong>gstat</strong>, kroswalidacja LOO jest dostępna w funkcjach <code><a href="https://r-spatial.github.io/gstat/reference/krige.cv.html">krige.cv()</a></code> oraz <code><a href="https://r-spatial.github.io/gstat/reference/krige.cv.html">gstat.cv()</a></code>.
+Działają one bardzo podobnie jak funkcje <code><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige()</a></code> oraz <code><a href="https://r-spatial.github.io/gstat/reference/gstat.html">gstat()</a></code>, jednak w przeciwieństwie do nich nie wymagają podania obiektu siatki.</p>
+<div class="sourceCode" id="cb337"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">model</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Sph"</span>, nugget <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">fitted</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario</span>, <span class="va">model</span><span class="op">)</span></span>
+<span><span class="va">cv_sk</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.cv.html">krige.cv</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>,</span>
+<span>                 locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>                 model <span class="op">=</span> <span class="va">fitted</span>,</span>
+<span>                 beta <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">cv_sk</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##    var1.pred         var1.var        observed         residual       
+##  Min.   : 8.945   Min.   :1.154   Min.   : 7.883   Min.   :-5.08278  
+##  1st Qu.:12.258   1st Qu.:1.808   1st Qu.:11.953   1st Qu.:-0.90162  
+##  Median :14.695   Median :2.177   Median :14.937   Median : 0.05113  
+##  Mean   :15.235   Mean   :2.245   Mean   :15.223   Mean   :-0.01262  
+##  3rd Qu.:17.422   3rd Qu.:2.564   3rd Qu.:17.584   3rd Qu.: 0.85763  
+##  Max.   :23.620   Max.   :5.319   Max.   :24.945   Max.   : 4.30996  
+##      zscore               fold                 geometry  
+##  Min.   :-3.555383   Min.   :  1.00   POINT        :242  
+##  1st Qu.:-0.627964   1st Qu.: 61.25   epsg:2180    :  0  
+##  Median : 0.030835   Median :121.50   +proj=tmer...:  0  
+##  Mean   : 0.000425   Mean   :121.50                      
+##  3rd Qu.: 0.636819   3rd Qu.:181.75                      
+##  Max.   : 3.140278   Max.   :242.00</code></pre>
+<p>Uzyskane w ten sposób wyniki możemy określić używając statystyk jakości estymacji lub też wykresów (ryciny <a href="ocena-jakosci-estymacji.html#fig:12-ocena-17">12.9</a>, <a href="ocena-jakosci-estymacji.html#fig:12-ocena-18">12.10</a>, <a href="ocena-jakosci-estymacji.html#fig:12-ocena-19">12.11</a>).</p>
+<div class="sourceCode" id="cb339"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">cv_sk</span><span class="op">$</span><span class="va">residual</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+## -5.08278 -0.90162  0.05113 -0.01262  0.85763  4.30996</code></pre>
+<div class="sourceCode" id="cb341"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">MPE</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">cv_sk</span><span class="op">$</span><span class="va">residual</span><span class="op">)</span></span>
+<span><span class="va">MPE</span></span></code></pre></div>
+<pre><code>## [1] -0.0126244</code></pre>
+<div class="sourceCode" id="cb343"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">RMSE</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">cv_sk</span><span class="op">$</span><span class="va">residual</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">RMSE</span></span></code></pre></div>
+<pre><code>## [1] 1.40683</code></pre>
+<div class="sourceCode" id="cb345"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">R2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">cv_sk</span><span class="op">$</span><span class="va">observed</span>, <span class="va">cv_sk</span><span class="op">$</span><span class="va">var1.pred</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span></span>
+<span><span class="va">R2</span></span></code></pre></div>
+<pre><code>## [1] 0.8732558</code></pre>
+<div class="sourceCode" id="cb347"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">cv_sk</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"residual"</span>, title.col <span class="op">=</span> <span class="st">""</span>,</span>
+<span>                   breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span>, <span class="op">-</span><span class="fl">5</span>, <span class="op">-</span><span class="fl">3</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">5</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>main.title <span class="op">=</span> <span class="st">"Błąd estymacji"</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:12-ocena-17"></span>
+<img src="12-ocena_files/figure-html/12-ocena-17-1.png" alt="Mapa przedstawiająca rozkład przestrzenny błędów estymacji uzyskanych używając krigingu prostego i kroswalidacji." width="100%"><p class="caption">
+Rycina 12.9: Mapa przedstawiająca rozkład przestrzenny błędów estymacji uzyskanych używając krigingu prostego i kroswalidacji.
+</p>
+</div>
+<div class="sourceCode" id="cb348"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">cv_sk</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">residual</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">"Błąd estymacji"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">"Liczebność"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:12-ocena-18"></span>
+<img src="12-ocena_files/figure-html/12-ocena-18-1.png" alt="Rozkład wartości błędów estymacji uzyskanych używając krigingu prostego i kroswalidacji." width="100%"><p class="caption">
+Rycina 12.10: Rozkład wartości błędów estymacji uzyskanych używając krigingu prostego i kroswalidacji.
+</p>
+</div>
+<div class="sourceCode" id="cb349"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">cv_sk</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">var1.pred</span>, <span class="va">observed</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">"Estymacja"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">"Obserwacja"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:12-ocena-19"></span>
+<img src="12-ocena_files/figure-html/12-ocena-19-1.png" alt="Wykres rozrzutu porównujący rzeczywiste (obserwowane) wartości i wartości estymowane uzyskane używając krigingu prostego i kroswalidacji." width="100%"><p class="caption">
+Rycina 12.11: Wykres rozrzutu porównujący rzeczywiste (obserwowane) wartości i wartości estymowane uzyskane używając krigingu prostego i kroswalidacji.
+</p>
+</div>
+<p>Podobnie jak w walidacji podzbiorem, gdy uzyskany model jest wystarczająco dobry, estymację dla całego obszaru uzyskuje się z użyciem funkcji <code><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige()</a></code> (rycina <a href="ocena-jakosci-estymacji.html#fig:12-ocena-20">12.12</a>).</p>
+<div class="sourceCode" id="cb350"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cv_skk</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>                locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>                newdata <span class="op">=</span> <span class="va">siatka</span>, </span>
+<span>                model <span class="op">=</span> <span class="va">fitted</span>, </span>
+<span>                beta <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using simple kriging]</code></pre>
+<div class="sourceCode" id="cb352"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">cv_skk</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span><span class="st">"var1.pred"</span>, style <span class="op">=</span> <span class="st">"cont"</span>, palette <span class="op">=</span> <span class="st">"-Spectral"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:12-ocena-20"></span>
+<img src="12-ocena_files/figure-html/12-ocena-20-1.png" alt="Estymacja uzyskana dla całego obszaru po oceneniu modelu używając kroswalidacji." width="100%"><p class="caption">
+Rycina 12.12: Estymacja uzyskana dla całego obszaru po oceneniu modelu używając kroswalidacji.
+</p>
+</div>
+<!-- 
+
+
+``` r
+# ok_loocv = krige.cv(temp ~ 1, punkty, model=model_zl2)
+# summary(ok_loocv)
+```
+
+- Tutaj inne przykłady
+- Wykresy z loocv
+- wykresy porównujące
+
+
+``` r
+# ok_fit = gstat(formula=temp ~ 1, data=punkty, model=model_zl2)
+# ok_loocv = gstat.cv(OK_fit, debug.level=0, random=FALSE)
+# spplot(pe[6])
+```
+
+## 
+- prezentacja 5 Ani
+- spatinter folder
+- AIC
+
+## Walidacja wyników estymacji
+
+### Walidacja wyników estymacji |  Kriging zwykły - LOO crossvalidation
+krige.cv
+
+
+``` r
+# OK_fit = gstat(id="OK_fit", formula=temp ~ 1, data=punkty, model=fitted)
+# pe = gstat.cv(OK_fit, debug.level=0, random=FALSE)
+# spplot(pe[6])
+#
+# z = predict(OK_fit, newdata = grid, debug.level = 0)
+# grid2 = grid
+# grid2$OK_pred = z$OK_fit.pred
+# grid2$OK_se = sqrt(z$OK_fit.var)
+# library('rasterVis')
+# spplot(grid2, 'OK_pred')
+# spplot(grid2, 'OK_se')
+```
+
+### Walidacja wyników estymacji |  K  Kriging uniwersalny - LOO crossvalidation
+
+
+``` r
+# KU_fit = gstat(id="KU_fit", formula=temp~odl_od_morza, data=punkty, model=fitted_ku)
+# pe = gstat.cv(KU_fit, debug.level=0, random=FALSE)
+# spplot(pe[6])
+
+# dodanie odległości od morza do siatki !!
+# z_KU = predict(KU_fit, newdata = grid, debug.level = 0)
+# grid$KU_pred = z$KU_fit.pred
+# grid$KU_se = sqrt(z$KU_fit.var)
+# library('rasterVis')
+# spplot(grid, 'KU_pred')
+# spplot(grid, 'KU_se')
+```
+-->
+</div>
+</div>
+<div id="z12" class="section level2" number="12.4">
+<h2>
+<span class="header-section-number">12.4</span> Zadania<a class="anchor" aria-label="anchor" href="#z12"><i class="fas fa-link"></i></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li>Wydziel obiekt <code>punkty</code> w taki sposób aby 70% danych należało zbioru treningowego, a 30 % danych do zbioru testowego.
+Zwizualizuj oba nowe zbiory danych.</li>
+<li>Stwórz optymalne modele zmiennej <code>temp</code> ze zbioru treningowego używając krigingu zwykłego, kokrigingu oraz krigingu uniwersalnego.</li>
+<li>Wykonaj estymacje korzystając z powyższych modeli.
+Porównaj uzyskane estymacje korzystając ze statystyk jakości estymacji oraz wizualizacji jakości estymacji i używając zbioru testowego.
+Który ze stworzonych modeli można uznać za najlepszy?
+Dlaczego?</li>
+<li>Porównaj uzyskane modele używając kroswalidacji.
+Jak wygląda rozkład reszt z uzyskanych estymacji?
+Który model można uznać za najlepszy oglądając rozkłady reszt?</li>
+<li>Stwórz optymalne modele zmiennej <code>temp</code> ze zbioru treningowego używając krigingu zwykłego, kokrigingu oraz krigingu uniwersalnego, ale tym razem wcześniej transformując wartości tej zmiennej używając metod opisanych w sekcji <a href="eksploracja-analiza-danych-nieprzestrzennych.html#trans-danych">3.6</a>.
+Wykonaj estymacje korzystając z powyższych modeli.
+Porównaj uzyskane estymacje korzystając ze statystyk jakości estymacji oraz wizualizacji jakości estymacji i używając zbioru testowego.
+Który ze stworzonych modeli można uznać za najlepszy?
+Dlaczego?
+Czy któryś z uzyskanych modeli dla zmiennej po transformacji jest lepszy niż dla zmiennej przed transformacją?</li>
+</ol>
+<!-- jedno zadanie używające wcześniej używanych technik estymacji -->
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></div>
+<div class="next"><a href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#ocena-jakosci-estymacji"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li>
+<a class="nav-link" href="#wizualizacja-jako%C5%9Bci-estymacji"><span class="header-section-number">12.1</span> Wizualizacja jakości estymacji</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#mapa"><span class="header-section-number">12.1.1</span> Mapa</a></li>
+<li><a class="nav-link" href="#histogram-1"><span class="header-section-number">12.1.2</span> Histogram</a></li>
+<li><a class="nav-link" href="#wykres-rozrzutu"><span class="header-section-number">12.1.3</span> Wykres rozrzutu</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#statystyki-jako%C5%9Bci-estymacji"><span class="header-section-number">12.2</span> Statystyki jakości estymacji</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#podstawowe-statystyki"><span class="header-section-number">12.2.1</span> Podstawowe statystyki</a></li>
+<li><a class="nav-link" href="#%C5%9Bredni-b%C5%82%C4%85d-estymacji"><span class="header-section-number">12.2.2</span> Średni błąd estymacji</a></li>
+<li><a class="nav-link" href="#pierwiastek-b%C5%82%C4%99du-%C5%9Bredniokwadratowego"><span class="header-section-number">12.2.3</span> Pierwiastek błędu średniokwadratowego</a></li>
+<li><a class="nav-link" href="#wsp%C3%B3%C5%82czynnik-determinacji"><span class="header-section-number">12.2.4</span> Współczynnik determinacji</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#jako%C5%9B%C4%87-wynik%C3%B3w-estymacji"><span class="header-section-number">12.3</span> Jakość wyników estymacji</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#walidacja-wynik%C3%B3w-estymacji"><span class="header-section-number">12.3.1</span> Walidacja wyników estymacji</a></li>
+<li><a class="nav-link" href="#walidacja-podzbiorem"><span class="header-section-number">12.3.2</span> Walidacja podzbiorem</a></li>
+<li><a class="nav-link" href="#kroswalidacja"><span class="header-section-number">12.3.3</span> Kroswalidacja</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#z12"><span class="header-section-number">12.4</span> Zadania</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/12-ocena.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/12-ocena.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

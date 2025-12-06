@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>3 Eksploracyjna analiza danych nieprzestrzennych | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(ggplot2) library(geostatbook) data(punkty)...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="3 Eksploracyjna analiza danych nieprzestrzennych | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/eksploracja-analiza-danych-nieprzestrzennych.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(ggplot2) library(geostatbook) data(punkty)...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="3 Eksploracyjna analiza danych nieprzestrzennych | Geostatystyka w R">
+<meta name="twitter:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(ggplot2) library(geostatbook) data(punkty)...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="3 Eksploracyjna analiza danych nieprzestrzennych | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="active" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="eksploracja-analiza-danych-nieprzestrzennych" class="section level1" number="3">
+<h1>
+<span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych<a class="anchor" aria-label="anchor" href="#eksploracja-analiza-danych-nieprzestrzennych"><i class="fas fa-link"></i></a>
+</h1>
+<p>Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bookdown.org/nowosad/geostatystyka/">geostatbook</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">granica</span><span class="op">)</span></span></code></pre></div>
+<div id="cele-eksploracyjnej-analizy-danych" class="section level2" number="3.1">
+<h2>
+<span class="header-section-number">3.1</span> Cele eksploracyjnej analizy danych<a class="anchor" aria-label="anchor" href="#cele-eksploracyjnej-analizy-danych"><i class="fas fa-link"></i></a>
+</h2>
+<p>Zazwyczaj przed przystąpieniem do analiz (geo-)statystycznych koniecznie jest wykonanie eksploracyjnej analizy danych nieprzestrzennych.
+Jej ogólne cele obejmują:</p>
+<ul>
+<li>Stworzenie ogólnej charakterystyki danych oraz badanego zjawiska.</li>
+<li>Określenie przestrzennego/czasowego typu próbkowania.</li>
+<li>Uzyskanie informacji o relacji pomiędzy lokalizacją obserwacji a czynnikami wpływającymi na zmienność przestrzenną badanych cech.</li>
+</ul>
+</div>
+<div id="dane-1" class="section level2" number="3.2">
+<h2>
+<span class="header-section-number">3.2</span> Dane<a class="anchor" aria-label="anchor" href="#dane-1"><i class="fas fa-link"></i></a>
+</h2>
+<div id="struktura-danych" class="section level3" number="3.2.1">
+<h3>
+<span class="header-section-number">3.2.1</span> Struktura danych<a class="anchor" aria-label="anchor" href="#struktura-danych"><i class="fas fa-link"></i></a>
+</h3>
+<p>Nie istnieje jedyna, optymalna ścieżka eksploracji danych.
+Proces ten różni się w zależności od posiadanego zbioru danych, jak i od postawionego pytania.
+Warto jednak, aby jednym z pierwszych kroków było przyjrzenie się danym wejściowym.
+Pozwala na to, między innymi, funkcja <code><a href="https://rdrr.io/r/utils/str.html">str()</a></code>.
+Przykładowo, dla obiektu klasy <code>sf</code> wyświetla ona szereg ważnych informacji.</p>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Classes 'sf' and 'data.frame':   242 obs. of  6 variables:
+##  $ srtm    : num  176 150 187 260 160 ...
+##  $ clc     : int  1 1 1 1 2 2 1 1 2 1 ...
+##  $ temp    : num  13.85 15.48 14.32 15.91 9.94 ...
+##  $ ndvi    : num  0.616 0.556 0.376 0.46 0.56 ...
+##  $ savi    : num  0.419 0.379 0.239 0.309 0.345 ...
+##  $ geometry:sfc_POINT of length 242; first list element:  'XY' num  750298 716732
+##  - attr(*, "sf_column")= chr "geometry"
+##  - attr(*, "agr")= Factor w/ 3 levels "constant","aggregate",..: NA NA NA NA NA
+##   ..- attr(*, "names")= chr [1:5] "srtm" "clc" "temp" "ndvi" ...
+##  - attr(*, "na.action")= 'omit' Named int [1:6] 3 90 110 115 140 197
+##   ..- attr(*, "names")= chr [1:6] "3" "90" "110" "115" ...</code></pre>
+<p>Każdą ze zmiennych można obejrzeć oddzielnie, poprzez połączenie nazwy obiekty, znaku <code>$</code>, oraz nazwy elementu.
+Przykładowo <code>punkty$temp</code> pozwala na obejrzenie wartości wybranej zmiennej z tabeli atrybutów.</p>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##  num [1:242] 13.85 15.48 14.32 15.91 9.94 ...</code></pre>
+</div>
+</div>
+<div id="statystyki-opisowe" class="section level2" number="3.3">
+<h2>
+<span class="header-section-number">3.3</span> Statystyki opisowe<a class="anchor" aria-label="anchor" href="#statystyki-opisowe"><i class="fas fa-link"></i></a>
+</h2>
+<div id="podsumowanie-numeryczne" class="section level3" number="3.3.1">
+<h3>
+<span class="header-section-number">3.3.1</span> Podsumowanie numeryczne<a class="anchor" aria-label="anchor" href="#podsumowanie-numeryczne"><i class="fas fa-link"></i></a>
+</h3>
+<p>Podstawową funkcją w R służącą wyliczaniu podstawowych statystyk jest <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code>.
+Dla zmiennych numerycznych wyświetla ona wartość minimalną, pierwszy kwartyl, medianę, średnią, trzeci kwartyl, oraz wartość maksymalną.</p>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##       srtm            clc             temp             ndvi       
+##  Min.   :146.5   Min.   :1.000   Min.   : 7.883   Min.   :0.2024  
+##  1st Qu.:190.4   1st Qu.:1.000   1st Qu.:11.953   1st Qu.:0.4629  
+##  Median :217.4   Median :1.000   Median :14.937   Median :0.5141  
+##  Mean   :214.3   Mean   :1.483   Mean   :15.223   Mean   :0.5034  
+##  3rd Qu.:238.4   3rd Qu.:2.000   3rd Qu.:17.584   3rd Qu.:0.5712  
+##  Max.   :278.4   Max.   :4.000   Max.   :24.945   Max.   :0.6597  
+##       savi                 geometry  
+##  Min.   :0.0824   POINT        :242  
+##  1st Qu.:0.2923   epsg:2180    :  0  
+##  Median :0.3253   +proj=tmer...:  0  
+##  Mean   :0.3170                      
+##  3rd Qu.:0.3591                      
+##  Max.   :0.4404</code></pre>
+</div>
+<div id="średnia-i-mediana" class="section level3" number="3.3.2">
+<h3>
+<span class="header-section-number">3.3.2</span> Średnia i mediana<a class="anchor" aria-label="anchor" href="#%C5%9Brednia-i-mediana"><i class="fas fa-link"></i></a>
+</h3>
+<p>Do określenia wartości przeciętnej zmiennych najczęściej stosuje się medianę i średnią.</p>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 14.93736</code></pre>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 15.22251</code></pre>
+<p>W wypadku symetrycznego rozkładu te dwie cechy są równe.
+Średnia jest bardziej wrażliwa na wartości odstające.
+Mediana jest lepszą miarą środka danych, jeżeli są one skośne.</p>
+<p>Po co używać średniej?</p>
+<ul>
+<li>Bardziej przydatna w przypadku małych zbiorów danych</li>
+<li>Gdy rozkład danych jest symetryczny</li>
+<li>(Jednak) często warto podawać obie miary</li>
+</ul>
+</div>
+<div id="minimum-i-maksimum" class="section level3" number="3.3.3">
+<h3>
+<span class="header-section-number">3.3.3</span> Minimum i maksimum<a class="anchor" aria-label="anchor" href="#minimum-i-maksimum"><i class="fas fa-link"></i></a>
+</h3>
+<p>Minimalna i maksymalna wartość zmiennej służy do określenia ekstremów w zbiorze danych, jak i sprawdzenia zakresu wartości.</p>
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 7.882644</code></pre>
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 24.94451</code></pre>
+</div>
+<div id="odchylenie-standardowe" class="section level3" number="3.3.4">
+<h3>
+<span class="header-section-number">3.3.4</span> Odchylenie standardowe<a class="anchor" aria-label="anchor" href="#odchylenie-standardowe"><i class="fas fa-link"></i></a>
+</h3>
+<p>Dodatkowo, często używaną statystyką jest odchylenie standardowe.
+Wartość ta określa w jak mocno wartości zmiennej odstają od średniej.
+Dla rozkładu normalnego ta wartość ma znane własności (rycina <a href="eksploracja-analiza-danych-nieprzestrzennych.html#fig:03-eksp-analiza-danych-7">3.1</a>):</p>
+<ul>
+<li>68% obserwacji mieści się w granicach jednego odchylenia standardowego od średniej</li>
+<li>95% obserwacji mieści się w granicach dwóch odchyleń standardowych od średniej</li>
+<li>99,7% obserwacji mieści się w granicach trzech odchyleń standardowych od średniej</li>
+</ul>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:03-eksp-analiza-danych-7"></span>
+<img src="figs/normal_distribution.png" alt="Rozrzut wartości w rozkładzie normalnym w zależności od odchylenia standardowego." width="100%"><p class="caption">
+Rycina 3.1: Rozrzut wartości w rozkładzie normalnym w zależności od odchylenia standardowego.
+</p>
+</div>
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 3.954922</code></pre>
+</div>
+<div id="liczebność-grup" class="section level3" number="3.3.5">
+<h3>
+<span class="header-section-number">3.3.5</span> Liczebność grup<a class="anchor" aria-label="anchor" href="#liczebno%C5%9B%C4%87-grup"><i class="fas fa-link"></i></a>
+</h3>
+<p>Dla zmiennych kategoryzowanych nie powinno wyliczać się powyższych statystyk.
+Możliwe jest natomiast określenie liczebności grup używając funkcji <code><a href="https://rdrr.io/r/base/table.html">table()</a></code>.</p>
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">clc</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## 
+##   1   2   4 
+## 165  57  20</code></pre>
+</div>
+</div>
+<div id="wykresy" class="section level2" number="3.4">
+<h2>
+<span class="header-section-number">3.4</span> Wykresy<a class="anchor" aria-label="anchor" href="#wykresy"><i class="fas fa-link"></i></a>
+</h2>
+<div id="histogram" class="section level3" number="3.4.1">
+<h3>
+<span class="header-section-number">3.4.1</span> Histogram<a class="anchor" aria-label="anchor" href="#histogram"><i class="fas fa-link"></i></a>
+</h3>
+<p>Histogram należy do typów wykresów najczęściej używanych w eksploracyjnej analizie danych (rycina <a href="eksploracja-analiza-danych-nieprzestrzennych.html#fig:03-eksp-analiza-danych-9">3.2</a>).</p>
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:03-eksp-analiza-danych-9"></span>
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-9-1.png" alt="Histogram reprezentujący wartości zmiennej temp z obiektu punkty." width="100%"><p class="caption">
+Rycina 3.2: Histogram reprezentujący wartości zmiennej temp z obiektu punkty.
+</p>
+</div>
+<p>Jest on graficzną reprezentacją rozkładu danych.
+Wartości danych są łączone w przedziały (na osi poziomej) a na osi pionowej jest ukazana liczba punktów (obserwacji) w każdym przedziale.
+Co ważne, różny dobór przedziałów może dawać inną informację - w pakiecie <strong>ggplot2</strong> domyślnie przedział jest ustalany poprzez podzielenie zakresu wartości przez 30.</p>
+</div>
+<div id="estymator-jądrowy-gęstości" class="section level3" number="3.4.2">
+<h3>
+<span class="header-section-number">3.4.2</span> Estymator jądrowy gęstości<a class="anchor" aria-label="anchor" href="#estymator-j%C4%85drowy-g%C4%99sto%C5%9Bci"><i class="fas fa-link"></i></a>
+</h3>
+<p>Podobną funkcję do histogramu spełnia estymator jądrowy gęstości (ang. <em>kernel density estimation</em>).
+Przypomina on wygładzony wykres histogramu i również służy graficznej reprezentacji rozkładu danych (rycina <a href="eksploracja-analiza-danych-nieprzestrzennych.html#fig:03-eksp-analiza-danych-10">3.3</a>).</p>
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:03-eksp-analiza-danych-10"></span>
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-10-1.png" alt="Rozkład wartości zmiennej temp z obiektu punkty." width="100%"><p class="caption">
+Rycina 3.3: Rozkład wartości zmiennej temp z obiektu punkty.
+</p>
+</div>
+</div>
+<div id="wykres-kwantyl-kwantyl" class="section level3" number="3.4.3">
+<h3>
+<span class="header-section-number">3.4.3</span> Wykres kwantyl-kwantyl<a class="anchor" aria-label="anchor" href="#wykres-kwantyl-kwantyl"><i class="fas fa-link"></i></a>
+</h3>
+<p>Wykres kwantyl-kwantyl (ang.<em>quantile-quantile</em>) ułatwia interpretację rozkładu danych (rycina <a href="eksploracja-analiza-danych-nieprzestrzennych.html#fig:03-eksp-analiza-danych-11">3.4</a>).</p>
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:03-eksp-analiza-danych-11"></span>
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-11-1.png" alt="Wykres kwantyl-kwantyl wartości zmiennej temp z obiektu punkty." width="100%"><p class="caption">
+Rycina 3.4: Wykres kwantyl-kwantyl wartości zmiennej temp z obiektu punkty.
+</p>
+</div>
+<p>Na poniższej rycinie można zobaczyć przykłady najczęściej spotykanych cech rozkładu danych w wykresach kwantyl-kwantyl (rycina <a href="eksploracja-analiza-danych-nieprzestrzennych.html#fig:03-eksp-analiza-danych-12">3.5</a>).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:03-eksp-analiza-danych-12"></span>
+<img src="figs/qq_plot_explained.png" alt="Interpretacja rozkładu danych w zależności od wyglądu wykresu kwantyl-kwantyl." width="100%"><p class="caption">
+Rycina 3.5: Interpretacja rozkładu danych w zależności od wyglądu wykresu kwantyl-kwantyl.
+</p>
+</div>
+</div>
+<div id="dystrybuanta-cdf" class="section level3" number="3.4.4">
+<h3>
+<span class="header-section-number">3.4.4</span> Dystrybuanta (CDF)<a class="anchor" aria-label="anchor" href="#dystrybuanta-cdf"><i class="fas fa-link"></i></a>
+</h3>
+<p>Dystrybuanta (ang. <em>cumulative distribution function</em> - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości (rycina <a href="eksploracja-analiza-danych-nieprzestrzennych.html#fig:03-eksp-analiza-danych-13">3.6</a>).</p>
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_ecdf.html">stat_ecdf</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:03-eksp-analiza-danych-13"></span>
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-13-1.png" alt="Dystrybuanta zmiennej temp z obiektu punkty." width="100%"><p class="caption">
+Rycina 3.6: Dystrybuanta zmiennej temp z obiektu punkty.
+</p>
+</div>
+</div>
+<div id="wykres-słupkowy" class="section level3" number="3.4.5">
+<h3>
+<span class="header-section-number">3.4.5</span> Wykres słupkowy<a class="anchor" aria-label="anchor" href="#wykres-s%C5%82upkowy"><i class="fas fa-link"></i></a>
+</h3>
+<p>Wykres słupkowy (ang. <em>bar plot</em>) przedstawia liczebność kolejnych grup (rycina <a href="eksploracja-analiza-danych-nieprzestrzennych.html#fig:03-eksp-analiza-danych-13b">3.7</a>).</p>
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">clc</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:03-eksp-analiza-danych-13b"></span>
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-13b-1.png" alt="Wykres słupkowy zmiennej clc z obiektu punkty." width="100%"><p class="caption">
+Rycina 3.7: Wykres słupkowy zmiennej clc z obiektu punkty.
+</p>
+</div>
+</div>
+</div>
+<div id="porównanie-zmiennych" class="section level2" number="3.5">
+<h2>
+<span class="header-section-number">3.5</span> Porównanie zmiennych<a class="anchor" aria-label="anchor" href="#por%C3%B3wnanie-zmiennych"><i class="fas fa-link"></i></a>
+</h2>
+<p>Wybór odpowiedniej metody porównania zmiennych zależy od szeregu cech, między innymi liczby zmiennych, ich typu, rozkładu wartości, etc.</p>
+<div id="kowariancja" class="section level3" number="3.5.1">
+<h3>
+<span class="header-section-number">3.5.1</span> Kowariancja<a class="anchor" aria-label="anchor" href="#kowariancja"><i class="fas fa-link"></i></a>
+</h3>
+<p>Kowariancja jest nieunormowaną miarą zależności liniowej pomiędzy dwiema zmiennymi.
+Kowariancja dwóch zmiennych <span class="math inline">\(x\)</span> i <span class="math inline">\(y\)</span> pokazuje jak dwie zmienne są ze sobą liniowo powiązane.
+Dodatnia kowariancja wskazuje na pozytywną relację liniową pomiędzy zmiennymi, podczas gdy ujemna kowariancja świadczy o odwrotnej sytuacji.
+Jeżeli zmienne nie są ze sobą liniowo powiązane, wartość kowariancji jest bliska zeru; inaczej mówiąc, kowariancja stanowi miarę wspólnej zmienności dwóch zmiennych.
+Wielkość samej kowariancji uzależniona jest od przyjętej skali zmiennej (jednostki).
+Inne wyniki uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wysokości terenu w metrach i temperatury w stopniach Celsjusza a inne dla wysokości terenu w metrach i temperatury w stopniach Fahrenheita.
+Do wyliczania kowariancji w R służy funkcja <code><a href="https://rdrr.io/r/stats/cor.html">cov()</a></code>.</p>
+</div>
+<div id="współczynnik-korelacji" class="section level3" number="3.5.2">
+<h3>
+<span class="header-section-number">3.5.2</span> Współczynnik korelacji<a class="anchor" aria-label="anchor" href="#wsp%C3%B3%C5%82czynnik-korelacji"><i class="fas fa-link"></i></a>
+</h3>
+<p>Współczynnik korelacji to unormowana miara zależności pomiędzy dwiema zmiennymi, przyjmująca wartości od -1 do 1.
+Ten współczynnik jest uzyskiwany poprzez podzielenie wartości kowariancji przez odchylenie standardowe wyników.
+Z racji unormowania nie jest ona uzależniona od jednostki.
+Korelację można wyliczyć dzięki funkcji <code><a href="https://rdrr.io/r/stats/cor.html">cor()</a></code> (rycina <a href="eksploracja-analiza-danych-nieprzestrzennych.html#fig:03-eksp-analiza-danych-15a">3.8</a>).
+Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego obiektu zawierającego zmienne numeryczne.
+Za pomocą argumentu <code>method</code> można również wybrać jedną z trzech dostępnych miar korelacji: <code>"pearson"</code> przeznaczoną dla zmiennych o rozkładzie normalnym oraz <code>"spearman"</code> i <code>"kendall"</code> używaną dla zmiennych o rozkładzie różnym od normalnego.</p>
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span>, <span class="va">punkty</span><span class="op">$</span><span class="va">ndvi</span>, method <span class="op">=</span> <span class="st">"spearman"</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 0.04499375</code></pre>
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">ndvi</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:03-eksp-analiza-danych-15a"></span>
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-15a-1.png" alt="Wykres rozrzutu reprezentujący relację pomiędzy zmienną temp i ndvi z obiektu punkty." width="100%"><p class="caption">
+Rycina 3.8: Wykres rozrzutu reprezentujący relację pomiędzy zmienną temp i ndvi z obiektu punkty.
+</p>
+</div>
+<p>Dodatkowo funkcja <code><a href="https://rdrr.io/r/stats/cor.test.html">cor.test()</a></code> służy do testowania istotności korelacji.</p>
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.test.html">cor.test</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span>, <span class="va">punkty</span><span class="op">$</span><span class="va">ndvi</span>, method <span class="op">=</span> <span class="st">"spearman"</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## 
+##  Spearman's rank correlation rho
+## 
+## data:  punkty$temp and punkty$ndvi
+## S = 2255764, p-value = 0.486
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+##        rho 
+## 0.04499375</code></pre>
+<!-- W przypadku posiadania co najmniej kilku par zmiennych, można również skorzystać z funkcji `corrplot()` z pakietu **corrplot**. -->
+<!-- Wyświetla ona wykres pokazujący wartości korelacji pomiędzy kolejnymi zmiennymi. -->
+<!-- ```{r } -->
+<!-- corrplot(cor(punkty@data[c(1, 3:5)])) -->
+<!-- ``` -->
+</div>
+<div id="wykres-pudełkowy" class="section level3" number="3.5.3">
+<h3>
+<span class="header-section-number">3.5.3</span> Wykres pudełkowy<a class="anchor" aria-label="anchor" href="#wykres-pude%C5%82kowy"><i class="fas fa-link"></i></a>
+</h3>
+<p>Wykres pudełkowy obrazuje pięć podstawowych statystyk opisowych oraz wartości odstające (rycina <a href="eksploracja-analiza-danych-nieprzestrzennych.html#fig:03-eksp-analiza-danych-17">3.9</a>).
+Pudełko to zakres międzykwartylowy (IQR), a linie oznaczają najbardziej ekstremalne wartości, ale nie odstające.
+Górna z nich to 1,5*IQR ponad krawędź pudełka, dolna to 1,5*IQR poniżej wartości dolnej krawędzi pudełka.
+Linia środkowa to mediana.</p>
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">punkty</span><span class="op">$</span><span class="va">clc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">clc</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">clc</span>, y <span class="op">=</span> <span class="va">temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:03-eksp-analiza-danych-17"></span>
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-17-1.png" alt="Wykres pudełkowy pokazujący relację pomiędzy zmienną clc i temp z obiektu punkty." width="100%"><p class="caption">
+Rycina 3.9: Wykres pudełkowy pokazujący relację pomiędzy zmienną clc i temp z obiektu punkty.
+</p>
+</div>
+</div>
+<div id="testowanie-istotności-różnić-średniej-pomiędzy-grupami" class="section level3" number="3.5.4">
+<h3>
+<span class="header-section-number">3.5.4</span> Testowanie istotności różnić średniej pomiędzy grupami<a class="anchor" aria-label="anchor" href="#testowanie-istotno%C5%9Bci-r%C3%B3%C5%BCni%C4%87-%C5%9Bredniej-pomi%C4%99dzy-grupami"><i class="fas fa-link"></i></a>
+</h3>
+<p>Analiza wariancji (ang. <em>Analysis of Variance</em> - ANOVA) służy do testowania istotności różnic między średnimi w wielu grupach.
+Metoda ta służy do oceny czy średnie wartości cechy <span class="math inline">\(Y\)</span> różnią się istotnie pomiędzy grupami wyznaczonymi przez zmienną <span class="math inline">\(X\)</span>.
+ANOVA nie pozwala natomiast na stwierdzenie między którymi grupami występują różnice.
+Aby to stwierdzić konieczne jest wykonanie porównań wielokrotnych (<em>post-hoc</em>).
+ANOVĘ można wykonać za pomocą funkcji <code><a href="https://rdrr.io/r/stats/aov.html">aov()</a></code> definiując zmienną zależną oraz zmienną grupującą oraz zbiór danych.</p>
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">punkty</span><span class="op">$</span><span class="va">clc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">clc</span><span class="op">)</span></span>
+<span><span class="va">aov_test</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/aov.html">aov</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="va">clc</span>, data <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">aov_test</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##              Df Sum Sq Mean Sq F value              Pr(&gt;F)    
+## clc           2   1272   636.0   60.86 &lt;0.0000000000000002 ***
+## Residuals   239   2498    10.4                                
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p>Do wykonania porównań wielokrotnych służy funkcja <code><a href="https://rdrr.io/r/stats/TukeyHSD.html">TukeyHSD()</a></code>.
+Dodatkowo wyniki można wizualizować za pomocą funkcji <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> (rycina <a href="eksploracja-analiza-danych-nieprzestrzennych.html#fig:03-eksp-analiza-danych-20">3.10</a>).</p>
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tukey</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/TukeyHSD.html">TukeyHSD</a></span><span class="op">(</span><span class="va">aov_test</span>, <span class="st">"clc"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">tukey</span>, las <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:03-eksp-analiza-danych-20"></span>
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-20-1.png" alt="Graficzna reprezentacja wyniku porównań wielokrotnych." width="100%"><p class="caption">
+Rycina 3.10: Graficzna reprezentacja wyniku porównań wielokrotnych.
+</p>
+</div>
+</div>
+</div>
+<div id="trans-danych" class="section level2" number="3.6">
+<h2>
+<span class="header-section-number">3.6</span> Transformacje danych<a class="anchor" aria-label="anchor" href="#trans-danych"><i class="fas fa-link"></i></a>
+</h2>
+<div id="cel-transformacji-danych" class="section level3" number="3.6.1">
+<h3>
+<span class="header-section-number">3.6.1</span> Cel transformacji danych<a class="anchor" aria-label="anchor" href="#cel-transformacji-danych"><i class="fas fa-link"></i></a>
+</h3>
+<p>Transformacja danych może mieć na celu ułatwienie porównywania różnych zmiennych, zniwelowanie skośności rozkładu lub też zmniejszenie wpływu danych odstających.
+W efekcie transformacja danych ułatwia przeprowadzenie analiz (geo-)statystycznych i polepsza wyniki prognoz z modeli.
+Przykładowo, możliwe jest stworzenie modelu i estymacji używając logarytmu badanej zmiennej, a następnie przywrócenie oryginalnej jednostki danych.</p>
+<p>Redukcja skośności może być przeprowadzona z na wiele sposób.
+Jednym z najpopularniejszych jest użycie transformacji logarytmicznej.</p>
+</div>
+<div id="testowanie-normalności-rozkładu" class="section level3" number="3.6.2">
+<h3>
+<span class="header-section-number">3.6.2</span> Testowanie normalności rozkładu<a class="anchor" aria-label="anchor" href="#testowanie-normalno%C5%9Bci-rozk%C5%82adu"><i class="fas fa-link"></i></a>
+</h3>
+<p>Test Shapiro-Wilka pozwala na sprawdzenie normalności rozkładu wybranej zmiennej.
+Hipoteza zerowa tego testu mówi, że rozkład badanej zmiennej jest zbliżony do normalnego, natomiast hipoteza alternatywna stwierdza, że ten rozkład jest różny od normalnego.</p>
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/shapiro.test.html">shapiro.test</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  punkty$temp
+## W = 0.96904, p-value = 0.00004054</code></pre>
+<p>W powyższym przypadku, <em>p-value</em> jest niskie, sugerując, że musimy odrzucić hipotezę zerową i przyjąć alternatywną: rozkład zmiennej <code>temp</code> jest różny od normalnego.</p>
+</div>
+<div id="logarytmizacja" class="section level3" number="3.6.3">
+<h3>
+<span class="header-section-number">3.6.3</span> Logarytmizacja<a class="anchor" aria-label="anchor" href="#logarytmizacja"><i class="fas fa-link"></i></a>
+</h3>
+<p>Jedną grupą technik służących redukcji skośności jest logarytmizacja.
+Logarytmizacja w R może odbyć się za pomocą funkcji <code><a href="https://rdrr.io/r/base/Log.html">log()</a></code> (rycina <a href="eksploracja-analiza-danych-nieprzestrzennych.html#fig:03-eksp-analiza-danych-28">3.11</a>).</p>
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">punkty</span><span class="op">$</span><span class="va">log_tpz</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:03-eksp-analiza-danych-28"></span>
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-28-1.png" alt="Porównania wartości zmiennej temp przed i po transformacji logaritmicznej." width="100%"><p class="caption">
+Rycina 3.11: Porównania wartości zmiennej temp przed i po transformacji logaritmicznej.
+</p>
+</div>
+</div>
+<div id="transformacja-odwrotna" class="section level3" number="3.6.4">
+<h3>
+<span class="header-section-number">3.6.4</span> Transformacja odwrotna<a class="anchor" aria-label="anchor" href="#transformacja-odwrotna"><i class="fas fa-link"></i></a>
+</h3>
+<p>Przywrócenie wartości do oryginalnej jednostki, np. po estymacji, wymaga zastosowania odpowiedniej metody transformacji wstecznej <a href="https://link.springer.com/article/10.1007/s10596-007-9046-x">(Yamamoto, 2007)</a>.</p>
+<p><span class="math display">\[y = k_0 \cdot exp[ln(\hat{y}_{OK})+\frac{\sigma^2_{OK}}{2}]\]</span></p>
+<p>, gdzie:</p>
+<ul>
+<li>
+<span class="math inline">\(k_0\)</span> - współczynnik korekcyjny (iloraz średniej oryginalnej i średniej po transformacji wstecznej)</li>
+<li>
+<span class="math inline">\(exp\)</span> - funkcja wykładnicza</li>
+<li>
+<span class="math inline">\(ln\)</span> - funkcja logarytmiczna</li>
+<li>
+<span class="math inline">\(\hat{y}_{OK}\)</span> - estymacja krigingu zwykłego</li>
+<li>
+<span class="math inline">\(\sigma^2_{OK}\)</span> - wariacja krigingu zwykłego</li>
+</ul>
+<p>Zobaczmy to na uproszczonym przykładzie.
+Poniższy blok kodu tworzy model semiwariogramy, a następnie estymację dla badanego obszaru.
+Wyjaśnienie działania poniższych linii kodu można znaleźć w rozdziałach <a href="geostatystyka-prolog.html#geostatystyka-prolog">6</a>, <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#modelowanie-matematycznie-autokorelacji-przestrzennej">7</a> i <a href="estymacje-jednozmienne.html#estymacje-jednozmienne">8</a>.</p>
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/gstat/">gstat</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">siatka</span><span class="op">)</span></span>
+<span><span class="va">vario</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">log_tpz</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">model</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario</span>, <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Sph"</span>, nugget <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">ok</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="va">log_tpz</span> <span class="op">~</span> <span class="fl">1</span>,</span>
+<span>            locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>            newdata <span class="op">=</span> <span class="va">siatka</span>, </span>
+<span>            model <span class="op">=</span> <span class="va">model</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using ordinary kriging]</code></pre>
+<p>Wynik, obiekt <code>ok</code> jest rastrem zawierającym dwie warstwy: <code>var1.pred</code> i <code>var1.var</code>.
+Pierwsza z nich, <code>var1.pred</code>, zawiera estymowane wartości dla każdego oczka siatki, jednak ich jednostkami jest logarytm oryginalnej jednostki (<span class="math inline">\(ln(\hat{y}_{OK})\)</span>).
+Druga warstwa, <code>var1.var</code>, opisuje wariancję (niepewność) pomiaru w każdym oczku siatki (<span class="math inline">\(\sigma^2_{OK}\)</span>).</p>
+<p>Wartości z obu tych warstw możemy podstawić do powyższego wzoru.</p>
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bt</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">ok</span><span class="op">$</span><span class="va">var1.pred</span> <span class="op">+</span> <span class="op">(</span><span class="va">ok</span><span class="op">$</span><span class="va">var1.var</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>W kolejnym kroku musimy wyliczyć, <span class="math inline">\(k_0\)</span>, współczynnik korekcyjny.
+Jest to iloraz średniej oryginalnej i średniej po transformacji wstecznej.</p>
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mu_bt</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">bt</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">mu_original</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">k0</span> <span class="op">=</span> <span class="va">mu_original</span> <span class="op">/</span> <span class="va">mu_bt</span></span></code></pre></div>
+<p>Do otrzymania wynikowych wartości w oryginalnej jednostce musimy teraz pomnożyć wartości po transformacji wstecznej ze współczynnikiem korekcyjnym (rycina <a href="eksploracja-analiza-danych-nieprzestrzennych.html#fig:03-eksp-analiza-danych-28b">3.12</a>).</p>
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">btt</span> <span class="op">=</span> <span class="va">bt</span> <span class="op">*</span> <span class="va">k0</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:03-eksp-analiza-danych-28b"></span>
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-28b-1.png" alt="Porównania wartości zmiennej temp przed, po transformacji logaritmicznej, oraz po transformacji odwrotnej." width="100%"><p class="caption">
+Rycina 3.12: Porównania wartości zmiennej temp przed, po transformacji logaritmicznej, oraz po transformacji odwrotnej.
+</p>
+</div>
+<p>Finalnie możliwe jest też wpisanie wartości po transformacji odwrotnej do siatki.</p>
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ok</span><span class="op">$</span><span class="va">var1.pred2</span> <span class="op">=</span> <span class="va">btt</span>   </span></code></pre></div>
+<p>Aby uprościć sobie transformacje odwrotne w przyszłości, możemy powyższy kod przepisać do postaci funkcji <code><a href="https://rdrr.io/pkg/geostatbook/man/rev_trans.html">rev_trans()</a></code>:</p>
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rev_trans</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">pred</span>, <span class="va">var</span>, <span class="va">obs</span><span class="op">)</span><span class="op">{</span></span>
+<span>        <span class="va">bt</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">pred</span> <span class="op">+</span> <span class="op">(</span><span class="va">var</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="va">mu_bt</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">bt</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>        <span class="va">mu_original</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">obs</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>        <span class="va">k0</span> <span class="op">=</span> <span class="va">mu_original</span> <span class="op">/</span> <span class="va">mu_bt</span></span>
+<span>        <span class="va">btt</span> <span class="op">=</span> <span class="va">bt</span> <span class="op">*</span> <span class="va">k0</span></span>
+<span>        <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">btt</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>Funkcja <code><a href="https://rdrr.io/pkg/geostatbook/man/rev_trans.html">rev_trans()</a></code> przyjmuje trzy argumenty:</p>
+<ul>
+<li>
+<code>pred</code> - estymowane wartości, których jednostką jest logarytm oryginalnej jednostki</li>
+<li>
+<code>var</code> - wariancja kolejnych estymacji</li>
+<li>
+<code>obs</code> - wartości pomiarów w punktach w oryginalnej jednostce</li>
+</ul>
+<p>Dla ułatwienia funkcja <code><a href="https://rdrr.io/pkg/geostatbook/man/rev_trans.html">rev_trans()</a></code> znajduje się też w pakiecie <strong>geostatbook</strong>.</p>
+<!-- - Logarytmizacji oraz funkcji wykładniczej -->
+<!-- - Pierwiastkowania oraz potęgowania -->
+<!-- - Innych -->
+<!--
+Transformacja danych | Rodzina transformacji Boxa Coxa
+
+
+``` r
+ggplot(punkty, aes(temp)) + geom_density()
+transformacja = BoxCoxTrans(punkty$temp)
+transformacja
+punkty$bc_tpz = predict(transformacja, punkty$temp)
+ggplot(punkty@data, aes(bc_tpz)) + geom_density()
+invBoxCox = function(x, lambda) if (lambda == 0) exp(x) else (lambda * x + 1) ^ (1 / lambda)
+punkty$bc_tpz_inv = invBoxCox(punkty$bc_tpz, lambda = 0.2)
+ggplot(punkty@data, aes(bc_tpz_inv)) + geom_density()
+```
+
+-->
+</div>
+</div>
+<div id="z3" class="section level2" number="3.7">
+<h2>
+<span class="header-section-number">3.7</span> Zadania<a class="anchor" aria-label="anchor" href="#z3"><i class="fas fa-link"></i></a>
+</h2>
+<p>Przyjrzyj się danym z obiektu <code>punkty_pref</code>.
+Możesz go wczytać używając poniższego kodu:</p>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">)</span></span></code></pre></div>
+<ol style="list-style-type: decimal">
+<li>Ile obserwacji i zmiennych jest zawartych w tym obiekcie?
+Jaka jest jego klasa?</li>
+<li>Określ i opisz podstawowe statystyki opisowe zmiennej <code>ndvi</code>.</li>
+<li>Stwórz histogram obrazujący rozkład tej zmiennej.
+Czym charakteryzuje się ten rozkład?</li>
+<li>Jakie jest prawdopodobieństwo przekroczenia wartości <code>ndvi</code> 0.4 w tym zbiorze danych?</li>
+<li>Określ korelację pomiędzy zmienną <code>ndvi</code> a <code>savi</code>.
+Czy jest ona istotna statystycznie?</li>
+<li>Zbuduj wykres pokazujący zmienność <code>ndvi</code> w zależności od klasy pokrycia terenu.
+Czy istnieje istotna statystycznie różnica w wartościach <code>ndvi</code> względem klas pokrycia terenu?</li>
+<li>Wypróbuj logarytmizację danych na zmiennej <code>ndvi</code>.
+Czy poprawiła ona właściwości rozkładu tej zmiennej?</li>
+</ol>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></div>
+<div class="next"><a href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#eksploracja-analiza-danych-nieprzestrzennych"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="nav-link" href="#cele-eksploracyjnej-analizy-danych"><span class="header-section-number">3.1</span> Cele eksploracyjnej analizy danych</a></li>
+<li>
+<a class="nav-link" href="#dane-1"><span class="header-section-number">3.2</span> Dane</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#struktura-danych"><span class="header-section-number">3.2.1</span> Struktura danych</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#statystyki-opisowe"><span class="header-section-number">3.3</span> Statystyki opisowe</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#podsumowanie-numeryczne"><span class="header-section-number">3.3.1</span> Podsumowanie numeryczne</a></li>
+<li><a class="nav-link" href="#%C5%9Brednia-i-mediana"><span class="header-section-number">3.3.2</span> Średnia i mediana</a></li>
+<li><a class="nav-link" href="#minimum-i-maksimum"><span class="header-section-number">3.3.3</span> Minimum i maksimum</a></li>
+<li><a class="nav-link" href="#odchylenie-standardowe"><span class="header-section-number">3.3.4</span> Odchylenie standardowe</a></li>
+<li><a class="nav-link" href="#liczebno%C5%9B%C4%87-grup"><span class="header-section-number">3.3.5</span> Liczebność grup</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#wykresy"><span class="header-section-number">3.4</span> Wykresy</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#histogram"><span class="header-section-number">3.4.1</span> Histogram</a></li>
+<li><a class="nav-link" href="#estymator-j%C4%85drowy-g%C4%99sto%C5%9Bci"><span class="header-section-number">3.4.2</span> Estymator jądrowy gęstości</a></li>
+<li><a class="nav-link" href="#wykres-kwantyl-kwantyl"><span class="header-section-number">3.4.3</span> Wykres kwantyl-kwantyl</a></li>
+<li><a class="nav-link" href="#dystrybuanta-cdf"><span class="header-section-number">3.4.4</span> Dystrybuanta (CDF)</a></li>
+<li><a class="nav-link" href="#wykres-s%C5%82upkowy"><span class="header-section-number">3.4.5</span> Wykres słupkowy</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#por%C3%B3wnanie-zmiennych"><span class="header-section-number">3.5</span> Porównanie zmiennych</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#kowariancja"><span class="header-section-number">3.5.1</span> Kowariancja</a></li>
+<li><a class="nav-link" href="#wsp%C3%B3%C5%82czynnik-korelacji"><span class="header-section-number">3.5.2</span> Współczynnik korelacji</a></li>
+<li><a class="nav-link" href="#wykres-pude%C5%82kowy"><span class="header-section-number">3.5.3</span> Wykres pudełkowy</a></li>
+<li><a class="nav-link" href="#testowanie-istotno%C5%9Bci-r%C3%B3%C5%BCni%C4%87-%C5%9Bredniej-pomi%C4%99dzy-grupami"><span class="header-section-number">3.5.4</span> Testowanie istotności różnić średniej pomiędzy grupami</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#trans-danych"><span class="header-section-number">3.6</span> Transformacje danych</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#cel-transformacji-danych"><span class="header-section-number">3.6.1</span> Cel transformacji danych</a></li>
+<li><a class="nav-link" href="#testowanie-normalno%C5%9Bci-rozk%C5%82adu"><span class="header-section-number">3.6.2</span> Testowanie normalności rozkładu</a></li>
+<li><a class="nav-link" href="#logarytmizacja"><span class="header-section-number">3.6.3</span> Logarytmizacja</a></li>
+<li><a class="nav-link" href="#transformacja-odwrotna"><span class="header-section-number">3.6.4</span> Transformacja odwrotna</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#z3"><span class="header-section-number">3.7</span> Zadania</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/03-eksp_analiza_danych.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/03-eksp_analiza_danych.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

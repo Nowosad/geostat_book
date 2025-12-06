@@ -1,0 +1,583 @@
+
+# Eksploracyjna analiza danych nieprzestrzennych {#eksploracja-analiza-danych-nieprzestrzennych}
+
+Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:
+
+
+``` r
+library(sf)
+library(stars)
+library(ggplot2)
+library(geostatbook)
+data(punkty)
+data(granica)
+```
+
+## Cele eksploracyjnej analizy danych
+
+Zazwyczaj przed przystąpieniem do analiz (geo-)statystycznych koniecznie jest wykonanie eksploracyjnej analizy danych nieprzestrzennych. 
+Jej ogólne cele obejmują:
+
+- Stworzenie ogólnej charakterystyki danych oraz badanego zjawiska.
+- Określenie przestrzennego/czasowego typu próbkowania.
+- Uzyskanie informacji o relacji pomiędzy lokalizacją obserwacji a czynnikami wpływającymi na zmienność przestrzenną badanych cech.
+
+## Dane
+
+### Struktura danych 
+
+Nie istnieje jedyna, optymalna ścieżka eksploracji danych. 
+Proces ten różni się w zależności od posiadanego zbioru danych, jak i od postawionego pytania.
+Warto jednak, aby jednym z pierwszych kroków było przyjrzenie się danym wejściowym. 
+Pozwala na to, między innymi, funkcja `str()`. 
+Przykładowo, dla obiektu klasy `sf` wyświetla ona szereg ważnych informacji. 
+
+
+``` r
+str(punkty)
+```
+
+```
+## Classes 'sf' and 'data.frame':	242 obs. of  6 variables:
+##  $ srtm    : num  176 150 187 260 160 ...
+##  $ clc     : int  1 1 1 1 2 2 1 1 2 1 ...
+##  $ temp    : num  13.85 15.48 14.32 15.91 9.94 ...
+##  $ ndvi    : num  0.616 0.556 0.376 0.46 0.56 ...
+##  $ savi    : num  0.419 0.379 0.239 0.309 0.345 ...
+##  $ geometry:sfc_POINT of length 242; first list element:  'XY' num  750298 716732
+##  - attr(*, "sf_column")= chr "geometry"
+##  - attr(*, "agr")= Factor w/ 3 levels "constant","aggregate",..: NA NA NA NA NA
+##   ..- attr(*, "names")= chr [1:5] "srtm" "clc" "temp" "ndvi" ...
+##  - attr(*, "na.action")= 'omit' Named int [1:6] 3 90 110 115 140 197
+##   ..- attr(*, "names")= chr [1:6] "3" "90" "110" "115" ...
+```
+
+Każdą ze zmiennych można obejrzeć oddzielnie, poprzez połączenie nazwy obiekty, znaku `$`, oraz nazwy elementu.
+Przykładowo `punkty$temp` pozwala na obejrzenie wartości wybranej zmiennej z tabeli atrybutów.
+
+
+``` r
+str(punkty$temp)
+```
+
+```
+##  num [1:242] 13.85 15.48 14.32 15.91 9.94 ...
+```
+
+## Statystyki opisowe
+
+### Podsumowanie numeryczne
+
+Podstawową funkcją w R służącą wyliczaniu podstawowych statystyk jest `summary()`. 
+Dla zmiennych numerycznych wyświetla ona wartość minimalną, pierwszy kwartyl, medianę, średnią, trzeci kwartyl, oraz wartość maksymalną. 
+
+
+``` r
+summary(punkty)
+```
+
+```
+##       srtm            clc             temp             ndvi       
+##  Min.   :146.5   Min.   :1.000   Min.   : 7.883   Min.   :0.2024  
+##  1st Qu.:190.4   1st Qu.:1.000   1st Qu.:11.953   1st Qu.:0.4629  
+##  Median :217.4   Median :1.000   Median :14.937   Median :0.5141  
+##  Mean   :214.3   Mean   :1.483   Mean   :15.223   Mean   :0.5034  
+##  3rd Qu.:238.4   3rd Qu.:2.000   3rd Qu.:17.584   3rd Qu.:0.5712  
+##  Max.   :278.4   Max.   :4.000   Max.   :24.945   Max.   :0.6597  
+##       savi                 geometry  
+##  Min.   :0.0824   POINT        :242  
+##  1st Qu.:0.2923   epsg:2180    :  0  
+##  Median :0.3253   +proj=tmer...:  0  
+##  Mean   :0.3170                      
+##  3rd Qu.:0.3591                      
+##  Max.   :0.4404
+```
+
+### Średnia i mediana
+
+Do określenia wartości przeciętnej zmiennych najczęściej stosuje się medianę i średnią.
+
+
+``` r
+median(punkty$temp, na.rm = TRUE)
+```
+
+```
+## [1] 14.93736
+```
+
+``` r
+mean(punkty$temp, na.rm = TRUE)
+```
+
+```
+## [1] 15.22251
+```
+
+W wypadku symetrycznego rozkładu te dwie cechy są równe. 
+Średnia jest bardziej wrażliwa na wartości odstające.
+Mediana jest lepszą miarą środka danych, jeżeli są one skośne.
+
+Po co używać średniej?
+
+- Bardziej przydatna w przypadku małych zbiorów danych
+- Gdy rozkład danych jest symetryczny
+- (Jednak) często warto podawać obie miary
+  
+### Minimum i maksimum
+
+Minimalna i maksymalna wartość zmiennej służy do określenia ekstremów w zbiorze danych, jak i sprawdzenia zakresu wartości.
+
+
+``` r
+min(punkty$temp, na.rm = TRUE)
+```
+
+```
+## [1] 7.882644
+```
+
+``` r
+max(punkty$temp, na.rm = TRUE)
+```
+
+```
+## [1] 24.94451
+```
+
+### Odchylenie standardowe
+
+Dodatkowo, często używaną statystyką jest odchylenie standardowe.
+Wartość ta określa w jak mocno wartości zmiennej odstają od średniej.
+Dla rozkładu normalnego ta wartość ma znane własności (rycina \@ref(fig:03-eksp-analiza-danych-7)):
+
+- 68% obserwacji mieści się w granicach jednego odchylenia standardowego od średniej
+- 95% obserwacji mieści się w granicach dwóch odchyleń standardowych od średniej
+- 99,7% obserwacji mieści się w granicach trzech odchyleń standardowych od średniej
+
+<div class="figure" style="text-align: center">
+<img src="figs/normal_distribution.png" alt="Rozrzut wartości w rozkładzie normalnym w zależności od odchylenia standardowego." width="100%" />
+<p class="caption">(\#fig:03-eksp-analiza-danych-7)Rozrzut wartości w rozkładzie normalnym w zależności od odchylenia standardowego.</p>
+</div>
+
+
+``` r
+sd(punkty$temp, na.rm = TRUE)
+```
+
+```
+## [1] 3.954922
+```
+
+### Liczebność grup
+
+Dla zmiennych kategoryzowanych nie powinno wyliczać się powyższych statystyk.
+Możliwe jest natomiast określenie liczebności grup używając funkcji `table()`.
+
+
+``` r
+table(punkty$clc)
+```
+
+```
+## 
+##   1   2   4 
+## 165  57  20
+```
+
+## Wykresy
+
+### Histogram
+
+Histogram należy do typów wykresów najczęściej używanych w eksploracyjnej analizie danych (rycina \@ref(fig:03-eksp-analiza-danych-9)).
+
+
+
+
+``` r
+ggplot(punkty, aes(temp)) + geom_histogram()
+```
+
+<div class="figure" style="text-align: center">
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-9-1.png" alt="Histogram reprezentujący wartości zmiennej temp z obiektu punkty." width="100%" />
+<p class="caption">(\#fig:03-eksp-analiza-danych-9)Histogram reprezentujący wartości zmiennej temp z obiektu punkty.</p>
+</div>
+
+Jest on graficzną reprezentacją rozkładu danych.
+Wartości danych są łączone w przedziały (na osi poziomej) a na osi pionowej jest ukazana liczba punktów (obserwacji) w każdym przedziale.
+Co ważne, różny dobór przedziałów może dawać inną informację - w pakiecie **ggplot2** domyślnie przedział jest ustalany poprzez podzielenie zakresu wartości przez 30.
+
+### Estymator jądrowy gęstości
+
+Podobną funkcję do histogramu spełnia estymator jądrowy gęstości (ang. *kernel density estimation*).
+Przypomina on wygładzony wykres histogramu i również służy graficznej reprezentacji rozkładu danych (rycina \@ref(fig:03-eksp-analiza-danych-10)).
+
+
+``` r
+ggplot(punkty, aes(temp)) + geom_density()
+```
+
+<div class="figure" style="text-align: center">
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-10-1.png" alt="Rozkład wartości zmiennej temp z obiektu punkty." width="100%" />
+<p class="caption">(\#fig:03-eksp-analiza-danych-10)Rozkład wartości zmiennej temp z obiektu punkty.</p>
+</div>
+
+### Wykres kwantyl-kwantyl
+
+Wykres kwantyl-kwantyl (ang.*quantile-quantile*) ułatwia interpretację rozkładu danych (rycina \@ref(fig:03-eksp-analiza-danych-11)).
+
+
+``` r
+ggplot(punkty, aes(sample = temp)) + geom_qq()
+```
+
+<div class="figure" style="text-align: center">
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-11-1.png" alt="Wykres kwantyl-kwantyl wartości zmiennej temp z obiektu punkty." width="100%" />
+<p class="caption">(\#fig:03-eksp-analiza-danych-11)Wykres kwantyl-kwantyl wartości zmiennej temp z obiektu punkty.</p>
+</div>
+
+Na poniższej rycinie można zobaczyć przykłady najczęściej spotykanych cech rozkładu danych w wykresach kwantyl-kwantyl (rycina \@ref(fig:03-eksp-analiza-danych-12)).
+
+<div class="figure" style="text-align: center">
+<img src="figs/qq_plot_explained.png" alt="Interpretacja rozkładu danych w zależności od wyglądu wykresu kwantyl-kwantyl." width="100%" />
+<p class="caption">(\#fig:03-eksp-analiza-danych-12)Interpretacja rozkładu danych w zależności od wyglądu wykresu kwantyl-kwantyl.</p>
+</div>
+
+### Dystrybuanta (CDF)
+
+Dystrybuanta (ang. *cumulative distribution function* - CDF) wyświetla prawdopodobieństwo, że wartość zmiennej przewidywanej jest mniejsza lub równa określonej wartości (rycina \@ref(fig:03-eksp-analiza-danych-13)).
+
+
+``` r
+ggplot(punkty, aes(temp)) + stat_ecdf()
+```
+
+<div class="figure" style="text-align: center">
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-13-1.png" alt="Dystrybuanta zmiennej temp z obiektu punkty." width="100%" />
+<p class="caption">(\#fig:03-eksp-analiza-danych-13)Dystrybuanta zmiennej temp z obiektu punkty.</p>
+</div>
+
+### Wykres słupkowy
+
+Wykres słupkowy (ang. *bar plot*) przedstawia liczebność kolejnych grup (rycina \@ref(fig:03-eksp-analiza-danych-13b)).
+
+
+``` r
+ggplot(punkty, aes(clc)) + geom_bar()
+```
+
+<div class="figure" style="text-align: center">
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-13b-1.png" alt="Wykres słupkowy zmiennej clc z obiektu punkty." width="100%" />
+<p class="caption">(\#fig:03-eksp-analiza-danych-13b)Wykres słupkowy zmiennej clc z obiektu punkty.</p>
+</div>
+
+## Porównanie zmiennych
+
+Wybór odpowiedniej metody porównania zmiennych zależy od szeregu cech, między innymi liczby zmiennych, ich typu, rozkładu wartości, etc.
+
+### Kowariancja
+
+Kowariancja jest nieunormowaną miarą zależności liniowej pomiędzy dwiema zmiennymi. 
+Kowariancja dwóch zmiennych $x$ i $y$ pokazuje jak dwie zmienne są ze sobą liniowo powiązane.
+Dodatnia kowariancja wskazuje na pozytywną relację liniową pomiędzy zmiennymi, podczas gdy ujemna kowariancja świadczy o odwrotnej sytuacji.
+Jeżeli zmienne nie są ze sobą liniowo powiązane, wartość kowariancji jest bliska zeru; inaczej mówiąc, kowariancja stanowi miarę wspólnej zmienności dwóch zmiennych.
+Wielkość samej kowariancji uzależniona jest od przyjętej skali zmiennej (jednostki).
+Inne wyniki uzyskamy (przy tej samej zależności pomiędzy parą zmiennych), gdy będziemy analizować wyniki np. wysokości terenu w metrach i temperatury w stopniach Celsjusza a inne dla wysokości terenu w metrach i temperatury w stopniach Fahrenheita. 
+Do wyliczania kowariancji w R służy funkcja `cov()`. 
+
+### Współczynnik korelacji
+
+Współczynnik korelacji to unormowana miara zależności pomiędzy dwiema zmiennymi, przyjmująca wartości od -1 do 1. 
+Ten współczynnik jest uzyskiwany poprzez podzielenie wartości kowariancji przez odchylenie standardowe wyników.
+Z racji unormowania nie jest ona uzależniona od jednostki.
+Korelację można wyliczyć dzięki funkcji `cor()` (rycina \@ref(fig:03-eksp-analiza-danych-15a)).
+Działa ona zarówno w przypadku dwóch zmiennych numerycznych, jak i całego obiektu zawierającego zmienne numeryczne.
+Za pomocą argumentu `method` można również wybrać jedną z trzech dostępnych miar korelacji: `"pearson"` przeznaczoną dla zmiennych o rozkładzie normalnym oraz `"spearman"` i `"kendall"` używaną dla zmiennych o rozkładzie różnym od normalnego.
+
+
+``` r
+cor(punkty$temp, punkty$ndvi, method = "spearman")
+```
+
+```
+## [1] 0.04499375
+```
+
+
+``` r
+ggplot(punkty, aes(temp, ndvi)) + geom_point()
+```
+
+<div class="figure" style="text-align: center">
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-15a-1.png" alt="Wykres rozrzutu reprezentujący relację pomiędzy zmienną temp i ndvi z obiektu punkty." width="100%" />
+<p class="caption">(\#fig:03-eksp-analiza-danych-15a)Wykres rozrzutu reprezentujący relację pomiędzy zmienną temp i ndvi z obiektu punkty.</p>
+</div>
+
+Dodatkowo funkcja `cor.test()` służy do testowania istotności korelacji.
+
+
+``` r
+cor.test(punkty$temp, punkty$ndvi, method = "spearman")
+```
+
+```
+## 
+## 	Spearman's rank correlation rho
+## 
+## data:  punkty$temp and punkty$ndvi
+## S = 2255764, p-value = 0.486
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+##        rho 
+## 0.04499375
+```
+
+<!-- W przypadku posiadania co najmniej kilku par zmiennych, można również skorzystać z funkcji `corrplot()` z pakietu **corrplot**. -->
+<!-- Wyświetla ona wykres pokazujący wartości korelacji pomiędzy kolejnymi zmiennymi. -->
+
+<!-- ```{r } -->
+<!-- corrplot(cor(punkty@data[c(1, 3:5)])) -->
+<!-- ``` -->
+
+### Wykres pudełkowy
+
+Wykres pudełkowy obrazuje pięć podstawowych statystyk opisowych oraz wartości odstające (rycina \@ref(fig:03-eksp-analiza-danych-17)).
+Pudełko to zakres międzykwartylowy (IQR), a linie oznaczają najbardziej ekstremalne wartości, ale nie odstające.
+Górna z nich to 1,5\*IQR ponad krawędź pudełka, dolna to 1,5\*IQR poniżej wartości dolnej krawędzi pudełka. 
+Linia środkowa to mediana.  
+
+
+``` r
+punkty$clc = as.factor(punkty$clc)
+ggplot(punkty, aes(x = clc, y = temp)) + geom_boxplot()
+```
+
+<div class="figure" style="text-align: center">
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-17-1.png" alt="Wykres pudełkowy pokazujący relację pomiędzy zmienną clc i temp z obiektu punkty." width="100%" />
+<p class="caption">(\#fig:03-eksp-analiza-danych-17)Wykres pudełkowy pokazujący relację pomiędzy zmienną clc i temp z obiektu punkty.</p>
+</div>
+
+### Testowanie istotności różnić średniej pomiędzy grupami
+
+Analiza wariancji (ang. *Analysis of Variance* - ANOVA) służy do testowania istotności różnic między średnimi w wielu grupach. 
+Metoda ta służy do oceny czy średnie wartości cechy $Y$ różnią się istotnie pomiędzy grupami wyznaczonymi przez zmienną $X$.
+ANOVA nie pozwala natomiast na stwierdzenie między którymi grupami występują różnice.
+Aby to stwierdzić konieczne jest wykonanie porównań wielokrotnych (*post-hoc*). 
+ANOVĘ można wykonać za pomocą funkcji `aov()` definiując zmienną zależną oraz zmienną grupującą oraz zbiór danych.
+
+
+``` r
+punkty$clc = as.factor(punkty$clc)
+aov_test = aov(temp ~ clc, data = punkty)
+summary(aov_test)
+```
+
+```
+##              Df Sum Sq Mean Sq F value              Pr(>F)    
+## clc           2   1272   636.0   60.86 <0.0000000000000002 ***
+## Residuals   239   2498    10.4                                
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+Do wykonania porównań wielokrotnych służy funkcja `TukeyHSD()`.
+Dodatkowo wyniki można wizualizować za pomocą funkcji `plot()` (rycina \@ref(fig:03-eksp-analiza-danych-20)).
+
+
+
+
+``` r
+tukey = TukeyHSD(aov_test, "clc")
+plot(tukey, las = 1)
+```
+
+<div class="figure" style="text-align: center">
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-20-1.png" alt="Graficzna reprezentacja wyniku porównań wielokrotnych." width="100%" />
+<p class="caption">(\#fig:03-eksp-analiza-danych-20)Graficzna reprezentacja wyniku porównań wielokrotnych.</p>
+</div>
+
+## Transformacje danych {#trans-danych}
+
+### Cel transformacji danych
+
+Transformacja danych może mieć na celu ułatwienie porównywania różnych zmiennych, zniwelowanie skośności rozkładu lub też zmniejszenie wpływu danych odstających.
+W efekcie transformacja danych ułatwia przeprowadzenie analiz (geo-)statystycznych i polepsza wyniki prognoz z modeli.
+Przykładowo, możliwe jest stworzenie modelu i estymacji używając logarytmu badanej zmiennej, a następnie przywrócenie oryginalnej jednostki danych.
+
+Redukcja skośności może być przeprowadzona z na wiele sposób.
+Jednym z najpopularniejszych jest użycie transformacji logarytmicznej.
+
+### Testowanie normalności rozkładu
+
+Test Shapiro-Wilka pozwala na sprawdzenie normalności rozkładu wybranej zmiennej.
+Hipoteza zerowa tego testu mówi, że rozkład badanej zmiennej jest zbliżony do normalnego, natomiast hipoteza alternatywna stwierdza, że ten rozkład jest różny od normalnego.
+
+
+``` r
+shapiro.test(punkty$temp)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  punkty$temp
+## W = 0.96904, p-value = 0.00004054
+```
+
+W powyższym przypadku, *p-value* jest niskie, sugerując, że musimy odrzucić hipotezę zerową i przyjąć alternatywną: rozkład zmiennej `temp` jest różny od normalnego.
+
+### Logarytmizacja
+
+Jedną grupą technik służących redukcji skośności jest logarytmizacja.
+Logarytmizacja w R może odbyć się za pomocą funkcji `log()` (rycina \@ref(fig:03-eksp-analiza-danych-28)).
+
+
+``` r
+punkty$log_tpz = log(punkty$temp)
+```
+
+<div class="figure" style="text-align: center">
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-28-1.png" alt="Porównania wartości zmiennej temp przed i po transformacji logaritmicznej." width="100%" />
+<p class="caption">(\#fig:03-eksp-analiza-danych-28)Porównania wartości zmiennej temp przed i po transformacji logaritmicznej.</p>
+</div>
+
+### Transformacja odwrotna
+
+Przywrócenie wartości do oryginalnej jednostki, np. po estymacji, wymaga zastosowania odpowiedniej metody transformacji wstecznej [(Yamamoto, 2007)](https://link.springer.com/article/10.1007/s10596-007-9046-x).
+
+$$y = k_0 \cdot exp[ln(\hat{y}_{OK})+\frac{\sigma^2_{OK}}{2}]$$
+
+, gdzie:
+
+- $k_0$ - współczynnik korekcyjny (iloraz średniej oryginalnej i średniej po transformacji wstecznej)
+- $exp$ - funkcja wykładnicza
+- $ln$ - funkcja logarytmiczna
+- $\hat{y}_{OK}$ - estymacja krigingu zwykłego
+- $\sigma^2_{OK}$ - wariacja krigingu zwykłego
+
+Zobaczmy to na uproszczonym przykładzie.
+Poniższy blok kodu tworzy model semiwariogramy, a następnie estymację dla badanego obszaru.
+Wyjaśnienie działania poniższych linii kodu można znaleźć w rozdziałach \@ref(geostatystyka-prolog), \@ref(modelowanie-matematycznie-autokorelacji-przestrzennej) i \@ref(estymacje-jednozmienne).
+
+
+``` r
+library(gstat)
+data(siatka)
+vario = variogram(log_tpz ~ 1, locations = punkty)
+model = fit.variogram(vario, vgm(model = "Sph", nugget = 0.5))
+ok = krige(log_tpz ~ 1,
+            locations = punkty,
+            newdata = siatka, 
+            model = model)
+```
+
+```
+## [using ordinary kriging]
+```
+
+Wynik, obiekt `ok` jest rastrem zawierającym dwie warstwy: `var1.pred` i `var1.var`. 
+Pierwsza z nich, `var1.pred`, zawiera estymowane wartości dla każdego oczka siatki, jednak ich jednostkami jest logarytm oryginalnej jednostki ($ln(\hat{y}_{OK})$). 
+Druga warstwa, `var1.var`, opisuje wariancję (niepewność) pomiaru w każdym oczku siatki ($\sigma^2_{OK}$). 
+
+Wartości z obu tych warstw możemy podstawić do powyższego wzoru.
+
+
+``` r
+bt = exp(ok$var1.pred + (ok$var1.var / 2))
+```
+
+W kolejnym kroku musimy wyliczyć, $k_0$, współczynnik korekcyjny.
+Jest to iloraz średniej oryginalnej i średniej po transformacji wstecznej.
+
+
+``` r
+mu_bt = mean(bt, na.rm = TRUE)
+mu_original = mean(punkty$temp, na.rm = TRUE)
+k0 = mu_original / mu_bt
+```
+
+Do otrzymania wynikowych wartości w oryginalnej jednostce musimy teraz pomnożyć wartości po transformacji wstecznej ze współczynnikiem korekcyjnym (rycina \@ref(fig:03-eksp-analiza-danych-28b)).
+
+
+``` r
+btt = bt * k0
+```
+
+<div class="figure" style="text-align: center">
+<img src="03-eksp_analiza_danych_files/figure-html/03-eksp-analiza-danych-28b-1.png" alt="Porównania wartości zmiennej temp przed, po transformacji logaritmicznej, oraz po transformacji odwrotnej." width="100%" />
+<p class="caption">(\#fig:03-eksp-analiza-danych-28b)Porównania wartości zmiennej temp przed, po transformacji logaritmicznej, oraz po transformacji odwrotnej.</p>
+</div>
+
+Finalnie możliwe jest też wpisanie wartości po transformacji odwrotnej do siatki.
+
+
+``` r
+ok$var1.pred2 = btt   
+```
+
+Aby uprościć sobie transformacje odwrotne w przyszłości, możemy powyższy kod przepisać do postaci funkcji `rev_trans()`:
+
+
+``` r
+rev_trans = function(pred, var, obs){
+        bt = exp(pred + (var / 2))
+        mu_bt = mean(bt, na.rm = TRUE)
+        mu_original = mean(obs, na.rm = TRUE)
+        k0 = mu_original / mu_bt
+        btt = bt * k0
+        return(btt)
+}
+```
+
+Funkcja `rev_trans()` przyjmuje trzy argumenty:
+
+- `pred` - estymowane wartości, których jednostką jest logarytm oryginalnej jednostki
+- `var` - wariancja kolejnych estymacji 
+- `obs` - wartości pomiarów w punktach w oryginalnej jednostce
+
+Dla ułatwienia funkcja `rev_trans()` znajduje się też w pakiecie **geostatbook**.
+
+<!-- - Logarytmizacji oraz funkcji wykładniczej -->
+<!-- - Pierwiastkowania oraz potęgowania -->
+<!-- - Innych -->
+
+<!--
+Transformacja danych | Rodzina transformacji Boxa Coxa
+
+
+``` r
+ggplot(punkty, aes(temp)) + geom_density()
+transformacja = BoxCoxTrans(punkty$temp)
+transformacja
+punkty$bc_tpz = predict(transformacja, punkty$temp)
+ggplot(punkty@data, aes(bc_tpz)) + geom_density()
+invBoxCox = function(x, lambda) if (lambda == 0) exp(x) else (lambda * x + 1) ^ (1 / lambda)
+punkty$bc_tpz_inv = invBoxCox(punkty$bc_tpz, lambda = 0.2)
+ggplot(punkty@data, aes(bc_tpz_inv)) + geom_density()
+```
+
+-->
+
+## Zadania {#z3}
+
+Przyjrzyj się danym z obiektu `punkty_pref`.
+Możesz go wczytać używając poniższego kodu:
+
+
+``` r
+data(punkty_pref)
+```
+
+1. Ile obserwacji i zmiennych jest zawartych w tym obiekcie? 
+Jaka jest jego klasa?
+2. Określ i opisz podstawowe statystyki opisowe zmiennej `ndvi`.
+3. Stwórz histogram obrazujący rozkład tej zmiennej.
+Czym charakteryzuje się ten rozkład?
+4. Jakie jest prawdopodobieństwo przekroczenia wartości `ndvi` 0.4 w tym zbiorze danych?
+5. Określ korelację pomiędzy zmienną `ndvi` a `savi`.
+Czy jest ona istotna statystycznie?
+6. Zbuduj wykres pokazujący zmienność `ndvi` w zależności od klasy pokrycia terenu. 
+Czy istnieje istotna statystycznie różnica w wartościach `ndvi` względem klas pokrycia terenu?
+7. Wypróbuj logarytmizację danych na zmiennej `ndvi`.
+Czy poprawiła ona właściwości rozkładu tej zmiennej?

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>10 Estymacje wielozmienne | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(geostatbook)...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="10 Estymacje wielozmienne | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/estymacje-wielozmienne.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(geostatbook)...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="10 Estymacje wielozmienne | Geostatystyka w R">
+<meta name="twitter:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(geostatbook)...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="10 Estymacje wielozmienne | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="active" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="estymacje-wielozmienne" class="section level1" number="10">
+<h1>
+<span class="header-section-number">10</span> Estymacje wielozmienne<a class="anchor" aria-label="anchor" href="#estymacje-wielozmienne"><i class="fas fa-link"></i></a>
+</h1>
+<p>Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:</p>
+<div class="sourceCode" id="cb269"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/gstat/">gstat</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bookdown.org/nowosad/geostatystyka/">geostatbook</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty_ndvi</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">siatka</span><span class="op">)</span></span></code></pre></div>
+<div id="kokriging" class="section level2" number="10.1">
+<h2>
+<span class="header-section-number">10.1</span> Kokriging<a class="anchor" aria-label="anchor" href="#kokriging"><i class="fas fa-link"></i></a>
+</h2>
+<div id="kokriging-ang.-co-kriging" class="section level3" number="10.1.1">
+<h3>
+<span class="header-section-number">10.1.1</span> Kokriging (ang. <em>co-kriging</em>)<a class="anchor" aria-label="anchor" href="#kokriging-ang.-co-kriging"><i class="fas fa-link"></i></a>
+</h3>
+<p>Kokriging pozwala na wykorzystanie dodatkowej zmiennej (ang. <em>auxiliary variable</em>), zwanej inaczej kozmienną (ang. <em>co-variable</em>), która może być użyta do prognozowania wartości badanej zmiennej w nieopróbowanej lokalizacji.
+Zmienna dodatkowa może być pomierzona w tych samych miejscach, gdzie badana zmienna, jak też w innych niż badana zmienna.
+Możliwa jest też sytuacja, gdy zmienna dodatkowa jest pomierzona w dwóch powyższych przypadkach.
+Kokriging wymaga, aby obie zmienne były istotnie ze sobą skorelowane.
+Najczęściej kokriging jest stosowany w sytuacji, gdy zmienna dodatkowa jest łatwiejsza (tańsza) do pomierzenia niż zmienna główna.
+W efekcie, uzyskany zbiór danych zawiera informacje o badanej zmiennej oraz gęściej opróbowane informacje o zmiennej dodatkowej.
+Jeżeli informacje o zmiennej dodatkowej są znane dla całego obszaru wówczas bardziej odpowiednią techniką będzie kriging z zewnętrznym trendem (KED).</p>
+</div>
+<div id="wybór-dodatkowej-zmiennej" class="section level3" number="10.1.2">
+<h3>
+<span class="header-section-number">10.1.2</span> Wybór dodatkowej zmiennej<a class="anchor" aria-label="anchor" href="#wyb%C3%B3r-dodatkowej-zmiennej"><i class="fas fa-link"></i></a>
+</h3>
+<p>Wybór zmiennej dodatkowej może opierać się na dwóch kryteriach:</p>
+<ul>
+<li>Teoretycznym</li>
+<li>Empirycznym</li>
+</ul>
+<!--
+Kroskowariogramy
+Kroskorelogramy
+-->
+</div>
+</div>
+<div id="krossemiwariogramy" class="section level2" number="10.2">
+<h2>
+<span class="header-section-number">10.2</span> Krossemiwariogramy<a class="anchor" aria-label="anchor" href="#krossemiwariogramy"><i class="fas fa-link"></i></a>
+</h2>
+<div id="krossemiwariogramy-ang.-crossvariogram" class="section level3" number="10.2.1">
+<h3>
+<span class="header-section-number">10.2.1</span> Krossemiwariogramy (ang. <strong>crossvariogram</strong>)<a class="anchor" aria-label="anchor" href="#krossemiwariogramy-ang.-crossvariogram"><i class="fas fa-link"></i></a>
+</h3>
+<p>Metoda kokrigingu opiera się nie o semiwariogram, lecz o krossemiwariogramy.
+Krossemiwariogram jest to wariancja różnicy pomiędzy dwiema zmiennymi w dwóch lokalizacjach.
+Wyliczając krossemiwariogram otrzymujemy empiryczne semiwariogramy dla dwóch badanych zmiennych oraz krosswariogram dla kombinacji dwóch zmiennych.</p>
+<p>W poniższym przykładzie istnieją dwie zmienne, <code>savi</code> ze zbioru <code>punkty</code> pomierzona w 242 lokalizacjach oraz <code>ndvi</code> ze zbioru <code>punkty_ndvi</code> pomierzona w 992 punktach (ryciny <a href="estymacje-wielozmienne.html#fig:10-kokriging-3">10.1</a> i <a href="estymacje-wielozmienne.html#fig:10-kokriging-3">10.1</a>).</p>
+<div class="sourceCode" id="cb270"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"savi"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:10-kokriging-3"></span>
+<img src="10-kokriging_files/figure-html/10-kokriging-3-1.png" alt="Mapa wartości zmiennej savi." width="100%"><p class="caption">
+Rycina 10.1: Mapa wartości zmiennej savi.
+</p>
+</div>
+<div class="sourceCode" id="cb271"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">punkty_ndvi</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"ndvi"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:10-kokriging-4"></span>
+<img src="10-kokriging_files/figure-html/10-kokriging-4-1.png" alt="Mapa wartości zmiennej ndvi." width="100%"><p class="caption">
+Rycina 10.2: Mapa wartości zmiennej ndvi.
+</p>
+</div>
+<p>Tworzenie krossemiwariogramów odbywa się z użyciem funkcji <code><a href="https://r-spatial.github.io/gstat/reference/gstat.html">gstat()</a></code>. Na początku definiujemy pierwszy obiekt <code>g</code>.
+Składa się on z obiektu pustego (<code>NULL</code>), nazwy pierwszej zmiennej (nazwa może być dowolna), wzoru (w przykładzie <code>savi ~ 1</code>), oraz pierwszego zbioru punktowego.
+Następnie do pierwszego obiektu <code>g</code> dodajemy nowe informacje również poprzez funkcję <code><a href="https://r-spatial.github.io/gstat/reference/gstat.html">gstat()</a></code>. Jest to nazwa obiektu (<code>g</code>), nazwa drugiej zmiennej, wzór, oraz drugi zbiór punktowy.</p>
+<div class="sourceCode" id="cb272"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">g</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/gstat.html">gstat</a></span><span class="op">(</span><span class="cn">NULL</span>, </span>
+<span>          id <span class="op">=</span> <span class="st">"SAVI"</span>, </span>
+<span>          form <span class="op">=</span> <span class="va">savi</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>          data <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">g</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/gstat.html">gstat</a></span><span class="op">(</span><span class="va">g</span>, </span>
+<span>          id <span class="op">=</span> <span class="st">"NDVI"</span>, </span>
+<span>          form <span class="op">=</span> <span class="va">ndvi</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>          data <span class="op">=</span> <span class="va">punkty_ndvi</span><span class="op">)</span></span>
+<span><span class="va">g</span></span></code></pre></div>
+<pre><code>## data:
+## SAVI : formula = savi`~`1 ; data dim = 242 x 5
+## NDVI : formula = ndvi`~`1 ; data dim = 992 x 1</code></pre>
+<p>Z uzyskanego w ten sposób obiektu tworzymy krossemiwariogram (funkcja <code><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram()</a></code>), a następnie go wizualizujemy używając funkcji <code><a href="https://rdrr.io/r/base/plot.html">plot()</a></code> (rycina <a href="estymacje-wielozmienne.html#fig:10-kokriging-6">10.3</a>).</p>
+<div class="sourceCode" id="cb274"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">v</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:10-kokriging-6"></span>
+<img src="10-kokriging_files/figure-html/10-kokriging-6-1.png" alt="Krossemiwariogram zmiennych savi i ndvi." width="100%"><p class="caption">
+Rycina 10.3: Krossemiwariogram zmiennych savi i ndvi.
+</p>
+</div>
+</div>
+</div>
+<div id="modelowanie-krossemiwariogramów" class="section level2" number="10.3">
+<h2>
+<span class="header-section-number">10.3</span> Modelowanie krossemiwariogramów<a class="anchor" aria-label="anchor" href="#modelowanie-krossemiwariogram%C3%B3w"><i class="fas fa-link"></i></a>
+</h2>
+<p>Modelowanie krossemiwariogramów, podobnie jak ich tworzenie, odbywa się używając funkcji <code><a href="https://r-spatial.github.io/gstat/reference/gstat.html">gstat()</a></code>,
+<!-- Istnieją dwie podstawowe podejścia modelowania krossemiwariogramów: (1) wspólne modelowanie semiwariogramów i krossemiwariogramów lub (2) modelowanie każdego semiwariogramu i krossemiwariogramu oddzielnie. -->
+<!-- W pierwszym podejściu  -->
+gdzie podaje się wcześniejszy obiekt <code>g</code>, model, oraz argument <code>fill.all = TRUE</code>.
+Ten ostatni parametr powoduje, że model dodawany jest do wszystkich elementów krossemiwariogramu.</p>
+<div class="sourceCode" id="cb275"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">g_model</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span><span class="fl">0.006</span>, model <span class="op">=</span> <span class="st">"Sph"</span>,</span>
+<span>              range <span class="op">=</span> <span class="fl">1200</span>, nugget <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span></span>
+<span><span class="va">g1</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/gstat.html">gstat</a></span><span class="op">(</span><span class="va">g</span>, model <span class="op">=</span> <span class="va">g_model</span>, fill.all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">g1</span></span></code></pre></div>
+<pre><code>## data:
+## SAVI : formula = savi`~`1 ; data dim = 242 x 5
+## NDVI : formula = ndvi`~`1 ; data dim = 992 x 1
+## variograms:
+##              model psill range
+## SAVI[1]        Nug 0.001     0
+## SAVI[2]        Sph 0.006  1200
+## NDVI[1]        Nug 0.001     0
+## NDVI[2]        Sph 0.006  1200
+## SAVI.NDVI[1]   Nug 0.001     0
+## SAVI.NDVI[2]   Sph 0.006  1200</code></pre>
+<p>W przypadku semiwariogramów funkcja <code><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram()</a></code> służyła dopasowaniu parametrów modelu do semiwariogramu empirycznego.
+Podobną rolę w krossemiwariogramach spełnia funkcja <code><a href="https://r-spatial.github.io/gstat/reference/fit.lmc.html">fit.lmc()</a></code> - dopasowuje ona liniowy model koregionalizacji do semiwariogramów wielozmienych (rycina <a href="estymacje-wielozmienne.html#fig:10-kokriging-8">10.4</a>).
+Funkcja <code><a href="https://r-spatial.github.io/gstat/reference/fit.lmc.html">fit.lmc()</a></code> oczekuje co najmniej dwóch elementów, krossemiwariogramu oraz modelów krossemiwariancji.
+W poniższym przykładzie dodatkowo użyto parametru <code>correct.diagonal = 1.01</code>, z uwagi na to że analizowane zmienne wykazywały bardzo silną korelację oraz parametru <code>fit.method</code>.
+Ten ostatni parametr określa, która z użytych metod automatycznego dopasowania semiwariogramów jest używana.
+Pakiet <strong>gstat</strong> ma domyślnie ustawione <code>fit.method = 7</code>, co daje największe znaczenie parom punktów o najmniejszym zasięgu.
+Ta opcja nie jest zazwyczaj optymalna w przypadku krossemiwariogramów - tutaj częściej stosuje się <code>fit.method = 6</code> (wagi nie są nadawane) lub <code>fit.method = 1</code> (wagi proporcjonalne do liczby par punktów w każdym przedziale).</p>
+<div class="sourceCode" id="cb277"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">g2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.lmc.html">fit.lmc</a></span><span class="op">(</span><span class="va">v</span>, <span class="va">g1</span>,</span>
+<span>                correct.diagonal <span class="op">=</span> <span class="fl">1.01</span>,</span>
+<span>                fit.method <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
+<span><span class="va">g2</span></span></code></pre></div>
+<pre><code>## data:
+## SAVI : formula = savi`~`1 ; data dim = 242 x 5
+## NDVI : formula = ndvi`~`1 ; data dim = 992 x 1
+## variograms:
+##              model        psill range
+## SAVI[1]        Nug 0.0009873135     0
+## SAVI[2]        Sph 0.0050465345  1200
+## NDVI[1]        Nug 0.0023006100     0
+## NDVI[2]        Sph 0.0070299532  1200
+## SAVI.NDVI[1]   Nug 0.0014922022     0
+## SAVI.NDVI[2]   Sph 0.0055018027  1200</code></pre>
+<div class="sourceCode" id="cb279"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">v</span>, <span class="va">g2</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:10-kokriging-8"></span>
+<img src="10-kokriging_files/figure-html/10-kokriging-8-1.png" alt="Automatycznie dopasowane modele krossemiwariogramu zmiennych savi i ndvi." width="100%"><p class="caption">
+Rycina 10.4: Automatycznie dopasowane modele krossemiwariogramu zmiennych savi i ndvi.
+</p>
+</div>
+<!--
+
+``` r
+# plot(variogram(g, map=TRUE, cutoff=12000, width=800))
+plot(variogram(g, alpha = c(60, 105, 150, 195)))
+```
+-->
+<!-- Drugie podejście polega na modelowaniu każdego semiwariogramu i krossemiwariogramu oddzielnie za pomocą funkcji `gstat()` oraz poprzez podanie za każdym razem odpowiedniego `id`. -->
+<!-- ```{r} -->
+<!-- model_savi = vgm(0.005, model = "Sph",  -->
+<!--                  range = 1200, nugget = 0.001) -->
+<!-- g3 = gstat(g,  -->
+<!--           id = "SAVI",  -->
+<!--           model = model_savi) -->
+<!-- model_ndvi = vgm(0.007, model = "Sph",  -->
+<!--                  range = 1200, nugget = 0.002) -->
+<!-- g3 = gstat(g3,  -->
+<!--           id = "NDVI",  -->
+<!--           model = model_ndvi) -->
+<!-- g3 -->
+<!-- ``` -->
+<!-- W przypadku semiwariogramów, odpowiednie `id` są zgodne z tymi podanymi podczas tworzenia krossemiwariogramu, natomiast modelowanie krossemiwariogramu polega na podaniu wektora dwóch `id`. -->
+<!-- ```{r} -->
+<!-- model_kros = vgm(0.0051, model = "Sph", -->
+<!--                       range = 1200, nugget = 0.002) -->
+<!-- g3 = gstat(g3, -->
+<!--           id = c("SAVI", "NDVI"), -->
+<!--           model = model_kros) -->
+<!-- g3 -->
+<!-- ``` -->
+<!-- Efekt takiego modelowanie można zobaczyć na rycinie \@ref(fig:kros-model-hand). -->
+<!-- ```{r kros-model-hand, fig.cap="Ręcznie dopasowane modele krossemiwariogramu zmiennych savi i ndvi. "} -->
+<!-- plot(v, g4) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- g4 = fit.lmc(v, g3, -->
+<!--              fit.sills = FALSE, -->
+<!--              correct.diagonal = 1.01) -->
+<!-- ``` -->
+</div>
+<div id="kokriging-1" class="section level2" number="10.4">
+<h2>
+<span class="header-section-number">10.4</span> Kokriging<a class="anchor" aria-label="anchor" href="#kokriging-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>Posiadając dopasowane modele oraz siatkę można uzyskać wynik używając funkcji <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> (rycina <a href="estymacje-wielozmienne.html#fig:kokriging-predicted">10.5</a>).</p>
+<div class="sourceCode" id="cb280"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ck</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">g2</span>, newdata <span class="op">=</span> <span class="va">siatka</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Linear Model of Coregionalization found. Good.
+## [using ordinary cokriging]</code></pre>
+<p>W efekcie otrzymujemy pięć zmiennych:</p>
+<ol style="list-style-type: decimal">
+<li>
+<code>SAVI.pred</code> - estymacja zmiennej <code>savi</code>
+</li>
+<li>
+<code>SAVI.var</code> - wariancja zmiennej <code>savi</code>
+</li>
+<li>
+<code>NDVI.pred</code> - estymacja zmiennej <code>ndvi</code>
+</li>
+<li>
+<code>NDVI.var</code> - wariancja zmiennej <code>ndvi</code>
+</li>
+<li>
+<code>cov.SAVI.NDVI</code> - kowariancja zmiennych <code>savi</code> oraz <code>ndvi</code>
+</li>
+</ol>
+<div class="sourceCode" id="cb282"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ck</span></span></code></pre></div>
+<pre><code>## stars object with 2 dimensions and 5 attributes
+## attribute(s):
+##                       Min.     1st Qu.      Median        Mean     3rd Qu.
+## SAVI.pred      0.077243684 0.290908153 0.321211504 0.315700226 0.348022981
+## SAVI.var       0.001525063 0.002379011 0.002638353 0.002652832 0.002905902
+## NDVI.pred      0.205549518 0.468630003 0.508090071 0.501150702 0.542080400
+## NDVI.var       0.003082640 0.003893078 0.004212984 0.004272496 0.004578181
+## cov.SAVI.NDVI  0.001930305 0.002625231 0.002885524 0.002929714 0.003180885
+##                       Max. NA's
+## SAVI.pred      0.437090600 1270
+## SAVI.var       0.004777928 1270
+## NDVI.pred      0.658528553 1270
+## NDVI.var       0.007378830 1270
+## cov.SAVI.NDVI  0.005432433 1270
+## dimension(s):
+##   from  to offset delta               refsys x/y
+## x    1 127 745542    90 ETRS89 / Poland CS92 [x]
+## y    1  96 721256   -90 ETRS89 / Poland CS92 [y]</code></pre>
+<div class="sourceCode" id="cb284"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">ck</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SAVI.pred"</span>, <span class="st">"SAVI.var"</span><span class="op">)</span>,</span>
+<span>                  style <span class="op">=</span> <span class="st">"cont"</span>, </span>
+<span>                  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"-Spectral"</span>, <span class="st">"viridis"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.frame <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:kokriging-predicted"></span>
+<img src="10-kokriging_files/figure-html/kokriging-predicted-1.png" alt="Estymacja i wariancja estymacji zmiennej savi używając metody kokrigingu (CK)." width="100%"><p class="caption">
+Rycina 10.5: Estymacja i wariancja estymacji zmiennej savi używając metody kokrigingu (CK).
+</p>
+</div>
+<!--   
+## Kokriging pełny i medianowy, kokriging kolokacyjny, 
+## Kokriging na podstawie uproszczonych modeli Markowa I i II
+-->
+</div>
+<div id="z10" class="section level2" number="10.5">
+<h2>
+<span class="header-section-number">10.5</span> Zadania<a class="anchor" aria-label="anchor" href="#z10"><i class="fas fa-link"></i></a>
+</h2>
+<p>Zadania w tym rozdziale są oparte o dane z <code>meuse.all</code> z pakietu <strong>gstat</strong>.</p>
+<div class="sourceCode" id="cb285"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"meuse.all"</span><span class="op">)</span></span>
+<span><span class="va">meuse</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">meuse.all</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Na jego podstawie wydziel dwa obiekty - <code>meuse164</code> zawierający tylko zmienną <code>cadmium</code> (kadm) dla 164 punktów, oraz <code>meuse60</code> zawierający tylko zmienną <code>copper</code> (miedź) dla 60 punktów.</p>
+<div class="sourceCode" id="cb286"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">431</span><span class="op">)</span></span>
+<span><span class="va">meuse164</span> <span class="op">=</span> <span class="va">meuse</span><span class="op">[</span><span class="st">"cadmium"</span><span class="op">]</span></span>
+<span><span class="va">meuse60</span> <span class="op">=</span> <span class="va">meuse</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">meuse</span><span class="op">)</span>, <span class="fl">60</span><span class="op">)</span>, <span class="st">"copper"</span><span class="op">]</span></span></code></pre></div>
+<ol style="list-style-type: decimal">
+<li>Stwórz siatkę interpolacyjną o rozdzielczości 100 jednostek dla obszaru, w którym znajdują się punkty <code>meuse</code>.</li>
+<li>Zbuduj optymalne modele semiwariogramu zmiennej <code>cadmium</code> dla obiektu <code>meuse164</code> oraz zmiennej <code>copper</code> dla obiektu <code>meuse60</code>.
+Porównaj graficznie uzyskane modele.</li>
+<li>Korzystając z obiektów <code>meuse164</code> oraz <code>meuse60</code> stwórz krossemiwariogram.</li>
+<li>Zbuduj ręczny model uzyskanego krossemiwariogramu.
+Następnie stwórz model automatyczny.
+Porównaj uzyskane wyniki.</li>
+<li>Stwórz estymację zmiennej <code>copper</code> w nowo utworzonej siatce korzystając z kokrigingu.</li>
+<li>Dodatkowe: stwórz estymację zmiennej <code>savi</code> z obiektu <code>punkty</code> używając krigingu zwykłego.
+Porównaj uzyskaną estymację z estymacją przedstawioną w tym rozdziale, stworzoną używając kokrigingu.</li>
+</ol>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></div>
+<div class="next"><a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#estymacje-wielozmienne"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li>
+<a class="nav-link" href="#kokriging"><span class="header-section-number">10.1</span> Kokriging</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#kokriging-ang.-co-kriging"><span class="header-section-number">10.1.1</span> Kokriging (ang. co-kriging)</a></li>
+<li><a class="nav-link" href="#wyb%C3%B3r-dodatkowej-zmiennej"><span class="header-section-number">10.1.2</span> Wybór dodatkowej zmiennej</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#krossemiwariogramy"><span class="header-section-number">10.2</span> Krossemiwariogramy</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#krossemiwariogramy-ang.-crossvariogram"><span class="header-section-number">10.2.1</span> Krossemiwariogramy (ang. crossvariogram)</a></li></ul>
+</li>
+<li><a class="nav-link" href="#modelowanie-krossemiwariogram%C3%B3w"><span class="header-section-number">10.3</span> Modelowanie krossemiwariogramów</a></li>
+<li><a class="nav-link" href="#kokriging-1"><span class="header-section-number">10.4</span> Kokriging</a></li>
+<li><a class="nav-link" href="#z10"><span class="header-section-number">10.5</span> Zadania</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/10-kokriging.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/10-kokriging.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

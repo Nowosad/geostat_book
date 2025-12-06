@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>11 Estymacja lokalnego rozkładu prawdopodobieństwa | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(ggplot2)...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="11 Estymacja lokalnego rozkładu prawdopodobieństwa | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/estymacja-lokalnego-rozkadu-prawdopodobienstwa.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(ggplot2)...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="11 Estymacja lokalnego rozkładu prawdopodobieństwa | Geostatystyka w R">
+<meta name="twitter:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(ggplot2)...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="11 Estymacja lokalnego rozkładu prawdopodobieństwa | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="active" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="estymacja-lokalnego-rozkadu-prawdopodobienstwa" class="section level1" number="11">
+<h1>
+<span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa<a class="anchor" aria-label="anchor" href="#estymacja-lokalnego-rozkadu-prawdopodobienstwa"><i class="fas fa-link"></i></a>
+</h1>
+<p>Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:</p>
+<div class="sourceCode" id="cb287"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/gstat/">gstat</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bookdown.org/nowosad/geostatystyka/">geostatbook</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">siatka</span><span class="op">)</span></span></code></pre></div>
+<div id="kriging-danych-kodowanych" class="section level2" number="11.1">
+<h2>
+<span class="header-section-number">11.1</span> Kriging danych kodowanych<a class="anchor" aria-label="anchor" href="#kriging-danych-kodowanych"><i class="fas fa-link"></i></a>
+</h2>
+<div id="kriging-danych-kodowanych-ang.-indicator-kriging" class="section level3" number="11.1.1">
+<h3>
+<span class="header-section-number">11.1.1</span> Kriging danych kodowanych (ang. <em>Indicator kriging</em>)<a class="anchor" aria-label="anchor" href="#kriging-danych-kodowanych-ang.-indicator-kriging"><i class="fas fa-link"></i></a>
+</h3>
+<p>Kriging danych kodowanych to metoda krigingu oparta o dane kategoryzowane lub też dane przetworzone z postaci ciągłej do binarnej.
+Jest ona zazwyczaj używana jest to oszacowania prawdopodobieństwa przekroczenia zdefiniowanej wartości progowej, może być również używana do szacowania wartości z całego rozkładu.
+Wartości danych wykorzystywane do krigingu danych kodowanych są określone jako 0 lub 1, co reprezentuje czy wartość danej zmiennej jest powyżej czy poniżej określonego progu.</p>
+<!--http://geostat-course.org/system/files/geostat13_ind.pdf-->
+</div>
+<div id="wady-i-zalety-krigingu-danych-kodowanych" class="section level3" number="11.1.2">
+<h3>
+<span class="header-section-number">11.1.2</span> Wady i zalety krigingu danych kodowanych<a class="anchor" aria-label="anchor" href="#wady-i-zalety-krigingu-danych-kodowanych"><i class="fas fa-link"></i></a>
+</h3>
+<p>Zalety:</p>
+<ul>
+<li>Możliwość zastosowania, gdy nie interesuje nas konkretna wartość, ale znalezienie obszarów o wartości przekraczającej dany poziom.</li>
+<li>Nie jest istotny kształt rozkładu.</li>
+</ul>
+<p>Wady:</p>
+<ul>
+<li>Potencjalnie trudne do modelowania semiwariogramy (szczególnie skrajnych przedziałów).</li>
+<li>Czasochłonność/pracochłonność.</li>
+</ul>
+</div>
+</div>
+<div id="przykłady-krigingu-danych-kodowanych" class="section level2" number="11.2">
+<h2>
+<span class="header-section-number">11.2</span> Przykłady krigingu danych kodowanych<a class="anchor" aria-label="anchor" href="#przyk%C5%82ady-krigingu-danych-kodowanych"><i class="fas fa-link"></i></a>
+</h2>
+<div id="binaryzacja-danych" class="section level3" number="11.2.1">
+<h3>
+<span class="header-section-number">11.2.1</span> Binaryzacja danych<a class="anchor" aria-label="anchor" href="#binaryzacja-danych"><i class="fas fa-link"></i></a>
+</h3>
+<p>Pierwszym krokiem w krigingu danych kodowanych jest stworzenie zmiennej binarnej.
+Na poniższym przykładzie tworzona jest nowa zmienna <code>temp_ind</code>.
+Przyjmuje ona wartość <code>TRUE</code> (czyli <code>1</code>) dla pomiarów temperatury wyższych niż 20 stopni Celsjusza, a dla pomiarów równych i niższych niż 20 stopni Celsjusza jej wartość wynosi <code>FALSE</code> (czyli <code>0</code>).</p>
+<div class="sourceCode" id="cb288"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   7.883  11.953  14.937  15.223  17.584  24.945</code></pre>
+<div class="sourceCode" id="cb290"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">punkty</span><span class="op">$</span><span class="va">temp_ind</span> <span class="op">=</span> <span class="va">punkty</span><span class="op">$</span><span class="va">temp</span> <span class="op">&gt;</span> <span class="fl">20</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp_ind</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##    Mode   FALSE    TRUE 
+## logical     207      35</code></pre>
+<p>W przykładzie, próg został wyznaczony arbitralnie.
+Istnieje oczywiście szereg innych możliwości wyznaczania progu.
+Można wykorzystać wiedzę zewnętrzną (np. toksyczne stężenie analizowanej substancji) lub też posłużyć się wykresem dystrybuanty do określenia istotnej zmiany wartości (rycina <a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#fig:11-dane-kodowane-4">11.1</a>).</p>
+<div class="sourceCode" id="cb292"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_ecdf.html">stat_ecdf</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:11-dane-kodowane-4"></span>
+<img src="11-dane_kodowane_files/figure-html/11-dane-kodowane-4-1.png" alt="Dystrybuanta zmiennej temp." width="100%"><p class="caption">
+Rycina 11.1: Dystrybuanta zmiennej temp.
+</p>
+</div>
+</div>
+<div id="modelowanie" class="section level3" number="11.2.2">
+<h3>
+<span class="header-section-number">11.2.2</span> Modelowanie<a class="anchor" aria-label="anchor" href="#modelowanie"><i class="fas fa-link"></i></a>
+</h3>
+<p>Tworzenie i modelowanie semiwariogramu empirycznego w krigingu danych kodowanych wygląda tak samo jak, np. w przypadku krigingu zwykłego (ryciny <a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#fig:11-dane-kodowane-5">11.2</a> i <a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#fig:11-dane-kodowane-6">11.3</a>).
+Korzystając z funkcji <code><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram()</a></code> tworzony jest semiwariogram empiryczny, używając <code><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm()</a></code> tworzony jest model “ręczny”, który następnie jest dopasowywany z użyciem funkcji <code><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram()</a></code>.</p>
+<div class="sourceCode" id="cb293"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_ind</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp_ind</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_ind</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:11-dane-kodowane-5"></span>
+<img src="11-dane_kodowane_files/figure-html/11-dane-kodowane-5-1.png" alt="Semiwariogram empiryczny binarnej zmiennej." width="100%"><p class="caption">
+Rycina 11.2: Semiwariogram empiryczny binarnej zmiennej.
+</p>
+</div>
+<div class="sourceCode" id="cb294"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model_ind</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Sph"</span>, nugget <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span>
+<span><span class="va">fitted_ind</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario_ind</span>, <span class="va">model_ind</span><span class="op">)</span></span>
+<span><span class="va">fitted_ind</span></span></code></pre></div>
+<pre><code>##   model      psill    range
+## 1   Nug 0.00000000    0.000
+## 2   Sph 0.08703823 2342.636</code></pre>
+<div class="sourceCode" id="cb296"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_ind</span>, model <span class="op">=</span> <span class="va">fitted_ind</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:11-dane-kodowane-6"></span>
+<img src="11-dane_kodowane_files/figure-html/11-dane-kodowane-6-1.png" alt="Model semiwariogramu empirycznego binarnej zmiennej." width="100%"><p class="caption">
+Rycina 11.3: Model semiwariogramu empirycznego binarnej zmiennej.
+</p>
+</div>
+</div>
+<div id="estymacja" class="section level3" number="11.2.3">
+<h3>
+<span class="header-section-number">11.2.3</span> Estymacja<a class="anchor" aria-label="anchor" href="#estymacja"><i class="fas fa-link"></i></a>
+</h3>
+<p>Ostatnim etapem jest stworzenie interpolacji geostatystycznej z pomocą funkcji <code>krige</code>.
+Wymaga ona czterech argumentów - wzoru (<code>temp_ind ~ 1</code>), zbioru punktowego (<code>punkty</code>), siatki do interpolacji (<code>siatka</code>) oraz modelu (<code>fitted_ind</code>).</p>
+<div class="sourceCode" id="cb297"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ik</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="va">temp_ind</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>           locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>           newdata <span class="op">=</span> <span class="va">siatka</span>,</span>
+<span>           model <span class="op">=</span> <span class="va">fitted_ind</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using ordinary kriging]</code></pre>
+<p>W wyniku estymacji otrzymuje się mapę przestawiającą prawdopodobieństwo przekroczenia zadanej wartości (w tym wypadku jest to 20 stopni Celsjusza) oraz uzyskaną wariancję estymacji (rycina <a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#fig:plotsy2ok">11.4</a>).</p>
+<div class="sourceCode" id="cb299"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">ik</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"var1.pred"</span>, <span class="st">"var1.var"</span><span class="op">)</span>,</span>
+<span>                  style <span class="op">=</span> <span class="st">"cont"</span>, </span>
+<span>                  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"-Spectral"</span>, <span class="st">"viridis"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.frame <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:plotsy2ok"></span>
+<img src="11-dane_kodowane_files/figure-html/plotsy2ok-1.png" alt="Estymacja i wariancja estymacji używając metody krigingu danych kodowanych (IK)." width="100%"><p class="caption">
+Rycina 11.4: Estymacja i wariancja estymacji używając metody krigingu danych kodowanych (IK).
+</p>
+</div>
+</div>
+<div id="tworzenie-mapy-binarnej" class="section level3" number="11.2.4">
+<h3>
+<span class="header-section-number">11.2.4</span> Tworzenie mapy binarnej<a class="anchor" aria-label="anchor" href="#tworzenie-mapy-binarnej"><i class="fas fa-link"></i></a>
+</h3>
+<p>Mapy przestawiające prawdopodobieństwo można też przetworzyć do postaci map binarnych poprzez użycie wybranej wartości progowej.
+Rozkład wartości prawdopodobieństwa jest możliwy do zobaczenia, np. używając histogramu (rycina <a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#fig:11-dane-kodowane-8">11.5</a>).</p>
+<div class="sourceCode" id="cb300"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ik_df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">ik</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">ik_df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">var1.pred</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:11-dane-kodowane-8"></span>
+<img src="11-dane_kodowane_files/figure-html/11-dane-kodowane-8-1.png" alt="Rozkład wartości estymacji używając metody krigingu danych kodowanych (IK)." width="100%"><p class="caption">
+Rycina 11.5: Rozkład wartości estymacji używając metody krigingu danych kodowanych (IK).
+</p>
+</div>
+<p>Następnie można stworzyć nową zmienną binarną w oparciu o wartości estymacji.
+Poniższy kod tworzy dwie nowe zmienne - <code>prog1</code>, gdzie wartość progowa została arbitralnie ustalona na 0.1 oraz <code>prog2</code> z wartością progową 0.75.</p>
+<div class="sourceCode" id="cb301"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ik</span><span class="op">$</span><span class="va">prog1</span> <span class="op">=</span> <span class="va">ik</span><span class="op">$</span><span class="va">var1.pred</span> <span class="op">&gt;</span> <span class="fl">0.1</span></span>
+<span><span class="va">ik</span><span class="op">$</span><span class="va">prog2</span> <span class="op">=</span> <span class="va">ik</span><span class="op">$</span><span class="va">var1.pred</span> <span class="op">&gt;</span> <span class="fl">0.75</span></span></code></pre></div>
+<p>W wyniku otrzymuje się binarne mapy, dla których stwierdza się obszary powyżej lub poniższej zadanego prawdopodobieństwa (rycina <a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#fig:plotsy2ik2">11.6</a>).</p>
+<div class="sourceCode" id="cb302"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">ik</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"prog1"</span>, <span class="st">"prog2"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.frame <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:plotsy2ik2"></span>
+<img src="11-dane_kodowane_files/figure-html/plotsy2ik2-1.png" alt="Binarne mapy dla progu ustalonego na 0.1 oraz 0.75." width="100%"><p class="caption">
+Rycina 11.6: Binarne mapy dla progu ustalonego na 0.1 oraz 0.75.
+</p>
+</div>
+</div>
+<div id="alternatywne-użycie-funkcji" class="section level3" number="11.2.5">
+<h3>
+<span class="header-section-number">11.2.5</span> Alternatywne użycie funkcji<a class="anchor" aria-label="anchor" href="#alternatywne-u%C5%BCycie-funkcji"><i class="fas fa-link"></i></a>
+</h3>
+<p>Alternatywnie, zamiast tworzenia nowej zmiennej (takiej jak <code>temp_ind</code>), można wykorzystać funkcję <code>I</code>.
+Z jej użyciem można definiować przyjęte progi bezpośrednio do funkcji <code>variogram</code> i <code>krige</code>.
+Na poniższych przykładach w ten sposób ustalono trzy progi - poniżej 20, poniżej 16, oraz poniżej 12 stopni Celsjusza (rycina <a href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html#fig:ploty-trzyik">11.7</a>).</p>
+<div class="sourceCode" id="cb303"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_ind20</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">&lt;</span> <span class="fl">20</span><span class="op">)</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">fitted_ind20</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario_ind20</span>, </span>
+<span>                              <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span><span class="st">"Sph"</span>, nugget <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">vario_ind16</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">&lt;</span> <span class="fl">16</span><span class="op">)</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">fitted_ind16</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario_ind16</span>, </span>
+<span>                              <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span><span class="st">"Sph"</span>, nugget <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">vario_ind12</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">&lt;</span> <span class="fl">12</span><span class="op">)</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">fitted_ind12</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario_ind12</span>, </span>
+<span>                              <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span><span class="st">"Sph"</span>, nugget <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb304"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ik20</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">&lt;</span> <span class="fl">20</span><span class="op">)</span> <span class="op">~</span> <span class="fl">1</span>,</span>
+<span>              locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>              newdata <span class="op">=</span> <span class="va">siatka</span>,</span>
+<span>              model <span class="op">=</span> <span class="va">fitted_ind20</span>, </span>
+<span>              nmax <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using ordinary kriging]</code></pre>
+<div class="sourceCode" id="cb306"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ik16</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">&lt;</span> <span class="fl">16</span><span class="op">)</span> <span class="op">~</span> <span class="fl">1</span>,</span>
+<span>              locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>              newdata <span class="op">=</span> <span class="va">siatka</span>,</span>
+<span>              model <span class="op">=</span> <span class="va">fitted_ind16</span>, </span>
+<span>              nmax <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using ordinary kriging]</code></pre>
+<div class="sourceCode" id="cb308"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ik12</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">&lt;</span> <span class="fl">12</span><span class="op">)</span> <span class="op">~</span> <span class="fl">1</span>,</span>
+<span>              locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>              newdata <span class="op">=</span> <span class="va">siatka</span>,</span>
+<span>              model <span class="op">=</span> <span class="va">fitted_ind12</span>, </span>
+<span>              nmax <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using ordinary kriging]</code></pre>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:ploty-trzyik"></span>
+<img src="11-dane_kodowane_files/figure-html/ploty-trzyik-1.png" alt="Estymacje używając metody krigingu danych kodowanych (IK) dla różnych progów prawdopodobieństwa." width="100%"><p class="caption">
+Rycina 11.7: Estymacje używając metody krigingu danych kodowanych (IK) dla różnych progów prawdopodobieństwa.
+</p>
+</div>
+</div>
+</div>
+<div id="z9" class="section level2" number="11.3">
+<h2>
+<span class="header-section-number">11.3</span> Zadania<a class="anchor" aria-label="anchor" href="#z9"><i class="fas fa-link"></i></a>
+</h2>
+<p>Zadania w tym rozdziale są oparte o dane z obiektu <code>punkty_ndvi</code>.</p>
+<div class="sourceCode" id="cb310"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty_ndvi</span><span class="op">)</span></span></code></pre></div>
+<ol style="list-style-type: decimal">
+<li>Używając obiektu <code>punkty_ndvi</code> stwórz nowe zmienne określające czy zmienna <code>ndvi</code> <!-- barren rock, sand, snow, water --><!-- sparse vegetation such as shrubs and grasslands or senescing crops --><!--  dense vegetation --> ma wartość:
+<ul>
+<li>poniżej 0.3</li>
+<li>pomiędzy 0.3 a 0.5</li>
+<li>powyżej 0.5</li>
+</ul>
+</li>
+<li>Poczytaj na temat tego wskaźnika.
+Co mogą oznaczać powyższe przedziały?</li>
+<li>Korzystając z trzech powyższych przedziałów stwórz mapy prawdopodobieństwa.
+W jaki sposób można zinterpretować trzy uzyskane mapy?</li>
+<li>Używając wybranego progu prawdopodobieństwa, stwórz trzy mapy binarne.</li>
+<li>(Dodatkowe) połącz trzy mapy binarne w jedną mapę pokazującą uproszczone pokrycie terenu.</li>
+</ol>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></div>
+<div class="next"><a href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#estymacja-lokalnego-rozkadu-prawdopodobienstwa"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li>
+<a class="nav-link" href="#kriging-danych-kodowanych"><span class="header-section-number">11.1</span> Kriging danych kodowanych</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#kriging-danych-kodowanych-ang.-indicator-kriging"><span class="header-section-number">11.1.1</span> Kriging danych kodowanych (ang. Indicator kriging)</a></li>
+<li><a class="nav-link" href="#wady-i-zalety-krigingu-danych-kodowanych"><span class="header-section-number">11.1.2</span> Wady i zalety krigingu danych kodowanych</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#przyk%C5%82ady-krigingu-danych-kodowanych"><span class="header-section-number">11.2</span> Przykłady krigingu danych kodowanych</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#binaryzacja-danych"><span class="header-section-number">11.2.1</span> Binaryzacja danych</a></li>
+<li><a class="nav-link" href="#modelowanie"><span class="header-section-number">11.2.2</span> Modelowanie</a></li>
+<li><a class="nav-link" href="#estymacja"><span class="header-section-number">11.2.3</span> Estymacja</a></li>
+<li><a class="nav-link" href="#tworzenie-mapy-binarnej"><span class="header-section-number">11.2.4</span> Tworzenie mapy binarnej</a></li>
+<li><a class="nav-link" href="#alternatywne-u%C5%BCycie-funkcji"><span class="header-section-number">11.2.5</span> Alternatywne użycie funkcji</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#z9"><span class="header-section-number">11.3</span> Zadania</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/11-dane_kodowane.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/11-dane_kodowane.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>7 Modelowanie autokorelacji przestrzennej | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(geostatbook) data(punkty)  7.1...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="7 Modelowanie autokorelacji przestrzennej | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/modelowanie-matematycznie-autokorelacji-przestrzennej.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(geostatbook) data(punkty)  7.1...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="7 Modelowanie autokorelacji przestrzennej | Geostatystyka w R">
+<meta name="twitter:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(geostatbook) data(punkty)  7.1...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="7 Modelowanie autokorelacji przestrzennej | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="active" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="modelowanie-matematycznie-autokorelacji-przestrzennej" class="section level1" number="7">
+<h1>
+<span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej<a class="anchor" aria-label="anchor" href="#modelowanie-matematycznie-autokorelacji-przestrzennej"><i class="fas fa-link"></i></a>
+</h1>
+<p>Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:</p>
+<div class="sourceCode" id="cb154"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/gstat/">gstat</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bookdown.org/nowosad/geostatystyka/">geostatbook</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span></code></pre></div>
+<div id="modelowanie-matematycznie-autokorelacji-przestrzennej-1" class="section level2" number="7.1">
+<h2>
+<span class="header-section-number">7.1</span> Modelowanie matematycznie autokorelacji przestrzennej<a class="anchor" aria-label="anchor" href="#modelowanie-matematycznie-autokorelacji-przestrzennej-1"><i class="fas fa-link"></i></a>
+</h2>
+<div id="modelowanie-struktury-przestrzennej" class="section level3" number="7.1.1">
+<h3>
+<span class="header-section-number">7.1.1</span> Modelowanie struktury przestrzennej<a class="anchor" aria-label="anchor" href="#modelowanie-struktury-przestrzennej"><i class="fas fa-link"></i></a>
+</h3>
+<p>Semiwariogram empiryczny (wyliczony z danych punktowych) jest:</p>
+<ul>
+<li>Nieciągły - wartości semiwariancji są średnimi przedziałowymi.</li>
+<li>Chaotyczny - badana próba jest jedynie przybliżeniem rzeczywistości, dodatkowo obciążonym błędami.</li>
+</ul>
+<p>Estymacje i symulacje przestrzenne wymagają modelu struktury przestrzennej analizowanej cechy, a nie tylko wartości empirycznych.
+Dodatkowo, matematycznie modelowanie wygładza chaotyczne fluktuacje danych empirycznych (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-3">7.1</a>).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-3"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-3-1.png" alt="Porównanie semiwariogramu empirycznego i modelu semiwariogramu." width="100%"><p class="caption">
+Rycina 7.1: Porównanie semiwariogramu empirycznego i modelu semiwariogramu.
+</p>
+</div>
+</div>
+<div id="model-semiwariogramu" class="section level3" number="7.1.2">
+<h3>
+<span class="header-section-number">7.1.2</span> Model semiwariogramu<a class="anchor" aria-label="anchor" href="#model-semiwariogramu"><i class="fas fa-link"></i></a>
+</h3>
+<p>Model semiwariogramu składa się zazwyczaj z trzech podstawowych elementów (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-4">7.2</a>).
+Są to:</p>
+<ul>
+<li>
+<strong>Nugget</strong> - efekt nuggetowy - pozwala na określenie błędu w danych wejściowych oraz zmienności na dystansie krótszym niż pierwszy odstęp.</li>
+<li>
+<strong>Sill</strong> - semiwariancja progowa - oznacza wariancję badanej zmiennej.</li>
+<li>
+<strong>Range</strong> - zasięg - to odległość do której istnieje przestrzenna korelacja.</li>
+</ul>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-4"></span>
+<img src="figs/variogram_text.png" alt="Podstawowe elementy modelu semiwariogramu." width="100%"><p class="caption">
+Rycina 7.2: Podstawowe elementy modelu semiwariogramu.
+</p>
+</div>
+</div>
+<div id="model-nuggetowy" class="section level3" number="7.1.3">
+<h3>
+<span class="header-section-number">7.1.3</span> Model nuggetowy<a class="anchor" aria-label="anchor" href="#model-nuggetowy"><i class="fas fa-link"></i></a>
+</h3>
+<p>Model nuggetowy określa sytuację, w której analizowana zmienna nie wykazuje autokorelacji.
+Inaczej mówiąc, niepodobieństwo jej wartości nie wzrasta wraz z odległością.
+Model nuggetowy nie powinien być używany samodzielnie - w większości zastosowań jest on elementem modelu złożonego.
+Służy on do określania, między innymi, błędu pomiarowego czy zmienności na krótkich odstępach.</p>
+</div>
+</div>
+<div id="modele-podstawowe" class="section level2" number="7.2">
+<h2>
+<span class="header-section-number">7.2</span> Modele podstawowe<a class="anchor" aria-label="anchor" href="#modele-podstawowe"><i class="fas fa-link"></i></a>
+</h2>
+<div id="typy-modeli-podstawowych" class="section level3" number="7.2.1">
+<h3>
+<span class="header-section-number">7.2.1</span> Typy modeli podstawowych<a class="anchor" aria-label="anchor" href="#typy-modeli-podstawowych"><i class="fas fa-link"></i></a>
+</h3>
+<p>Pakiet <code>gstat</code> zawiera 20 podstawowych modeli geostatystycznych, w tym najczęściej używane takie jak:</p>
+<ul>
+<li>Nuggetowy (ang. <em>Nugget effect model</em>)</li>
+<li>Sferyczny (ang. <em>Spherical model</em>)</li>
+<li>Gaussowski (ang. <em>Gaussian model</em>)</li>
+<li>Potęgowy (ang. <em>Power model</em>)</li>
+<li>Wykładniczy (ang. <em>Exponential model</em>)</li>
+<li>Inne</li>
+</ul>
+<p>Do wyświetlenia listy nazw modeli i ich skrótów służy funkcja <code><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm()</a></code>.</p>
+<div class="sourceCode" id="cb155"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##    short                                      long
+## 1    Nug                              Nug (nugget)
+## 2    Exp                         Exp (exponential)
+## 3    Sph                           Sph (spherical)
+## 4    Gau                            Gau (gaussian)
+## 5    Exc        Exclass (Exponential class/stable)
+## 6    Mat                              Mat (Matern)
+## 7    Ste Mat (Matern, M. Stein's parameterization)
+## 8    Cir                            Cir (circular)
+## 9    Lin                              Lin (linear)
+## 10   Bes                              Bes (bessel)
+## 11   Pen                      Pen (pentaspherical)
+## 12   Per                            Per (periodic)
+## 13   Wav                                Wav (wave)
+## 14   Hol                                Hol (hole)
+## 15   Log                         Log (logarithmic)
+## 16   Pow                               Pow (power)
+## 17   Spl                              Spl (spline)
+## 18   Leg                            Leg (Legendre)
+## 19   Err                   Err (Measurement error)
+## 20   Int                           Int (Intercept)</code></pre>
+<p>Można się również im przyjrzeć używając funkcji <code><a href="https://r-spatial.github.io/gstat/reference/show.vgms.html">show.vgms()</a></code> (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-6">7.3</a>).</p>
+<div class="sourceCode" id="cb157"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/gstat/reference/show.vgms.html">show.vgms</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-6"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-6-1.png" alt="Przykład modeli semiwariogramu dostępnych w pakiecie gstat." width="100%"><p class="caption">
+Rycina 7.3: Przykład modeli semiwariogramu dostępnych w pakiecie gstat.
+</p>
+</div>
+<p>Istnieje możliwość wyświetlenia tylko wybranych modeli podstawowych poprzez argument <code>models</code> (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-7">7.4</a>).</p>
+<div class="sourceCode" id="cb158"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/gstat/reference/show.vgms.html">show.vgms</a></span><span class="op">(</span>models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Sph"</span>, <span class="st">"Gau"</span>, <span class="st">"Pow"</span>, <span class="st">"Exp"</span><span class="op">)</span>, </span>
+<span>          range <span class="op">=</span> <span class="fl">1.4</span>, max <span class="op">=</span> <span class="fl">2.5</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-7"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-7-1.png" alt="Porównanie modeli sferycznego (Sph), gaussowskiego (Gau), potęgowego (Pow) i wykładniczego (Exp)." width="100%"><p class="caption">
+Rycina 7.4: Porównanie modeli sferycznego (Sph), gaussowskiego (Gau), potęgowego (Pow) i wykładniczego (Exp).
+</p>
+</div>
+<p>Dodatkowo, można je porównać na jednym wykresie poprzez argument <code>as.groups = TRUE</code> (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-8">7.5</a>).</p>
+<div class="sourceCode" id="cb159"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/gstat/reference/show.vgms.html">show.vgms</a></span><span class="op">(</span>models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Sph"</span>, <span class="st">"Gau"</span>, <span class="st">"Pow"</span>, <span class="st">"Exp"</span><span class="op">)</span>, </span>
+<span>          range <span class="op">=</span> <span class="fl">1.4</span>, max <span class="op">=</span> <span class="fl">2.5</span>, as.groups <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-8"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-8-1.png" alt="Porównanie modeli sferycznego (Sph), gaussowskiego (Gau), potęgowego (Pow) i wykładniczego (Exp) na jednym wykresie." width="100%"><p class="caption">
+Rycina 7.5: Porównanie modeli sferycznego (Sph), gaussowskiego (Gau), potęgowego (Pow) i wykładniczego (Exp) na jednym wykresie.
+</p>
+</div>
+</div>
+</div>
+<div id="metody-modelowania" class="section level2" number="7.3">
+<h2>
+<span class="header-section-number">7.3</span> Metody modelowania<a class="anchor" aria-label="anchor" href="#metody-modelowania"><i class="fas fa-link"></i></a>
+</h2>
+<div id="rodzaje-metod-modelowania" class="section level3" number="7.3.1">
+<h3>
+<span class="header-section-number">7.3.1</span> Rodzaje metod modelowania<a class="anchor" aria-label="anchor" href="#rodzaje-metod-modelowania"><i class="fas fa-link"></i></a>
+</h3>
+<p>Istnieją trzy najczęściej spotykane metody modelowania geostatystycznego:</p>
+<ul>
+<li>Ustawianie “ręczne” parametrów modelu, np. funkcja <code><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm()</a></code> z pakietu <strong>gstat</strong>.</li>
+<li>Ustawianie “wizualne” parametrów modelu, np. funkcja <code>eyefit()</code> z pakietu <strong>geoR</strong>.</li>
+<li>Automatyczny wybór parametrów na podstawie różnych kryteriów statystycznych, np. funkcja <code><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram()</a></code> z pakietu <strong>gstat</strong>, <code>variofit()</code> z pakietu <strong>geoR</strong>, <code>autofitVariogram()</code> z pakietu <strong>automap</strong>.</li>
+</ul>
+<p>Odpowiednie określenie modelu matematycznego często nie jest proste.
+W efekcie automatyczne metody nie zawsze są w stanie dać lepszy wynik od modelowania “ręcznego”.
+Najlepiej, gdy wybór modelu oparty jest o wiedzę na temat zakładanego procesu przestrzennego.</p>
+</div>
+<div id="funkcja-fit.variogram" class="section level3" number="7.3.2">
+<h3>
+<span class="header-section-number">7.3.2</span> Funkcja <code>fit.variogram()</code><a class="anchor" aria-label="anchor" href="#funkcja-fit.variogram"><i class="fas fa-link"></i></a>
+</h3>
+<p>Funkcja <code><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram()</a></code> z pakietu <strong>gstat</strong> dopasowuje zasięg oraz semiwariancję progową w oparciu o ustalone “ręcznie” wejściowe parametry modelu<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Więcej na temat działania tej funkcji można przeczytać we wpisie na stronie &lt;a href="https://www.r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html" class="uri"&gt;https://www.r-spatial.org/r/2016/02/14/gstat-variogram-fitting.html&lt;/a&gt;.&lt;/p&gt;'><sup>3</sup></a>.</p>
+<!-- ### Liniowy model regionalizacji -->
+<!-- W przypadku, gdy analizowane zjawisko jest złożone, odwzorowanie kształtu semiwariogramu empirycznego wymaga połączenia dwóch lub większej liczby modeli podstawowych.  -->
+<!-- W takiej sytuacji konieczne jest spełnienie dwóch warunków: -->
+<!-- - Wszystkie zastosowane modele muszą być dopuszczalne (`vgm()`) -->
+<!-- - Wariancja progowa każdego podstawowego modelu musi być dodatnia -->
+</div>
+</div>
+<div id="modelowanie-izotropowe" class="section level2" number="7.4">
+<h2>
+<span class="header-section-number">7.4</span> Modelowanie izotropowe<a class="anchor" aria-label="anchor" href="#modelowanie-izotropowe"><i class="fas fa-link"></i></a>
+</h2>
+<p>Do zbudowania modelu semiwariogramu należy wykonać szereg kroków:</p>
+<ol style="list-style-type: decimal">
+<li>Stworzyć i wyświetlić semiwariogram empiryczny analizowanej zmiennej z użyciem funkcji <code><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram()</a></code> oraz <code><a href="https://rdrr.io/r/base/plot.html">plot()</a></code>.</li>
+<li>Zdefiniować wejściowe parametry semiwariogramu.
+W najprostszej sytuacji wystarczy zdefiniować używany model/e poprzez skróconą nazwę używanej funkcji (<code>model</code>).
+Możliwe, ale nie wymagane jest także określenie wejściowej semiwariancji cząstkowej (<code>psill</code>) oraz zasięgu modelu (<code>range</code>) w funkcji <code><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm()</a></code>.
+Uzyskany model można przedstawić w funkcji <code><a href="https://rdrr.io/r/base/plot.html">plot()</a></code> podając nazwę obiektu zawierającego semiwariogram empiryczny oraz obiektu zawierającego model.</li>
+<li>Dopasować parametry modelu używając funkcji <code><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram()</a></code>.
+To dopasowanie można również zwizualizować używając funkcji <code><a href="https://rdrr.io/r/base/plot.html">plot()</a></code>.</li>
+</ol>
+<div id="model-sferyczny" class="section level3" number="7.4.1">
+<h3>
+<span class="header-section-number">7.4.1</span> Model sferyczny<a class="anchor" aria-label="anchor" href="#model-sferyczny"><i class="fas fa-link"></i></a>
+</h3>
+<p>Model sferyczny (<code>Sph</code>) jest jednym z najczęściej stosowanych modeli geostatystycznych.
+Reprezentuje on cechę, której zmienność wartości ma charakter naprzemiennych płatów niskich i wysokich wartości (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-10">7.6</a>).
+Średnio te płaty mają średnicę określoną przez zasięg (<code>range</code>) modelu.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-10"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-10-1.png" alt="Przykład zjawiska reprezentowanego poprzez model sferyczny." width="100%"><p class="caption">
+Rycina 7.6: Przykład zjawiska reprezentowanego poprzez model sferyczny.
+</p>
+</div>
+<p>Stworzenie takiego modelu dla zmiennej <code>temp</code> polega najpierw na zbudowaniu semiwariogramu empirycznego używając funkcji <code><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram()</a></code> (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-11">7.7</a>).</p>
+<div class="sourceCode" id="cb160"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-11"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-11-1.png" alt="Semiwariogram zmiennej temp." width="100%"><p class="caption">
+Rycina 7.7: Semiwariogram zmiennej temp.
+</p>
+</div>
+<p>W kolejnym kroku, przy użyciu funkcji <code><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm()</a></code> określa się typ modelu oraz jego podstawowe parametry (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-12">7.8</a>).</p>
+<div class="sourceCode" id="cb161"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model_sph</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>psill <span class="op">=</span> <span class="fl">10</span>, model <span class="op">=</span> <span class="st">"Sph"</span>, range <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span></span>
+<span><span class="va">model_sph</span></span></code></pre></div>
+<pre><code>##   model psill range
+## 1   Sph    10  3000</code></pre>
+<div class="sourceCode" id="cb163"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">model_sph</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-12"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-12-1.png" alt="Model sferyczny zmiennej temp." width="100%"><p class="caption">
+Rycina 7.8: Model sferyczny zmiennej temp.
+</p>
+</div>
+<p>Dodatkowo możliwe jest także automatyczne dopasowanie modelu w oparciu o wstępnie podane parametry używając funkcji <code><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram()</a></code> (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-13">7.9</a>).</p>
+<div class="sourceCode" id="cb164"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fitted_sph</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario</span>, <span class="va">model_sph</span><span class="op">)</span></span>
+<span><span class="va">fitted_sph</span></span></code></pre></div>
+<pre><code>##   model    psill    range
+## 1   Sph 13.20295 4549.691</code></pre>
+<div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">fitted_sph</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-13"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-13-1.png" alt="Automatycznie dopasowany model sferyczny zmiennej temp używając wstępnie podanych parametrów." width="100%"><p class="caption">
+Rycina 7.9: Automatycznie dopasowany model sferyczny zmiennej temp używając wstępnie podanych parametrów.
+</p>
+</div>
+<p>W niektórych przypadkach funkcja <code><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram()</a></code> da także zadowalające wyniki, gdy tylko zostanie podany typ modelu (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-14">7.10</a>).</p>
+<div class="sourceCode" id="cb167"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model_sph2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Sph"</span><span class="op">)</span></span>
+<span><span class="va">fitted_sph2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario</span>, <span class="va">model_sph2</span><span class="op">)</span></span>
+<span><span class="va">fitted_sph2</span></span></code></pre></div>
+<pre><code>##   model   psill    range
+## 1   Sph 13.2018 4549.092</code></pre>
+<div class="sourceCode" id="cb169"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">fitted_sph2</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-14"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-14-1.png" alt="Automatycznie dopasowany model sferyczny zmiennej temp używając jedynie wstępnie podanego typu modelu." width="100%"><p class="caption">
+Rycina 7.10: Automatycznie dopasowany model sferyczny zmiennej temp używając jedynie wstępnie podanego typu modelu.
+</p>
+</div>
+</div>
+<div id="model-wykładniczy" class="section level3" number="7.4.2">
+<h3>
+<span class="header-section-number">7.4.2</span> Model wykładniczy<a class="anchor" aria-label="anchor" href="#model-wyk%C5%82adniczy"><i class="fas fa-link"></i></a>
+</h3>
+<p>Model wykładniczy (<code>Exp</code>) również jest jednym z najczęściej używanych w geostatystyce.
+Od modelu sferycznego różni go szczególnie to, że nie ma on skończonego zasięgu.
+W jego przypadku, zamiast zasięgu podaje się tzw. zasięg praktyczny.
+Oznacza on odległość na jakiej model osiąga 95% wartości wariancji progowej (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-15">7.11</a>).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-15"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-15-1.png" alt="Przykład zjawiska reprezentowanego poprzez model wykładniczy." width="100%"><p class="caption">
+Rycina 7.11: Przykład zjawiska reprezentowanego poprzez model wykładniczy.
+</p>
+</div>
+<p>Proces tworzenia tego modelu jest bardzo podobny do przedstawionego powyżej - budowany jest semiwariogram empiryczny, a następnie ustalany jest model poprzez podanie kilku jego parametrów (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-17">7.12</a>).</p>
+<div class="sourceCode" id="cb170"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="co"># plot(vario)</span></span>
+<span><span class="va">model_exp</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>psill <span class="op">=</span> <span class="fl">10</span>, model <span class="op">=</span> <span class="st">"Exp"</span>, range <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span></span>
+<span><span class="va">model_exp</span></span></code></pre></div>
+<pre><code>##   model psill range
+## 1   Exp    10  3000</code></pre>
+<div class="sourceCode" id="cb172"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">model_exp</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-17"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-17-1.png" alt="Model wykładniczy zmiennej temp." width="100%"><p class="caption">
+Rycina 7.12: Model wykładniczy zmiennej temp.
+</p>
+</div>
+<p>Dalej, funkcja <code><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram()</a></code> może pomóc w dopasowaniu tego modelu (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-18">7.13</a>).</p>
+<div class="sourceCode" id="cb173"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fitted_exp</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario</span>, <span class="va">model_exp</span><span class="op">)</span></span>
+<span><span class="va">fitted_exp</span></span></code></pre></div>
+<pre><code>##   model    psill    range
+## 1   Exp 17.87051 3298.917</code></pre>
+<div class="sourceCode" id="cb175"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">fitted_exp</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-18"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-18-1.png" alt="Automatycznie dopasowany model wykładniczy zmiennej temp." width="100%"><p class="caption">
+Rycina 7.13: Automatycznie dopasowany model wykładniczy zmiennej temp.
+</p>
+</div>
+</div>
+<div id="model-gaussowski" class="section level3" number="7.4.3">
+<h3>
+<span class="header-section-number">7.4.3</span> Model gaussowski<a class="anchor" aria-label="anchor" href="#model-gaussowski"><i class="fas fa-link"></i></a>
+</h3>
+<p>Model gaussowski (<code>Gau</code>) również posiada zasięg praktyczny definiowany jako 95% wartości wariancji progowej (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-19">7.14</a>).
+Jego cechą charakterystyczną jest paraboliczny kształt na początkowym odcinku.
+Jest on najczęściej używany do modelowania cech o regularnej i łagodnej zmienności przestrzennej.
+Model gaussowski z uwagi na swoje cechy zazwyczaj nie powinien być stosowany samodzielnie, lecz jako element modelu złożonego.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-19"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-19-1.png" alt="Przykład zjawiska reprezentowanego poprzez model gaussowski." width="100%"><p class="caption">
+Rycina 7.14: Przykład zjawiska reprezentowanego poprzez model gaussowski.
+</p>
+</div>
+<p>Zdefiniowanie modelu gaussowskiego odbywa się używając skrótu <code>"Gau"</code> (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-21">7.15</a>).</p>
+<div class="sourceCode" id="cb176"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="co"># plot(vario)</span></span>
+<span><span class="va">model_gau</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>psill <span class="op">=</span> <span class="fl">13</span>, model <span class="op">=</span> <span class="st">"Gau"</span>, range <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span></span>
+<span><span class="va">model_gau</span></span></code></pre></div>
+<pre><code>##   model psill range
+## 1   Gau    13  3000</code></pre>
+<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">model_gau</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-21"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-21-1.png" alt="Model gaussowski zmiennej temp." width="100%"><p class="caption">
+Rycina 7.15: Model gaussowski zmiennej temp.
+</p>
+</div>
+<p>Dopasowanie tego modelu może również nastąpić używając funkcji <code><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram()</a></code> (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-22">7.16</a>).</p>
+<div class="sourceCode" id="cb179"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fitted_gau</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario</span>, <span class="va">model_gau</span><span class="op">)</span></span>
+<span><span class="va">fitted_gau</span></span></code></pre></div>
+<pre><code>##   model    psill    range
+## 1   Gau 8.573835 852.2404</code></pre>
+<div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">fitted_gau</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-22"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-22-1.png" alt="Automatycznie dopasowany model gaussowski zmiennej temp." width="100%"><p class="caption">
+Rycina 7.16: Automatycznie dopasowany model gaussowski zmiennej temp.
+</p>
+</div>
+</div>
+<div id="model-potęgowy" class="section level3" number="7.4.4">
+<h3>
+<span class="header-section-number">7.4.4</span> Model potęgowy<a class="anchor" aria-label="anchor" href="#model-pot%C4%99gowy"><i class="fas fa-link"></i></a>
+</h3>
+<p>Model potęgowy (<code>Pow</code>) to przykład tzw. modelu nieograniczonego (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-23">7.17</a>).
+Jego wartość rośnie w nieskończoność, dlatego niemożliwe jest określenie jego zasięgu.
+W przypadku modelu potęgowego, parametr <code>range</code> oznacza wykładnik potęgowy.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-23"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-23-1.png" alt="Przykład zjawiska reprezentowanego poprzez model potęgowy." width="100%"><p class="caption">
+Rycina 7.17: Przykład zjawiska reprezentowanego poprzez model potęgowy.
+</p>
+</div>
+<p>Model potęgowy jest określany skrótem <code>"Pow"</code> (ryciny <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-25">7.18</a> i <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-26">7.19</a>).</p>
+<div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="co"># plot(vario)</span></span>
+<span><span class="va">model_pow</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>psill <span class="op">=</span> <span class="fl">0.03</span>, model <span class="op">=</span> <span class="st">"Pow"</span>, range <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span>
+<span><span class="va">model_pow</span></span></code></pre></div>
+<pre><code>##   model psill range
+## 1   Pow  0.03   0.7</code></pre>
+<div class="sourceCode" id="cb184"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">model_pow</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-25"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-25-1.png" alt="Model potęgowy zmiennej temp." width="100%"><p class="caption">
+Rycina 7.18: Model potęgowy zmiennej temp.
+</p>
+</div>
+<div class="sourceCode" id="cb185"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fitted_pow</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario</span>, <span class="va">model_pow</span><span class="op">)</span></span>
+<span><span class="va">fitted_pow</span></span></code></pre></div>
+<pre><code>##   model      psill     range
+## 1   Pow 0.02515946 0.7535889</code></pre>
+<div class="sourceCode" id="cb187"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">fitted_pow</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-26"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-26-1.png" alt="Automatycznie dopasowany model potęgowy zmiennej temp." width="100%"><p class="caption">
+Rycina 7.19: Automatycznie dopasowany model potęgowy zmiennej temp.
+</p>
+</div>
+</div>
+<div id="porównanie-modeli" class="section level3" number="7.4.5">
+<h3>
+<span class="header-section-number">7.4.5</span> Porównanie modeli<a class="anchor" aria-label="anchor" href="#por%C3%B3wnanie-modeli"><i class="fas fa-link"></i></a>
+</h3>
+<p>Z uwagi na swoją charakterystykę, każdy z powyższych modeli ma inny zakres wartości.
+Aby porównać te modele należy je przedstawić używając tej samej skali kolorystycznej (<a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-27">7.20</a>).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-27"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-27-1.png" alt="Porównanie powierzchni reprezentowanej przez modele sferyczny, wykładniczy, gaussowski i potęgowy." width="100%"><p class="caption">
+Rycina 7.20: Porównanie powierzchni reprezentowanej przez modele sferyczny, wykładniczy, gaussowski i potęgowy.
+</p>
+</div>
+</div>
+<div id="modele-złożone-i" class="section level3" number="7.4.6">
+<h3>
+<span class="header-section-number">7.4.6</span> Modele złożone I<a class="anchor" aria-label="anchor" href="#modele-z%C5%82o%C5%BCone-i"><i class="fas fa-link"></i></a>
+</h3>
+<p>Najczęściej pojedynczy model nie jest w stanie odwzorować dokładnie zmienności przestrzennej analizowanej cechy.
+W takich sytuacjach konieczne jest połączenie dwóch lub więcej modeli podstawowych.
+Najbardziej powszechny model złożony składa się z funkcji nuggetowej (dla odległości zero) oraz drugiej funkcji (dla dalszej odległości) (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-28">7.21</a>).
+Zdefiniowanie takiej funkcji odbywa się poprzez dodanie argumentu <code>nugget</code> w funkcji <code><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm()</a></code>.</p>
+<div class="sourceCode" id="cb188"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">model_zl1</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>psill <span class="op">=</span> <span class="fl">10</span>, model <span class="op">=</span> <span class="st">"Sph"</span>, range <span class="op">=</span> <span class="fl">3000</span>,</span>
+<span>                nugget <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">model_zl1</span></span></code></pre></div>
+<pre><code>##   model psill range
+## 1   Nug   0.5     0
+## 2   Sph  10.0  3000</code></pre>
+<div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">model_zl1</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-28"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-28-1.png" alt="Złożony model zmiennej temp." width="100%"><p class="caption">
+Rycina 7.21: Złożony model zmiennej temp.
+</p>
+</div>
+<p>Dalsze dopasowanie modeli złożonych również można uzyskać używając funkcji <code><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram()</a></code> (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-29">7.22</a>).</p>
+<div class="sourceCode" id="cb191"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fitted_zl1</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario</span>, <span class="va">model_zl1</span><span class="op">)</span></span>
+<span><span class="va">fitted_zl1</span></span></code></pre></div>
+<pre><code>##   model      psill    range
+## 1   Nug  0.6751142    0.000
+## 2   Sph 13.7617233 5511.173</code></pre>
+<div class="sourceCode" id="cb193"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">fitted_zl1</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-29"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-29-1.png" alt="Automatycznie dopasowany złożony model zmiennej temp." width="100%"><p class="caption">
+Rycina 7.22: Automatycznie dopasowany złożony model zmiennej temp.
+</p>
+</div>
+</div>
+<div id="modele-złożone-ii" class="section level3" number="7.4.7">
+<h3>
+<span class="header-section-number">7.4.7</span> Modele złożone II<a class="anchor" aria-label="anchor" href="#modele-z%C5%82o%C5%BCone-ii"><i class="fas fa-link"></i></a>
+</h3>
+<p>Bardziej złożone modele można tworzyć z pomocą argumentu <code>add.to</code>.
+Przyjmuje on kolejny obiekt funkcji <code><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm()</a></code> i poprzez połączenie tych dwóch obiektów otrzymuje model złożony.
+Na poniższym przykładzie stworzony został model złożony składający się z modelu nuggetowego oraz dwóch modeli gaussowskich (ryciny <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-30">7.23</a> i <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-31">7.24</a>).</p>
+<div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">model_zl2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"Gau"</span>, <span class="fl">3000</span>, </span>
+<span>                add.to <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span><span class="fl">4</span>, model <span class="op">=</span> <span class="st">"Gau"</span>,</span>
+<span>                             range <span class="op">=</span> <span class="fl">500</span>, nugget <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">model_zl2</span></span></code></pre></div>
+<pre><code>##   model psill range
+## 1   Nug   0.5     0
+## 2   Gau   4.0   500
+## 3   Gau  10.0  3000</code></pre>
+<div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">model_zl2</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-30"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-30-1.png" alt="Złożony model zmiennej temp składający się z modelu nuggetowego oraz dwóch modeli gaussowskich." width="100%"><p class="caption">
+Rycina 7.23: Złożony model zmiennej temp składający się z modelu nuggetowego oraz dwóch modeli gaussowskich.
+</p>
+</div>
+<div class="sourceCode" id="cb197"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fitted_zl2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario</span>, <span class="va">model_zl2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">fitted_zl2</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-31"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-31-1.png" alt="Automatycznie dopasowany złożony model zmiennej temp składający się z modelu nuggetowego oraz dwóch modeli gaussowskich." width="100%"><p class="caption">
+Rycina 7.24: Automatycznie dopasowany złożony model zmiennej temp składający się z modelu nuggetowego oraz dwóch modeli gaussowskich.
+</p>
+</div>
+</div>
+</div>
+<div id="modelowanie-anizotropowe" class="section level2" number="7.5">
+<h2>
+<span class="header-section-number">7.5</span> Modelowanie anizotropowe<a class="anchor" aria-label="anchor" href="#modelowanie-anizotropowe"><i class="fas fa-link"></i></a>
+</h2>
+<div id="anizotropia-1" class="section level3" number="7.5.1">
+<h3>
+<span class="header-section-number">7.5.1</span> Anizotropia<a class="anchor" aria-label="anchor" href="#anizotropia-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Uwzględnienie anizotropii wymaga zamiany parametru zasięgu na trzy inne parametry (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-33">7.25</a>):</p>
+<ul>
+<li>Kąt określający dominujący kierunek.</li>
+<li>Zasięg w dominującym kierunku.</li>
+<li>Proporcję anizotropii, czyli relację pomiędzy zasięgiem w przeciwległym kierunku do zasięgu w dominującym kierunku.</li>
+</ul>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-33"></span>
+<img src="figs/mapa_semiwariogramu.png" alt="Podstawowe parametry mapy semiwariogramu." width="100%"><p class="caption">
+Rycina 7.25: Podstawowe parametry mapy semiwariogramu.
+</p>
+</div>
+<p>W pakiecie <strong>gstat</strong> odbywa się to poprzez dodanie argumentu <code>alpha</code> do funkcji <code><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram()</a></code>.
+Należy w niej zdefiniować analizowane kierunki, które zostały określone na podstawie mapy semiwariogramu.
+Następnie w funkcji <code><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm()</a></code> należy podać nowy argument <code>anis</code>.
+Przyjmuje on dwie wartości. Pierwsza z nich (<code>45</code> w przykładzie poniżej) oznacza dominujący kierunek anizotropii, druga zaś (<code>0.4</code>) mówi o tzw. proporcji anizotropii.
+Proporcja anizotropii jest to relacja pomiędzy zmiennością na kierunku prostopadłym a głównym kierunku.
+Na poniższym przykładzie zasięg ustalony dla głównego kierunku wynosi 4000 metrów.
+Wartość proporcji anizotropii, <code>0.4</code>, w tym wypadku oznacza że dla prostopadłego kierunku zasięg będzie wynosił 1600 metrów (4000 metrów x 0.4) (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-34">7.26</a>).</p>
+<div class="sourceCode" id="cb198"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_map</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>                      locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>                      cutoff <span class="op">=</span> <span class="fl">4000</span>,</span>
+<span>                      width <span class="op">=</span> <span class="fl">400</span>, </span>
+<span>                      map <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_map</span>, threshold <span class="op">=</span> <span class="fl">30</span>, </span>
+<span>     col.regions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html">hcl.colors</a></span><span class="op">(</span><span class="fl">40</span>, palette <span class="op">=</span> <span class="st">"ag_GrnYl"</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-34"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-34-1.png" alt="Mapa semiwariogramu zmiennej temp." width="100%"><p class="caption">
+Rycina 7.26: Mapa semiwariogramu zmiennej temp.
+</p>
+</div>
+<p>Anizotropia może być także reprezentowana używając semiwariogramów kierunkowych (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-35">7.27</a>)</p>
+<div class="sourceCode" id="cb199"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_kier</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>                       locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>                       alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">45</span>, <span class="fl">90</span>, <span class="fl">135</span><span class="op">)</span>,</span>
+<span>                       cutoff <span class="op">=</span> <span class="fl">4000</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_kier</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-35"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-35-1.png" alt="Semiwariogramy kierunkowe zmiennej temp." width="100%"><p class="caption">
+Rycina 7.27: Semiwariogramy kierunkowe zmiennej temp.
+</p>
+</div>
+<p>Następnie semiwariogramy kierunkowe mogą być modelowane ręcznie (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-36">7.28</a>) lub też używając automatycznego dopasowania (rycina <a href="modelowanie-matematycznie-autokorelacji-przestrzennej.html#fig:07-modelowanie-37">7.29</a>).</p>
+<div class="sourceCode" id="cb200"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_kier_fit</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>psill <span class="op">=</span> <span class="fl">8</span>, model <span class="op">=</span> <span class="st">"Sph"</span>, range <span class="op">=</span> <span class="fl">4000</span>, </span>
+<span>                     nugget <span class="op">=</span> <span class="fl">0.5</span>, anis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">45</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_kier</span>, <span class="va">vario_kier_fit</span>, as.table <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-36"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-36-1.png" alt="Modele kierunkowe zmiennej temp." width="100%"><p class="caption">
+Rycina 7.28: Modele kierunkowe zmiennej temp.
+</p>
+</div>
+<div class="sourceCode" id="cb201"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_kier_fit2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario_kier</span>,</span>
+<span>                                <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Sph"</span>,</span>
+<span>                                    anis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">45</span>, <span class="fl">0.4</span><span class="op">)</span>, </span>
+<span>                                    nugget <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_kier</span>, <span class="va">vario_kier_fit2</span>, as.table <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:07-modelowanie-37"></span>
+<img src="07-modelowanie_files/figure-html/07-modelowanie-37-1.png" alt="Automatycznie dopasowane modele kierunkowe zmiennej temp." width="100%"><p class="caption">
+Rycina 7.29: Automatycznie dopasowane modele kierunkowe zmiennej temp.
+</p>
+</div>
+</div>
+</div>
+<div id="z7" class="section level2" number="7.6">
+<h2>
+<span class="header-section-number">7.6</span> Zadania<a class="anchor" aria-label="anchor" href="#z7"><i class="fas fa-link"></i></a>
+</h2>
+<p>Przyjrzyj się danym z obiektu <code>punkty_pref</code>. Możesz go wczytać używając poniższego kodu:</p>
+<div class="sourceCode" id="cb202"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">)</span></span></code></pre></div>
+<ol style="list-style-type: decimal">
+<li>Zbuduj modele semiwariogramu zmiennej <code>srtm</code> używając modelu sferycznego używając zarówno ręcznie ustalonych parametrów oraz funkcji <code><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram()</a></code>.
+Porównaj graficznie uzyskane modele.</li>
+<li>Zbuduj modele semiwariogramu zmiennej <code>srtm</code> używając modelu nuggetowego, sferycznego, wykładniczego, gausowskiego i potęgowego.
+Porównaj graficznie uzyskane modele.</li>
+<li>Stwórz złożony model semiwariogramu zmiennej <code>srtm</code> używając modelu nuggetowego i sferycznego.</li>
+<li>W oparciu o mapę semiwariogramu, zbuduj semiwariogramy kierunkowe zmiennej <code>srtm</code> dla kierunków wykazujących anizotropię przestrzenną.
+Następnie zbuduj modele semiwariogramu dla uzyskanych semiwariogramów kierunkowych.</li>
+<li>(Dodatkowe) Spróbuj użyć jednego z modeli podstawowych, który nie był opisywany w tym rozdziale.
+Czym ten wybrany model się charakteryzuje?</li>
+</ol>
+</div>
+</div>
+
+  <div class="chapter-nav">
+<div class="prev"><a href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></div>
+<div class="next"><a href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#modelowanie-matematycznie-autokorelacji-przestrzennej"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li>
+<a class="nav-link" href="#modelowanie-matematycznie-autokorelacji-przestrzennej-1"><span class="header-section-number">7.1</span> Modelowanie matematycznie autokorelacji przestrzennej</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#modelowanie-struktury-przestrzennej"><span class="header-section-number">7.1.1</span> Modelowanie struktury przestrzennej</a></li>
+<li><a class="nav-link" href="#model-semiwariogramu"><span class="header-section-number">7.1.2</span> Model semiwariogramu</a></li>
+<li><a class="nav-link" href="#model-nuggetowy"><span class="header-section-number">7.1.3</span> Model nuggetowy</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#modele-podstawowe"><span class="header-section-number">7.2</span> Modele podstawowe</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#typy-modeli-podstawowych"><span class="header-section-number">7.2.1</span> Typy modeli podstawowych</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#metody-modelowania"><span class="header-section-number">7.3</span> Metody modelowania</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#rodzaje-metod-modelowania"><span class="header-section-number">7.3.1</span> Rodzaje metod modelowania</a></li>
+<li><a class="nav-link" href="#funkcja-fit.variogram"><span class="header-section-number">7.3.2</span> Funkcja fit.variogram()</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#modelowanie-izotropowe"><span class="header-section-number">7.4</span> Modelowanie izotropowe</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#model-sferyczny"><span class="header-section-number">7.4.1</span> Model sferyczny</a></li>
+<li><a class="nav-link" href="#model-wyk%C5%82adniczy"><span class="header-section-number">7.4.2</span> Model wykładniczy</a></li>
+<li><a class="nav-link" href="#model-gaussowski"><span class="header-section-number">7.4.3</span> Model gaussowski</a></li>
+<li><a class="nav-link" href="#model-pot%C4%99gowy"><span class="header-section-number">7.4.4</span> Model potęgowy</a></li>
+<li><a class="nav-link" href="#por%C3%B3wnanie-modeli"><span class="header-section-number">7.4.5</span> Porównanie modeli</a></li>
+<li><a class="nav-link" href="#modele-z%C5%82o%C5%BCone-i"><span class="header-section-number">7.4.6</span> Modele złożone I</a></li>
+<li><a class="nav-link" href="#modele-z%C5%82o%C5%BCone-ii"><span class="header-section-number">7.4.7</span> Modele złożone II</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#modelowanie-anizotropowe"><span class="header-section-number">7.5</span> Modelowanie anizotropowe</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#anizotropia-1"><span class="header-section-number">7.5.1</span> Anizotropia</a></li></ul>
+</li>
+<li><a class="nav-link" href="#z7"><span class="header-section-number">7.6</span> Zadania</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/07-modelowanie.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/07-modelowanie.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>B Dane | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału 2) oraz korzystając z pakietu geostatbook (dla kolejnych rozdziałów). Dodatkowo, przy instalacji...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="B Dane | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/dane-app.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału 2) oraz korzystając z pakietu geostatbook (dla kolejnych rozdziałów). Dodatkowo, przy instalacji...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="B Dane | Geostatystyka w R">
+<meta name="twitter:description" content="Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału 2) oraz korzystając z pakietu geostatbook (dla kolejnych rozdziałów). Dodatkowo, przy instalacji...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="B Dane | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="active" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="dane-app" class="section level1" number="15">
+<h1>
+<span class="header-section-number">B</span> Dane<a class="anchor" aria-label="anchor" href="#dane-app"><i class="fas fa-link"></i></a>
+</h1>
+<p>Dane wykorzystywane w tym skrypcie można pobrać w postaci spakowanego archiwum (dla rozdziału <a href="r-a-dane-przestrzenne.html#r-a-dane-przestrzenne">2</a>) oraz korzystając z pakietu <strong>geostatbook</strong> (dla kolejnych rozdziałów).
+Dodatkowo, przy instalacji pakietu <strong>geostatbook</strong> pobierane są wszystkie inne pakiety potrzebne do pełnego korzystania z materiałów zawartych w tym skrypcie.</p>
+<ul>
+<li><a href="https://github.com/Nowosad/geostat_book/blob/master/dane3.zip?raw=true">Archiwum zawierające dane do rozdziału drugiego</a></li>
+<li><a href="https://github.com/Nowosad/geostatbook">Dane do kolejnych rozdziałów są zawarte w pakiecie geostatbook:</a></li>
+</ul>
+<div class="sourceCode" id="cb389"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"nowosad/geostatbook@3"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb390"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bookdown.org/nowosad/geostatystyka/">geostatbook</a></span><span class="op">)</span></span></code></pre></div>
+<div id="punkty" class="section level2" number="15.1">
+<h2>
+<span class="header-section-number">B.1</span> <code>punkty</code><a class="anchor" aria-label="anchor" href="#punkty"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb391"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"punkty"</span><span class="op">)</span></span>
+<span><span class="op">?</span><span class="va">punkty</span></span></code></pre></div>
+<p>Zbiór danych <code>punkty</code> zawiera 242 obserwacje oraz 5 zmiennych dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
+Zmienne:</p>
+<ul>
+<li>
+<code>srtm</code> - wysokość w metrach n.p.m. pozyskana z numerycznego modelu terenu z misji SRTM</li>
+<li>
+<code>clc</code> - uproszczona kategoria pokrycia terenu z bazy Corine Land Cover.
+1 oznacza tereny rolne, 2 oznacza lasy i ekosystemy seminaturalne, 3 to obszary podmokłe, 4 to obszary wodne</li>
+<li>
+<code>temp</code> - temperatura powierzchni ziemi w stopniach Celsjusza</li>
+<li>
+<code>ndvi</code> - znormalizowany różnicowy wskaźnik wegetacji (ang. <em>Normalized Difference Vegetation Index</em>)</li>
+<li>
+<code>savi</code> - wskaźnik wegetacji mniej podatny na wpływ jasności gleby na uzyskane wyniki (ang. <em>Soil Adjusted Vegetation Index</em>)</li>
+</ul>
+<div class="sourceCode" id="cb392"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"srtm"</span>, <span class="st">"clc"</span>, <span class="st">"temp"</span>, <span class="st">"ndvi"</span>, <span class="st">"savi"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.frame <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="15-appendix-dane_files/figure-html/15-appendix-dane-5-1.png" width="100%" style="display: block; margin: auto;"></div>
+</div>
+<div id="punkty_ndvi" class="section level2" number="15.2">
+<h2>
+<span class="header-section-number">B.2</span> <code>punkty_ndvi</code><a class="anchor" aria-label="anchor" href="#punkty_ndvi"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb393"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"punkty_ndvi"</span><span class="op">)</span></span>
+<span><span class="op">?</span><span class="va">punkty_ndvi</span></span></code></pre></div>
+<p>Zbiór danych <code>punkty_ndvi</code> zawiera 993 obserwacji oraz 1 zmienną dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
+Zmienna:</p>
+<ul>
+<li>
+<code>ndvi</code> - znormalizowany różnicowy wskaźnik wegetacji (ang. <em>Normalized Difference Vegetation Index</em>)</li>
+</ul>
+<div class="sourceCode" id="cb394"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">punkty_ndvi</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"ndvi"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.frame <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="15-appendix-dane_files/figure-html/15-appendix-dane-7-1.png" width="100%" style="display: block; margin: auto;"></div>
+</div>
+<div id="punkty_pref" class="section level2" number="15.3">
+<h2>
+<span class="header-section-number">B.3</span> <code>punkty_pref</code><a class="anchor" aria-label="anchor" href="#punkty_pref"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb395"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"punkty_pref"</span><span class="op">)</span></span>
+<span><span class="op">?</span><span class="va">punkty_pref</span></span></code></pre></div>
+<p>Zbiór danych <code>punkty_pref</code> zawiera 264 obserwacji oraz 5 zmiennych dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
+Są one rozlokowane w sposób preferencyjny.
+Zmienna:</p>
+<ul>
+<li>
+<code>srtm</code> - wysokość w metrach n.p.m. pozyskana z numerycznego modelu terenu z misji SRTM</li>
+<li>
+<code>clc</code> - uproszczona kategoria pokrycia terenu z bazy Corine Land Cover.
+1 oznacza tereny rolne, 2 oznacza lasy i ekosystemy seminaturalne, 3 to obszary podmokłe, 4 to obszary wodne</li>
+<li>
+<code>temp</code> - temperatura powierzchni ziemi w stopniach Celsjusza</li>
+<li>
+<code>ndvi</code> - znormalizowany różnicowy wskaźnik wegetacji (ang. <em>Normalized Difference Vegetation Index</em>)</li>
+<li>
+<code>savi</code> - wskaźnik wegetacji mniej podatny na wpływ jasności gleby na uzyskane wyniki (ang. <em>Soil Adjusted Vegetation Index</em>)</li>
+</ul>
+<div class="sourceCode" id="cb396"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"srtm"</span>, <span class="st">"clc"</span>, <span class="st">"temp"</span>, <span class="st">"ndvi"</span>, <span class="st">"savi"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.frame <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="15-appendix-dane_files/figure-html/15-appendix-dane-9-1.png" width="100%" style="display: block; margin: auto;"></div>
+</div>
+<div id="granica" class="section level2" number="15.4">
+<h2>
+<span class="header-section-number">B.4</span> <code>granica</code><a class="anchor" aria-label="anchor" href="#granica"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb397"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"granica"</span><span class="op">)</span></span>
+<span><span class="op">?</span><span class="va">granica</span></span></code></pre></div>
+<p>Granica Suwalskiego Parku Krajobrazowego.</p>
+<div class="sourceCode" id="cb398"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">granica</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_polygons</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="15-appendix-dane_files/figure-html/15-appendix-dane-11-1.png" width="100%" style="display: block; margin: auto;"></div>
+</div>
+<div id="siatka" class="section level2" number="15.5">
+<h2>
+<span class="header-section-number">B.5</span> <code>siatka</code><a class="anchor" aria-label="anchor" href="#siatka"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb399"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"siatka"</span><span class="op">)</span></span>
+<span><span class="op">?</span><span class="va">siatka</span></span></code></pre></div>
+<p>Siatka badanego obszaru dla obszaru Suwalskiego Parku Krajobrazowego i okolic.
+Zawiera ona 96 wierszy i 127 kolumn.</p>
+<div class="sourceCode" id="cb400"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">siatka</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="15-appendix-dane_files/figure-html/15-appendix-dane-13-1.png" width="100%" style="display: block; margin: auto;"></div>
+</div>
+<div id="dane_uzup" class="section level2" number="15.6">
+<h2>
+<span class="header-section-number">B.6</span> <code>dane_uzup</code><a class="anchor" aria-label="anchor" href="#dane_uzup"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb401"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"dane_uzup"</span><span class="op">)</span></span>
+<span><span class="op">?</span><span class="va">dane_uzup</span></span></code></pre></div>
+<p>Siatka badanego obszaru dla obszaru Suwalskiego Parku Krajobrazowego i okolic zawierająca zmienne dodatkowe.
+Zawiera ona 96 wierszy i 127 kolumn oraz 4 zmienne:</p>
+<ul>
+<li>
+<code>srtm</code> - wysokość w metrach n.p.m. pozyskana z numerycznego modelu terenu z misji SRTM</li>
+<li>
+<code>clc</code> - uproszczona kategoria pokrycia terenu z bazy Corine Land Cover.
+1 oznacza tereny rolne, 2 oznacza lasy i ekosystemy seminaturalne, 3 to obszary podmokłe, 4 to obszary wodne</li>
+<li>
+<code>ndvi</code> - znormalizowany różnicowy wskaźnik wegetacji (ang. <em>Normalized Difference Vegetation Index</em>)</li>
+<li>
+<code>savi</code> - wskaźnik wegetacji mniej podatny na wpływ jasności gleby na uzyskane wyniki (ang. <em>Soil Adjusted Vegetation Index</em>)</li>
+</ul>
+<div class="sourceCode" id="cb402"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">dane_uzup</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.frame <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="15-appendix-dane_files/figure-html/15-appendix-dane-15-1.png" width="100%" style="display: block; margin: auto;"></div>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></div>
+<div class="next"><a href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#dane-app"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="nav-link" href="#punkty"><span class="header-section-number">B.1</span> punkty</a></li>
+<li><a class="nav-link" href="#punkty_ndvi"><span class="header-section-number">B.2</span> punkty_ndvi</a></li>
+<li><a class="nav-link" href="#punkty_pref"><span class="header-section-number">B.3</span> punkty_pref</a></li>
+<li><a class="nav-link" href="#granica"><span class="header-section-number">B.4</span> granica</a></li>
+<li><a class="nav-link" href="#siatka"><span class="header-section-number">B.5</span> siatka</a></li>
+<li><a class="nav-link" href="#dane_uzup"><span class="header-section-number">B.6</span> dane_uzup</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/15-appendix-dane.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/15-appendix-dane.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

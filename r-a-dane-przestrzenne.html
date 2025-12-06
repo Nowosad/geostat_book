@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>2 R a dane przestrzenne | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="2.1 Wprowadzenie  2.1.1 Reprezentacja danych nieprzestrzennych Skrypty i funkcje w języku R są zbudowane na podstawie szeregu obiektów nieprzestrzennych. Do wbudowanych typów obiektów należą:...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="2 R a dane przestrzenne | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/r-a-dane-przestrzenne.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="2.1 Wprowadzenie  2.1.1 Reprezentacja danych nieprzestrzennych Skrypty i funkcje w języku R są zbudowane na podstawie szeregu obiektów nieprzestrzennych. Do wbudowanych typów obiektów należą:...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2 R a dane przestrzenne | Geostatystyka w R">
+<meta name="twitter:description" content="2.1 Wprowadzenie  2.1.1 Reprezentacja danych nieprzestrzennych Skrypty i funkcje w języku R są zbudowane na podstawie szeregu obiektów nieprzestrzennych. Do wbudowanych typów obiektów należą:...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="2 R a dane przestrzenne | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="active" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="r-a-dane-przestrzenne" class="section level1" number="2">
+<h1>
+<span class="header-section-number">2</span> R a dane przestrzenne<a class="anchor" aria-label="anchor" href="#r-a-dane-przestrzenne"><i class="fas fa-link"></i></a>
+</h1>
+<div id="wprowadzenie-1" class="section level2" number="2.1">
+<h2>
+<span class="header-section-number">2.1</span> Wprowadzenie<a class="anchor" aria-label="anchor" href="#wprowadzenie-1"><i class="fas fa-link"></i></a>
+</h2>
+<div id="reprezentacja-danych-nieprzestrzennych" class="section level3" number="2.1.1">
+<h3>
+<span class="header-section-number">2.1.1</span> Reprezentacja danych nieprzestrzennych<a class="anchor" aria-label="anchor" href="#reprezentacja-danych-nieprzestrzennych"><i class="fas fa-link"></i></a>
+</h3>
+<p>Skrypty i funkcje w języku R są zbudowane na podstawie szeregu obiektów nieprzestrzennych.
+Do wbudowanych typów obiektów należą:<!--ref JN--></p>
+<ul>
+<li>Wektory atomowe (ang. <em>vector</em>):
+<ul>
+<li>liczbowe (ang. <em>integer</em>, <em>numeric</em>) - <code>c(1, 2, 3)</code> i <code>c(1.21, 3.32, 4.43)</code>
+</li>
+<li>znakowe (ang. <em>character</em>) - <code>c("jeden", "dwa", "trzy")</code>
+</li>
+<li>logiczne (ang. <em>logical</em>) - <code>c(TRUE, FALSE)</code>
+</li>
+</ul>
+</li>
+<li>Ramki danych (ang. <em>data.frame</em>) - to zbiór zmiennych (kolumn) oraz obserwacji (wierszy) zawierających różne typy danych</li>
+<li>Macierze (ang. <em>matrix</em>) - to zbiór kolumn oraz wierszy zawierających wektory jednego typu</li>
+<li>Listy (ang. <em>list</em>) - to sposób przechowywania obiektów o różnych typach i różnej długości</li>
+</ul>
+<p>Dokładniejsze wyjaśnienie powyższych typów obiektów można znaleźć w rozdziałach 5 i 7 książki <a href="https://nowosad.github.io/elp/">Elementarz programisty: Wstęp do programowania używając R</a>.</p>
+</div>
+<div id="pakiety" class="section level3" number="2.1.2">
+<h3>
+<span class="header-section-number">2.1.2</span> Pakiety<a class="anchor" aria-label="anchor" href="#pakiety"><i class="fas fa-link"></i></a>
+</h3>
+<p>R zawiera także wiele funkcji pozwalających na przetwarzanie, wizualizację i analizowanie danych przestrzennych.
+Zawarte są one w szeregu pakietów (zbiorów funkcji), między innymi:</p>
+<ul>
+<li>Obsługa danych przestrzennych - <strong>sf</strong>, <strong>stars</strong>, <strong>terra</strong>, <strong>raster</strong>, <strong>sp</strong>
+</li>
+<li>Geostatystyka - <strong>gstat</strong>, <strong>geoR</strong>
+</li>
+</ul>
+<p>Więcej szczegółów na ten temat pakietów R służących do analizy przestrzennej można znaleźć pod adresem <a href="https://cran.r-project.org/view=Spatial" class="uri">https://cran.r-project.org/view=Spatial</a>.</p>
+</div>
+<div id="reprezentacja-danych-przestrzennych" class="section level3" number="2.1.3">
+<h3>
+<span class="header-section-number">2.1.3</span> Reprezentacja danych przestrzennych<a class="anchor" aria-label="anchor" href="#reprezentacja-danych-przestrzennych"><i class="fas fa-link"></i></a>
+</h3>
+<p>Dane przestrzenne mogą być reprezentowane w R poprzez wiele różnych klas obiektów z użyciem różnych pakietów R.
+Przykładowo dane wektorowe mogą być reprezentowane poprzez obiekty klasy <code>Spatial*</code> z pakietu <strong>sp</strong> oraz obiekty klasy <code>sf</code> z pakietu <strong>sf</strong>.</p>
+<p>Pakiet <strong>sf</strong> oparty jest o standard OGC o nazwie Simple Features.
+Większość jego funkcji zaczyna się od prefiksu <code>st_</code>.
+Ten pakiet definiuje klasę obiektów <code>sf</code>, która jest sposobem reprezentacji przestrzennych danych wektorowych.
+Pozwala on na stosowanie dodatkowych typów danych wektorowych (np. poligon i multipoligon to dwie oddzielne klasy), łatwiejsze przetwarzanie danych, oraz obsługę przestrzennych baz danych takich jak PostGIS.
+Pakiet <strong>sf</strong> jest używany przez kilkadziesiąt dodatkowych pakietów R, jednak wiele metod i funkcji nadal wymaga obiektów klasy <strong>sp</strong>.
+Porównanie funkcji dostępnych w pakietach <strong>sp</strong> i <strong>sf</strong> można znaleźć pod adresem <a href="https://github.com/r-spatial/sf/wiki/Migrating" class="uri">https://github.com/r-spatial/sf/wiki/Migrating</a>.
+Więcej o pakiecie <strong>sf</strong> można przeczytać w <a href="https://geocompr.robinlovelace.net/spatial-class.html">rozdziale drugim</a> książki Geocomputation with R.</p>
+<p>Dane rastrowe są reprezentowane między innymi poprzez klasę <code>SpatialGridDataFrame</code> z pakietu <strong>sp</strong>, obiekty klasy <code>Raster*</code> z pakietu <strong>raster</strong>, <code>SpatRaster</code> z pakietu <strong>terra</strong>, oraz klasę <code>stars</code> z pakietu <strong>stars</strong>.</p>
+<p>Pakiet <strong>stars</strong> (<em>scalable, spatiotemporal tidy arrays</em>) pozwala na obsługę różnorodnych danych przestrzennych i czasoprzestrzennych reprezentowanych jako kostka danych (ang. <em>data cubes</em>).
+Obejmuje to, między innymi, regularne i nieregularne dane rastrowe, ale także czasoprzestrzenne dane wektorowe.
+Ten pakiet zapewnia klasy i metody do wczytywania, przetwarzania, wizualizacji czy zapisywania kości danych.
+Posiada on także wbudowaną integrację z pakietem <strong>sf</strong>.</p>
+</div>
+<div id="gdalogr" class="section level3" number="2.1.4">
+<h3>
+<span class="header-section-number">2.1.4</span> GDAL/OGR<a class="anchor" aria-label="anchor" href="#gdalogr"><i class="fas fa-link"></i></a>
+</h3>
+<p>Pakiety <strong>sf</strong> czy <strong>stars</strong> wykorzystują zewnętrzne biblioteki <a href="http://www.gdal.org/">GDAL/OGR</a> w R do wczytywania i zapisywania danych przestrzennych.
+GDAL to biblioteka zawierająca funkcje służące do odczytywania i zapisywania danych w formatach rastrowych, a OGR to biblioteka służąca to odczytywania i zapisywania danych w formatach wektorowych.</p>
+</div>
+<div id="proj" class="section level3" number="2.1.5">
+<h3>
+<span class="header-section-number">2.1.5</span> PROJ<a class="anchor" aria-label="anchor" href="#proj"><i class="fas fa-link"></i></a>
+</h3>
+<p>Dane przestrzenne powinny być zawsze powiązane z układem współrzędnych - w ten sposób możliwe jest określenie gdzie są one położone, a także jak wykonywane są na nich operacje przestrzenne.
+Biblioteka <a href="https://proj.org/">PROJ</a> jest używana przez pakiety <strong>sf</strong> i <strong>stars</strong> do określania i konwersji układów współrzędnych.
+Układy współrzędnych mogą być opisywane na szereg sposobów, np. poprzez systemy kodów.
+Najpopularniejszym z nich jest system kodów EPSG (ang. <em>European Petroleum Survey Group</em>), który pozwala on na łatwe identyfikowanie układów współrzędnych.
+Przykładowo, układ PL 1992 może być określony jako <code>"EPSG:2180"</code>.
+Taki sposób określania układów współrzędnych wymaga jedynie znajomości odpowiedniego numery dla danego obszaru.</p>
+<p>Dane przestrzenne przechowują też opis tego układu współrzędnych w bardziej złożony sposób nazwany WKT2.
+Zawiera on opis elementów związanych z konkretnym układem współrzędnych, takich jak jednostka, elipsoida odwzorowania, itd.</p>
+<p>Warto też wiedzieć, że przez wiele lat główną rolę pełniła reprezentacja <strong>proj4string</strong>, np. <code>"+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"</code>, która określała własności układu współrzędnych.
+Współcześnie jednak ta reprezentacja nie jest zalecana do użycia.</p>
+<p>Strona <a href="https://epsg.org/" class="uri">https://epsg.org/</a> zawiera bazę danych układów współrzędnych.</p>
+</div>
+<div id="układy-współrzędnych" class="section level3" number="2.1.6">
+<h3>
+<span class="header-section-number">2.1.6</span> Układy współrzędnych<a class="anchor" aria-label="anchor" href="#uk%C5%82ady-wsp%C3%B3%C5%82rz%C4%99dnych"><i class="fas fa-link"></i></a>
+</h3>
+<p>Dane przestrzenne mogą być reprezentowane używając układów współrzędnych geograficznych lub prostokątnych płaskich.</p>
+<p>W układzie współrzędnych geograficznych proporcje pomiędzy współrzędną oznaczającą długość geograficzną (X) a oznaczającą szerokość geograficzną (Y) nie są równe 1:1.
+Realna wielkość oczka siatki (jego powierzchnia) jest zmienna, a jednostka mapy jest abstrakcyjna w tych układach.
+W efekcie nie pozwala to na proste określanie odległości czy powierzchni.
+Powyższe cechy układów współrzędnych geograficznych powodują, że do większości algorytmów w geostatystyce wykorzystywane są układy współrzędnych prostokątnych płaskich.</p>
+<p>Układy współrzędnych prostokątnych płaskich określane są w miarach liniowych (np. metrach).
+W tych układach proporcje między współrzędną X a Y są równe 1:1, a wielkość oczka jest stała.</p>
+</div>
+<div id="geos" class="section level3" number="2.1.7">
+<h3>
+<span class="header-section-number">2.1.7</span> GEOS<a class="anchor" aria-label="anchor" href="#geos"><i class="fas fa-link"></i></a>
+</h3>
+<p>Pakiet <strong>sf</strong> używa biblioteki <a href="https://libgeos.org/">GEOS</a> do wykonywania operacji przestrzennych.
+Przykładowe funkcje tej biblioteki to tworzenie buforów, wyliczanie centroidów, określanie relacji topologicznych (np. przecina, zawiera, etc.) i wiele innych.</p>
+</div>
+</div>
+<div id="import-danych" class="section level2" number="2.2">
+<h2>
+<span class="header-section-number">2.2</span> Import danych<a class="anchor" aria-label="anchor" href="#import-danych"><i class="fas fa-link"></i></a>
+</h2>
+<p>R pozwala na odczytywanie danych przestrzennych z wielu formatów.
+Do najpopularniejszych należą dane tekstowe z plików o rozszerzeniu <code>.csv</code>, dane wektorowe z plików <code>.shp</code>, dane rastrowe z plików w formacie GeoTIFF, oraz bazy danych przestrzennych z plików rozszerzeniu <code>.gpkg</code>.</p>
+<div id="format-.csv-dane-punktowe" class="section level3" number="2.2.1">
+<h3>
+<span class="header-section-number">2.2.1</span> Format .csv (dane punktowe)<a class="anchor" aria-label="anchor" href="#format-.csv-dane-punktowe"><i class="fas fa-link"></i></a>
+</h3>
+<p>Dane z plików tekstowych (np. rozszerzenie <code>.csv</code>) można odczytać za pomocą uogólnionej funkcji <code><a href="https://rdrr.io/r/utils/read.table.html">read.table()</a></code> lub też funkcji szczegółowych - <code><a href="https://rdrr.io/r/utils/read.table.html">read.csv()</a></code> lub <code><a href="https://rdrr.io/r/utils/read.table.html">read.csv2()</a></code>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dane_punktowe</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"dane/punkty.csv"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dane_punktowe</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##       srtm clc      temp      ndvi      savi        x        y
+## 1 175.7430   1 13.852222 0.6158061 0.4189449 750298.0 716731.6
+## 2 149.8111   1 15.484209 0.5558816 0.3794864 753482.9 717331.4
+## 3 272.8583  NA 12.760814 0.6067462 0.3745572 747242.5 720589.0
+## 4 187.2777   1 14.324648 0.3756170 0.2386246 755798.9 718828.1
+## 5 260.1366   1 15.908549 0.4598393 0.3087599 746963.5 717533.5
+## 6 160.1416   2  9.941118 0.5600288 0.3453627 756801.6 720474.1</code></pre>
+<p>Po wczytaniu za pomocą funkcji <code><a href="https://rdrr.io/r/utils/read.table.html">read.csv()</a></code>, nowy obiekt (np. <code>dane_punktowe</code>) jest reprezentowany za pomocą klasy nieprzestrzennej <code>data.frame</code>.
+Aby obiekt został przetworzony do klasy przestrzennej, konieczne jest określenie które kolumny zawierają informacje o współrzędnych; w tym wypadku współrzędne znajduję się w kolumnach <code>x</code> oraz <code>y</code>.
+Nadanie układu współrzędnych odbywa się poprzez funkcję <code><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf()</a></code>.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="va">dane_punktowe_sf</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">dane_punktowe</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">dane_punktowe_sf</span></span></code></pre></div>
+<pre><code>## Simple feature collection with 248 features and 5 fields
+## Geometry type: POINT
+## Dimension:     XY
+## Bounding box:  xmin: 745592.5 ymin: 712642.4 xmax: 756967.8 ymax: 721238.7
+## CRS:           NA
+## First 10 features:
+##        srtm clc      temp      ndvi      savi                  geometry
+## 1  175.7430   1 13.852222 0.6158061 0.4189449   POINT (750298 716731.6)
+## 2  149.8111   1 15.484209 0.5558816 0.3794864 POINT (753482.9 717331.4)
+## 3  272.8583  NA 12.760814 0.6067462 0.3745572   POINT (747242.5 720589)
+## 4  187.2777   1 14.324648 0.3756170 0.2386246 POINT (755798.9 718828.1)
+## 5  260.1366   1 15.908549 0.4598393 0.3087599 POINT (746963.5 717533.5)
+## 6  160.1416   2  9.941118 0.5600288 0.3453627 POINT (756801.6 720474.1)
+## 7  192.9223   2 13.514751 0.6009588 0.3737249   POINT (752698 718623.6)
+## 8  234.9989   1 12.919225 0.4979195 0.2978503 POINT (749399.8 716955.2)
+## 9  228.7312   1 19.247132 0.3819634 0.2077981   POINT (748766.6 713889)
+## 10 240.5474   2 10.529105 0.5795159 0.3805268   POINT (749290.4 718861)</code></pre>
+<p>Ważne, ale nie wymagane, jest także dodanie informacji o układzie przestrzennym danych za pomocą funkcji <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_set_crs()</a></code>.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dane_punktowe_sf</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_set_crs</a></span><span class="op">(</span><span class="va">dane_punktowe_sf</span>, value <span class="op">=</span> <span class="st">"EPSG:2180"</span><span class="op">)</span></span></code></pre></div>
+<p>Proste wizualizacje uzyskanych danych klasy przestrzennej, np. <code>sf</code> czy <code>stars</code>, można uzyskać za pomocą funkcji <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> (rycina <a href="r-a-dane-przestrzenne.html#fig:02-r-a-dane-przestrzenne-5">2.1</a> i <a href="r-a-dane-przestrzenne.html#fig:02-r-a-dane-przestrzenne-7a">2.2</a>).</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">dane_punktowe_sf</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:02-r-a-dane-przestrzenne-5"></span>
+<img src="02-r-a-dane-przestrzenne_files/figure-html/02-r-a-dane-przestrzenne-5-1.png" alt="Efekt działania funkcji plot na obiekcie klasy sf." width="100%"><p class="caption">
+Rycina 2.1: Efekt działania funkcji plot na obiekcie klasy sf.
+</p>
+</div>
+</div>
+<div id="dane-wektorowe" class="section level3" number="2.2.2">
+<h3>
+<span class="header-section-number">2.2.2</span> Dane wektorowe<a class="anchor" aria-label="anchor" href="#dane-wektorowe"><i class="fas fa-link"></i></a>
+</h3>
+<p>Dane wektorowe (np. w formacie GeoPackage czy ESRI Shapefile) można odczytać za pomocą funkcji <code><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf()</a></code> z pakietu <strong>sf</strong>.
+Przyjmuje ona co najmniej jeden argument - <code>dsn</code>, który określa główny plik w którym znajdują się dane.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="va">granica_sf</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf</a></span><span class="op">(</span>dsn <span class="op">=</span> <span class="st">"dane/granica.gpkg"</span><span class="op">)</span></span>
+<span><span class="co"># plot(granica_sf)</span></span></code></pre></div>
+</div>
+<div id="dane-rastrowe" class="section level3" number="2.2.3">
+<h3>
+<span class="header-section-number">2.2.3</span> Dane rastrowe<a class="anchor" aria-label="anchor" href="#dane-rastrowe"><i class="fas fa-link"></i></a>
+</h3>
+<p>Istnieje kilka sposobów odczytu danych rastrowych w R.
+Do najpopularniejszych należą funkcje <code>rast()</code> z pakietu <strong>terra</strong> i <code>raster()</code> z pakietu <strong>raster</strong>.
+W poniższym przykładzie użyjemy funkcji <code><a href="https://r-spatial.github.io/stars/reference/read_stars.html">read_stars()</a></code> z pakietu <strong>stars</strong>.
+Należy w niej jedynie podać ścieżkę do pliku rastrowego.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span></span>
+<span><span class="va">siatka_stars</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/stars/reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="st">"dane/siatka.tif"</span><span class="op">)</span></span>
+<span><span class="va">siatka_stars</span></span></code></pre></div>
+<pre><code>## stars object with 2 dimensions and 1 attribute
+## attribute(s):
+##             Min. 1st Qu. Median Mean 3rd Qu. Max. NA's
+## siatka.tif     0       0      0    0       0    0 1270
+## dimension(s):
+##   from  to offset delta             refsys point x/y
+## x    1 127 745542    90 ETRF2000-PL / CS92 FALSE [x]
+## y    1  96 721256   -90 ETRF2000-PL / CS92 FALSE [y]</code></pre>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">siatka_stars</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:02-r-a-dane-przestrzenne-7a"></span>
+<img src="02-r-a-dane-przestrzenne_files/figure-html/02-r-a-dane-przestrzenne-7a-1.png" alt="Efekt działania funkcji plot na obiekcie klasy sf." width="100%"><p class="caption">
+Rycina 2.2: Efekt działania funkcji plot na obiekcie klasy sf.
+</p>
+</div>
+</div>
+</div>
+<div id="przeglądanie-danych-przestrzennych" class="section level2" number="2.3">
+<h2>
+<span class="header-section-number">2.3</span> Przeglądanie danych przestrzennych<a class="anchor" aria-label="anchor" href="#przegl%C4%85danie-danych-przestrzennych"><i class="fas fa-link"></i></a>
+</h2>
+<div id="struktura-obiektu" class="section level3" number="2.3.1">
+<h3>
+<span class="header-section-number">2.3.1</span> Struktura obiektu<a class="anchor" aria-label="anchor" href="#struktura-obiektu"><i class="fas fa-link"></i></a>
+</h3>
+<p>Podstawowe informacje o obiekcie można uzyskać poprzez wpisanie jego nazwy:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dane_punktowe_sf</span></span></code></pre></div>
+<pre><code>## Simple feature collection with 248 features and 5 fields
+## Geometry type: POINT
+## Dimension:     XY
+## Bounding box:  xmin: 745592.5 ymin: 712642.4 xmax: 756967.8 ymax: 721238.7
+## Projected CRS: ETRF2000-PL / CS92
+## First 10 features:
+##        srtm clc      temp      ndvi      savi                  geometry
+## 1  175.7430   1 13.852222 0.6158061 0.4189449   POINT (750298 716731.6)
+## 2  149.8111   1 15.484209 0.5558816 0.3794864 POINT (753482.9 717331.4)
+## 3  272.8583  NA 12.760814 0.6067462 0.3745572   POINT (747242.5 720589)
+## 4  187.2777   1 14.324648 0.3756170 0.2386246 POINT (755798.9 718828.1)
+## 5  260.1366   1 15.908549 0.4598393 0.3087599 POINT (746963.5 717533.5)
+## 6  160.1416   2  9.941118 0.5600288 0.3453627 POINT (756801.6 720474.1)
+## 7  192.9223   2 13.514751 0.6009588 0.3737249   POINT (752698 718623.6)
+## 8  234.9989   1 12.919225 0.4979195 0.2978503 POINT (749399.8 716955.2)
+## 9  228.7312   1 19.247132 0.3819634 0.2077981   POINT (748766.6 713889)
+## 10 240.5474   2 10.529105 0.5795159 0.3805268   POINT (749290.4 718861)</code></pre>
+<p>Obiekty <code>sf</code> są zbudowane z tabeli (<em>data frame</em>) wraz z dodatkową kolumną zawierającą geometrie (często nazywaną <code>geometry</code> lub <code>geom</code>) oraz szeregu atrybutów przestrzennych.
+Strukturę obiektu <code>sf</code> można sprawdzić za pomocą funkcji <code><a href="https://rdrr.io/r/utils/str.html">str()</a></code>:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">dane_punktowe_sf</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Classes 'sf' and 'data.frame':   248 obs. of  6 variables:
+##  $ srtm    : num  176 150 273 187 260 ...
+##  $ clc     : int  1 1 NA 1 1 2 2 1 1 2 ...
+##  $ temp    : num  13.9 15.5 12.8 14.3 15.9 ...
+##  $ ndvi    : num  0.616 0.556 0.607 0.376 0.46 ...
+##  $ savi    : num  0.419 0.379 0.375 0.239 0.309 ...
+##  $ geometry:sfc_POINT of length 248; first list element:  'XY' num  750298 716732
+##  - attr(*, "sf_column")= chr "geometry"
+##  - attr(*, "agr")= Factor w/ 3 levels "constant","aggregate",..: NA NA NA NA NA
+##   ..- attr(*, "names")= chr [1:5] "srtm" "clc" "temp" "ndvi" ...</code></pre>
+<p>Obiekty <code>stars</code> mogą przyjmować różną formę w zależności od tego czy reprezentują one dane wektorowe czy rastrowe oraz tego ile wymiarów posiadają te dane.
+Przykładowy obiekt <code>siatka_stars</code> posiada dwa wymiary (<code>x</code> i <code>y</code>) oraz jeden atrybut (<code>siatka.tif</code>).</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">siatka_stars</span></span></code></pre></div>
+<pre><code>## stars object with 2 dimensions and 1 attribute
+## attribute(s):
+##             Min. 1st Qu. Median Mean 3rd Qu. Max. NA's
+## siatka.tif     0       0      0    0       0    0 1270
+## dimension(s):
+##   from  to offset delta             refsys point x/y
+## x    1 127 745542    90 ETRF2000-PL / CS92 FALSE [x]
+## y    1  96 721256   -90 ETRF2000-PL / CS92 FALSE [y]</code></pre>
+<p>Jest on zbudowany jako lista zawierająca dwuwymiarową macierz wraz ze zbiorem metadanych (można to sprawdzić za pomocą funkcji <code>str(siatka_stars)</code>).</p>
+</div>
+<div id="tabla-atrybutów" class="section level3" number="2.3.2">
+<h3>
+<span class="header-section-number">2.3.2</span> Tabla atrybutów<a class="anchor" aria-label="anchor" href="#tabla-atrybut%C3%B3w"><i class="fas fa-link"></i></a>
+</h3>
+<p>Funkcja <code><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_drop_geometry()</a></code> pozwala na pozbycie się informacji przestrzennych z obiektu klasy <code>sf</code> i uzyskanie jedynie obiektu klasy <code>data.frame</code> zawierającego nieprzestrzenne informacje o kolejnych punktach w tym zbiorze.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">punkty_df</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_drop_geometry</a></span><span class="op">(</span><span class="va">dane_punktowe_sf</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">punkty_df</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##       srtm clc      temp      ndvi      savi
+## 1 175.7430   1 13.852222 0.6158061 0.4189449
+## 2 149.8111   1 15.484209 0.5558816 0.3794864
+## 3 272.8583  NA 12.760814 0.6067462 0.3745572
+## 4 187.2777   1 14.324648 0.3756170 0.2386246
+## 5 260.1366   1 15.908549 0.4598393 0.3087599
+## 6 160.1416   2  9.941118 0.5600288 0.3453627</code></pre>
+<p>Przetworzenie obiektu klasy <code>stars</code> na <code>data.frame</code> odbywa się natomiast używając funkcji <code><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame()</a></code>.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">siatka_df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">siatka_stars</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">siatka_df</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##          x        y siatka.tif
+## 1 745586.7 721211.2         NA
+## 2 745676.7 721211.2         NA
+## 3 745766.7 721211.2         NA
+## 4 745856.7 721211.2         NA
+## 5 745946.7 721211.2         NA
+## 6 746036.7 721211.2         NA</code></pre>
+</div>
+<div id="współrzędne" class="section level3" number="2.3.3">
+<h3>
+<span class="header-section-number">2.3.3</span> Współrzędne<a class="anchor" aria-label="anchor" href="#wsp%C3%B3%C5%82rz%C4%99dne"><i class="fas fa-link"></i></a>
+</h3>
+<p>Funkcja <code><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates()</a></code> pozwala na wydobycie współrzędnych zarówno z obiektu punktowego klasy <code>sf</code> jak i siatki klasy <code>stars</code>.</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># sf</span></span>
+<span><span class="va">xy</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">dane_punktowe_sf</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">xy</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##             X        Y
+## [1,] 750298.0 716731.6
+## [2,] 753482.9 717331.4
+## [3,] 747242.5 720589.0
+## [4,] 755798.9 718828.1
+## [5,] 746963.5 717533.5
+## [6,] 756801.6 720474.1</code></pre>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># stars</span></span>
+<span><span class="va">siatka_xy</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">siatka_stars</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">siatka_xy</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##          x        y
+## 1 745586.7 721211.2
+## 2 745676.7 721211.2
+## 3 745766.7 721211.2
+## 4 745856.7 721211.2
+## 5 745946.7 721211.2
+## 6 746036.7 721211.2</code></pre>
+</div>
+<div id="obwiednia" class="section level3" number="2.3.4">
+<h3>
+<span class="header-section-number">2.3.4</span> Obwiednia<a class="anchor" aria-label="anchor" href="#obwiednia"><i class="fas fa-link"></i></a>
+</h3>
+<p>Funkcja <code><a href="https://r-spatial.github.io/sf/reference/st_bbox.html">st_bbox()</a></code> określa zasięg przestrzenny danych w jednostkach mapy.</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="va">dane_punktowe_sf</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##     xmin     ymin     xmax     ymax 
+## 745592.5 712642.4 756967.8 721238.7</code></pre>
+</div>
+<div id="układ-współrzędnych" class="section level3" number="2.3.5">
+<h3>
+<span class="header-section-number">2.3.5</span> Układ współrzędnych<a class="anchor" aria-label="anchor" href="#uk%C5%82ad-wsp%C3%B3%C5%82rz%C4%99dnych"><i class="fas fa-link"></i></a>
+</h3>
+<p>Funkcja <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs()</a></code> wyświetla definicję układu współrzędnych.</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">dane_punktowe_sf</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Coordinate Reference System:
+##   User input: EPSG:2180 
+##   wkt:
+## PROJCRS["ETRF2000-PL / CS92",
+##     BASEGEOGCRS["ETRF2000-PL",
+##         DATUM["ETRF2000 Poland",
+##             ELLIPSOID["GRS 1980",6378137,298.257222101,
+##                 LENGTHUNIT["metre",1]]],
+##         PRIMEM["Greenwich",0,
+##             ANGLEUNIT["degree",0.0174532925199433]],
+##         ID["EPSG",9702]],
+##     CONVERSION["Poland CS92",
+##         METHOD["Transverse Mercator",
+##             ID["EPSG",9807]],
+##         PARAMETER["Latitude of natural origin",0,
+##             ANGLEUNIT["degree",0.0174532925199433],
+##             ID["EPSG",8801]],
+##         PARAMETER["Longitude of natural origin",19,
+##             ANGLEUNIT["degree",0.0174532925199433],
+##             ID["EPSG",8802]],
+##         PARAMETER["Scale factor at natural origin",0.9993,
+##             SCALEUNIT["unity",1],
+##             ID["EPSG",8805]],
+##         PARAMETER["False easting",500000,
+##             LENGTHUNIT["metre",1],
+##             ID["EPSG",8806]],
+##         PARAMETER["False northing",-5300000,
+##             LENGTHUNIT["metre",1],
+##             ID["EPSG",8807]]],
+##     CS[Cartesian,2],
+##         AXIS["northing (x)",north,
+##             ORDER[1],
+##             LENGTHUNIT["metre",1]],
+##         AXIS["easting (y)",east,
+##             ORDER[2],
+##             LENGTHUNIT["metre",1]],
+##     USAGE[
+##         SCOPE["Topographic mapping (medium and small scale)."],
+##         AREA["Poland - onshore and offshore."],
+##         BBOX[49,14.14,55.93,24.15]],
+##     ID["EPSG",2180]]</code></pre>
+</div>
+</div>
+<div id="przetwarzanie-danych-przestrzennych" class="section level2" number="2.4">
+<h2>
+<span class="header-section-number">2.4</span> Przetwarzanie danych przestrzennych<a class="anchor" aria-label="anchor" href="#przetwarzanie-danych-przestrzennych"><i class="fas fa-link"></i></a>
+</h2>
+<div id="łączenie-danych-rastrowych" class="section level3" number="2.4.1">
+<h3>
+<span class="header-section-number">2.4.1</span> Łączenie danych rastrowych<a class="anchor" aria-label="anchor" href="#%C5%82%C4%85czenie-danych-rastrowych"><i class="fas fa-link"></i></a>
+</h3>
+<p>Połączenie danych rastrowych pochodzących z kilku plików może odbyć się poprzez wczytanie ich jako osobnych obiektów klasy <code>stars</code> a następnie połączenie ich używając funkcji <code><a href="https://rdrr.io/r/base/c.html">c()</a></code>.</p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">srtm_stars</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/stars/reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="st">"dane/srtm.tif"</span><span class="op">)</span></span>
+<span><span class="va">clc_stars</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/stars/reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="st">"dane/clc.tif"</span><span class="op">)</span></span>
+<span><span class="va">dwie_stars</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">srtm_stars</span>, <span class="va">clc_stars</span><span class="op">)</span></span></code></pre></div>
+<p>W efekcie uzyskiwany jest obiekt posiadający dwa atrybuty odpowiadające wczytanym plikom.</p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dwie_stars</span></span></code></pre></div>
+<pre><code>## stars object with 2 dimensions and 2 attributes
+## attribute(s):
+##               Min.  1st Qu.   Median      Mean  3rd Qu.     Max. NA's
+## srtm.tif  143.6559 186.4765 216.4929 212.21245 235.2941 288.8382 1242
+## clc.tif     1.0000   1.0000   1.0000   1.42126   2.0000   4.0000 1270
+## dimension(s):
+##   from  to offset delta             refsys point x/y
+## x    1 127 745542    90 ETRF2000-PL / CS92 FALSE [x]
+## y    1  96 721256   -90 ETRF2000-PL / CS92 FALSE [y]</code></pre>
+</div>
+<div id="wydobywanie-wartości-z-rastra" class="section level3" number="2.4.2">
+<h3>
+<span class="header-section-number">2.4.2</span> Wydobywanie wartości z rastra<a class="anchor" aria-label="anchor" href="#wydobywanie-warto%C5%9Bci-z-rastra"><i class="fas fa-link"></i></a>
+</h3>
+<p>Posiadając dwa obiekty, jeden punktowy a drugi rastrowy, dotyczące tego samego obszaru możliwe jest wydobycie wartości dla punktów używając funkcji <code><a href="https://r-spatial.github.io/sf/reference/st_join.html">st_join()</a></code>.
+<!-- toDo --></p>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dane_punktowe_sf2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_join.html">st_join</a></span><span class="op">(</span><span class="va">dane_punktowe_sf</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">dwie_stars</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div id="eksport-danych" class="section level2" number="2.5">
+<h2>
+<span class="header-section-number">2.5</span> Eksport danych<a class="anchor" aria-label="anchor" href="#eksport-danych"><i class="fas fa-link"></i></a>
+</h2>
+<div id="zapisywanie-danych-wektorowych" class="section level3" number="2.5.1">
+<h3>
+<span class="header-section-number">2.5.1</span> Zapisywanie danych wektorowych<a class="anchor" aria-label="anchor" href="#zapisywanie-danych-wektorowych"><i class="fas fa-link"></i></a>
+</h3>
+<p>R pozwala również na zapisywanie danych przestrzennych.
+W przypadku zapisu danych wektorowych za pomocą funkcji <code><a href="https://r-spatial.github.io/sf/reference/st_write.html">write_sf()</a></code> konieczne jest podanie ścieżki i nazwy zapisywanego obiektu wraz z rozszerzeniem (np. <code>dane/granica.gpkg</code>).</p>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_write.html">write_sf</a></span><span class="op">(</span><span class="va">granica_sf</span>, dsn <span class="op">=</span> <span class="st">"dane/granica.gpkg"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div id="zapisywanie-danych-rastrowych" class="section level3" number="2.5.2">
+<h3>
+<span class="header-section-number">2.5.2</span> Zapisywanie danych rastrowych<a class="anchor" aria-label="anchor" href="#zapisywanie-danych-rastrowych"><i class="fas fa-link"></i></a>
+</h3>
+<p>Funkcja <code><a href="https://r-spatial.github.io/sf/reference/st_write.html">write_sf()</a></code> pozwala również na zapisywanie danych rastrowych.
+Wymaga ona podania dwóch argumentów - nazwy zapisywanego obiektu (np. <code>siatka_stars</code>) oraz ścieżki i nazwy nowego pliku wraz z rozszerzeniem (np. <code>dane/nowa_siatka.tif</code>).</p>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/stars/reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">siatka_stars</span>, dsn <span class="op">=</span> <span class="st">"dane/nowa_siatka.tif"</span><span class="op">)</span></span></code></pre></div>
+<!-- Możliwe jest także użycie szeregu dodatkowych argumentów, np.: -->
+<!-- - `type` - określającego typ danych wyjściowych  -->
+<!-- - `options` - pozwalającego na użycie dodatkowych opcji sterownika, np. użycie kompresji danych -->
+</div>
+</div>
+<div id="wizualizacja-danych-2d" class="section level2" number="2.6">
+<h2>
+<span class="header-section-number">2.6</span> Wizualizacja danych 2D<a class="anchor" aria-label="anchor" href="#wizualizacja-danych-2d"><i class="fas fa-link"></i></a>
+</h2>
+<p>Do wizualizacji danych przestrzennych w R służy co najmniej kilkanaście różnych pakietów.
+Poniżej pokazane są przykłady użycia pakietu <strong>tmap</strong>.</p>
+<p>Poniższy blok kodu tworzy złożoną wizualizację przestrzenną (rycina <a href="r-a-dane-przestrzenne.html#fig:02-r-a-dane-przestrzenne-1-bis">2.3</a>) składającą się z cyfrowego modelu wysokościowego, którego różne wartości są oddane poprzez kolejne kolory (<code><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster()</a></code>) i legendę z prawej strony (<code><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout()</a></code>); granic Suwalskiego Parku Krajobrazowego (<code><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders()</a></code>); kropek przedstawiających dane punktowe (<code><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_dots()</a></code>); podziałki liniowej (<code><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar()</a></code>); strzałki północy (<code>tm_compass</code>).</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">dwie_stars</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span><span class="st">"srtm.tif"</span>, style <span class="op">=</span> <span class="st">"cont"</span>, title <span class="op">=</span> <span class="st">"[m npm]"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">granica_sf</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">dane_punktowe_sf</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_dots</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_compass.html">tm_compass</a></span><span class="op">(</span>position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"left"</span>, <span class="st">"top"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:02-r-a-dane-przestrzenne-1-bis"></span>
+<img src="02-r-a-dane-przestrzenne_files/figure-html/02-r-a-dane-przestrzenne-1-bis-1.png" alt="Przykład wizualizacji danych 2D stworzonej z użyciem pakietu tmap." width="100%"><p class="caption">
+Rycina 2.3: Przykład wizualizacji danych 2D stworzonej z użyciem pakietu tmap.
+</p>
+</div>
+<p>Główna idea stojąca za pakietem <strong>tmap</strong> mówi o łączeniu kolejnych linii kodu znakiem <code>+</code>, i te kolejne elementy będą wyświetlane po sobie.
+Podstawową funkcją tego pakietu jest <code><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape()</a></code>, która pozwala na zdefiniowanie jaki obiekt przestrzenny chcemy zwizualizować.
+Następnie, w zależności od tego jakiego rodzaju jest nasz obiekt (np. czy to punkt czy raster), możemy zdefiniować różne typy wizualizacji.
+Dla danych punktowych może to być <code><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_dots()</a></code> czy <code><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols()</a></code>, dla poligonów - <code><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders()</a></code> czy <code><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_polygons()</a></code>, a dla rastrów - <code><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster()</a></code>.
+Każda z powyższych funkcji jest też łatwo modyfikowalna, pozwalając na wybranie zmiennej do przestawienia na mapie, stylu legendy, jej tytułu, itd.
+Dodatkowo, <strong>tmap</strong> daje możliwość umieszczenia innych elementów map, takich jak podziałka liniowa (<code><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar()</a></code>) i strzałka północy (<code>tm_compass</code>).</p>
+<p>Więcej o wizualizacji danych przestrzennych można przeczytać w książce <a href="https://r-tmap.github.io/tmap-book/">Elegant and informative maps with tmap</a> oraz rozdziale <a href="https://geocompr.robinlovelace.net/adv-map.html">Making maps with R</a> książki Geocomputation with R.</p>
+<div id="dane-punktowe" class="section level3" number="2.6.1">
+<h3>
+<span class="header-section-number">2.6.1</span> Dane punktowe<a class="anchor" aria-label="anchor" href="#dane-punktowe"><i class="fas fa-link"></i></a>
+</h3>
+<p>Pakiet <strong>tmap</strong> posiada szereg funkcji dla różnych typów danych wejściowych.
+W przypadku danych punktowych, najczęściej używane są <code><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols()</a></code> i <code><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_dots()</a></code>.
+Gdy są one używane bez podania dodatkowych argumentów, wówczas otrzymujemy jedynie wizualizację geometrii naszych danych (rycina <a href="r-a-dane-przestrzenne.html#fig:02-r-a-dane-przestrzenne-2-bis">2.4</a>).</p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">dane_punktowe_sf</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:02-r-a-dane-przestrzenne-2-bis"></span>
+<img src="02-r-a-dane-przestrzenne_files/figure-html/02-r-a-dane-przestrzenne-2-bis-1.png" alt="Użycie pakietu plot do wyświetlenia geometrii obiektu klasy sf." width="100%"><p class="caption">
+Rycina 2.4: Użycie pakietu plot do wyświetlenia geometrii obiektu klasy sf.
+</p>
+</div>
+<p>Kiedy jednak chcemy przedstawić konkretną zmienną, musimy zadeklarować w jaki sposób ma być przedstawiona, przykładowo <code>col = "temp"</code> pokoloruje nasze punkty w zależności od wartości zmiennej <code>"temp"</code> i automatycznie doda odpowiednią legendę.
+W takiej sytuacji możemy dodatkowo, np. dodać tytuł legendy (<code>title.col = "Temperatura [*C]")</code>) czy sposób opisu brakujących wartości <code>textNA = "Brak danych"</code> (rycina <a href="r-a-dane-przestrzenne.html#fig:02-r-a-dane-przestrzenne-3-bis">2.5</a>).</p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">dane_punktowe_sf</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"temp"</span>, </span>
+<span>                   title.col <span class="op">=</span> <span class="st">"Temperatura [*C]"</span>,</span>
+<span>                   textNA <span class="op">=</span> <span class="st">"Brak danych"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:02-r-a-dane-przestrzenne-3-bis"></span>
+<img src="02-r-a-dane-przestrzenne_files/figure-html/02-r-a-dane-przestrzenne-3-bis-1.png" alt="Użycie pakietu tmap do wizualizacji zmiennej temp w danych punktowych." width="100%"><p class="caption">
+Rycina 2.5: Użycie pakietu tmap do wizualizacji zmiennej temp w danych punktowych.
+</p>
+</div>
+<p>Inne możliwe modyfikacje obejmują zmianę domyślnej palety kolorystycznej (<code>palette = "-Spectral"</code>) czy też tego w jaki sposób kolejne wartości są przedstawiane (rycina <a href="r-a-dane-przestrzenne.html#fig:02-r-a-dane-przestrzenne-4-bis">2.6</a>).
+Automatycznie używany jest podział wartości na kilka równych przedziałów, ale możliwe są również inne podejścia do tego zadania.
+Przykładowo, <code>style = "cont"</code> tworzy ciągłą legendę.</p>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">dane_punktowe_sf</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"temp"</span>, </span>
+<span>                   title.col <span class="op">=</span> <span class="st">"Temperatura [*C]"</span>,</span>
+<span>                   textNA <span class="op">=</span> <span class="st">"Brak danych"</span>,  </span>
+<span>                   palette <span class="op">=</span> <span class="st">"-Spectral"</span>,</span>
+<span>                   style <span class="op">=</span> <span class="st">"cont"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:02-r-a-dane-przestrzenne-4-bis"></span>
+<img src="02-r-a-dane-przestrzenne_files/figure-html/02-r-a-dane-przestrzenne-4-bis-1.png" alt="Bardziej złożone zastosowanie pakietu tmap do wizualizacji zmiennej temp w danych punktowych." width="100%"><p class="caption">
+Rycina 2.6: Bardziej złożone zastosowanie pakietu tmap do wizualizacji zmiennej temp w danych punktowych.
+</p>
+</div>
+</div>
+<div id="dane-punktowe---kategorie" class="section level3" number="2.6.2">
+<h3>
+<span class="header-section-number">2.6.2</span> Dane punktowe - kategorie<a class="anchor" aria-label="anchor" href="#dane-punktowe---kategorie"><i class="fas fa-link"></i></a>
+</h3>
+<p>Nie zawsze dane mają postać ciągłych wartości - bywają one również określeniami różnych klas.
+W takich sytuacjach należy wcześniej przetworzyć typ danych do postaci kategoryzowanej (<code><a href="https://rdrr.io/r/base/factor.html">as.factor()</a></code>) lub zmienić sposób przedstawiana wartości na <code>"cat"</code> (rycina <a href="r-a-dane-przestrzenne.html#fig:02-r-a-dane-przestrzenne-5-bis">2.7</a>).</p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">dane_punktowe_sf</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"clc"</span>, </span>
+<span>                   title.col <span class="op">=</span> <span class="st">"Kategoria pokrycia terenu"</span>,</span>
+<span>                   style <span class="op">=</span> <span class="st">"cat"</span>,</span>
+<span>                   textNA <span class="op">=</span> <span class="st">"Brak danych"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:02-r-a-dane-przestrzenne-5-bis"></span>
+<img src="02-r-a-dane-przestrzenne_files/figure-html/02-r-a-dane-przestrzenne-5-bis-1.png" alt="Użycie funkcji plot do wyświetlenia zmiennej kategoryzowanej obiektu klasy sf." width="100%"><p class="caption">
+Rycina 2.7: Użycie funkcji plot do wyświetlenia zmiennej kategoryzowanej obiektu klasy sf.
+</p>
+</div>
+</div>
+<div id="rastry" class="section level3" number="2.6.3">
+<h3>
+<span class="header-section-number">2.6.3</span> Rastry<a class="anchor" aria-label="anchor" href="#rastry"><i class="fas fa-link"></i></a>
+</h3>
+<p>Pakiet <strong>tmap</strong> pozwala również na wyświetlanie danych rastrowych – tym razem używając funkcji <code><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster()</a></code>.
+Domyślnie wyświetla ona wszystkie zmienne (lub warstwy znajdujące się w obiekcie klasy <code>stars</code> (rycina <a href="r-a-dane-przestrzenne.html#fig:02-r-a-dane-przestrzenne-6-bis">2.8</a>).</p>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">dwie_stars</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:02-r-a-dane-przestrzenne-6-bis"></span>
+<img src="02-r-a-dane-przestrzenne_files/figure-html/02-r-a-dane-przestrzenne-6-bis-1.png" alt="Użycie pakietu tmap do wyświetlenia obiektu klasy stars." width="100%"><p class="caption">
+Rycina 2.8: Użycie pakietu tmap do wyświetlenia obiektu klasy stars.
+</p>
+</div>
+<p>Wybranie jednej zmiennej ma miejsce w argumencie <code>col</code>.
+Przykładowo, <code>col = "srtm.tif"</code> wyświetli pierwszą zmienną (rycina <a href="r-a-dane-przestrzenne.html#fig:02-r-a-dane-przestrzenne-7-bis">2.9</a>), a <code>col = "clc.tif"</code> drugą.
+Wynik wizualizacji możemy też modyfikować podobnie jak w przykładach dla danych punktowych powyżej.</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">dwie_stars</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"srtm.tif"</span>, style <span class="op">=</span> <span class="st">"cont"</span>, title <span class="op">=</span> <span class="st">"m npm"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:02-r-a-dane-przestrzenne-7-bis"></span>
+<img src="02-r-a-dane-przestrzenne_files/figure-html/02-r-a-dane-przestrzenne-7-bis-1.png" alt="Wizualizacja zmiennej srtm.tif obiektu klasy stars." width="100%"><p class="caption">
+Rycina 2.9: Wizualizacja zmiennej srtm.tif obiektu klasy stars.
+</p>
+</div>
+<p>Wyświetlenie wybranej zmiennej może też mieć miejsce poprzez indeksowanie.
+Opiera się to o kilka indeksów, np. dla obiektu <code>siatka_stars</code> są to <code>[indeks atrybutu, indeksy kolumn, indeksy wierszy]</code><a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Liczba indeksów zależy od złożoności obiektu klasy &lt;code&gt;stars&lt;/code&gt;. Przykładowo dla obiektów posiadających trzy wymiary, np. wielokanałowe dane satelitarne, mogą to być &lt;code&gt;[indeks atrybutu, indeksy kolumn, indeksy wierszy, indeksy kanału]&lt;/code&gt;.&lt;/p&gt;"><sup>1</sup></a>.
+Przykładowo indeks <code>dwie_stars[2, , ]</code> pozwala na wyświetlenie drugiego atrybutu – możliwe jest tutaj również użycie uproszczonej formy <code>dwie_stars[2]</code>.
+Indeksowanie pozwala też na wyświetlenie fragmentu danych rastrowych.
+Na przykład, indeks <code>[1, 2:50, 1:20]</code> pozwala na wyświetlenie pierwszej zmiennej, ale tylko dla kolumn od 20 do 50 i wierszy od 1 do 20 (rycina <a href="r-a-dane-przestrzenne.html#fig:02-r-a-dane-przestrzenne-8-bis">2.10</a>).</p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">dwie_stars</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">20</span><span class="op">:</span><span class="fl">50</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"srtm.tif"</span>, style <span class="op">=</span> <span class="st">"cont"</span>, title <span class="op">=</span> <span class="st">"m npm"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:02-r-a-dane-przestrzenne-8-bis"></span>
+<img src="02-r-a-dane-przestrzenne_files/figure-html/02-r-a-dane-przestrzenne-8-bis-1.png" alt="Użycie pakietu tmap do wyświetlenia wybranej zmiennej obiektu klasy stars dla wybranego zasięgu przestrzennego." width="100%"><p class="caption">
+Rycina 2.10: Użycie pakietu tmap do wyświetlenia wybranej zmiennej obiektu klasy stars dla wybranego zasięgu przestrzennego.
+</p>
+</div>
+</div>
+</div>
+<div id="z2" class="section level2" number="2.7">
+<h2>
+<span class="header-section-number">2.7</span> Zadania<a class="anchor" aria-label="anchor" href="#z2"><i class="fas fa-link"></i></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li>Wczytaj dane z pliku <code>punkty_ndvi.csv</code> i przetwórz je do postaci obiektu przestrzennego <code>ndvi_p</code>.</li>
+<li>Stwórz mapę zmiennej <code>ndvi</code> z nowo utworzonego obiektu. (Dodatkowo: zapisz mapę do pliku graficznego <code>punkty_ndvi.png</code>).</li>
+<li>Zapisz obiekt <code>ndvi_p</code> do formatu GeoPackage oraz do formatu ESRI Shapefile.</li>
+<li>Wczytaj ten nowy plik w formacie ESRI Shapefile do R.
+Przejrzyj ten obiekt.
+Jaki typ geometrii on przechowuje?
+Ile obiektów on zawiera?
+Ile ma on atrybutów (zmiennych)?
+Jaki ma on układ współrzędnych?</li>
+<li>Nadaj powyższemu obiektowi układ współrzędnych PL1992 (<code>EPSG:2180</code>).</li>
+<li>Wczytaj dane z pliku <code>srtm.tif</code> do R jako obiekt <code>srtm</code>.
+Jakiego rodzaju jest wynikowy obiekt?
+Jaki typ danych on przechowuje?
+Jakie ma wymiary?
+Ile ma on atrybutów (zmiennych)?
+Jaki ma on układ współrzędnych?
+Stwórz prostą mapę z nowo utworzonego obiektu.</li>
+<li>Dla punktów z obiektu <code>ndvi_p</code> wydobądź wartości z obiektu <code>srtm</code>.</li>
+<li>Stwórz mapę pokazującą punkty z obiektu <code>ndvi_p</code>, gdzie kolory będą obrazowały wartości wyciągnięte z obiektu <code>srtm</code>.
+W tle tej mapy przedstaw obiekt <code>srtm</code>.
+(Dodatkowo: spróbuj do tego użyć pakietu <strong>tmap</strong> lub <strong>ggplot2</strong>).</li>
+</ol>
+</div>
+</div>
+
+  <div class="chapter-nav">
+<div class="prev"><a href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></div>
+<div class="next"><a href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#r-a-dane-przestrzenne"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li>
+<a class="nav-link" href="#wprowadzenie-1"><span class="header-section-number">2.1</span> Wprowadzenie</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#reprezentacja-danych-nieprzestrzennych"><span class="header-section-number">2.1.1</span> Reprezentacja danych nieprzestrzennych</a></li>
+<li><a class="nav-link" href="#pakiety"><span class="header-section-number">2.1.2</span> Pakiety</a></li>
+<li><a class="nav-link" href="#reprezentacja-danych-przestrzennych"><span class="header-section-number">2.1.3</span> Reprezentacja danych przestrzennych</a></li>
+<li><a class="nav-link" href="#gdalogr"><span class="header-section-number">2.1.4</span> GDAL/OGR</a></li>
+<li><a class="nav-link" href="#proj"><span class="header-section-number">2.1.5</span> PROJ</a></li>
+<li><a class="nav-link" href="#uk%C5%82ady-wsp%C3%B3%C5%82rz%C4%99dnych"><span class="header-section-number">2.1.6</span> Układy współrzędnych</a></li>
+<li><a class="nav-link" href="#geos"><span class="header-section-number">2.1.7</span> GEOS</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#import-danych"><span class="header-section-number">2.2</span> Import danych</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#format-.csv-dane-punktowe"><span class="header-section-number">2.2.1</span> Format .csv (dane punktowe)</a></li>
+<li><a class="nav-link" href="#dane-wektorowe"><span class="header-section-number">2.2.2</span> Dane wektorowe</a></li>
+<li><a class="nav-link" href="#dane-rastrowe"><span class="header-section-number">2.2.3</span> Dane rastrowe</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#przegl%C4%85danie-danych-przestrzennych"><span class="header-section-number">2.3</span> Przeglądanie danych przestrzennych</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#struktura-obiektu"><span class="header-section-number">2.3.1</span> Struktura obiektu</a></li>
+<li><a class="nav-link" href="#tabla-atrybut%C3%B3w"><span class="header-section-number">2.3.2</span> Tabla atrybutów</a></li>
+<li><a class="nav-link" href="#wsp%C3%B3%C5%82rz%C4%99dne"><span class="header-section-number">2.3.3</span> Współrzędne</a></li>
+<li><a class="nav-link" href="#obwiednia"><span class="header-section-number">2.3.4</span> Obwiednia</a></li>
+<li><a class="nav-link" href="#uk%C5%82ad-wsp%C3%B3%C5%82rz%C4%99dnych"><span class="header-section-number">2.3.5</span> Układ współrzędnych</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#przetwarzanie-danych-przestrzennych"><span class="header-section-number">2.4</span> Przetwarzanie danych przestrzennych</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#%C5%82%C4%85czenie-danych-rastrowych"><span class="header-section-number">2.4.1</span> Łączenie danych rastrowych</a></li>
+<li><a class="nav-link" href="#wydobywanie-warto%C5%9Bci-z-rastra"><span class="header-section-number">2.4.2</span> Wydobywanie wartości z rastra</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#eksport-danych"><span class="header-section-number">2.5</span> Eksport danych</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#zapisywanie-danych-wektorowych"><span class="header-section-number">2.5.1</span> Zapisywanie danych wektorowych</a></li>
+<li><a class="nav-link" href="#zapisywanie-danych-rastrowych"><span class="header-section-number">2.5.2</span> Zapisywanie danych rastrowych</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#wizualizacja-danych-2d"><span class="header-section-number">2.6</span> Wizualizacja danych 2D</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#dane-punktowe"><span class="header-section-number">2.6.1</span> Dane punktowe</a></li>
+<li><a class="nav-link" href="#dane-punktowe---kategorie"><span class="header-section-number">2.6.2</span> Dane punktowe - kategorie</a></li>
+<li><a class="nav-link" href="#rastry"><span class="header-section-number">2.6.3</span> Rastry</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#z2"><span class="header-section-number">2.7</span> Zadania</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/02-r-a-dane-przestrzenne.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/02-r-a-dane-przestrzenne.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

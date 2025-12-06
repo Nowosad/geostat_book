@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>4 Eksploracyjna analiza danych przestrzennych | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(tmap) library(geostatbook) data(punkty)...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="4 Eksploracyjna analiza danych przestrzennych | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/eksploracyjna-analiza-danych-przestrzennych.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(tmap) library(geostatbook) data(punkty)...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="4 Eksploracyjna analiza danych przestrzennych | Geostatystyka w R">
+<meta name="twitter:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(tmap) library(geostatbook) data(punkty)...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="4 Eksploracyjna analiza danych przestrzennych | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="active" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="eksploracyjna-analiza-danych-przestrzennych" class="section level1" number="4">
+<h1>
+<span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych<a class="anchor" aria-label="anchor" href="#eksploracyjna-analiza-danych-przestrzennych"><i class="fas fa-link"></i></a>
+</h1>
+<p>Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:</p>
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bookdown.org/nowosad/geostatystyka/">geostatbook</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">granica</span><span class="op">)</span></span></code></pre></div>
+<div id="aspekt-przestrzenny" class="section level2" number="4.1">
+<h2>
+<span class="header-section-number">4.1</span> Aspekt przestrzenny<a class="anchor" aria-label="anchor" href="#aspekt-przestrzenny"><i class="fas fa-link"></i></a>
+</h2>
+<div id="podstawowe-terminy" class="section level3" number="4.1.1">
+<h3>
+<span class="header-section-number">4.1.1</span> Podstawowe terminy<a class="anchor" aria-label="anchor" href="#podstawowe-terminy"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>Populacja - cały obszar, dla którego chcemy określić wybrane właściwości, np. temperatura powietrza.</li>
+<li>Próba - zbiór obserwacji, dla których mamy informacje, np. pomiary ze stacji meteorologicznych.
+Inaczej, próba to podzbiór populacji.</li>
+</ul>
+<p>Zazwyczaj niemożliwe (lub bardzo kosztowne) jest zdobycie informacji o całej populacji.
+Z tego powodu bardzo cenne jest odpowiednie wykorzystanie informacji z próby, a następnie wnioskowanie na jej podstawie o populacji.</p>
+</div>
+<div id="mapy-punktowe" class="section level3" number="4.1.2">
+<h3>
+<span class="header-section-number">4.1.2</span> Mapy punktowe<a class="anchor" aria-label="anchor" href="#mapy-punktowe"><i class="fas fa-link"></i></a>
+</h3>
+<p>Eksploracyjna analiza danych przestrzennych w przypadku danych punktowych ma na celu:</p>
+<ul>
+<li>Sprawdzenie poprawności współrzędnych (sekcja <a href="eksploracyjna-analiza-danych-przestrzennych.html#popr-wsp">4.2</a>).</li>
+<li>Sprawdzenie poprawności danych, w tym między innymi określenie danych odstających lokalnie (sekcja <a href="eksploracyjna-analiza-danych-przestrzennych.html#dane-odst">4.3</a>).</li>
+<li>Wgląd w typ próbkowania danych (sekcja <a href="eksploracyjna-analiza-danych-przestrzennych.html#probkowanie">4.4</a>).</li>
+<li>Rozgrupowanie danych przy próbkowaniu preferencyjnym (sekcja <a href="eksploracyjna-analiza-danych-przestrzennych.html#rozgrupowanie">4.5</a>).</li>
+<li>Ogólny pogląd na zmienność przestrzenną, wykorzystanie prostej automatycznej procedury interpolacji (rozdział <a href="metody-interpolacji.html#metody-interpolacji">5</a>).</li>
+</ul>
+</div>
+</div>
+<div id="popr-wsp" class="section level2" number="4.2">
+<h2>
+<span class="header-section-number">4.2</span> Sprawdzenie poprawności współrzędnych<a class="anchor" aria-label="anchor" href="#popr-wsp"><i class="fas fa-link"></i></a>
+</h2>
+<p>Wstępne sprawdzenie poprawności współrzędnych można wykonać poprzez wizualizację danych przestrzennych za pomocą funkcji <code><a href="https://rdrr.io/r/base/plot.html">plot()</a></code> (rycina <a href="eksploracyjna-analiza-danych-przestrzennych.html#fig:04-eksp-przestrzenna-3">4.1</a>).</p>
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">granica</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_polygons</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_grid.html">tm_grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:04-eksp-przestrzenna-3"></span>
+<img src="04-eksp_przestrzenna_files/figure-html/04-eksp-przestrzenna-3-1.png" alt="Lokalizacja punktów pomiarowych na tle granicy obszaru badań." width="100%"><p class="caption">
+Rycina 4.1: Lokalizacja punktów pomiarowych na tle granicy obszaru badań.
+</p>
+</div>
+</div>
+<div id="dane-odst" class="section level2" number="4.3">
+<h2>
+<span class="header-section-number">4.3</span> Dane lokalnie odstające<a class="anchor" aria-label="anchor" href="#dane-odst"><i class="fas fa-link"></i></a>
+</h2>
+<p>Dane lokalnie odstające oznaczają nietypowe przestrzennie wartości danej cechy; nie zawsze możliwe jest ich określenie używając statystyk opisowych czy histogramów.
+Daną lokalnie odstającą może być przykładowo niska wartość otoczona wysokimi wartościami lub też wysoka wartość otoczona niskimi wartościami.
+Może to oznaczać zarówno błąd w danych albo wpływ innego czynnika na analizowaną cechę.
+Przyjrzenie się wartościom analizowanej cechy można wykonać z użyciem funkcji <code><a href="https://rdrr.io/r/base/plot.html">plot()</a></code>.
+Na poniższym przykładzie wyświetlona jest zmienna <code>temp</code> oznaczająca średnią temperaturę dobową (rycina <a href="eksploracyjna-analiza-danych-przestrzennych.html#fig:04-eksp-przestrzenna-8">4.2</a>).</p>
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">granica</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_polygons</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"temp"</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:04-eksp-przestrzenna-8"></span>
+<img src="04-eksp_przestrzenna_files/figure-html/04-eksp-przestrzenna-8-1.png" alt="Wizualizacja zmiennej temp pozwalająca na wyszukanie wartości lokalnie odstających." width="100%"><p class="caption">
+Rycina 4.2: Wizualizacja zmiennej temp pozwalająca na wyszukanie wartości lokalnie odstających.
+</p>
+</div>
+<p>Dodatkowo można wykorzystać tryb <code>view</code> w pakiecie <strong>tmap</strong> do interaktywnego określania wartości oraz numeru punktu (numer wiersza w tabeli atrybutów).</p>
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_mode.html">tmap_mode</a></span><span class="op">(</span><span class="st">"view"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"temp"</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<p>Aby powrócić do trybu statycznego, trzeba użyć funkcji <code>tmap_mode("plot")</code>.</p>
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_mode.html">tmap_mode</a></span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div id="probkowanie" class="section level2" number="4.4">
+<h2>
+<span class="header-section-number">4.4</span> Próbkowanie<a class="anchor" aria-label="anchor" href="#probkowanie"><i class="fas fa-link"></i></a>
+</h2>
+<div id="podstawowe-typy-próbowania" class="section level3" number="4.4.1">
+<h3>
+<span class="header-section-number">4.4.1</span> Podstawowe typy próbowania<a class="anchor" aria-label="anchor" href="#podstawowe-typy-pr%C3%B3bowania"><i class="fas fa-link"></i></a>
+</h3>
+<p>Istnieje cały szereg typów próbkowania danych przestrzennych.
+Funkcja <code><a href="https://r-spatial.github.io/sf/reference/st_sample.html">st_sample()</a></code> z pakietu <strong>sf</strong> pozwala na stworzenie kilku typów próbkowania (argument <code>type</code>), między innymi:</p>
+<ul>
+<li>Regularny (ang.<em>regular</em>)</li>
+<li>Losowy (ang.<em>random</em>)</li>
+<li>Losowy stratyfikowany (ang.<em>stratified</em>)</li>
+<li>Preferencyjny (ang.<em>clustered</em>)</li>
+</ul>
+</div>
+<div id="regularny-typ-próbowania" class="section level3" number="4.4.2">
+<h3>
+<span class="header-section-number">4.4.2</span> Regularny typ próbowania<a class="anchor" aria-label="anchor" href="#regularny-typ-pr%C3%B3bowania"><i class="fas fa-link"></i></a>
+</h3>
+<p>W regularnym typie próbkowania, kolejne punkty rozłożone są równomiernie na badanym obszarze (rycina <a href="eksploracyjna-analiza-danych-przestrzennych.html#fig:04-eksp-przestrzenna-4">4.3</a>).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:04-eksp-przestrzenna-4"></span>
+<img src="04-eksp_przestrzenna_files/figure-html/04-eksp-przestrzenna-4-1.png" alt="Przykład próbkowania regularnego." width="100%"><p class="caption">
+Rycina 4.3: Przykład próbkowania regularnego.
+</p>
+</div>
+</div>
+<div id="losowy-typ-próbowania" class="section level3" number="4.4.3">
+<h3>
+<span class="header-section-number">4.4.3</span> Losowy typ próbowania<a class="anchor" aria-label="anchor" href="#losowy-typ-pr%C3%B3bowania"><i class="fas fa-link"></i></a>
+</h3>
+<p>W losowym typie próbkowania każda lokalizacja ma takie samo prawdopodobieństwo wystąpienia.
+Dodatkowo, każdy punkt jest losowany niezależnie od pozostałych (rycina <a href="eksploracyjna-analiza-danych-przestrzennych.html#fig:04-eksp-przestrzenna-5">4.4</a>).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:04-eksp-przestrzenna-5"></span>
+<img src="04-eksp_przestrzenna_files/figure-html/04-eksp-przestrzenna-5-1.png" alt="Przykład próbkowania losowego." width="100%"><p class="caption">
+Rycina 4.4: Przykład próbkowania losowego.
+</p>
+</div>
+</div>
+<div id="losowy-stratyfikowany-typ-próbowania" class="section level3" number="4.4.4">
+<h3>
+<span class="header-section-number">4.4.4</span> Losowy stratyfikowany typ próbowania<a class="anchor" aria-label="anchor" href="#losowy-stratyfikowany-typ-pr%C3%B3bowania"><i class="fas fa-link"></i></a>
+</h3>
+<p>Losowy stratyfikowany typ próbkowania polega na podzieleniu analizowanego obszaru na regularne komórki, a następnie dla każdej komórki losowana jest lokalizacja punktu (rycina <a href="eksploracyjna-analiza-danych-przestrzennych.html#fig:04-eksp-przestrzenna-6b">4.5</a>).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:04-eksp-przestrzenna-6b"></span>
+<img src="04-eksp_przestrzenna_files/figure-html/04-eksp-przestrzenna-6b-1.png" alt="Przykład próbkowania losowego stratyfikowanego." width="100%"><p class="caption">
+Rycina 4.5: Przykład próbkowania losowego stratyfikowanego.
+</p>
+</div>
+</div>
+<div id="preferencyjny-typ-próbowania" class="section level3" number="4.4.5">
+<h3>
+<span class="header-section-number">4.4.5</span> Preferencyjny typ próbowania<a class="anchor" aria-label="anchor" href="#preferencyjny-typ-pr%C3%B3bowania"><i class="fas fa-link"></i></a>
+</h3>
+<p>W preferencyjnym typie próbkowania istnieją obszary, które z jakieś powodu (np. specyficzne wartości analizowanej cechy) są znacznie częściej opróbowane niż inne (rycina <a href="eksploracyjna-analiza-danych-przestrzennych.html#fig:04-eksp-przestrzenna-7b">4.6</a>).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:04-eksp-przestrzenna-7b"></span>
+<img src="04-eksp_przestrzenna_files/figure-html/04-eksp-przestrzenna-7b-1.png" alt="Przykład próbkowania preferencyjnego." width="100%"><p class="caption">
+Rycina 4.6: Przykład próbkowania preferencyjnego.
+</p>
+</div>
+<!-- https://www.youtube.com/watch?v=75IZVZBaLkQ -->
+<!-- Wskaźnik Clarka-Evansa (1954) to stosunek między rzeczywistą średnią odległością od najbliższego sąsiada, a oczekiwaną dla rozkładu losowego:
+
+- **Wartości niższe od 1** wskazują na występowanie skupień punktów
+- **Wartość równa 1** wskazuje na losowy rozkład punktów
+- **Wartości wyższe od 1** wskazują na bardziej regularny ich rozkład (np., dla regularnej siatki heksagonalnej wartość wskaźnika wynosi 2,15)
+
+- Wartość wskaźnika Clarka-Evansa (1954) dla poniższych danych wynosi 
+- Oznacza to, że te dane były próbkowane w schemacie (układzie) zbliżonym do losowego -->
+</div>
+</div>
+<div id="rozgrupowanie" class="section level2" number="4.5">
+<h2>
+<span class="header-section-number">4.5</span> Rozgrupowanie danych<a class="anchor" aria-label="anchor" href="#rozgrupowanie"><i class="fas fa-link"></i></a>
+</h2>
+<p>Typ próbkowania może wpływać na wartości statystyk opisowych.
+W odpowiedzi na to istnieje szereg metod rozgrupowywania danych, wśród których można wymienić, między innymi, rozgrupowywanie poligonalne oraz rozgrupowywanie komórkowe.
+Celem tych metod jest nadanie wag obserwacjom w celu zapewnienia reprezentatywności przestrzennej danych.</p>
+<p>Na potrzeby przykładów związanych z rozgrupowaniem danych w pakiecie <strong>geostatbook</strong> znajduje się zbiór danych <code>punkty_pref</code>.
+W tym zbiorze gęściej opróbkowane są niskie wartości temperatury, co powoduje, że średnia dla całego obszaru jest znacznie niższa niż w rzeczywistości.</p>
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"temp"</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="04-eksp_przestrzenna_files/figure-html/unnamed-chunk-1-1.png" width="100%" style="display: block; margin: auto;"></div>
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">srednia_arytmetyczna</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">$</span><span class="va">temp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">srednia_arytmetyczna</span></span></code></pre></div>
+<pre><code>## [1] 14.06929</code></pre>
+<div id="rozgrupowanie-poligonalne" class="section level3" number="4.5.1">
+<h3>
+<span class="header-section-number">4.5.1</span> Rozgrupowanie poligonalne<a class="anchor" aria-label="anchor" href="#rozgrupowanie-poligonalne"><i class="fas fa-link"></i></a>
+</h3>
+<p><strong>Rozgrupowanie poligonalne</strong> polega na zastosowaniu jednej z metod triangulacji, np. poligonów Woronoja:</p>
+<ol style="list-style-type: decimal">
+<li>Dla każdego punktu określany jest poligon</li>
+<li>Wyliczana jest powierzchnia poligonu</li>
+<li>Waga każdego punktu wyliczana jest poprzez podzielenie powierzchni indywidualnych przez powierzchnię całego obszaru, a następnie pomnożenie przez liczbę punktów</li>
+</ol>
+<p><span class="math display">\[w'_j=\frac{area_j}{\sum_{j=1}^{n}area_j} \cdot n\]</span>
+, gdzie <span class="math inline">\(area_j\)</span> powierzchnia dla wybranej obserwacji, a <span class="math inline">\(n\)</span> to łączna liczba obserwacji</p>
+<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster/sdm/">dismo</a></span><span class="op">)</span></span>
+<span><span class="va">punkty_pref</span><span class="op">$</span><span class="va">id</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">)</span></span>
+<span><span class="va">v</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/voronoi.html">voronoi</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/methods/as.html">as</a></span><span class="op">(</span><span class="va">punkty_pref</span>, <span class="st">"Spatial"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">v</span><span class="op">$</span><span class="va">pow</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_area</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">v</span><span class="op">$</span><span class="va">waga_rp</span> <span class="op">=</span> <span class="va">v</span><span class="op">$</span><span class="va">pow</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">v</span><span class="op">$</span><span class="va">pow</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">)</span></span>
+<span><span class="va">v_df</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_drop_geometry</a></span><span class="op">(</span><span class="va">v</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"waga_rp"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">punkty_pref</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">punkty_pref</span>, <span class="va">v_df</span>, by <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_polygons</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"temp"</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_dots</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="04-eksp_przestrzenna_files/figure-html/unnamed-chunk-4-1.png" width="100%" style="display: block; margin: auto;"></div>
+<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">srednia_wazona_rp</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">$</span><span class="va">temp</span> <span class="op">*</span> <span class="va">punkty_pref</span><span class="op">$</span><span class="va">waga_rp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">srednia_wazona_rp</span></span></code></pre></div>
+<pre><code>## [1] 15.87475</code></pre>
+</div>
+<div id="rozgrupowanie-komórkowe" class="section level3" number="4.5.2">
+<h3>
+<span class="header-section-number">4.5.2</span> Rozgrupowanie komórkowe<a class="anchor" aria-label="anchor" href="#rozgrupowanie-kom%C3%B3rkowe"><i class="fas fa-link"></i></a>
+</h3>
+<p>Rozgrupowanie komórkowe (ang. <em>cell declustering</em>) polega na:</p>
+<ol style="list-style-type: decimal">
+<li>Stworzeniu regularnej siatki dla badanego obszaru</li>
+<li>Policzeniu liczby obserwacji w każdym oczku siatki</li>
+<li>Nadanie wagi dla każdego punktu, zgodnie ze wzorem:</li>
+</ol>
+<p><span class="math display">\[w'_j=\frac{\frac{1}{n_i}}{\text{liczba komorek z danymi}} \cdot n\]</span></p>
+<p>, gdzie <span class="math inline">\(n_i\)</span> to liczba obserwacji w komórce, a <span class="math inline">\(n\)</span> to łączna liczba obserwacji</p>
+<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">siatka_n</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_make_grid.html">st_make_grid</a></span><span class="op">(</span><span class="va">granica</span>, cellsize <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span>
+<span><span class="va">siatka_n</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">siatka_n</span><span class="op">)</span></span>
+<span><span class="va">punkty_pref</span><span class="op">$</span><span class="va">liczebnosc</span> <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">siatka_n</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">)</span></span>
+<span><span class="va">siatka_nr</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">[</span><span class="st">"liczebnosc"</span><span class="op">]</span>, by <span class="op">=</span> <span class="va">siatka_n</span>, FUN <span class="op">=</span> <span class="va">length</span><span class="op">)</span></span>
+<span><span class="co"># siatka_nr$odw_licz = 1 / siatka_nr$liczebnosc</span></span>
+<span><span class="va">punkty_pref</span><span class="op">$</span><span class="va">liczebnosc</span> <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="va">punkty_pref</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_join.html">st_join</a></span><span class="op">(</span><span class="va">punkty_pref</span>, <span class="va">siatka_nr</span><span class="op">)</span></span>
+<span><span class="va">punkty_pref</span><span class="op">$</span><span class="va">waga_rk</span> <span class="op">=</span> <span class="op">(</span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">punkty_pref</span><span class="op">$</span><span class="va">liczebnosc</span><span class="op">)</span> <span class="op">/</span></span>
+<span>                       <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">siatka_nr</span><span class="op">$</span><span class="va">liczebnosc</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span></span>
+<span>                      <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">siatka_nr</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_polygons</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"liczebnosc"</span>, n <span class="op">=</span> <span class="fl">10</span>, textNA <span class="op">=</span> <span class="st">"brak"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_dots</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="04-eksp_przestrzenna_files/figure-html/unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;"></div>
+<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">srednia_wazona_rk</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">punkty_pref</span><span class="op">$</span><span class="va">temp</span> <span class="op">*</span> <span class="va">punkty_pref</span><span class="op">$</span><span class="va">waga_rk</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">srednia_wazona_rk</span></span></code></pre></div>
+<pre><code>## [1] 14.26612</code></pre>
+</div>
+<div id="porównanie-metod-rozgrupowania" class="section level3" number="4.5.3">
+<h3>
+<span class="header-section-number">4.5.3</span> Porównanie metod rozgrupowania<a class="anchor" aria-label="anchor" href="#por%C3%B3wnanie-metod-rozgrupowania"><i class="fas fa-link"></i></a>
+</h3>
+<p>Średnia wartość temperatury dla badanego obszaru wynosiła 15,59 stopni Celsjusza, jednak w preferencyjnej próbie ta wartość wynosiła 14,07 stopni Celsjusza.
+Porównując dwie zastosowane metody rozgrupowania warto zauważyć, że najbliższy wynik uzyskano korzystając z rozgrupowania poligonalnego, które nieznacznie zawyżyło rzeczywistą wartość temperatury.
+Rozgrupowanie komórkowe było w tym przypadku mniej dokładne, wyraźnie zawyżając wartości temperatury.</p>
+<div class="inline-table"><table class="table table-sm">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">Średnia arytmetyczna</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Populacja</td>
+<td align="right">15.5913</td>
+</tr>
+<tr class="even">
+<td align="left">Próba</td>
+<td align="right">14.0693</td>
+</tr>
+<tr class="odd">
+<td align="left">Rozgrupowanie poligonalne</td>
+<td align="right">15.8747</td>
+</tr>
+<tr class="even">
+<td align="left">Rozgrupowanie komórkowe</td>
+<td align="right">14.2661</td>
+</tr>
+</tbody>
+</table></div>
+<p>W przypadku metod rozgrupowania należy jednak pamiętać, że ich wynik zależy od szeregu wprowadzonych parametrów, w szczególności granic badanego obszaru oraz zastosowanej wielkości oczka siatki.</p>
+<!--
+polygon declustering - http://gis.stackexchange.com/questions/122376/cell-declustering-using-open-source-software
+cell declustering - https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html
+http://gaa.org.au/pdf/DeclusterDebias-CCG.pdf
+
+
+<!-- Poniżej znajdują się przykłady użycia dwóch wersji rozgrupowania komórkowego (rozgrupowywanie komórkowe I oraz rozgrupowywanie komórkowe II) i jedna wersja rozgrupowania poligonowego. -->
+<!-- ### Rozgrupowanie danych -->
+<!-- Na potrzeby przykładów związanych z rozgrupowaniem danych w pakiecie **geostatbook** znajduje się zbiór danych `punkty_pref`.  -->
+<!-- W tym zbiorze gęściej opróbkowane są niskie wartości temperatury, co powoduje, że średnia dla całego obszaru jest znacznie niższa niż w rzeczywistości. -->
+<!-- ```{r } -->
+<!-- data(punkty_pref) -->
+<!-- spplot(punkty_pref, "temp") -->
+<!-- summary(punkty_pref$temp) -->
+<!-- ``` -->
+<!-- ### Rozgrupowanie komórkowe I | (ang. *cell declustering*) -->
+<!-- Pierwszy rodzaj rozgrupowania komórkowego polega na: -->
+<!-- 1. Stworzeniu siatki dla badanego obszaru -->
+<!-- 2. Policzeniu liczby obserwacji w każdym oczku siatki -->
+<!-- 3. Nadanie wagi dla każdego punktu, zgodnie ze wzorem: -->
+<!-- $$w'_j=\frac{\frac{1}{n_i}}{\text{liczba komorek z danymi}} \cdot n$$ -->
+<!-- , gdzie $n_i$ to liczba obserwacji w komórce, a $n$ to łączna liczba obserwacji -->
+<!-- ### Rozgrupowanie komórkowe I | (ang. *cell declustering*) -->
+<!-- ```{r rozkom01} -->
+<!-- data(punkty_pref) -->
+<!-- punkty_pref$id = 1:nrow(punkty_pref) -->
+<!-- spplot(punkty_pref, "id", colorkey = TRUE) -->
+<!-- data(granica) -->
+<!-- siatka_n = raster(extent(gBuffer(granica, width = 500))) -->
+<!-- res(siatka_n) = c(1000, 1000) -->
+<!-- siatka_n[] = 0 -->
+<!-- proj4string(siatka_n) = CRS(proj4string(punkty_pref)) -->
+<!-- siatka_n = as(siatka_n, "SpatialPolygonsDataFrame") -->
+<!-- siatka_n = siatka_n[!is.na(siatka_n@data$layer), ] -->
+<!-- plot(siatka_n) -->
+<!-- plot(punkty_pref, add = TRUE) -->
+<!-- punkty_pref$liczebnosc = rep(0, length(punkty_pref)) -->
+<!-- siatka_nr = aggregate(punkty_pref["liczebnosc"], by = siatka_n, FUN = length) -->
+<!-- spplot(siatka_nr, "liczebnosc") -->
+<!-- liczba = over(punkty_pref, siatka_nr) -->
+<!-- punkty_pref$waga = ((1 / liczba$liczebnosc) / sum(!is.na(siatka_nr$liczebnosc))) * length(punkty_pref) -->
+<!-- spplot(punkty_pref, "waga") -->
+<!-- srednia_arytmetyczna = mean(punkty_pref$temp) -->
+<!-- srednia_wazona_c1 = mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
+<!-- ``` -->
+<!-- ### Rozgrupowanie komórkowe II | (ang. *cell declustering*) -->
+<!-- Drugi rodzaj rozgrupowania komórkowego polega na: -->
+<!-- 1. Stworzeniu siatki dla badanego obszaru -->
+<!-- 2. Wykonaniu interpolacji z użyciem funkcji `krige()` z pakietu **gstat**. W tym wypadku konieczne jest użycie argumentu `nmax = 1`, który przypisuje wartość najbliższej obserwacji do każdego oczka siatki. -->
+<!-- 3. Waga dla każdego punktu nadawana jest poprzez zliczenie liczby oczek siatki dla konkretnej wartości, a następnie podzielenie tego przez liczbę oczek siatki. -->
+<!-- <!-- -->
+<!-- - Przygotowanie danych -->
+<!-- https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html -->
+<!-- When "interpolating" with nmax=1, you basically assign the value of the -->
+<!-- nearest observation to each grid cell, so, honoustly, it's hard to call -->
+<!-- this interpolation, it is rather something of a discretized Thiessen -->
+<!-- polygon. -->
+<!-- -->
+<!-- ```{r rozkom02} -->
+<!-- data(punkty_pref) -->
+<!-- punkty_pref$id = 1:nrow(punkty_pref) -->
+<!-- spplot(punkty_pref, "id", colorkey = TRUE) -->
+<!-- data(granica) -->
+<!-- siatka_n = raster(extent(gBuffer(granica, width = 500))) -->
+<!-- res(siatka_n) = c(100, 100) -->
+<!-- siatka_n[] = 0 -->
+<!-- proj4string(siatka_n) = CRS(proj4string(punkty_pref)) -->
+<!-- siatka_n = as(siatka_n, "SpatialPointsDataFrame") -->
+<!-- siatka_n = siatka_n[!is.na(siatka_n@data$layer), ] -->
+<!-- gridded(siatka_n) = TRUE -->
+<!-- plot(siatka_n, border = TRUE) -->
+<!-- ``` -->
+<!-- ```{r rozkom02b} -->
+<!-- out = krige(id~1, punkty_pref, siatka_n, nmax = 1) -->
+<!-- spplot(out, "var1.pred") -->
+<!-- df = as.data.frame(table(out[[1]])) -->
+<!-- df$waga = df$Freq / sum(df$Freq) -->
+<!-- punkty_pref = sp::merge(punkty_pref, df, by.x = "id", by.y = "Var1") -->
+<!-- summary(punkty_pref$waga) -->
+<!-- spplot(out, "var1.pred", sp.layout = list("sp.points", punkty_pref)) -->
+<!-- # spplot(punkty_pref, "waga") -->
+<!-- srednia_arytmetyczna = mean(punkty_pref$temp) -->
+<!-- srednia_wazona_c2 = sum(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
+<!-- ``` -->
+<!-- ### Rozgrupowanie poligonowe | (ang. *polygon declustering*) -->
+<!-- Rozgrupowanie poligonowe polega na zastosowaniu jednej z metod triangulacji, np. poligonów Voronoi'a: -->
+<!-- 1. Dla każdego punktu określany jest poligon. -->
+<!-- 2. Wyliczana jest powierzchnia poligonu. -->
+<!-- 3. Waga każdego punktu wyliczana jest poprzez podzielenie powierzchni indywidualnych przez powierzchnię całego obszaru, a następnie pomnożenie przez liczbę punktów. -->
+<!-- $$w'_j=\frac{area_j}{\sum_{j=1}^{n}area_j} \cdot n$$ -->
+<!-- , gdzie $area_j$ powierzchnia dla wybranej obserwacji, a $n$ to łączna liczba obserwacji -->
+<!-- ### Rozgrupowanie poligonowe | (ang. *polygon declustering*) -->
+<!-- ```{r rozpoly} -->
+<!-- data(punkty_pref) -->
+<!-- punkty_pref$id = 1:nrow(punkty_pref) -->
+<!-- spplot(punkty_pref, "id", colorkey = TRUE) -->
+<!-- v = voronoi(punkty_pref) -->
+<!-- plot(punkty_pref, cex = 0.2, col = "red") -->
+<!-- plot(v, add = TRUE) -->
+<!-- v$pow = area(v) -->
+<!-- v$waga = v$pow / sum(v$pow) * length(punkty_pref) -->
+<!-- punkty_pref = sp::merge(punkty_pref, v[c("id", "waga")], by = "id") -->
+<!-- spplot(punkty_pref, "waga") -->
+<!-- srednia_arytmetyczna = mean(punkty_pref$temp, na.rm = TRUE) -->
+<!-- srednia_wazona_p = mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
+<!-- ``` -->
+<!-- ```{r old_with_intersect, echo=FALSE, eval=FALSE} -->
+<!-- data(punkty_pref) -->
+<!-- punkty_pref$id = 1:nrow(punkty_pref) -->
+<!-- spplot(punkty_pref, "id", colorkey = TRUE) -->
+<!-- v = voronoi(punkty_pref) -->
+<!-- plot(punkty_pref, cex = 0.2, col = "red") -->
+<!-- plot(v, add = TRUE) -->
+<!-- v_intersect = intersect(granica, v) -->
+<!-- plot(punkty_pref, cex = 0.2, col = "red") -->
+<!-- plot(v_intersect, add = TRUE) -->
+<!-- v_intersect$pow = area(v_intersect) -->
+<!-- v_intersect$waga = v_intersect$pow / sum(v_intersect$pow) * length(punkty_pref) -->
+<!-- punkty_pref = merge(punkty_pref, v_intersect[c("id", "waga")], by = "id") -->
+<!-- spplot(punkty_pref, "waga") -->
+<!-- srednia_arytmetyczna = mean(punkty_pref$temp, na.rm = TRUE) -->
+<!-- srednia_wazona_p = mean(punkty_pref$temp * punkty_pref$waga, na.rm = TRUE) -->
+<!-- ``` -->
+<!-- ### Porównanie metod rozgrupowania -->
+<!-- Średnia wartość temperatury dla badanego obszaru wynosiła 15,59 stopni Celsjusza, jednak w preferencyjnej próbie ta wartość wynosiła 14,28 stopni Celsjusza.  -->
+<!-- Porównując trzy zastosowane metody próbkowania warto zauważyć, że najbliższy wynik uzyskano korzystając z pierwszego rodzaju rozgrupowania komórkowego, która nieznacznie zaniżyła rzeczywistą wartość temperatury. -->
+<!-- Rozgrupowanie komórkowe II oraz rozgrupowanie poligonowe były w tym przypadku mniej dokładne, wyraźnie zawyżając wartości temperatury.  -->
+<!-- ```{r tab_dec_1, echo=FALSE} -->
+<!-- srednia_arytmetyczna_pop = 15.5912781 -->
+<!-- df = data.frame(sa = c(srednia_arytmetyczna_pop, srednia_arytmetyczna, srednia_wazona_c1, srednia_wazona_c2, srednia_wazona_p)) -->
+<!-- rownames(df) = c("Populacja", "Próba", "Rozgrupowanie komórkowe I", "Rozgrupowanie komórkowe II", "Rozgrupowanie poligonowe") -->
+<!-- knitr::kable(df, col.names = "Średnia arytmetyczna", row.names = TRUE, digits = 4) -->
+<!-- ``` -->
+<!-- W przypadku metod rozgrupowania należy jednak pamiętać, że ich wynik zależy od szeregu wprowadzonych parametrów, w szczególności granic badanego obszaru oraz zastosowanej wielkości oczka siatki. -->
+<!-- <!-- -->
+<!-- polygon declustering - http://gis.stackexchange.com/questions/122376/cell-declustering-using-open-source-software -->
+<!-- cell declustering - https://stat.ethz.ch/pipermail/r-sig-geo/2010-February/007710.html -->
+<!-- http://gaa.org.au/pdf/DeclusterDebias-CCG.pdf -->
+<!-- -->
+</div>
+</div>
+<div id="z4" class="section level2" number="4.6">
+<h2>
+<span class="header-section-number">4.6</span> Zadania<a class="anchor" aria-label="anchor" href="#z4"><i class="fas fa-link"></i></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li>Wykonaj mapę pokazującą przestrzenny rozkład wartości NDVI w zbiorze <code>punkty</code>.
+(Dodatkowo: spróbuj użyć do tego pakietu <strong>tmap</strong> - <code>install.packages("tmap")</code>).</li>
+<li>Stwórz nowy obiekt <code>punkty4326</code>, który będzie zawierać pomiary z obiektu <code>punkty</code>, ale będzie w układzie odwzorowania WGS 84.
+Wykonaj mapę pokazującą przestrzenny rozkład wartości NDVI w zbiorze <code>punkty4326</code>.
+Czy dostrzegasz jakieś różnice?</li>
+<li>Określ i opisz typ próbkowania danych <code>punkty</code> oraz danych <code>punkty_pref</code>.</li>
+<li>Porównaj średnią arytmetyczną zmiennej <code>srtm</code> z obiektu <code>punkty_pref</code> ze średnimi uzyskanymi metodami rozgupowania poligonalnego i rozgrupowanie komórkowego.
+(Dodatkowo: sprawdź różne wielkości oczka siatki w rozgrupowaniu komórkowym).</li>
+</ol>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></div>
+<div class="next"><a href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#eksploracyjna-analiza-danych-przestrzennych"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li>
+<a class="nav-link" href="#aspekt-przestrzenny"><span class="header-section-number">4.1</span> Aspekt przestrzenny</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#podstawowe-terminy"><span class="header-section-number">4.1.1</span> Podstawowe terminy</a></li>
+<li><a class="nav-link" href="#mapy-punktowe"><span class="header-section-number">4.1.2</span> Mapy punktowe</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#popr-wsp"><span class="header-section-number">4.2</span> Sprawdzenie poprawności współrzędnych</a></li>
+<li><a class="nav-link" href="#dane-odst"><span class="header-section-number">4.3</span> Dane lokalnie odstające</a></li>
+<li>
+<a class="nav-link" href="#probkowanie"><span class="header-section-number">4.4</span> Próbkowanie</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#podstawowe-typy-pr%C3%B3bowania"><span class="header-section-number">4.4.1</span> Podstawowe typy próbowania</a></li>
+<li><a class="nav-link" href="#regularny-typ-pr%C3%B3bowania"><span class="header-section-number">4.4.2</span> Regularny typ próbowania</a></li>
+<li><a class="nav-link" href="#losowy-typ-pr%C3%B3bowania"><span class="header-section-number">4.4.3</span> Losowy typ próbowania</a></li>
+<li><a class="nav-link" href="#losowy-stratyfikowany-typ-pr%C3%B3bowania"><span class="header-section-number">4.4.4</span> Losowy stratyfikowany typ próbowania</a></li>
+<li><a class="nav-link" href="#preferencyjny-typ-pr%C3%B3bowania"><span class="header-section-number">4.4.5</span> Preferencyjny typ próbowania</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#rozgrupowanie"><span class="header-section-number">4.5</span> Rozgrupowanie danych</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#rozgrupowanie-poligonalne"><span class="header-section-number">4.5.1</span> Rozgrupowanie poligonalne</a></li>
+<li><a class="nav-link" href="#rozgrupowanie-kom%C3%B3rkowe"><span class="header-section-number">4.5.2</span> Rozgrupowanie komórkowe</a></li>
+<li><a class="nav-link" href="#por%C3%B3wnanie-metod-rozgrupowania"><span class="header-section-number">4.5.3</span> Porównanie metod rozgrupowania</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#z4"><span class="header-section-number">4.6</span> Zadania</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/04-eksp_przestrzenna.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/04-eksp_przestrzenna.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

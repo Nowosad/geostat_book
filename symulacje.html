@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>13 Symulacje | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(ggplot2)...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="13 Symulacje | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/symulacje.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(ggplot2)...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="13 Symulacje | Geostatystyka w R">
+<meta name="twitter:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(ggplot2)...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="13 Symulacje | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="active" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="symulacje" class="section level1" number="13">
+<h1>
+<span class="header-section-number">13</span> Symulacje<a class="anchor" aria-label="anchor" href="#symulacje"><i class="fas fa-link"></i></a>
+</h1>
+<p>Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:</p>
+<div class="sourceCode" id="cb353"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/gstat/">gstat</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bookdown.org/nowosad/geostatystyka/">geostatbook</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">siatka</span><span class="op">)</span></span></code></pre></div>
+<!-- demo(cosimulation) -->
+<!-- krigeSimCE -->
+<!-- krigeSTSimTB -->
+<!--
+## Symulacje przestrzenne 1:
+ sekwencyjna symulacja i ko symulacja gaussowska,
+  sekwencyjna symulacja danych kodowanych, 
+  przetwarzanie (postprocesing) wyników symulacji
+-->
+<div id="symulacje-geostatystyczne" class="section level2" number="13.1">
+<h2>
+<span class="header-section-number">13.1</span> Symulacje geostatystyczne<a class="anchor" aria-label="anchor" href="#symulacje-geostatystyczne"><i class="fas fa-link"></i></a>
+</h2>
+<p>Kriging daje optymalne estymacje, czyli wyznacza najbardziej potencjalnie możliwą wartość dla wybranej lokalizacji.
+Dodatkowo, efektem krigingu jest wygładzony obraz.
+W konsekwencji wyniki estymacji różnią się od danych pomiarowych.
+Uzyskiwana jest tylko (aż?) estymacja, a prawdziwa wartość jest niepewna…
+Korzystając z symulacji geostatystycznych nie tworzymy estymacji, ale generujemy równie prawdopodobne możliwości poprzez symulację z rozkładu prawdopodobieństwa (wykorzystując generator liczb losowych).</p>
+<div id="właściwości" class="section level3" number="13.1.1">
+<h3>
+<span class="header-section-number">13.1.1</span> Właściwości<a class="anchor" aria-label="anchor" href="#w%C5%82a%C5%9Bciwo%C5%9Bci"><i class="fas fa-link"></i></a>
+</h3>
+<p>Właściwości symulacji geostatystycznych:</p>
+<ul>
+<li>Efekt symulacji ma bardziej realistyczny przestrzenny wzór (ang. <em>pattern</em>) niż kriging, którego efektem jest wygładzona reprezentacja rzeczywistości.</li>
+<li>Każda z symulowanych map jest równie prawdopodobna.</li>
+<li>Symulacje pozwalają na przedstawianie niepewności interpolacji.</li>
+<li>Jednocześnie - kriging jest znacznie lepszy, gdy naszym celem jest jak najdokładniejsza estymacja.</li>
+</ul>
+</div>
+<div id="typy-symulacji" class="section level3" number="13.1.2">
+<h3>
+<span class="header-section-number">13.1.2</span> Typy symulacji<a class="anchor" aria-label="anchor" href="#typy-symulacji"><i class="fas fa-link"></i></a>
+</h3>
+<p>Istnieją dwa podstawowe typy symulacji geostatystycznych:</p>
+<ul>
+<li>Symulacje bezwarunkowe (ang. <em>Unconditional Simulations</em>) - wykorzystujące semiwariogram, żeby włączyć informację przestrzenną, ale wartości ze zmierzonych punktów nie są w niej wykorzystywane.</li>
+<li>Symulacje warunkowe (ang. <em>Conditional Simulations</em>) - opiera się ona o średnią wartość, strukturę kowariancji oraz obserwowane wartości (w tym sekwencyjna symulacja danych kodowanych (ang. <em>Sequential indicator simulation</em>)).</li>
+</ul>
+</div>
+</div>
+<div id="symulacje-bezwarunkowe" class="section level2" number="13.2">
+<h2>
+<span class="header-section-number">13.2</span> Symulacje bezwarunkowe<a class="anchor" aria-label="anchor" href="#symulacje-bezwarunkowe"><i class="fas fa-link"></i></a>
+</h2>
+<!--http://santiago.begueria.es/2010/10/generating-spatially-correlated-random-fields-with-r/-->
+<p>Symulacje bezwarunkowe w pakiecie <strong>gstat</strong> tworzy się z wykorzystaniem funkcji <code><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige()</a></code>.
+Podobnie jak w przypadku estymacji geostatystycznych, należy tutaj podać wzór, model, siatkę, średnią globalną (<code>beta</code>), oraz liczbę sąsiednich punktów używanych do symulacji (w przykładzie poniżej <code>nmax = 30</code>).
+Należy wprowadzić również informacje, że nie korzystamy z danych punktowych (<code>locations = NULL</code>) oraz że chcemy stworzyć dane sztuczne (<code>dummy = TRUE</code>).
+Ostatni argument (<code>nsim = 4</code>) informuje o liczbie symulacji do przeprowadzenia (Ryciny <a href="symulacje.html#fig:symbezw1-fig">13.1</a>, <a href="symulacje.html#fig:symbezw2-fig">13.2</a>).</p>
+<div class="sourceCode" id="cb354"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sym_bezw1</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">z</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>                   model <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>psill <span class="op">=</span> <span class="fl">0.025</span>,</span>
+<span>                               model <span class="op">=</span> <span class="st">"Exp"</span>, </span>
+<span>                               range <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, </span>
+<span>                   newdata <span class="op">=</span> <span class="va">siatka</span>, </span>
+<span>                   beta <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                   nmax <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>                   locations <span class="op">=</span> <span class="cn">NULL</span>, </span>
+<span>                   dummy <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>                   nsim <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using unconditional Gaussian simulation]</code></pre>
+<div class="sourceCode" id="cb356"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">sym_bezw1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">""</span>, style <span class="op">=</span> <span class="st">"cont"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:symbezw1-fig"></span>
+<img src="13-symulacje_files/figure-html/symbezw1-fig-1.png" alt="Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 100, oraz modelu wykładniczego" width="100%"><p class="caption">
+Rycina 13.1: Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 100, oraz modelu wykładniczego
+</p>
+</div>
+<div class="sourceCode" id="cb357"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sym_bezw2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">z</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>                   model <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>psill <span class="op">=</span> <span class="fl">0.025</span>,</span>
+<span>                               model <span class="op">=</span> <span class="st">"Exp"</span>, </span>
+<span>                               range <span class="op">=</span> <span class="fl">1500</span><span class="op">)</span>, </span>
+<span>                   newdata <span class="op">=</span> <span class="va">siatka</span>, </span>
+<span>                   beta <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                   nmax <span class="op">=</span> <span class="fl">30</span>, </span>
+<span>                   locations <span class="op">=</span> <span class="cn">NULL</span>, </span>
+<span>                   dummy <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>                   nsim <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using unconditional Gaussian simulation]</code></pre>
+<div class="sourceCode" id="cb359"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">sym_bezw2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">""</span>, style <span class="op">=</span> <span class="st">"cont"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:symbezw2-fig"></span>
+<img src="13-symulacje_files/figure-html/symbezw2-fig-1.png" alt="Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 1500, oraz modelu wykładniczego" width="100%"><p class="caption">
+Rycina 13.2: Przestrzennie skorelowana powierzchnia o średniej równej 1, wartości nsill równej 0.025, zasięgu równym 1500, oraz modelu wykładniczego
+</p>
+</div>
+<!--
+sym_bezw_model3 = gstat(formula= ~ 1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
+sym_bezw3 = predict(sym_bezw_model3, newdata=siatka, nsim=4)
+spplot(sym_bezw3, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=1500, model wykładniczy \ntrend na osi y = 0.005")
+
+sym_bezw_model4 = gstat(formula= ~ 1+X+Y, locations=~X+Y, dummy=T, beta=c(1,0.02,0.005), model=vgm(psill=0.025,model='Exp',range=1500), nmax=20)
+sym_bezw4 = predict(sym_bezw_model4, newdata=siatka, nsim=4)
+spplot(sym_bezw4, main="Przestrzennie skorelowana powierzchnia \nśrednia=1, sill=0.025, zasięg=500, model wykładniczy \ntrend na osi x = 0.02, trend na osi y = 0.005")
+-->
+</div>
+<div id="symulacje-warunkowe" class="section level2" number="13.3">
+<h2>
+<span class="header-section-number">13.3</span> Symulacje warunkowe<a class="anchor" aria-label="anchor" href="#symulacje-warunkowe"><i class="fas fa-link"></i></a>
+</h2>
+<div id="sekwencyjna-symulacja-gaussowska" class="section level3" number="13.3.1">
+<h3>
+<span class="header-section-number">13.3.1</span> Sekwencyjna symulacja gaussowska<a class="anchor" aria-label="anchor" href="#sekwencyjna-symulacja-gaussowska"><i class="fas fa-link"></i></a>
+</h3>
+<p>Jednym z podstawowych typów symulacji warunkowych jest sekwencyjna symulacja gaussowska (ang. <em>Sequential Gaussian simulation</em>).
+Polega ona na wybieraniu losowo lokalizacji nie posiadającej zmierzonej wartości badanej zmiennej:</p>
+<ol style="list-style-type: decimal">
+<li>Krigingu wartości w tej lokalizacji korzystając z dostępnych danych.</li>
+<li>Wylosowaniu wartości z rozkładu normalnego o średniej i wariancji wynikającej z krigingu.</li>
+<li>Dodaniu symulowanej wartości do zbioru danych i przejściu do kolejnej lokalizacji.</li>
+<li>Powtórzeniu poprzednich kroków, aż do momentu gdy nie pozostanie już żadna nieokreślona lokalizacja.</li>
+</ol>
+<p>Sekwencyjna symulacja gaussowska wymaga zmiennej posiadającej wartości o rozkładzie zbliżonym do normalnego.
+Można to sprawdzić poprzez wizualizacje danych (histogram, wykres kwantyl-kwantyl) lub też test statystyczny (test Shapiro-Wilka) (ryciny <a href="symulacje.html#fig:13-symulacje-3">13.3</a> i <a href="symulacje.html#fig:13-symulacje-3a">13.4</a>).
+Zmienna <code>temp</code> nie ma rozkładu zbliżonego do normalnego.</p>
+<div class="sourceCode" id="cb360"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:13-symulacje-3"></span>
+<img src="13-symulacje_files/figure-html/13-symulacje-3-1.png" alt="Rozkład wartości zmiennej temp." width="100%"><p class="caption">
+Rycina 13.3: Rozkład wartości zmiennej temp.
+</p>
+</div>
+<div class="sourceCode" id="cb361"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">stat_qq</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/shapiro.test.html">shapiro.test</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  punkty$temp
+## W = 0.96904, p-value = 0.00004054</code></pre>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:13-symulacje-3a"></span>
+<img src="13-symulacje_files/figure-html/13-symulacje-3a-1.png" alt="Wykres kwantyl-kwantyl wartości zmiennej temp." width="100%"><p class="caption">
+Rycina 13.4: Wykres kwantyl-kwantyl wartości zmiennej temp.
+</p>
+</div>
+<p>Na potrzeby symulacji zmienna <code>temp</code> została zlogarytmizowna (ryciny <a href="symulacje.html#fig:13-symulacje-4">13.5</a> i <a href="symulacje.html#fig:13-symulacje-4a">13.6</a>).</p>
+<div class="sourceCode" id="cb363"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">punkty</span><span class="op">$</span><span class="va">temp_log</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">temp_log</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:13-symulacje-4"></span>
+<img src="13-symulacje_files/figure-html/13-symulacje-4-1.png" alt="Rozkład wartości zmiennej temp po logaritmizacji." width="100%"><p class="caption">
+Rycina 13.5: Rozkład wartości zmiennej temp po logaritmizacji.
+</p>
+</div>
+<div class="sourceCode" id="cb364"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">temp_log</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">stat_qq</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/shapiro.test.html">shapiro.test</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp_log</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  punkty$temp_log
+## W = 0.98435, p-value = 0.009226</code></pre>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:13-symulacje-4a"></span>
+<img src="13-symulacje_files/figure-html/13-symulacje-4a-1.png" alt="Wykres kwantyl-kwantyl wartości zmiennej temp po logaritmizacji." width="100%"><p class="caption">
+Rycina 13.6: Wykres kwantyl-kwantyl wartości zmiennej temp po logaritmizacji.
+</p>
+</div>
+<p>Dalsze etapy przypominają przeprowadzenie estymacji statystycznej, jedynym wyjątkiem jest dodanie argumentu mówiącego o liczbie symulacji do przeprowadzenia (<code>nsim</code> w funkcji <code><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige()</a></code>) (ryciny <a href="symulacje.html#fig:13-symulacje-5">13.7</a> i <a href="symulacje.html#fig:13-symulacje-6">13.8</a>).</p>
+<div class="sourceCode" id="cb366"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp_log</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">model</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Sph"</span>, nugget <span class="op">=</span> <span class="fl">0.005</span><span class="op">)</span></span>
+<span><span class="va">fitted</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario</span>, <span class="va">model</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">fitted</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:13-symulacje-5"></span>
+<img src="13-symulacje_files/figure-html/13-symulacje-5-1.png" alt="Model semiwariogramu zmiennej temp po logaritmizacji" width="100%"><p class="caption">
+Rycina 13.7: Model semiwariogramu zmiennej temp po logaritmizacji
+</p>
+</div>
+<div class="sourceCode" id="cb367"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sym_ok</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="va">temp_log</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>               locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>               newdata <span class="op">=</span> <span class="va">siatka</span>, </span>
+<span>               model <span class="op">=</span> <span class="va">fitted</span>,</span>
+<span>               nmax <span class="op">=</span> <span class="fl">30</span>, </span>
+<span>               nsim <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## drawing 4 GLS realisations of beta...
+## [using conditional Gaussian simulation]</code></pre>
+<div class="sourceCode" id="cb369"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">sym_ok</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">""</span>, style <span class="op">=</span> <span class="st">"cont"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:13-symulacje-6"></span>
+<img src="13-symulacje_files/figure-html/13-symulacje-6-1.png" alt="Symulacja warunkowa zmiennej temp po logaritmizacji." width="100%"><p class="caption">
+Rycina 13.8: Symulacja warunkowa zmiennej temp po logaritmizacji.
+</p>
+</div>
+<p>Wyniki symulacji można przetworzyć do pierwotnej jednostki z użyciem funkcji <code><a href="https://rdrr.io/pkg/geostatbook/man/rev_trans.html">rev_trans()</a></code>, którą stworzyliśmy w sekcji <a href="eksploracja-analiza-danych-nieprzestrzennych.html#transformacja-odwrotna">3.6.4</a>.
+Potrzebuje ona jednak najpierw określenia wariancji symulacji (rycina <a href="symulacje.html#fig:13-symulacje-7a">13.9</a>).
+Do jej wyliczenia używamy kombinacji funkcji <code><a href="https://r-spatial.github.io/stars/reference/st_apply.html">st_apply()</a></code> oraz <code><a href="https://rdrr.io/r/stats/cor.html">var()</a></code>.
+W funkcji <code><a href="https://r-spatial.github.io/stars/reference/st_apply.html">st_apply()</a></code> konieczne tutaj jest określenie argumentu <code>MARGIN = c("x", "y")</code>, co oznacza że funkcja <code>var</code> będzie wykonana dla każdej komórki niezależnie.
+W efekcie tej operacji otrzymujemy tylko jedną warstwę.</p>
+<div class="sourceCode" id="cb370"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sym_ok_var</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/stars/reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">sym_ok</span>, MARGIN <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, FUN <span class="op">=</span> <span class="va">var</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">sym_ok_var</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>style <span class="op">=</span> <span class="st">"cont"</span>, palette <span class="op">=</span> <span class="st">"Purples"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:13-symulacje-7a"></span>
+<img src="13-symulacje_files/figure-html/13-symulacje-7a-1.png" alt="Wariancja symulacji warunkowej." width="100%"><p class="caption">
+Rycina 13.9: Wariancja symulacji warunkowej.
+</p>
+</div>
+<p>Teraz możliwe jest przywrócenie oryginalnej jednostki dla wszystkich symulacji z użyciem funkcji <code><a href="https://r-spatial.github.io/stars/reference/st_apply.html">st_apply()</a></code> i <code><a href="https://rdrr.io/pkg/geostatbook/man/rev_trans.html">rev_trans()</a></code>.
+(rycina <a href="symulacje.html#fig:13-symulacje-7">13.10</a>)</p>
+<div class="sourceCode" id="cb371"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sym_ok_rescaled</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/stars/reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">sym_ok</span>, <span class="fl">3</span>, <span class="va">rev_trans</span>, </span>
+<span>                           var <span class="op">=</span> <span class="va">sym_ok_var</span><span class="op">$</span><span class="va">var</span>, obs <span class="op">=</span> <span class="va">punkty</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">sym_ok_rescaled</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">""</span>, style <span class="op">=</span> <span class="st">"cont"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:13-symulacje-7"></span>
+<img src="13-symulacje_files/figure-html/13-symulacje-7-1.png" alt="Symulacja warunkowa po przeskalowaniu do oryginalnych wartości." width="100%"><p class="caption">
+Rycina 13.10: Symulacja warunkowa po przeskalowaniu do oryginalnych wartości.
+</p>
+</div>
+<p>Symulacje geostatystyczne pozwalają również na przedstawianie niepewności interpolacji.
+W tym wypadku należy wykonać znacznie więcej powtórzeń (np. <code>nsim = 100</code>).</p>
+<div class="sourceCode" id="cb372"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sym_sk</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="va">temp_log</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>               location <span class="op">=</span> <span class="va">punkty</span>, </span>
+<span>               newdata <span class="op">=</span> <span class="va">siatka</span>, </span>
+<span>               model <span class="op">=</span> <span class="va">fitted</span>, </span>
+<span>               nsim <span class="op">=</span> <span class="fl">100</span>, </span>
+<span>               nmax <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## drawing 100 GLS realisations of beta...
+## [using conditional Gaussian simulation]</code></pre>
+<p>Uzyskane wyniki należy przeliczyć do oryginalnej jednostki, a następnie wyliczyć odchylenie standardowe ich wartości.
+Można to zrobić korzystając trzykrotnie z funkcji <code><a href="https://r-spatial.github.io/stars/reference/st_apply.html">st_apply()</a></code>.
+Przywrócenie oryginalnej jednostki odbywa się poprzez wyliczenie wariancji symulacji, a następnie użycie funkcji <code><a href="https://rdrr.io/pkg/geostatbook/man/rev_trans.html">rev_trans()</a></code>.</p>
+<div class="sourceCode" id="cb374"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># wyliczenie wariancji (jedostka log)</span></span>
+<span><span class="va">sym_sk_var</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/stars/reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">sym_sk</span>, MARGIN <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, FUN <span class="op">=</span> <span class="va">var</span><span class="op">)</span></span>
+<span><span class="co"># przywrócenie oryginalnej jednostki</span></span>
+<span><span class="va">sym_sk_rescaled</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/stars/reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">sym_sk</span>, <span class="fl">3</span>, <span class="va">rev_trans</span>,</span>
+<span>                           var <span class="op">=</span> <span class="va">sym_sk_var</span><span class="op">$</span><span class="va">var</span>, obs <span class="op">=</span> <span class="va">punkty</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span></span>
+<span><span class="va">sym_sk_rescaled</span></span></code></pre></div>
+<pre><code>## stars object with 3 dimensions and 1 attribute
+## attribute(s), summary of first 100000 cells:
+##           Min.  1st Qu.   Median     Mean  3rd Qu.     Max.  NA's
+## var1  6.434447 12.14176 14.56187 15.17236 17.65367 33.26342 10550
+## dimension(s):
+##        from  to offset delta               refsys          values x/y
+## x         1 127 745542    90 ETRS89 / Poland CS92            NULL [x]
+## y         1  96 721256   -90 ETRS89 / Poland CS92            NULL [y]
+## sample    1 100     NA    NA                   NA sim1,...,sim100</code></pre>
+<p>Wyliczenie odchylenia standardowego odbywa się poprzez argumenty <code>MARGIN = c("x", "y")</code> oraz <code>FUN = sd</code>.
+W ten sposób funkcja <code><a href="https://rdrr.io/r/stats/sd.html">sd()</a></code> będzie wykonana niezależnie dla każdej komórki dla wszystkich warstw.
+W efekcie tej operacji otrzymuje się tylko jedną warstwę.</p>
+<div class="sourceCode" id="cb376"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># wyliczenie odchylenia standardowego</span></span>
+<span><span class="va">sym_sk_sd</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/stars/reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">sym_sk_rescaled</span>, MARGIN <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, FUN <span class="op">=</span> <span class="va">sd</span><span class="op">)</span></span>
+<span><span class="va">sym_sk_sd</span></span></code></pre></div>
+<pre><code>## stars object with 2 dimensions and 1 attribute
+## attribute(s):
+##          Min.  1st Qu.   Median     Mean  3rd Qu.     Max. NA's
+## sd  0.6649792 1.300912 1.592292 1.670204 1.945753 4.453824 1270
+## dimension(s):
+##   from  to offset delta               refsys x/y
+## x    1 127 745542    90 ETRS89 / Poland CS92 [x]
+## y    1  96 721256   -90 ETRS89 / Poland CS92 [y]</code></pre>
+<p>Finalnie otrzymujemy mapę odchylenia standardowego symulowanych wartości (rycina <a href="symulacje.html#fig:13-symulacje-8">13.11</a>).
+Można na niej odczytać obszary o najpewniejszych (najmniej zmiennych) wartościach (jasny kolor) oraz obszary o największej zmienności cechy (kolor niebieski).</p>
+<div class="sourceCode" id="cb378"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">sym_sk_sd</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">""</span>, style <span class="op">=</span> <span class="st">"cont"</span>, palette <span class="op">=</span> <span class="st">"YlGnBu"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:13-symulacje-8"></span>
+<img src="13-symulacje_files/figure-html/13-symulacje-8-1.png" alt="Mapa odchylenia standardowego symulowanych wartości." width="100%"><p class="caption">
+Rycina 13.11: Mapa odchylenia standardowego symulowanych wartości.
+</p>
+</div>
+</div>
+<div id="sekwencyjna-symulacja-danych-kodowanych" class="section level3" number="13.3.2">
+<h3>
+<span class="header-section-number">13.3.2</span> Sekwencyjna symulacja danych kodowanych<a class="anchor" aria-label="anchor" href="#sekwencyjna-symulacja-danych-kodowanych"><i class="fas fa-link"></i></a>
+</h3>
+<p>Symulacje geostatystyczne można również zastosować do danych binarnych.
+Dla potrzeb przykładu tworzona jest nowa zmienna <code>temp_ind</code> przyjmująca wartość <code>TRUE</code> dla pomiarów o wartościach temperatury niższych niż 12 stopni Celsjusza oraz <code>FALSE</code> dla pomiarów o wartościach temperatury równych lub wyższych niż 12 stopni Celsjusza.</p>
+<div class="sourceCode" id="cb379"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   7.883  11.953  14.937  15.223  17.584  24.945</code></pre>
+<div class="sourceCode" id="cb381"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">punkty</span><span class="op">$</span><span class="va">temp_ind</span> <span class="op">=</span> <span class="va">punkty</span><span class="op">$</span><span class="va">temp</span> <span class="op">&lt;</span> <span class="fl">12</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">temp_ind</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##    Mode   FALSE    TRUE 
+## logical     180      62</code></pre>
+<p>W tej metodzie kolejne etapy przypominają przeprowadzenie krigingu danych kodowanych (rycina <a href="symulacje.html#fig:13-symulacje-10">13.12</a>).
+Jedynie w funkcji <code><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige()</a></code> należy dodać argument mówiący o liczbie symulacji do przeprowadzenia (<code>nsim</code>).</p>
+<div class="sourceCode" id="cb383"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_ind</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp_ind</span> <span class="op">~</span> <span class="fl">1</span>, locations <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="co"># plot(vario_ind)</span></span>
+<span><span class="va">fitted_ind</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario_ind</span>,</span>
+<span>                            <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Sph"</span>, nugget <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">fitted_ind</span></span></code></pre></div>
+<pre><code>##   model      psill    range
+## 1   Nug 0.03492253    0.000
+## 2   Sph 0.13081796 1733.339</code></pre>
+<div class="sourceCode" id="cb385"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_ind</span>, model <span class="op">=</span> <span class="va">fitted_ind</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:13-symulacje-10"></span>
+<img src="13-symulacje_files/figure-html/13-symulacje-10-1.png" alt="Model semiwariogramu empirycznego binarnej zmiennej stworzony na potrzeby symulacji." width="100%"><p class="caption">
+Rycina 13.12: Model semiwariogramu empirycznego binarnej zmiennej stworzony na potrzeby symulacji.
+</p>
+</div>
+<div class="sourceCode" id="cb386"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sym_ind</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="va">temp_ind</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>                locations <span class="op">=</span> <span class="va">punkty</span>, </span>
+<span>                newdata <span class="op">=</span> <span class="va">siatka</span>, </span>
+<span>                model <span class="op">=</span> <span class="va">fitted_ind</span>, </span>
+<span>                indicators <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                nsim <span class="op">=</span> <span class="fl">4</span>, </span>
+<span>                nmax <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## drawing 4 GLS realisations of beta...
+## [using conditional indicator simulation]</code></pre>
+<p>Wynik symulacji danych kodowanych znacząco różni się od wyniku krigingu danych kodowanych.
+W przeciwieństwie do tej drugiej metody, w rezultacie symulacji nie otrzymujemy prawdopodobieństwa zajścia danej klasy, ale konkretne wartości <code>1</code> lub <code>0</code> (rycina <a href="symulacje.html#fig:13-symulacje-11">13.13</a>).</p>
+<div class="sourceCode" id="cb388"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">sym_ind</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">""</span>, style <span class="op">=</span> <span class="st">"cat"</span>, palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#88CCEE"</span>, <span class="st">"#CC6677"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>main.title <span class="op">=</span> <span class="st">"Symulacja warunkowa"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:13-symulacje-11"></span>
+<img src="13-symulacje_files/figure-html/13-symulacje-11-1.png" alt="Przykłady symulacji danych kodowanych." width="100%"><p class="caption">
+Rycina 13.13: Przykłady symulacji danych kodowanych.
+</p>
+</div>
+<!--
+łączenie sis - wiele symulacji
+-->
+</div>
+</div>
+<div id="z13" class="section level2" number="13.4">
+<h2>
+<span class="header-section-number">13.4</span> Zadania<a class="anchor" aria-label="anchor" href="#z13"><i class="fas fa-link"></i></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li>Stwórz nową siatkę dla obszaru o zasięgu x od 0 do 40000 i zasięgu y od 0 do 30000 oraz rozdzielczości 250.</li>
+<li>Zbuduj po trzy symulacje bezwarunkowe w tej siatce korzystając z:
+<ul>
+<li>modelu sferycznego o semiwariancji cząstkowej 15 i zasięgu 7000</li>
+<li>modelu nugetowego o wartości 1 razem z modelem sferycznym o semiwariancji cząstkowej 15 i zasięgu 7000</li>
+<li>modelu sferycznego o semiwariancji cząstkowej 5 i zasięgu 7000</li>
+<li>modelu sferycznego o semiwariancji cząstkowej 15 i zasięgu 1000</li>
+</ul>
+</li>
+<li>Porównaj graficznie uzyskane powyżej wyniki i opisz je.</li>
+<li>Stwórz optymalny model semiwariogramu zmiennej <code>temp</code> z obiektu <code>punkty</code>.
+Następnie korzystając z wybranej metody krigingowej, poznanej w poprzednich rozdziałach, wykonaj estymację zmiennej <code>temp</code>.</li>
+<li>Wykonaj cztery symulacje warunkowe używając optymalnego modelu semiwariancji stworzonego w poprzednim zadaniu.
+Porównaj uzyskaną estymację geostatystyczną z symulacjami geostatystycznymi.
+Jakie można zaobserwować podobieństwa a jakie różnice?</li>
+<li>Zbuduj optymalny model semiwariogramu empirycznego określający prawdopodobieństwo wystąpienia wartości <code>ndvi</code> poniżej 0.4 dla zbioru <code>punkty</code>.
+Wykonaj estymację metodą krigingu danych kodowanych.
+Następnie używając tego samego modelu, wykonaj cztery symulacje warunkowe (symulacje danych kodowanych).
+Jakie wartości progowe prawdopodobieństwa przypominają uzyskane symulacje?</li>
+</ol>
+</div>
+</div>
+
+
+
+  <div class="chapter-nav">
+<div class="prev"><a href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></div>
+<div class="next"><a href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#symulacje"><span class="header-section-number">13</span> Symulacje</a></li>
+<li>
+<a class="nav-link" href="#symulacje-geostatystyczne"><span class="header-section-number">13.1</span> Symulacje geostatystyczne</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#w%C5%82a%C5%9Bciwo%C5%9Bci"><span class="header-section-number">13.1.1</span> Właściwości</a></li>
+<li><a class="nav-link" href="#typy-symulacji"><span class="header-section-number">13.1.2</span> Typy symulacji</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#symulacje-bezwarunkowe"><span class="header-section-number">13.2</span> Symulacje bezwarunkowe</a></li>
+<li>
+<a class="nav-link" href="#symulacje-warunkowe"><span class="header-section-number">13.3</span> Symulacje warunkowe</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#sekwencyjna-symulacja-gaussowska"><span class="header-section-number">13.3.1</span> Sekwencyjna symulacja gaussowska</a></li>
+<li><a class="nav-link" href="#sekwencyjna-symulacja-danych-kodowanych"><span class="header-section-number">13.3.2</span> Sekwencyjna symulacja danych kodowanych</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#z13"><span class="header-section-number">13.4</span> Zadania</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/13-symulacje.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/13-symulacje.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

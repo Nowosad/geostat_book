@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>A Źródła wiedzy | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="A.1 Podstawy R  Elementarz programisty: Wstęp do programowania używając R (Nowosad 2020)  Przewodnik po pakiecie R (Biecek 2014)  Programowanie w języku R Analiza Danych. Obliczenia. Symulacje...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="A Źródła wiedzy | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/zrodla-wiedzy.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="A.1 Podstawy R  Elementarz programisty: Wstęp do programowania używając R (Nowosad 2020)  Przewodnik po pakiecie R (Biecek 2014)  Programowanie w języku R Analiza Danych. Obliczenia. Symulacje...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="A Źródła wiedzy | Geostatystyka w R">
+<meta name="twitter:description" content="A.1 Podstawy R  Elementarz programisty: Wstęp do programowania używając R (Nowosad 2020)  Przewodnik po pakiecie R (Biecek 2014)  Programowanie w języku R Analiza Danych. Obliczenia. Symulacje...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="A Źródła wiedzy | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="active" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="zrodla-wiedzy" class="section level1" number="14">
+<h1>
+<span class="header-section-number">A</span> Źródła wiedzy<a class="anchor" aria-label="anchor" href="#zrodla-wiedzy"><i class="fas fa-link"></i></a>
+</h1>
+<div id="podstawy-r" class="section level2" number="14.1">
+<h2>
+<span class="header-section-number">A.1</span> Podstawy R<a class="anchor" aria-label="anchor" href="#podstawy-r"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li>
+<a href="https://nowosad.github.io/elp/">Elementarz programisty: Wstęp do programowania używając R</a> <span class="citation">(<a href="bibliografia.html#ref-nowosadElementarz2020">Nowosad 2020</a>)</span>
+</li>
+<li>
+<a href="http://www.biecek.pl/R/">Przewodnik po pakiecie R</a> <span class="citation">(<a href="bibliografia.html#ref-biecekPrzewodnikPoPakiecie2014">Biecek 2014</a>)</span>
+</li>
+<li>
+<a href="https://github.com/gagolews/Programowanie_w_jezyku_R">Programowanie w języku R Analiza Danych. Obliczenia. Symulacje</a> <span class="citation">(<a href="bibliografia.html#ref-gagolewski2016programowanie">Gagolewski 2016</a>)</span>
+</li>
+<li>R for Data Science - <a href="https://r4ds.had.co.nz/" class="uri">https://r4ds.had.co.nz/</a> - <a href="https://helion.pl/ksiazki/jezyk-r-kompletny-zestaw-narzedzi-dla-analitykow-danych-hadley-wickham-garrett-grolemund,jezrkv.htm#format/d" class="uri">https://helion.pl/ksiazki/jezyk-r-kompletny-zestaw-narzedzi-dla-analitykow-danych-hadley-wickham-garrett-grolemund,jezrkv.htm#format/d</a> <span class="citation">(<a href="bibliografia.html#ref-wickham2016r">Wickham and Grolemund 2016</a>)</span>
+</li>
+<li>Efficient R programming - <a href="https://csgillespie.github.io/efficientR/" class="uri">https://csgillespie.github.io/efficientR/</a> - <a href="https://helion.pl/ksiazki/wydajne-programowanie-w-r-praktyczny-przewodnik-po-lepszym-programowaniu-colin-gillespie-robin-lovelace,e_1vi4.htm#format/e" class="uri">https://helion.pl/ksiazki/wydajne-programowanie-w-r-praktyczny-przewodnik-po-lepszym-programowaniu-colin-gillespie-robin-lovelace,e_1vi4.htm#format/e</a> <span class="citation">(<a href="bibliografia.html#ref-gillespie2016efficient">Gillespie and Lovelace 2016</a>)</span>
+</li>
+<li>Metody przetwarzania danych meteorologicznych w języku programowania R - <a href="http://enwo.pl/przetwarzanie" class="uri">http://enwo.pl/przetwarzanie</a> <span class="citation">(<a href="bibliografia.html#ref-czerneckiMetodyPrzetwarzaniaDanych2018">Czernecki 2018</a>)</span>
+</li>
+</ul>
+</div>
+<div id="analizy-przestrzenne-w-r" class="section level2" number="14.2">
+<h2>
+<span class="header-section-number">A.2</span> Analizy przestrzenne w R<a class="anchor" aria-label="anchor" href="#analizy-przestrzenne-w-r"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li>
+<a href="https://geocompr.robinlovelace.net/">Geocomputation with R</a> <span class="citation">(<a href="bibliografia.html#ref-lovelace2019geocomputation">Lovelace, Nowosad, and Muenchow 2019</a>)</span>
+</li>
+<li>
+<a href="https://r-tmap.github.io/tmap-book/">Elegant and informative maps with tmap</a> <span class="citation">(<a href="bibliografia.html#ref-tennekes_elegant_2022">Tennekes and Nowosad 2022</a>)</span>
+</li>
+<li>
+<a href="http://www.asdar-book.org/">Applied Spatial Dala Analysis with R</a> <span class="citation">(<a href="bibliografia.html#ref-bivand2014applied">Bivand, Pebesma, and Gomez-Rubio 2014</a>)</span>
+</li>
+<li>
+<a href="https://www.r-spatial.org/book/">Spatial Data Science</a> <span class="citation">(<a href="bibliografia.html#ref-pebesma2020spatial">E. J. Pebesma and Bivand 2019</a>)</span>
+</li>
+<li><a href="https://cran.r-project.org/web/views/Spatial.html">CRAN Task View: Analysis of Spatial Data</a></li>
+</ul>
+</div>
+<div id="geostatystyka-1" class="section level2" number="14.3">
+<h2>
+<span class="header-section-number">A.3</span> Geostatystyka<a class="anchor" aria-label="anchor" href="#geostatystyka-1"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li>
+<a href="http://www.geoinfo.amu.edu.pl/staff/astach/www_geostat/programy/A_Stach_%20poradnik_geostatystyki.pdf">Praktyczny poradnik - jak szybko zrozumieć i wykorzystać geostatystykę w pracy badawczej</a> <span class="citation">(<a href="bibliografia.html#ref-stachpraktyczny">Stach 2009</a>)</span>
+</li>
+<li>
+<a href="http://www.css.cornell.edu/faculty/dgr2/_static/files/R_PDF/gs_intro_20Mar2019.pdf">An introduction to geostatistics with R/gstat</a> <span class="citation">(<a href="bibliografia.html#ref-rossiter2016introduction">Rossiter 2016</a>)</span>
+</li>
+<li>
+<a href="https://edepot.wur.nl/485517">A Practical Guide to Geostatistical Mapping</a> <span class="citation">(<a href="bibliografia.html#ref-hengl2009practical">Hengl 2009</a>)</span>
+</li>
+<li>
+<a href="http://www.gstat.org/gstat.pdf">gstat user’s manual</a> <span class="citation">(<a href="bibliografia.html#ref-pebesma2001gstat">E. J. Pebesma 2001</a>)</span>
+</li>
+<li>
+<a href="https://books.google.pl/books?id=vC2dcXFLI3YC">Applied Geostatistics</a> <span class="citation">(<a href="bibliografia.html#ref-isaaks1989applied">Isaaks and Srivastava 1989</a>)</span>
+</li>
+<li>
+<a href="https://books.google.pl/books?id=4SdRAAAAMAAJ">Statistics for spatial data</a> <span class="citation">(<a href="bibliografia.html#ref-cressie1992statistics">Cressie 1992</a>)</span>
+</li>
+<li>
+<a href="http://www.oupcanada.com/catalog/9780195115383.html">Geostatistics for Natural Resources Evaluation</a> <span class="citation">(<a href="bibliografia.html#ref-goovaerts1997geostatistics">Goovaerts et al. 1997</a>)</span>
+</li>
+<li>
+<a href="http://eu.wiley.com/WileyCDA/WileyTitle/productCd-0470028580.html">Geostatistics for Environmental Scientists</a> <span class="citation">(<a href="bibliografia.html#ref-webster2007geostatistics">Webster and Oliver 2007</a>)</span>
+</li>
+</ul>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></div>
+<div class="next"><a href="dane-app.html"><span class="header-section-number">B</span> Dane</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#zrodla-wiedzy"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="nav-link" href="#podstawy-r"><span class="header-section-number">A.1</span> Podstawy R</a></li>
+<li><a class="nav-link" href="#analizy-przestrzenne-w-r"><span class="header-section-number">A.2</span> Analizy przestrzenne w R</a></li>
+<li><a class="nav-link" href="#geostatystyka-1"><span class="header-section-number">A.3</span> Geostatystyka</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/14-appendix-resources.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/14-appendix-resources.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

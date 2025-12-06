@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>C Przykład analizy geostatystycznej | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="C.1 Analiza geostatystyczna Analiza geostatystyczna jest złożonym procesem, często wymagającym sprawdzenia jakości danych i ich korekcji oraz wypróbowania wielu możliwości modelowania. Poniższy...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="C Przykład analizy geostatystycznej | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/przyklad.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="C.1 Analiza geostatystyczna Analiza geostatystyczna jest złożonym procesem, często wymagającym sprawdzenia jakości danych i ich korekcji oraz wypróbowania wielu możliwości modelowania. Poniższy...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C Przykład analizy geostatystycznej | Geostatystyka w R">
+<meta name="twitter:description" content="C.1 Analiza geostatystyczna Analiza geostatystyczna jest złożonym procesem, często wymagającym sprawdzenia jakości danych i ich korekcji oraz wypróbowania wielu możliwości modelowania. Poniższy...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="C Przykład analizy geostatystycznej | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="active" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="przyklad" class="section level1" number="16">
+<h1>
+<span class="header-section-number">C</span> Przykład analizy geostatystycznej<a class="anchor" aria-label="anchor" href="#przyklad"><i class="fas fa-link"></i></a>
+</h1>
+<div id="analiza-geostatystyczna" class="section level2" number="16.1">
+<h2>
+<span class="header-section-number">C.1</span> Analiza geostatystyczna<a class="anchor" aria-label="anchor" href="#analiza-geostatystyczna"><i class="fas fa-link"></i></a>
+</h2>
+<p>Analiza geostatystyczna jest złożonym procesem, często wymagającym sprawdzenia jakości danych i ich korekcji oraz wypróbowania wielu możliwości modelowania.
+Poniższy appendiks skupia się na pokazaniu przykładu uproszczonej analizy geostatystycznej, w której głównym celem jest estymacja średniej wartości temperatury.</p>
+</div>
+<div id="przygotowanie-danych" class="section level2" number="16.2">
+<h2>
+<span class="header-section-number">C.2</span> Przygotowanie danych<a class="anchor" aria-label="anchor" href="#przygotowanie-danych"><i class="fas fa-link"></i></a>
+</h2>
+<p>Pierwszym krokiem analizy geostatystycznej jest załadowanie pakietów, które zostaną użyte.
+Brakujące pakiety można także załadować także w trakcie analizy geostatystycznej.</p>
+<div class="sourceCode" id="cb403"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/gstat/">gstat</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
+<p>Kolejnym krokiem jest wczytanie danych oraz sprawdzenie ich jakości.</p>
+<div class="sourceCode" id="cb404"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">moje_punkty</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf</a></span><span class="op">(</span><span class="st">"dane/moje_punkty.gpkg"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">moje_punkty</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##       tavg               X                Y                     geom    
+##  Min.   :-0.8726   Min.   :345007   Min.   :312609   POINT        :188  
+##  1st Qu.: 1.0871   1st Qu.:347681   1st Qu.:314664   epsg:2180    :  0  
+##  Median : 1.6470   Median :351093   Median :316628   +proj=tmer...:  0  
+##  Mean   : 1.6204   Mean   :350809   Mean   :316827                      
+##  3rd Qu.: 2.1644   3rd Qu.:353591   3rd Qu.:319037                      
+##  Max.   : 4.0310   Max.   :357010   Max.   :321540</code></pre>
+<p>Obiekt <code>moje_punkty</code> zawiera tylko jedną zmienną <code>tavg</code>, która ma być użyta do stworzenia estymacji.
+Warto zwizualizować rozkład wartości tej zmiennej w postaci histogramu oraz mapy (rycina <a href="przyklad.html#fig:18-przyklad-4">C.1</a> i <a href="przyklad.html#fig:18-przyklad-4a">C.2</a>).</p>
+<div class="sourceCode" id="cb406"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">moje_punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">tavg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:18-przyklad-4"></span>
+<img src="18-przyklad_files/figure-html/18-przyklad-4-1.png" alt="Rozkład wartości zmiennej tavg." width="100%"><p class="caption">
+Rycina C.1: Rozkład wartości zmiennej tavg.
+</p>
+</div>
+<div class="sourceCode" id="cb407"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">moje_punkty</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"tavg"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:18-przyklad-4a"></span>
+<img src="18-przyklad_files/figure-html/18-przyklad-4a-1.png" alt="Rozkład przestrzenny wartości zmiennej tavg." width="100%"><p class="caption">
+Rycina C.2: Rozkład przestrzenny wartości zmiennej tavg.
+</p>
+</div>
+<p>Pozwala to na zauważenie, że w badanej zmiennej występują co najmniej dwie wartości odstające.</p>
+<div class="sourceCode" id="cb408"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">moje_punkty</span><span class="op">[</span><span class="va">moje_punkty</span><span class="op">$</span><span class="va">tavg</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">moje_punkty</span><span class="op">$</span><span class="va">tavg</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div>
+<pre><code>## Simple feature collection with 1 feature and 3 fields
+## Geometry type: POINT
+## Dimension:     XY
+## Bounding box:  xmin: 355581.8 ymin: 313212.1 xmax: 355581.8 ymax: 313212.1
+## Projected CRS: ETRF2000-PL / CS92
+## # A tibble: 1 × 4
+##    tavg       X       Y                geom
+##   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;         &lt;POINT [m]&gt;
+## 1  4.03 355582. 313212. (355581.8 313212.1)</code></pre>
+<div class="sourceCode" id="cb410"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">moje_punkty</span><span class="op">[</span><span class="va">moje_punkty</span><span class="op">$</span><span class="va">tavg</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">moje_punkty</span><span class="op">$</span><span class="va">tavg</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div>
+<pre><code>## Simple feature collection with 1 feature and 3 fields
+## Geometry type: POINT
+## Dimension:     XY
+## Bounding box:  xmin: 353849 ymin: 319540.7 xmax: 353849 ymax: 319540.7
+## Projected CRS: ETRF2000-PL / CS92
+## # A tibble: 1 × 4
+##     tavg       X       Y              geom
+##    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;       &lt;POINT [m]&gt;
+## 1 -0.873 353849. 319541. (353849 319540.7)</code></pre>
+<p>Jedna z nich ma wartość ok. -3,5 °C i jest znacznie niższa od pozostałych, druga natomiast jest znacznie wyższa od pozostałych i ma wartość ok. 9,2 °C.
+Należy w tym momencie zastanowić się czy te wartości odstające są prawidłowymi wartościami, czy też są one błędne.
+W tej sytuacji, nie posiadając zewnętrznej informacji, bezpieczniej jest usunąć te dwa pomiary.
+Można to zrobić wyszukując id punktów za pomocą pakietu <strong>tmap</strong>.</p>
+<p>Teraz id punktów można użyć do ich wybrania i zastąpienia potencjalnie błędnych wartości wartościami <code>NA</code>.</p>
+<div class="sourceCode" id="cb412"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># usunięcie wartości według id</span></span>
+<span><span class="va">moje_punkty</span><span class="op">[</span><span class="fl">60</span>, <span class="st">"tavg"</span><span class="op">]</span> <span class="op">=</span> <span class="cn">NA</span></span>
+<span><span class="va">moje_punkty</span><span class="op">[</span><span class="fl">72</span>, <span class="st">"tavg"</span><span class="op">]</span> <span class="op">=</span> <span class="cn">NA</span></span></code></pre></div>
+<p>Te punkty nadal istnieją jednak w obiekcie <code>moje_punkty</code>.
+Można je usunąć korzystając z funkcji <code>is.na</code> oraz indeksowania:</p>
+<div class="sourceCode" id="cb413"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">moje_punkty</span> <span class="op">=</span> <span class="va">moje_punkty</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">moje_punkty</span><span class="op">$</span><span class="va">tavg</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div>
+<p>Po tej zmianie powinno się po raz kolejny obejrzeć dokładnie dane w celu stwierdzenia, czy problem został naprawiony i czy nie występują dodatkowe sytuacje problemowe (rycina <a href="przyklad.html#fig:18-przyklad-10">C.3</a> i <a href="przyklad.html#fig:18-przyklad-10a">C.4</a>).</p>
+<div class="sourceCode" id="cb414"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">moje_punkty</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">tavg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:18-przyklad-10"></span>
+<img src="18-przyklad_files/figure-html/18-przyklad-10-1.png" alt="Rozkład wartości zmiennej tavg po usunięciu wartości odstających." width="100%"><p class="caption">
+Rycina C.3: Rozkład wartości zmiennej tavg po usunięciu wartości odstających.
+</p>
+</div>
+<div class="sourceCode" id="cb415"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">moje_punkty</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_symbols</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"tavg"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:18-przyklad-10a"></span>
+<img src="18-przyklad_files/figure-html/18-przyklad-10a-1.png" alt="Rozkład przestrzenny wartości zmiennej tavg po usunięciu wartości odstających." width="100%"><p class="caption">
+Rycina C.4: Rozkład przestrzenny wartości zmiennej tavg po usunięciu wartości odstających.
+</p>
+</div>
+<p>Można dodatkowo stworzyć chmurę semiwariogramu w celu wyszukania potencjalnych wartości lokalnie odstających (rycina <a href="przyklad.html#fig:18-przyklad-11">C.5</a>).</p>
+<div class="sourceCode" id="cb416"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">moja_chmura</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">tavg</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">moje_punkty</span>, cloud <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">moja_chmura</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:18-przyklad-11"></span>
+<img src="18-przyklad_files/figure-html/18-przyklad-11-1.png" alt="Chmura semiwariogramu zmiennej tavg." width="100%"><p class="caption">
+Rycina C.5: Chmura semiwariogramu zmiennej tavg.
+</p>
+</div>
+</div>
+<div id="tworzenie-modeli-semiwariogramów" class="section level2" number="16.3">
+<h2>
+<span class="header-section-number">C.3</span> Tworzenie modeli semiwariogramów<a class="anchor" aria-label="anchor" href="#tworzenie-modeli-semiwariogram%C3%B3w"><i class="fas fa-link"></i></a>
+</h2>
+<p>Posiadając już poprawne dane można sprawdzić czy badane zjawisko wykazuje anizotropię przestrzenną poprzez stworzenie mapy semiwariogramu (rycina <a href="przyklad.html#fig:18-przyklad-12">C.6</a>).</p>
+<div class="sourceCode" id="cb417"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">moja_mapa</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">tavg</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>                      locations <span class="op">=</span> <span class="va">moje_punkty</span>,</span>
+<span>                      cutoff <span class="op">=</span> <span class="fl">4500</span>,</span>
+<span>                      width <span class="op">=</span> <span class="fl">850</span>, </span>
+<span>                      map <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">moja_mapa</span>, threshold <span class="op">=</span> <span class="fl">30</span>, </span>
+<span>     col.regions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html">hcl.colors</a></span><span class="op">(</span><span class="fl">40</span>, palette <span class="op">=</span> <span class="st">"ag_GrnYl"</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:18-przyklad-12"></span>
+<img src="18-przyklad_files/figure-html/18-przyklad-12-1.png" alt="Mapa semiwariogramu zmiennej tavg." width="100%"><p class="caption">
+Rycina C.6: Mapa semiwariogramu zmiennej tavg.
+</p>
+</div>
+<p>Uzyskana mapa nie pozwala na jednoznaczne stwierdzenie kierunkowej zmienności podobieństwa badanej cechy, w związku z tym można skupić się na modelowaniu izotropowym.
+Kolejnym etapem jest stworzenie semiwariogramu oraz jego modelowanie.
+Optymalnie tworzy się więcej niż jeden model semiwariogramu, co pozwala na porównanie uzyskanych wyników i wybór lepszego modelu.
+Do tego przykładu zostały stworzone dwa modele semiwariogramu.
+Pierwszy z nich używa tylko zmiennej <code>tavg</code> oraz modelu ręcznego o wybranych parametrach (ryciny <a href="przyklad.html#fig:18-przyklad-13">C.7</a>, <a href="przyklad.html#fig:18-przyklad-14">C.8</a>, <a href="przyklad.html#fig:18-przyklad-15">C.9</a>, <a href="przyklad.html#fig:18-przyklad-16">C.10</a>).</p>
+<div class="sourceCode" id="cb418"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">moj_semiwar</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">tavg</span> <span class="op">~</span> <span class="fl">1</span>, </span>
+<span>                        locations <span class="op">=</span> <span class="va">moje_punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">moj_semiwar</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:18-przyklad-13"></span>
+<img src="18-przyklad_files/figure-html/18-przyklad-13-1.png" alt="Semiwariogram zmiennej tavg." width="100%"><p class="caption">
+Rycina C.7: Semiwariogram zmiennej tavg.
+</p>
+</div>
+<div class="sourceCode" id="cb419"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">moj_model</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>psill <span class="op">=</span> <span class="fl">0.65</span>,</span>
+<span>        model <span class="op">=</span> <span class="st">"Sph"</span>,</span>
+<span>        range <span class="op">=</span> <span class="fl">2000</span>,</span>
+<span>        nugget <span class="op">=</span> <span class="fl">0.15</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">moj_semiwar</span>, <span class="va">moj_model</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:18-przyklad-14"></span>
+<img src="18-przyklad_files/figure-html/18-przyklad-14-1.png" alt="Model semiwariogramu zmiennej tavg." width="100%"><p class="caption">
+Rycina C.8: Model semiwariogramu zmiennej tavg.
+</p>
+</div>
+<p>Drugi model, oprócz zmiennej <code>tavg</code>, używa też wartości współrzędnych oraz modelu o parametrach zmodyfikowanych przez funkcję <code><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram()</a></code>.</p>
+<div class="sourceCode" id="cb420"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">moje_punkty</span><span class="op">$</span><span class="va">X</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">moje_punkty</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">moje_punkty</span><span class="op">$</span><span class="va">Y</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">moje_punkty</span><span class="op">)</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span></span>
+<span><span class="va">moj_semiwar2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">tavg</span> <span class="op">~</span> <span class="va">X</span> <span class="op">+</span> <span class="va">Y</span>,</span>
+<span>                         locations <span class="op">=</span> <span class="va">moje_punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">moj_semiwar2</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:18-przyklad-15"></span>
+<img src="18-przyklad_files/figure-html/18-przyklad-15-1.png" alt="Semiwariogram zmiennej tavg uwzględniający współrzędne x i y." width="100%"><p class="caption">
+Rycina C.9: Semiwariogram zmiennej tavg uwzględniający współrzędne x i y.
+</p>
+</div>
+<div class="sourceCode" id="cb421"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">moj_model2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Sph"</span>, nugget <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
+<span><span class="va">moj_model2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">moj_semiwar2</span>, <span class="va">moj_model2</span><span class="op">)</span></span>
+<span><span class="va">moj_model2</span></span></code></pre></div>
+<pre><code>##   model      psill    range
+## 1   Nug 0.01750625    0.000
+## 2   Sph 0.73618909 1852.585</code></pre>
+<div class="sourceCode" id="cb423"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">moj_semiwar2</span>, <span class="va">moj_model2</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:18-przyklad-16"></span>
+<img src="18-przyklad_files/figure-html/18-przyklad-16-1.png" alt="Model semiwariogramu zmiennej tavg uwzględniający współrzędne x i y." width="100%"><p class="caption">
+Rycina C.10: Model semiwariogramu zmiennej tavg uwzględniający współrzędne x i y.
+</p>
+</div>
+</div>
+<div id="ocena-jakości-modeli" class="section level2" number="16.4">
+<h2>
+<span class="header-section-number">C.4</span> Ocena jakości modeli<a class="anchor" aria-label="anchor" href="#ocena-jako%C5%9Bci-modeli"><i class="fas fa-link"></i></a>
+</h2>
+<p>Aby porównać oba modele należy przyjąć metodę walidacji oraz współczynnik jakości estymacji.
+W tym przykładzie użyto kroswalidacji metodą LOO (funkcja <code>krige.cv</code>) oraz pierwiastek błędu średniokwadratowego (RMSE) jako miarę jakości.</p>
+<div class="sourceCode" id="cb424"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ocena1</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.cv.html">krige.cv</a></span><span class="op">(</span><span class="va">tavg</span> <span class="op">~</span> <span class="fl">1</span>,</span>
+<span>                  locations <span class="op">=</span> <span class="va">moje_punkty</span>,</span>
+<span>                  model <span class="op">=</span> <span class="va">moj_model</span>,</span>
+<span>                  beta <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span>
+<span><span class="va">RMSE1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">ocena1</span><span class="op">$</span><span class="va">residual</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb425"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ocena2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.cv.html">krige.cv</a></span><span class="op">(</span><span class="va">tavg</span> <span class="op">~</span> <span class="va">X</span> <span class="op">+</span> <span class="va">Y</span>,</span>
+<span>                  locations <span class="op">=</span> <span class="va">moje_punkty</span>,</span>
+<span>                  model <span class="op">=</span> <span class="va">moj_model2</span><span class="op">)</span></span>
+<span><span class="va">RMSE2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">ocena2</span><span class="op">$</span><span class="va">residual</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Porównanie dwóch wartości RMSE pozwala zdecydowanie stwierdzić, że drugi model charakteryzuje się lepszą jakością estymacji.</p>
+<div class="sourceCode" id="cb426"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">RMSE1</span></span></code></pre></div>
+<pre><code>## [1] 6.233389</code></pre>
+<div class="sourceCode" id="cb428"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">RMSE2</span></span></code></pre></div>
+<pre><code>## [1] 0.586952</code></pre>
+</div>
+<div id="stworzenie-siatki" class="section level2" number="16.5">
+<h2>
+<span class="header-section-number">C.5</span> Stworzenie siatki<a class="anchor" aria-label="anchor" href="#stworzenie-siatki"><i class="fas fa-link"></i></a>
+</h2>
+<p>Przedostatnim krokiem jest utworzenie siatki do estymacji.
+Do niej zostaną wpisane wartości uzyskane z modelu semiwariogramu.</p>
+<div class="sourceCode" id="cb430"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">punkty_bbox</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="va">moje_punkty</span><span class="op">)</span></span>
+<span><span class="va">moja_siatka</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/stars/reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">punkty_bbox</span>, </span>
+<span>                          dx <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>                          dy <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+<span><span class="va">moja_siatka</span><span class="op">$</span><span class="va">X</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">moja_siatka</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">moja_siatka</span><span class="op">$</span><span class="va">Y</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">moja_siatka</span><span class="op">)</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span></span></code></pre></div>
+</div>
+<div id="stworzenie-estymacji" class="section level2" number="16.6">
+<h2>
+<span class="header-section-number">C.6</span> Stworzenie estymacji<a class="anchor" aria-label="anchor" href="#stworzenie-estymacji"><i class="fas fa-link"></i></a>
+</h2>
+<p>Następnie nowo utworzona siatka może posłużyć do stworzenia estymacji (rycina <a href="przyklad.html#fig:18-przyklad-21">C.11</a>).</p>
+<div class="sourceCode" id="cb431"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">moja_estymacja</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="va">tavg</span> <span class="op">~</span> <span class="va">X</span> <span class="op">+</span> <span class="va">Y</span>,</span>
+<span>                       locations <span class="op">=</span> <span class="va">moje_punkty</span>,</span>
+<span>                       newdata <span class="op">=</span> <span class="va">moja_siatka</span>,</span>
+<span>                       model <span class="op">=</span> <span class="va">moj_model2</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using universal kriging]</code></pre>
+<div class="sourceCode" id="cb433"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">moja_estymacja</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"var1.pred"</span>, style <span class="op">=</span> <span class="st">"cont"</span>, palette <span class="op">=</span> <span class="st">"-Spectral"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">moja_estymacja</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"var1.var"</span>, style <span class="op">=</span> <span class="st">"cont"</span>, palette <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:18-przyklad-21"></span>
+<img src="18-przyklad_files/figure-html/18-przyklad-21-1.png" alt="Estymacja i wariancja estymacji drugiego modelu zmiennej tavg." width="100%"><img src="18-przyklad_files/figure-html/18-przyklad-21-2.png" alt="Estymacja i wariancja estymacji drugiego modelu zmiennej tavg." width="100%"><p class="caption">
+Rycina C.11: Estymacja i wariancja estymacji drugiego modelu zmiennej tavg.
+</p>
+</div>
+<p>Wynikiem uproszczonej analizy geostatystycznej jest mapa estymowanych wartości temperatury dla całego badanego obszaru oraz mapa przedstawiająca wariancję estymacji temperatury.</p>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="dane-app.html"><span class="header-section-number">B</span> Dane</a></div>
+<div class="next"><a href="bibliografia.html">Bibliografia</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#przyklad"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="nav-link" href="#analiza-geostatystyczna"><span class="header-section-number">C.1</span> Analiza geostatystyczna</a></li>
+<li><a class="nav-link" href="#przygotowanie-danych"><span class="header-section-number">C.2</span> Przygotowanie danych</a></li>
+<li><a class="nav-link" href="#tworzenie-modeli-semiwariogram%C3%B3w"><span class="header-section-number">C.3</span> Tworzenie modeli semiwariogramów</a></li>
+<li><a class="nav-link" href="#ocena-jako%C5%9Bci-modeli"><span class="header-section-number">C.4</span> Ocena jakości modeli</a></li>
+<li><a class="nav-link" href="#stworzenie-siatki"><span class="header-section-number">C.5</span> Stworzenie siatki</a></li>
+<li><a class="nav-link" href="#stworzenie-estymacji"><span class="header-section-number">C.6</span> Stworzenie estymacji</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/18-przyklad.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/18-przyklad.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

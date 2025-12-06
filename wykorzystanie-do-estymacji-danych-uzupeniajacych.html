@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>9 Estymacje używające danych uzupełniających | Geostatystyka w R</title>
+<meta name="author" content="Jakub Nowosad">
+<meta name="description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(geostatbook)...">
+<meta name="generator" content="bookdown 0.40 with bs4_book()">
+<meta property="og:title" content="9 Estymacje używające danych uzupełniających | Geostatystyka w R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://bookdown.org/nowosad/geostatystyka/wykorzystanie-do-estymacji-danych-uzupeniajacych.html">
+<meta property="og:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<meta property="og:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(geostatbook)...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="9 Estymacje używające danych uzupełniających | Geostatystyka w R">
+<meta name="twitter:description" content="Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych: library(sf) library(stars) library(gstat) library(tmap) library(geostatbook)...">
+<meta name="twitter:image" content="https://bookdown.org/nowosad/geostatystyka//Rfigs/book_cover3.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.9.0/transition.js"></script><script src="libs/bs3compat-0.9.0/tabs.js"></script><script src="libs/bs3compat-0.9.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><meta name="citation_title" content="9 Estymacje używające danych uzupełniających | Geostatystyka w R">
+<meta name="citation_author" content="Jakub Nowosad">
+<meta name="citation_publication_date" content="2021">
+<meta name="citation_isbn" content="978-83-953296-2-3">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-75924107-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geostatystyka w R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Szukaj" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Spis treści</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">O skrypcie</a></li>
+<li><a class="" href="wprowadzenie.html"><span class="header-section-number">1</span> Wprowadzenie</a></li>
+<li><a class="" href="r-a-dane-przestrzenne.html"><span class="header-section-number">2</span> R a dane przestrzenne</a></li>
+<li><a class="" href="eksploracja-analiza-danych-nieprzestrzennych.html"><span class="header-section-number">3</span> Eksploracyjna analiza danych nieprzestrzennych</a></li>
+<li><a class="" href="eksploracyjna-analiza-danych-przestrzennych.html"><span class="header-section-number">4</span> Eksploracyjna analiza danych przestrzennych</a></li>
+<li><a class="" href="metody-interpolacji.html"><span class="header-section-number">5</span> Metody interpolacji</a></li>
+<li><a class="" href="geostatystyka-prolog.html"><span class="header-section-number">6</span> Miary relacji przestrzennych</a></li>
+<li><a class="" href="modelowanie-matematycznie-autokorelacji-przestrzennej.html"><span class="header-section-number">7</span> Modelowanie autokorelacji przestrzennej</a></li>
+<li><a class="" href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></li>
+<li><a class="active" href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li><a class="" href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></li>
+<li><a class="" href="estymacja-lokalnego-rozkadu-prawdopodobienstwa.html"><span class="header-section-number">11</span> Estymacja lokalnego rozkładu prawdopodobieństwa</a></li>
+<li><a class="" href="ocena-jakosci-estymacji.html"><span class="header-section-number">12</span> Ocena jakości estymacji</a></li>
+<li><a class="" href="symulacje.html"><span class="header-section-number">13</span> Symulacje</a></li>
+<li class="book-part">Appendiks</li>
+<li><a class="" href="zrodla-wiedzy.html"><span class="header-section-number">A</span> Źródła wiedzy</a></li>
+<li><a class="" href="dane-app.html"><span class="header-section-number">B</span> Dane</a></li>
+<li><a class="" href="przyklad.html"><span class="header-section-number">C</span> Przykład analizy geostatystycznej</a></li>
+<li><a class="" href="bibliografia.html">Bibliografia</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a href="https://bookdown.org/nowosad/geostatystyka/geostatystyka-w-r-nowosad-2021.pdf">PDF <i class="fas fa-file-pdf"></i></a></p>
+          <p><a id="book-repo" href="https://github.com/nowosad/geostat_book">Kod źródłowy książki <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="wykorzystanie-do-estymacji-danych-uzupeniajacych" class="section level1" number="9">
+<h1>
+<span class="header-section-number">9</span> Estymacje używające danych uzupełniających<a class="anchor" aria-label="anchor" href="#wykorzystanie-do-estymacji-danych-uzupeniajacych"><i class="fas fa-link"></i></a>
+</h1>
+<p>Odtworzenie obliczeń z tego rozdziału wymaga załączenia poniższych pakietów oraz wczytania poniższych danych:</p>
+<div class="sourceCode" id="cb244"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/gstat/">gstat</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bookdown.org/nowosad/geostatystyka/">geostatbook</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">siatka</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">dane_uzup</span><span class="op">)</span></span></code></pre></div>
+<p>W wielu przypadkach, oprócz konkretnych pomiarów, istnieje również informacja na temat zmienności innych cech na analizowanym obszarze.
+W sytuacji, gdy dodatkowe zmienne są skorelowane ze zmienną analizowaną można wykorzystać jedną z metod krigingu wykorzystującą dane uzupełniające, tj. kriging stratyfikowany, kriging prosty ze zmiennymi średnimi lokalnymi, czy kriging uniwersalny.</p>
+<div class="inline-figure"><img src="09-dane_uzupelniajace_files/figure-html/09-dane-uzupelniajace-3-1.png" width="100%" style="display: block; margin: auto;"></div>
+<!-- ## Kriging stratyfikowany -->
+<!-- ### Kriging stratyfikowany (ang. *Kriging within strata*) -->
+<!-- Kriging stratyfikowany zakłada, że zmienność badanego zjawiska zależy od cechy jakościowej (kategoryzowanej). -->
+<!-- Przykładowo, wartość badanej zmiennej jest różna w zależności od pokrycia terenu. -->
+<!-- Kriging stratyfikowany wymaga posiadania danych zmiennej jakościowej (kategoryzowanej) na całym badanym obszarze. -->
+<!-- W poniższym przykładzie zmienną jakościową jest uproszczone pokrycie terenu ze zmiennej `clc`.  -->
+<!-- Przyjmuje ono jedno z trzech wartości. `1` oznacza obszary rolnicze, `2` oznacza obszary leśne, a `4` oznacza wody powierzchniowe. -->
+<!-- ```{r } -->
+<!-- siatka$clc = as.factor(siatka$clc) -->
+<!-- plot(siatka["clc"]) -->
+<!-- ``` -->
+<!-- Kriging stratyfikowany polega na niezależnym tworzeniu i modelowaniu semiwariogramów dla każdej z kategorii. -->
+<!-- ```{r } -->
+<!-- vario_kws1 = variogram(temp~1, punkty[punkty$clc == 1, ]) -->
+<!-- # plot(vario_kws1) -->
+<!-- fitted_kws1 = fit.variogram(vario_kws1, vgm(model = "Sph", nugget = 0.5)) -->
+<!-- plot(vario_kws1, fitted_kws1) -->
+<!-- ``` -->
+<!-- ```{r } -->
+<!-- vario_kws2 = variogram(temp~1, punkty[punkty$clc == 2, ]) -->
+<!-- # plot(vario_kws2) -->
+<!-- fitted_kws2 = fit.variogram(vario_kws2, vgm(model = "Gau", nugget = 0.1)) -->
+<!-- plot(vario_kws2, fitted_kws2) -->
+<!-- ``` -->
+<!-- ```{r } -->
+<!-- vario_kws4 = variogram(temp~1, punkty[punkty$clc == 4, ]) -->
+<!-- # plot(vario_kws4) -->
+<!-- fitted_kws4 = fit.variogram(vario_kws4, vgm(model = "Nug")) -->
+<!-- plot(vario_kws4, fitted_kws4) -->
+<!-- ``` -->
+<!-- Następnie dla każdego obszaru przeprowadzona jest niezależna estymacja wartości analizowanej cechy.  -->
+<!-- Należy jedynie wcześniej zadbać, by w siatce nie było elementów `NA` dotyczących zmiennych jakościowych.  -->
+<!-- W przykładzie tworzona jest nowa siatka (`siatka2`) nie zawierająca braków wartości dla zmiennej `clc`. -->
+<!-- ```{r} -->
+<!-- siatka2 = siatka[siatka$clc == 1,,] -->
+<!-- kws1 = krige(temp~1,  -->
+<!--               location = punkty[punkty$clc == 1, ],  -->
+<!--               newdata = siatka2[na.omit(siatka2$clc == 1), ],  -->
+<!--               model = fitted_kws1) -->
+<!-- spplot(kws1, "var1.pred") -->
+<!-- ``` -->
+<!-- ```{r, message=FALSE} -->
+<!-- siatka2 = dplyr::filter(siatka, clc == 1) -->
+<!-- siatka2  -->
+<!-- kws1 = krige(temp~1,  -->
+<!--               location = punkty[punkty$clc == 1, ],  -->
+<!--               newdata = siatka2[na.omit(siatka2$clc == 1), ],  -->
+<!--               model = fitted_kws1) -->
+<!-- spplot(kws1, "var1.pred") -->
+<!-- ``` -->
+<!-- ```{r, message=FALSE} -->
+<!-- kws2 = krige(temp~1, -->
+<!--               location = punkty[punkty$clc == 2, ], -->
+<!--               newdata = siatka2[na.omit(siatka2$clc == 2), ],  -->
+<!--               model = fitted_kws2) -->
+<!-- spplot(kws2, "var1.pred") -->
+<!-- ``` -->
+<!-- ```{r, message=FALSE} -->
+<!-- kws4 = krige(temp~1,  -->
+<!--               location = punkty[punkty$clc == 4, ],  -->
+<!--               newdata = siatka2[na.omit(siatka2$clc == 4), ],  -->
+<!--               model = fitted_kws4) -->
+<!-- spplot(kws4, "var1.pred") -->
+<!-- ``` -->
+<!-- Ostatnim etapem jest połączenie cząstkowych wyników w jeden obiekt klasy `SpatialPixelsDataFrame`. -->
+<!-- ```{r} -->
+<!-- kws = rbind(kws1, kws2, kws4) -->
+<!-- ``` -->
+<!-- Uzyskane w ten sposób wyniki znacząco różnią się od estymacji krigingem prostym czy zwykłym, wykazując odrębność zmienności w poszczególnych kategoriach pokrycia/użytkowania terenu. -->
+<!-- ```{r plotsykws1, eval=FALSE} -->
+<!-- spplot(kws, "var1.pred") -->
+<!-- spplot(kws, "var1.var") -->
+<!-- ``` -->
+<!-- ```{r plotsykws2, echo=FALSE, fig.height=8} -->
+<!-- library(gridExtra) -->
+<!-- p1 = spplot(kws, "var1.pred", main = "Estymacja KWS") -->
+<!-- p2 = spplot(kws, "var1.var", main = "Wariancja estymacja KWS") -->
+<!-- grid.arrange(p1, p2, ncol = 1) -->
+<!-- ``` -->
+<div id="SKlm" class="section level2" number="9.1">
+<h2>
+<span class="header-section-number">9.1</span> Kriging prosty ze zmiennymi średnimi lokalnymi (LVM)<a class="anchor" aria-label="anchor" href="#SKlm"><i class="fas fa-link"></i></a>
+</h2>
+<div id="kriging-prosty-ze-zmiennymi-średnimi-lokalnymi-lvm-ang.-simple-kriging-with-varying-local-means" class="section level3" number="9.1.1">
+<h3>
+<span class="header-section-number">9.1.1</span> Kriging prosty ze zmiennymi średnimi lokalnymi (LVM) (ang. <em>Simple kriging with varying local means</em>)<a class="anchor" aria-label="anchor" href="#kriging-prosty-ze-zmiennymi-%C5%9Brednimi-lokalnymi-lvm-ang.-simple-kriging-with-varying-local-means"><i class="fas fa-link"></i></a>
+</h3>
+<p>Kriging prosty ze zmiennymi średnimi lokalnymi zamiast znanej (stałej) stacjonarnej średniej wykorzystuje zmienne średnie lokalne uzyskane na podstawie innej informacji.</p>
+<p>Lokalna średnia może być uzyskana za pomocą wyliczenia regresji liniowej pomiędzy zmienną badaną a zmienną dodatkową.
+W takiej sytuacji konieczne jest użycie funkcji <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>.
+W poniższym przykładzie budowany jest model liniowy relacji pomiędzy temperaturą powietrza (<code>temp</code>), a wysokością nad poziomem morza (<code>srtm</code>).</p>
+<div class="sourceCode" id="cb245"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">coef</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="va">srtm</span>, <span class="va">punkty</span><span class="op">)</span><span class="op">$</span><span class="va">coef</span></span>
+<span><span class="va">coef</span></span></code></pre></div>
+<pre><code>## (Intercept)        srtm 
+## 17.41296753 -0.01021971</code></pre>
+<p>Wykorzystując relację pomiędzy tymi dwoma zmiennymi tworzony jest semiwariogram empiryczny, który następnie jest modelowany (rycina <a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#fig:09-dane-uzupelniajace-5">9.1</a>).</p>
+<div class="sourceCode" id="cb247"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="va">srtm</span>, location <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="va">model_sim</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Sph"</span>, nugget <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">fitted_sim</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario</span>, <span class="va">model_sim</span><span class="op">)</span></span>
+<span><span class="va">fitted_sim</span></span></code></pre></div>
+<pre><code>##   model      psill    range
+## 1   Nug  0.6756367    0.000
+## 2   Sph 13.1450299 5085.204</code></pre>
+<div class="sourceCode" id="cb249"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario</span>, model <span class="op">=</span> <span class="va">fitted_sim</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:09-dane-uzupelniajace-5"></span>
+<img src="09-dane_uzupelniajace_files/figure-html/09-dane-uzupelniajace-5-1.png" alt="Model semiwariogramu zmiennej temp używając zmiennej srtm." width="100%"><p class="caption">
+Rycina 9.1: Model semiwariogramu zmiennej temp używając zmiennej srtm.
+</p>
+</div>
+<p>Ostatnim krokiem jest estymacja geostatystyczna, w której oprócz czterech podstawowych argumentów, definiujemy także parametr <code>beta</code>.
+W tym wypadku jest to wypadku obiekt uzyskany na podstawie regresji liniowej.</p>
+<div class="sourceCode" id="cb250"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sk_lvm</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="va">srtm</span>, </span>
+<span>               location <span class="op">=</span> <span class="va">punkty</span>, </span>
+<span>               newdata <span class="op">=</span> <span class="va">dane_uzup</span>, </span>
+<span>               model <span class="op">=</span> <span class="va">fitted_sim</span>, </span>
+<span>               beta <span class="op">=</span> <span class="va">coef</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using simple kriging]</code></pre>
+<div class="sourceCode" id="cb252"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sk_lvm</span></span></code></pre></div>
+<pre><code>## stars object with 2 dimensions and 2 attributes
+## attribute(s):
+##                Min.   1st Qu.    Median      Mean   3rd Qu.      Max. NA's
+## var1.pred  8.559515 12.745494 14.958937 15.523648 17.759209 24.240945 1242
+## var1.var   1.066204  1.875899  2.248138  2.321278  2.638222  6.852509 1242
+## dimension(s):
+##   from  to offset delta               refsys x/y
+## x    1 127 745542    90 ETRS89 / Poland CS92 [x]
+## y    1  96 721256   -90 ETRS89 / Poland CS92 [y]</code></pre>
+<div class="sourceCode" id="cb254"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">sk_lvm</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"var1.pred"</span>, <span class="st">"var1.var"</span><span class="op">)</span>,</span>
+<span>                  style <span class="op">=</span> <span class="st">"cont"</span>, </span>
+<span>                  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"-Spectral"</span>, <span class="st">"viridis"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.frame <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:plotsylvm2"></span>
+<img src="09-dane_uzupelniajace_files/figure-html/plotsylvm2-1.png" alt="Estymacja i wariancja estymacji używając metody prostego krigingu ze zmiennymi średnimi lokalnymi (LVM)." width="100%"><p class="caption">
+Rycina 9.2: Estymacja i wariancja estymacji używając metody prostego krigingu ze zmiennymi średnimi lokalnymi (LVM).
+</p>
+</div>
+</div>
+</div>
+<div id="kriging-uniwersalny" class="section level2" number="9.2">
+<h2>
+<span class="header-section-number">9.2</span> Kriging uniwersalny<a class="anchor" aria-label="anchor" href="#kriging-uniwersalny"><i class="fas fa-link"></i></a>
+</h2>
+<div id="kriging-uniwersalny-ang.-universal-kriging" class="section level3" number="9.2.1">
+<h3>
+<span class="header-section-number">9.2.1</span> Kriging uniwersalny (ang. <em>Universal kriging</em>)<a class="anchor" aria-label="anchor" href="#kriging-uniwersalny-ang.-universal-kriging"><i class="fas fa-link"></i></a>
+</h3>
+<p>Kriging uniwersalny, określany również jako kriging z trendem (ang. <em>Kriging with a trend model</em>) zakłada, że nieznana średnia lokalna zmienia się stopniowo na badanym obszarze.
+W krigingu uniwersalnym możemy stosować zarówno zmienne jakościowe, jak i ilościowe.</p>
+<p>W pierwszym przykładzie, kriging uniwersalny służy stworzeniu semiwariogramu, modelowaniu oraz estymacji temperatury powietrza z użyciem zmiennej pokrycia terenu (ryciny <a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#fig:09-dane-uzupelniajace-7">9.3</a>, <a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#fig:09-dane-uzupelniajace-8">9.4</a>, <a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#fig:plotsy4uk1">9.5</a>).</p>
+<div class="sourceCode" id="cb255"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">punkty</span><span class="op">$</span><span class="va">clc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">$</span><span class="va">clc</span><span class="op">)</span></span>
+<span><span class="va">vario_uk1</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="va">clc</span>, location <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="co"># vario_uk1</span></span>
+<span><span class="co"># plot(vario_uk1)</span></span>
+<span><span class="va">model_uk1</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Sph"</span>, nugget <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">vario_fit_uk1</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario_uk1</span>, model <span class="op">=</span> <span class="va">model_uk1</span><span class="op">)</span></span>
+<span><span class="va">vario_fit_uk1</span></span></code></pre></div>
+<pre><code>##   model    psill    range
+## 1   Nug 1.626245    0.000
+## 2   Sph 9.059005 6426.143</code></pre>
+<div class="sourceCode" id="cb257"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_uk1</span>, <span class="va">vario_fit_uk1</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:09-dane-uzupelniajace-7"></span>
+<img src="09-dane_uzupelniajace_files/figure-html/09-dane-uzupelniajace-7-1.png" alt="Model semiwariogramu zmiennej temp używając zmiennej clc." width="100%"><p class="caption">
+Rycina 9.3: Model semiwariogramu zmiennej temp używając zmiennej clc.
+</p>
+</div>
+<div class="sourceCode" id="cb258"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dane_uzup</span><span class="op">$</span><span class="va">clc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">dane_uzup</span><span class="op">$</span><span class="va">clc</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">dane_uzup</span><span class="op">[</span><span class="st">"clc"</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#d9d40c"</span>, <span class="st">"#416422"</span>, <span class="st">"#0c6cae"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:09-dane-uzupelniajace-8"></span>
+<img src="09-dane_uzupelniajace_files/figure-html/09-dane-uzupelniajace-8-1.png" alt="Rozkład przestrzenny wartości zmiennej clc używanej w modelu." width="100%"><p class="caption">
+Rycina 9.4: Rozkład przestrzenny wartości zmiennej clc używanej w modelu.
+</p>
+</div>
+<div class="sourceCode" id="cb259"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">uk1</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="va">clc</span>, </span>
+<span>            locations <span class="op">=</span> <span class="va">punkty</span>,</span>
+<span>            newdata <span class="op">=</span> <span class="va">dane_uzup</span>, </span>
+<span>            model <span class="op">=</span> <span class="va">vario_fit_uk1</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using universal kriging]</code></pre>
+<div class="sourceCode" id="cb261"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">uk1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"var1.pred"</span>, <span class="st">"var1.var"</span><span class="op">)</span>,</span>
+<span>                  style <span class="op">=</span> <span class="st">"cont"</span>, </span>
+<span>                  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"-Spectral"</span>, <span class="st">"viridis"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.frame <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:plotsy4uk1"></span>
+<img src="09-dane_uzupelniajace_files/figure-html/plotsy4uk1-1.png" alt="Estymacja i wariancja estymacji używając zmiennej clc i metody krigingu uniwersalnego (KU)." width="100%"><p class="caption">
+Rycina 9.5: Estymacja i wariancja estymacji używając zmiennej clc i metody krigingu uniwersalnego (KU).
+</p>
+</div>
+<p>W kolejnym przykładzie zastosowane są już dwie zmienne uzupełniające - wartość wskaźnika wegetacji (<code>ndvi</code>) oraz wysokość nad poziomem morza (<code>srtm</code>) (ryciny <a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#fig:09-dane-uzupelniajace-10">9.6</a>, <a href="wykorzystanie-do-estymacji-danych-uzupeniajacych.html#fig:plotsy4KU">9.7</a>).</p>
+<div class="sourceCode" id="cb262"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vario_uk2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/variogram.html">variogram</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="va">ndvi</span> <span class="op">+</span> <span class="va">srtm</span>, location <span class="op">=</span> <span class="va">punkty</span><span class="op">)</span></span>
+<span><span class="co"># vario_uk2</span></span>
+<span><span class="co"># plot(vario_uk2)</span></span>
+<span><span class="va">model</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Sph"</span>, nugget <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">vario_fit_uk2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/fit.variogram.html">fit.variogram</a></span><span class="op">(</span><span class="va">vario_uk2</span>, model <span class="op">=</span> <span class="va">model</span><span class="op">)</span></span>
+<span><span class="va">vario_fit_uk2</span></span></code></pre></div>
+<pre><code>##   model      psill    range
+## 1   Nug  0.7602125    0.000
+## 2   Sph 12.4326154 5188.676</code></pre>
+<div class="sourceCode" id="cb264"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">vario_uk2</span>, <span class="va">vario_fit_uk2</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:09-dane-uzupelniajace-10"></span>
+<img src="09-dane_uzupelniajace_files/figure-html/09-dane-uzupelniajace-10-1.png" alt="Model semiwariogramu zmiennej temp używając zmiennych ndvi i srtm." width="100%"><p class="caption">
+Rycina 9.6: Model semiwariogramu zmiennej temp używając zmiennych ndvi i srtm.
+</p>
+</div>
+<div class="sourceCode" id="cb265"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">uk2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/gstat/reference/krige.html">krige</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="va">ndvi</span> <span class="op">+</span> <span class="va">srtm</span>,</span>
+<span>             locations <span class="op">=</span> <span class="va">punkty</span>, </span>
+<span>             newdata <span class="op">=</span> <span class="va">dane_uzup</span>,</span>
+<span>             model <span class="op">=</span> <span class="va">vario_fit_uk2</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [using universal kriging]</code></pre>
+<div class="sourceCode" id="cb267"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">uk2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_raster.html">tm_raster</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"var1.pred"</span>, <span class="st">"var1.var"</span><span class="op">)</span>,</span>
+<span>                  style <span class="op">=</span> <span class="st">"cont"</span>, </span>
+<span>                  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"-Spectral"</span>, <span class="st">"viridis"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.frame <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:plotsy4KU"></span>
+<img src="09-dane_uzupelniajace_files/figure-html/plotsy4KU-1.png" alt="Estymacja i wariancja estymacji używając zmiennych ndvi i srtm i metody krigingu uniwersalnego (KU)." width="100%"><p class="caption">
+Rycina 9.7: Estymacja i wariancja estymacji używając zmiennych ndvi i srtm i metody krigingu uniwersalnego (KU).
+</p>
+</div>
+</div>
+</div>
+<div id="z11" class="section level2" number="9.3">
+<h2>
+<span class="header-section-number">9.3</span> Zadania<a class="anchor" aria-label="anchor" href="#z11"><i class="fas fa-link"></i></a>
+</h2>
+<p>Zadania w tym rozdziale są oparte o dane z obiektu <code>punkty</code>.</p>
+<div class="sourceCode" id="cb268"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">punkty</span><span class="op">)</span></span></code></pre></div>
+<!-- 1. Używając krigingu stratyfikowanego, stwórz optymalne modele zmiennej `ndvi` dla trzech typów pokrycia terenu (zmienna `clc`). Bazując na stworzonych modelach, stwórz estymacje zmiennej `ndvi` dla trzech typów pokrycia terenu. -->
+<!-- Połącz uzyskane estymacje w jedną mapę. -->
+<ol style="list-style-type: decimal">
+<li>Zastosuj kriging prosty ze zmiennymi średnimi lokalnymi do stworzenia estymacji zmiennej <code>ndvi</code> używając jej relacji ze zmienną <code>savi</code>.</li>
+<li>Stwórz estymację krigingu uniwersalnego dla zmiennej <code>ndvi</code> używając jej relacji ze zmienną <code>savi</code>.</li>
+<li>Stwórz estymację krigingu uniwersalnego dla zmiennej <code>ndvi</code> używając jej relacji ze zmiennymi <code>clc</code>, <code>srtm</code>, <code>temp</code> i <code>savi</code>.</li>
+<li>Porównaj graficznie trzy powyższe estymacje.
+Opisz podobieństwa i różnice.</li>
+</ol>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="estymacje-jednozmienne.html"><span class="header-section-number">8</span> Estymacje jednozmienne</a></div>
+<div class="next"><a href="estymacje-wielozmienne.html"><span class="header-section-number">10</span> Estymacje wielozmienne</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>W tym rozdziale:</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#wykorzystanie-do-estymacji-danych-uzupeniajacych"><span class="header-section-number">9</span> Estymacje używające danych uzupełniających</a></li>
+<li>
+<a class="nav-link" href="#SKlm"><span class="header-section-number">9.1</span> Kriging prosty ze zmiennymi średnimi lokalnymi (LVM)</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#kriging-prosty-ze-zmiennymi-%C5%9Brednimi-lokalnymi-lvm-ang.-simple-kriging-with-varying-local-means"><span class="header-section-number">9.1.1</span> Kriging prosty ze zmiennymi średnimi lokalnymi (LVM) (ang. Simple kriging with varying local means)</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#kriging-uniwersalny"><span class="header-section-number">9.2</span> Kriging uniwersalny</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#kriging-uniwersalny-ang.-universal-kriging"><span class="header-section-number">9.2.1</span> Kriging uniwersalny (ang. Universal kriging)</a></li></ul>
+</li>
+<li><a class="nav-link" href="#z11"><span class="header-section-number">9.3</span> Zadania</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nowosad/geostat_book/blob/master/09-dane_uzupelniajace.Rmd">Kod źródłowy rozdziału <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nowosad/geostat_book/edit/master/09-dane_uzupelniajace.Rmd">Edytuj <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geostatystyka w R</strong>", autor: Jakub Nowosad. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ta książka została stworzona przy użyciu pakietu R <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>
