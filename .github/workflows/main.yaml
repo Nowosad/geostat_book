@@ -16,7 +16,7 @@ jobs:
 
       - name: Install pandoc
         run: |
-          brew install pandoc
+          apt install pandoc
 
       - name: Cache bookdown results
         uses: actions/cache@v4
